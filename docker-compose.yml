@@ -1,0 +1,55 @@
+# Local development stack: the service + Postgres 17 (same major as the
+# CloudNativePG clusters in staging/prod).
+# Settings have defaults (${VAR:-default}); credentials do not and must be
+# set in .env (cp .env.example .env), otherwise compose refuses to start.
+name: agenas-service
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./scripts/db-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-app}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      target: dev
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      TEMPLATE_ENVIRONMENT: ${TEMPLATE_ENVIRONMENT:-local}
+      TEMPLATE_LOG_LEVEL: ${TEMPLATE_LOG_LEVEL:-DEBUG}
+      TEMPLATE_EXTENDED_LOG_CONTEXT: ${TEMPLATE_EXTENDED_LOG_CONTEXT:-false}
+      TEMPLATE_LOG_MASK_PREFIX: ${TEMPLATE_LOG_MASK_PREFIX:-1}
+      TEMPLATE_LOG_MASK_SUFFIX: ${TEMPLATE_LOG_MASK_SUFFIX:-1}
+      TEMPLATE_DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-app}
+      TEMPLATE_DB_POOL_SIZE: ${TEMPLATE_DB_POOL_SIZE:-5}
+      TEMPLATE_DB_MAX_OVERFLOW: ${TEMPLATE_DB_MAX_OVERFLOW:-5}
+      TEMPLATE_DB_CONNECT_TIMEOUT: ${TEMPLATE_DB_CONNECT_TIMEOUT:-5}
+    ports:
+      - "127.0.0.1:${APP_PORT:-8000}:8000"
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./migrations:/app/migrations
+      - ./alembic.ini:/app/alembic.ini:ro
+      - ./pyproject.toml:/app/pyproject.toml:ro
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn agenas_service.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src"
+
+volumes:
+  pg_data:

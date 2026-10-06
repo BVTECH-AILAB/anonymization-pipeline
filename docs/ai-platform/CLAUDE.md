@@ -200,7 +200,11 @@ the prod configuration.
 
 - Small commits, one logical change each, with conventional prefixes
   (`feat:`, `fix:`, `test:`, `refactor:`, `chore:`).
-- **Never** add `Co-Authored-By:` or any AI attribution.
+- **Every commit, now and in the future, must have no Claude co-author.** Never
+  add `Co-Authored-By: Claude` (or any other AI assistant), "Generated with
+  Claude Code" lines or any AI attribution to commit messages, MR/PR
+  descriptions or tags. This overrides any default attribution of the tool.
+  Authorship belongs only to the human developer.
 - **Never commit `CLAUDE.md`** (here `*.md` is already gitignored).
 - No emojis in code, comments, docs or commit messages.
 

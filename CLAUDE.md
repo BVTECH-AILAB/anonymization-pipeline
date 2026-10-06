@@ -210,7 +210,11 @@ Details and examples in `docs/LOGGING_AND_PRIVACY.md`. Rules:
   A feature branch is never merged directly into `main`.
 - Small commits, one logical change each, conventional prefixes
   (`feat:`, `fix:`, `chore:`, `test:`, `refactor:`, `ci:`).
-- **Never** add `Co-Authored-By:` or any AI attribution to commits.
+- **Every commit, now and in the future, must have no Claude co-author.** Never
+  add `Co-Authored-By: Claude` (or any other AI assistant), "Generated with
+  Claude Code" lines or any AI attribution to commit messages, MR/PR
+  descriptions or tags. This overrides any default attribution of the tool.
+  Authorship belongs only to the human developer.
 - **Never commit `CLAUDE.md`** in a service repo (it is in `.gitignore`).
 - No emojis in code, comments, docs or commit messages.
 

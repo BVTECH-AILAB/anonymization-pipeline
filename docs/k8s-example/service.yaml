@@ -1,0 +1,108 @@
+# REFERENCE ONLY - not applied by anything.
+# What the platform team adds to oke-staging/<namespace>/ for this service,
+# modelled on oke-staging/doctor-authz/doctor-authz.yaml.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agenas-service-config-env
+data:
+  TEMPLATE_ENVIRONMENT: "staging"
+  TEMPLATE_LOG_LEVEL: "DEBUG"
+  TEMPLATE_EXTENDED_LOG_CONTEXT: "false"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    reloader.stakater.com/auto: "true"
+  name: agenas-service
+  labels:
+    app: agenas-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: agenas-service
+  template:
+    metadata:
+      labels:
+        app: agenas-service
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - agenas-service
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: agenas-service
+        image: harbor.agenas.oci/agenas/agenas-service:2026.10.06-test.1791280000 # {"$imagepolicy": "flux-system:agenas-service-test"}
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: agenas-service-config-env
+        env:
+        - name: TEMPLATE_DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-agenas-service-app
+              key: uri
+        ports:
+        - containerPort: 8000
+          name: web
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: web
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: web
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agenas-service
+  labels:
+    app: agenas-service
+spec:
+  ports:
+    - name: web
+      port: 8000
+      targetPort: web
+  selector:
+    app: agenas-service
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agenas-service-ingress
+spec:
+  ingressClassName: traefik-int
+  rules:
+  - host: "agenas-service.agenas-stg.oci"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: agenas-service
+            port:
+              name: web

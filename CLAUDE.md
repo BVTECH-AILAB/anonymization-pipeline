@@ -50,7 +50,7 @@ GP (doctor, SPID/CIE)
 | Language | Python 3.12, type hints everywhere (`list[str]`, `X \| None`) |
 | Packages | `uv` only. Never `pip install`, never `python ...` without `uv run` |
 | Web | FastAPI + uvicorn, app factory `create_app()` in `main.py`, routers in `api/` |
-| Config | pydantic-settings, `config.py`, env prefix `TEMPLATE_` |
+| Config | pydantic-settings, `config.py`, env prefix `ANONPIP_` |
 | Database | PostgreSQL 17, SQLAlchemy 2 async + asyncpg, schema via Alembic only |
 | HTTP client | `httpx.AsyncClient`, created in `lifespan`, stored on `app.state` |
 | Lint / format | ruff (`print()` is banned by rule T20) |
@@ -90,7 +90,7 @@ and `just test-int` passes if the change touches the database.
   (integration tests, created by `scripts/db-init/`).
 - **We do not provision databases ourselves.** In staging/prod the platform
   team creates a CloudNativePG cluster and the service receives one variable,
-  `TEMPLATE_DATABASE_URL`, from the CNPG secret (`<cluster>-app`, key `uri`).
+  `ANONPIP_DATABASE_URL`, from the CNPG secret (`<cluster>-app`, key `uri`).
   `config.py` already converts that `postgresql://` URI to the asyncpg driver.
 - Schema changes go **only** through Alembic migrations in `migrations/versions/`.
   Never `Base.metadata.create_all()`, never DDL in application code.
@@ -139,7 +139,7 @@ Details and examples in `docs/LOGGING_AND_PRIVACY.md`. Rules:
   be logged in local and staging for debugging, only:
   - through `redact_user_text(text, settings)`, never directly;
   - at `DEBUG` level;
-  - when `TEMPLATE_EXTENDED_LOG_CONTEXT=true` is set. It is off by default,
+  - when `ANONPIP_EXTENDED_LOG_CONTEXT=true` is set. It is off by default,
     so switch it on only for the time the investigation needs.
   In prod `redact_user_text` always returns `<redacted>` (the flag is forced
   off and DEBUG is forced to INFO). In every environment it still masks
@@ -183,7 +183,7 @@ Details and examples in `docs/LOGGING_AND_PRIVACY.md`. Rules:
 - In the cluster, secrets come from Vault via External Secrets, or from the
   CNPG secret for the database. The platform team wires them. They never
   appear in logs.
-- `TEMPLATE_ENVIRONMENT` defaults to `prod`, the most conservative
+- `ANONPIP_ENVIRONMENT` defaults to `prod`, the most conservative
   behaviour: redaction on, DEBUG off, OpenAPI docs off.
 
 ## 9. API conventions

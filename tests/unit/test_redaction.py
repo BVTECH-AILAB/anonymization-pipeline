@@ -147,3 +147,21 @@ def test_single_value_without_a_call() -> None:
     groups, _ = asyncio.run(group_entities([E("Mario Rossi", "PERSONA")], client, cfg))
 
     assert len(groups) == 1 and client.calls == []
+
+
+def test_common_words_in_lowercase_are_not_redacted() -> None:
+    cfg = pipeline_config()
+    groups, _ = _groups(cfg, [E("Rossi", "COGNOME")])
+
+    pages, _ = redact(["Paziente Rossi, globuli rossi"], groups, cfg)
+
+    assert pages == ["Paziente [COGNOME_1], globuli rossi"]
+
+
+def test_initials_are_not_redacted_inside_dotted_abbreviations() -> None:
+    cfg = pipeline_config()
+    groups, _ = _groups(cfg, [E("M.", "PERSONA")])
+
+    pages, _ = redact(["Rossi M. - U.M. mg/dL"], groups, cfg)
+
+    assert pages == ["Rossi [PERSONA_1] - U.M. mg/dL"]

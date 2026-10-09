@@ -26,10 +26,10 @@ def _normalize(s: str) -> str:
 
 def _literal(text: str, value: str, a: Anchoring) -> list[Span]:
     pattern = r"[*_]*\s+[*_]*".join(re.escape(word) for word in value.split())
-    flags = re.I if len(value) > a.case_insensitive_over else 0
-    return [
-        m.span() for m in re.finditer(r"(?<!\w)" + pattern + r"(?!\w)", text, flags)
-    ]
+    short = len(value) <= a.case_insensitive_over
+    flags = 0 if short else re.I
+    before = r"(?<!\w)(?<!\w\.)" if short else r"(?<!\w)"  # short: never inside "U.M."
+    return [m.span() for m in re.finditer(before + pattern + r"(?!\w)", text, flags)]
 
 
 def _approximate(text: str, value: str, threshold: float) -> list[Span]:

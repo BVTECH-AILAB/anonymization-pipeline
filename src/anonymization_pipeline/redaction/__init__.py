@@ -10,6 +10,7 @@ import re
 from collections import Counter
 from typing import Any
 
+from anonymization_pipeline.detectors import eponyms
 from anonymization_pipeline.domain import Entity, Group, Occurrence
 from anonymization_pipeline.pipeline_config import (
     PipelineConfig,
@@ -142,6 +143,7 @@ def redact(
     anchoring = cfg.phases.detection.anchoring.model_copy(
         update={"fuzzy": 0}
     )  # forms are exact substrings
+    filtered = cfg.phases.detection.detectors.eponyms
     forms: dict[str, int] = {}
     for gi, group in enumerate(groups):
         for entity in group.values:
@@ -152,6 +154,7 @@ def redact(
             (s, e, gi)
             for form, gi in forms.items()
             for s, e in find(text, form, anchoring)
+            if not (filtered and eponyms.is_excluded(text[s:e], groups[gi].category))
         ]
         chosen: list[tuple[int, int, int]] = []
         for s, e, gi in sorted(candidates, key=lambda x: (-(x[1] - x[0]), x[0])):

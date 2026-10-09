@@ -166,3 +166,15 @@ def test_detectors_are_independent() -> None:
                     assert module.startswith((*allowed, own)), (
                         f"{path.name} imports {module}"
                     )
+
+
+def test_common_words_are_discarded_where_found_in_lowercase() -> None:
+    text = "Paziente: ROSSI MARIO\nEritrociti (globuli rossi) 5,11\n"
+    model = IdealModel({"ROSSI MARIO": "PERSONA", "ROSSI": "COGNOME"})
+
+    outcome, _ = _detect(model, _cfg(), text)
+
+    assert ("ROSSI", "COGNOME") in _found(outcome)
+    assert ("rossi", "COGNOME") not in _found(outcome)
+    outcome, _ = _detect(model, _cfg({"eponyms": False}), text)
+    assert ("rossi", "COGNOME") in _found(outcome)

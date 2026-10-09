@@ -75,6 +75,7 @@ def _anchor(
         outcome.eponyms_discarded = len(proposals) - len(kept)
         proposals = kept
     forms: dict[tuple[str, str], None] = {}
+    filtered = cfg.phases.detection.detectors.eponyms
     for proposal in proposals:
         category = proposal.category
         if category not in active:
@@ -87,6 +88,13 @@ def _anchor(
         if not spans:
             outcome.hallucinations_discarded += 1
             continue
+        if filtered:
+            spans = [
+                (s, e) for s, e in spans if not eponyms.is_excluded(text[s:e], category)
+            ]
+            if not spans:
+                outcome.eponyms_discarded += 1
+                continue
         for s, e in spans:
             forms.setdefault((text[s:e], category))
     outcome.entities = [

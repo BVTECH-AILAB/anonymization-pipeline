@@ -57,3 +57,12 @@ def test_tag_category() -> None:
 
     assert tag_category("[CODICE_FISCALE_2]", cfg) == "CODICE_FISCALE"
     assert tag_category("█████", cfg) is None
+
+
+def test_short_values_never_inside_dotted_abbreviations() -> None:
+    a = _anchoring()
+
+    assert find("U.M. mg/dL", "M.", a) == []
+    assert find("U.M. mg/dL", "M", a) == []
+    assert [s for s, _ in find("Rossi M. e M. Rossi", "M.", a)] == [6, 11]
+    assert find("Dott.Rossi", "Rossi", a)  # longer values keep the plain word boundary

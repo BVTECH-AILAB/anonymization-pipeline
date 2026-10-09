@@ -13,6 +13,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from anonymization_pipeline.detectors.base import Proposal
+from anonymization_pipeline.detectors.patterns import compile_regex, fragments
 from anonymization_pipeline.detectors.rules.validators import (
     luhn,
     valid_card,
@@ -142,7 +143,6 @@ VALIDATORS: dict[str, Callable[[str], bool]] = {
 
 # ----------------------------------------------------------------------------- loading
 
-_REFERENCE = re.compile(r"\$\{(\w+)\}")
 _SPEC_KEYS = {
     "category",
     "regex",
@@ -160,33 +160,10 @@ def _error(where: str, message: str) -> ValueError:
     return ValueError(f"invalid {FILE} ({where}): {message}")
 
 
-def _substitute(
-    text: str, raw: dict[str, str], where: str, chain: tuple[str, ...] = ()
-) -> str:
-    """Replace ``${name}`` with the fragment (also nested)."""
-
-    def one(match: re.Match[str]) -> str:
-        name = match.group(1)
-        if name not in raw:
-            raise _error(where, f"unknown fragment ${{{name}}}")
-        if name in chain:
-            raise _error(where, f"recursive fragment ${{{name}}}")
-        return _substitute(raw[name], raw, where, (*chain, name))
-
-    return _REFERENCE.sub(one, text)
-
-
 def _compile(
     text: Any, raw: dict[str, str], where: str, flags: int = 0
 ) -> re.Pattern[str]:
-    if isinstance(text, list):  # expression split into pieces
-        text = "".join(str(p) for p in text)
-    if not isinstance(text, str) or not text:
-        raise _error(where, "missing or non-text expression")
-    try:
-        return re.compile(_substitute(text, raw, where), flags)
-    except re.error as exc:
-        raise _error(where, f"invalid regular expression: {exc}") from None
+    return compile_regex(text, raw, f"invalid {FILE} ({where})", flags)
 
 
 def _category(value: Any, where: str) -> str:
@@ -266,10 +243,7 @@ def _spec(
 def rules() -> Rules:
     """Rules of ``rules.yaml`` (read and compiled at first use, then cached)."""
     data = read_yaml(FILE)
-    raw = {
-        str(k): "|".join(str(x) for x in v) if isinstance(v, list) else str(v)
-        for k, v in (data.get("fragments") or {}).items()
-    }
+    raw = fragments(data.get("fragments") or {}, f"invalid {FILE} (fragments)")
     contexts = {
         str(k): _compile(v, raw, f"contexts.{k}", re.I)
         for k, v in (data.get("contexts") or {}).items()

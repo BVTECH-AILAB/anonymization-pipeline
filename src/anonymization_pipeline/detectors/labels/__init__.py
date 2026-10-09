@@ -16,6 +16,12 @@ from dataclasses import dataclass
 from typing import Any
 
 from anonymization_pipeline.detectors.base import Proposal
+from anonymization_pipeline.detectors.patterns import (
+    compile_regex,
+    expand,
+    fragments,
+    source,
+)
 from anonymization_pipeline.pipeline_config import registry
 from anonymization_pipeline.pipeline_config.resources import read_yaml
 
@@ -111,38 +117,12 @@ def _words(value: Any, where: str) -> frozenset[str]:
     return frozenset(str(p).lower() for p in value)
 
 
-def _substitute(text: Any, fragments: dict[str, str], where: str) -> str:
-    if not isinstance(text, str):
-        raise ValueError(f"{where}: expected a regex (quoted string), found {text!r}")
-
-    def fragment(match: re.Match[str]) -> str:
-        if match.group(1) not in fragments:
-            raise ValueError(
-                f"{where}: unknown fragment ${{{match.group(1)}}} (defined: {', '.join(fragments) or 'none'})"
-            )
-        return fragments[match.group(1)]
-
-    return re.sub(r"\$\{(\w+)\}", fragment, text)
-
-
-def _regex(
-    text: Any, fragments: dict[str, str], where: str, flags: int = 0
-) -> re.Pattern[str]:
-    source = _substitute(text, fragments, where)
-    try:
-        return re.compile(source, flags)
-    except re.error as exc:
-        raise ValueError(f"{where}: invalid regex ({exc})") from None
-
-
-def _shape(
-    kind: str, raw: dict, fragments: dict[str, str], where: str
-) -> dict[str, Any]:
+def _shape(kind: str, raw: dict, defined: dict[str, str], where: str) -> dict[str, Any]:
     shape: dict[str, Any] = {}
     for key, value in raw.items():
         if key in ("pattern", "end"):
-            shape[key] = _regex(
-                value, fragments, f"{where}.{key}", re.I if key == "pattern" else 0
+            shape[key] = compile_regex(
+                value, defined, f"{where}.{key}", re.I if key == "pattern" else 0
             )
         elif key == "particles":
             shape[key] = _words(value, f"{where}.{key}")
@@ -164,17 +144,16 @@ def rules() -> LabelRules:
     """Rules of ``labels.yaml`` (read and compiled at first use, then cached)."""
     data = _keys(read_yaml(FILE), _KEYS, f"invalid labels in {FILE}")
 
-    # fragments, resolved in order (each one may use the previous ones)
-    fragments: dict[str, str] = {}
     _keys(
         data["fragments"], _FRAGMENTS, f"{FILE}, fragments", allowed=data["fragments"]
     )
-    for key, value in data["fragments"].items():
-        fragments[str(key)] = _regex(
-            value, fragments, f"{FILE}, fragment '{key}'"
-        ).pattern
+    raw = fragments(data["fragments"], f"{FILE}, fragments")
+    defined = {
+        name: compile_regex(text, raw, f"{FILE}, fragment '{name}'").pattern
+        for name, text in raw.items()
+    }
 
-    letter = _regex(data["letter"], fragments, f"{FILE}, letter").pattern
+    letter = compile_regex(data["letter"], defined, f"{FILE}, letter").pattern
 
     _keys(data["shapes"], (), f"{FILE}, shapes", allowed=data["shapes"])
     if unknown := sorted(set(map(str, data["shapes"])) - set(KINDS)):
@@ -186,27 +165,27 @@ def rules() -> LabelRules:
         where = f"{FILE}, shapes.{kind}"
         if kind not in data["shapes"]:
             raise ValueError(f"{where}: missing the shape of kind '{kind}'")
-        raw = _keys(
+        values = _keys(
             data["shapes"][kind] or {},
             _SHAPES[kind],
             where,
             (*_SHAPES[kind], "pattern", "max_len"),
         )
-        shapes[kind] = _shape(kind, raw, fragments, where)
+        shapes[kind] = _shape(kind, values, defined, where)
 
     defaults = _keys(data["defaults"], _DEFAULTS, f"{FILE}, defaults")
-    labels = tuple(_labels(data["labels"], defaults, shapes, fragments, letter))
+    labels = tuple(_labels(data["labels"], defaults, shapes, defined, letter))
     if not labels:
         raise ValueError(f"{FILE}: no label defined")
 
     return LabelRules(
         labels=labels,
         any_label=re.compile("|".join(label.regex.pattern for label in labels), re.I),
-        separator=_regex(data["separator"], fragments, f"{FILE}, separator"),
+        separator=compile_regex(data["separator"], defined, f"{FILE}, separator"),
         leading_title=re.compile(
-            r"\s*(?:" + fragments["titles"] + r")(?![A-Za-z])\s*", re.I
+            r"\s*(?:" + defined["titles"] + r")(?![A-Za-z])\s*", re.I
         ),
-        name_token=re.compile(fragments["name_token"] + r"\.?"),
+        name_token=re.compile(defined["name_token"] + r"\.?"),
         stop_values=_words(data["stop_values"], f"{FILE}, stop_values"),
         shapes=shapes,
     )
@@ -216,7 +195,7 @@ def _labels(
     groups: Any,
     defaults: dict,
     shapes: dict[str, dict[str, Any]],
-    fragments: dict[str, str],
+    defined: dict[str, str],
     letter: str,
 ) -> Iterable[Label]:
     if not isinstance(groups, dict):
@@ -243,23 +222,20 @@ def _labels(
                 )
             if not isinstance(merged["need_sep"], bool):
                 raise ValueError(f"{where}: need_sep must be true or false")
-            alternatives = (
-                merged["regex"]
-                if isinstance(merged["regex"], list)
-                else [merged["regex"]]
+            inner = expand(source(merged["regex"], where), defined, where)
+            regex = compile_regex(
+                f"(?<!{letter})(?:{inner})(?!{letter})", {}, where, re.I
             )
-            if not alternatives:
-                raise ValueError(f"{where}: empty regex")
-            inner = "|".join(_substitute(a, fragments, where) for a in alternatives)
-            regex = _regex(f"(?<!{letter})(?:{inner})(?!{letter})", {}, where, re.I)
-            stop = _regex(merged["stop"], fragments, f"{where}, stop").pattern
+            stop = compile_regex(merged["stop"], defined, f"{where}, stop").pattern
             max_len = _number(
                 entry.get("max_len", shapes[kind].get("max_len", defaults["max_len"])),
                 f"{where}, max_len",
             )
             min_len = _number(merged["min_len"], f"{where}, min_len")
             if "pattern" in entry:
-                pattern = _regex(entry["pattern"], fragments, f"{where}, pattern", re.I)
+                pattern = compile_regex(
+                    entry["pattern"], defined, f"{where}, pattern", re.I
+                )
             else:
                 pattern = shapes[kind].get("pattern")
             yield Label(

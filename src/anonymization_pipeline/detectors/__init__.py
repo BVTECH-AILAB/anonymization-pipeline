@@ -1,7 +1,8 @@
 """Text detectors that work in union with the VLM: rules, label -> value, NER.
 
 Every detector lives in its own module and does not know the others: they share only the
-interface of ``base`` (Proposal, Detector, DetectorUnavailable). This is the only place that knows
+interface of ``base`` (Proposal, Detector, DetectorUnavailable) and the regex syntax of their
+files (``patterns``). This is the only place that knows
 them all: it builds them, only when active in the configuration, in the reliability order used by
 the union.
 """

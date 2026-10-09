@@ -6,13 +6,14 @@
 #  Each label ("Cognome:", "Paziente:", "Nato a"...) tells which category the value following
 #  it belongs to (after the ":", in the next cell or on the line below) and what shape it has.
 #  Regular expressions are Python ones (re module) and must be written in single quotes:
-#  inside the quotes the only character to double is the quote itself ('').
+#  inside the quotes the only character to double is the quote itself (''). ${name} is replaced
+#  with a fragment (also nested) and a list is an alternation: the same syntax as rules.yaml
+#  (detectors/patterns.py).
 #  An error (invalid regex, unknown key or kind, nonexistent category) stops
 #  startup with a message that names the label.
 # =============================================================================
 
-# Reused regex fragments: the regexes of this file refer to them with ${name}
-# (a fragment can use the ones defined before it).
+# Reused regex fragments: the regexes of this file refer to them with ${name}.
 fragments:
   # word with a capital initial (proper names, also with an apostrophe or hyphen)
   name_token: '[A-ZÀ-Ü][A-Za-zÀ-ÿ''’\-]+'

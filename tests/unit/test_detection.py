@@ -149,10 +149,12 @@ def test_eponym_proposed_as_a_drug() -> None:
 
 
 def test_detectors_are_independent() -> None:
-    """Every detector imports only base, the configuration and external libraries: never another one."""
+    """Every detector imports only base, patterns, the configuration and external libraries: never
+    another one."""
     root = Path(detectors.__file__).parent
     allowed = (
         "anonymization_pipeline.detectors.base",
+        "anonymization_pipeline.detectors.patterns",
         "anonymization_pipeline.pipeline_config",
     )
     for name in ("rules", "labels", "ner"):

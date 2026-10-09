@@ -79,7 +79,7 @@ def check_invariant(
             for v, c in values
             if any(
                 # the occurrences redaction leaves on purpose ("globuli rossi") are not residuals
-                not (filtered and eponyms.is_excluded(text[s:e], c))
+                not (filtered and eponyms.is_excluded(text, s, e, c))
                 for s, e in find(text, v, anchoring, exclude)
             )
         ]

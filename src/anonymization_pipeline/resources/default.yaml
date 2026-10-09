@@ -103,7 +103,8 @@ phases:
       vlm: true                 # the passes above, with the VLM
       rules: true               # regex + checksum (CF, IBAN, VAT, cards, phones, ICD-10...): detectors/rules.yaml
       labels: true              # value after a label ("Codice paziente: ..."): detectors/labels.yaml
-      eponyms: true             # Parkinson, Valsalva, Coumadin... are not people: detectors/eponyms.yaml
+      eponyms: true             # "morbo di Parkinson", "Glasgow 15", Coumadin are not people (decided
+                                # on the context of each occurrence): detectors/eponyms.yaml
       ner:                      # token classification on CPU (image with the 'ner' extra, model in HF_HOME);
                                 # label map and filters: detectors/ner.yaml
         enabled: true

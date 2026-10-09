@@ -93,6 +93,30 @@ def test_text_end_to_end_and_restore() -> None:
     assert restore(result.markdown, result.encrypted_map, KEY) == TEXT
 
 
+def test_patient_with_an_eponym_surname_is_redacted(log_stream: io.StringIO) -> None:
+    """Parkinson the patient is redacted everywhere, the morbo di Parkinson is not a person."""
+    text = (
+        "Paziente: Parkinson Mario\nAffetto da morbo di Parkinson.\n"
+        "Il sig. Parkinson rientra a domicilio.\n"
+    )
+    model = IdealModel(
+        {"Parkinson Mario": "PERSONA", "Parkinson": "COGNOME"},
+        groups=[["Parkinson Mario", "Parkinson"]],
+    )
+    cfg = pipeline_config(
+        {"categories": {"groups": {"sanitari": False}}}, default_mode="tag"
+    )
+
+    result, _ = _run(model, cfg, data=text.encode(), key=None)
+
+    assert result.markdown == (
+        "Paziente: [PERSONA_1]\nAffetto da morbo di Parkinson.\n"
+        "Il sig. [PERSONA_1] rientra a domicilio.\n"
+    )
+    assert result.report["verification"]["outcome"] == "ok"
+    assert "Parkinson" not in log_stream.getvalue()
+
+
 def test_multipage_images_extracted_by_the_vlm() -> None:
     buffer = io.BytesIO()
     Image.new("RGB", (500, 300), "white").save(

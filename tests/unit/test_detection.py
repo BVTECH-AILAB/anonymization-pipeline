@@ -7,7 +7,6 @@ import pytest
 
 from anonymization_pipeline import detectors
 from anonymization_pipeline.detection import Outcome, detect
-from anonymization_pipeline.detectors.eponyms import is_excluded
 from anonymization_pipeline.domain import Document, Page
 from anonymization_pipeline.pipeline_config import PipelineConfig
 from tests.pipeline import FakeVLM, IdealModel, pipeline_config
@@ -134,18 +133,6 @@ def test_unavailable_ner_gives_a_warning(tmp_path: Path) -> None:
     assert "ner_unavailable" in outcome.warnings
     assert outcome.sources["ner"] == 0
     assert ("Mario Rossi", "PERSONA") in _found(outcome)
-
-
-def test_eponym_proposed_as_a_drug() -> None:
-    assert is_excluded("Valsalva", "FARMACO") and is_excluded("Valsalva", "MEDICO")
-    assert is_excluded("Coumadin", "PERSONA")
-    assert not is_excluded(
-        "Coumadin", "FARMACO"
-    )  # a real drug stays a drug (health data)
-    assert not is_excluded(
-        "Parkinson", "DIAGNOSI"
-    )  # a diagnosis is never left in clear text
-    assert is_excluded("rossi", "COGNOME") and not is_excluded("Rossi", "COGNOME")
 
 
 def test_detectors_are_independent() -> None:

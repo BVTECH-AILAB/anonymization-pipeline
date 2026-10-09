@@ -1,27 +1,73 @@
 # =============================================================================
-#  Eponyms and drug names that look like person names (anonymization_pipeline/detectors/eponyms.py)
+#  Eponyms, scales and drug names that look like person names (anonymization_pipeline/detectors/eponyms.py)
 #
-#  "Morbo di Parkinson", "manovra di Valsalva", "Coumadin": proper names or brand names that are
-#  not personal data. A value proposed by any detector (VLM included) in a person category
-#  (PERSONA family: NOME, COGNOME, MEDICO, FAMILIARE...) is discarded if it matches, in full,
-#  one of these words; eponyms even when proposed as FARMACO. The comparison ignores
-#  extra spaces.
-#  The entries come from the expected false positives of the synthetic corpus of the anonimizzatore
-#  project, plus the eponyms and drugs most common in medical reports. An unknown key stops startup.
+#  "Morbo di Parkinson", "segno di Giordano", "Glasgow 15", "Coumadin": proper names or brand names
+#  that are not personal data. Parkinson or Giordano can also be the surname of a patient, so the
+#  decision is taken on each occurrence of a value proposed by any detector (VLM included) in a
+#  person category (PERSONA family: NOME, COGNOME, MEDICO, FAMILIARE...):
+#    eponyms       discarded only in a medical context (see 'context'), or inside a compound of
+#                  the list ("Wolff-Parkinson-White"); elsewhere ("Sig. Giordano") redacted
+#    scales        as eponyms, and also when followed by a score ("Glasgow 15", "Killip I")
+#    nouns         names used as common nouns, never surnames in practice: always discarded
+#    drugs         brand names: always discarded (names of people are left out on purpose)
+#    common_words  discarded only when written in lowercase ("globuli rossi"): with a capital
+#                  initial they remain possible surnames
+#  A value proposed as FARMACO is discarded when it is an eponym, a scale or a noun ("manovra di
+#  Valsalva" is not a drug). The comparison ignores case (except common_words) and extra spaces.
+#  An entry in two lists, an unknown key or an invalid regex stops startup.
+#  Regex syntax as rules.yaml and labels.yaml (detectors/patterns.py).
 # =============================================================================
 
-# case-insensitive
+# -----------------------------------------------------------------------------
+# Context of an occurrence, on its own line (case-insensitive except 'score')
+# -----------------------------------------------------------------------------
+fragments:
+  # clinical terms that introduce an eponym, also without "di" ("manovra Valsalva")
+  clinical: [
+    morbo, malattia, sindrome, segno, segni, manovra, test, prova, riflesso, fenomeno, scala, score,
+    punteggio, indice, classificazione, criteri, criterio, stadio, stadiazione, grado, cisti, tendine,
+    legamento, cavo, dotto, ampolla, canale, fascio, poligono, 'ghiandol[ae]', tumore, linfoma, frattura,
+    ernia, diverticolo, ulcera, membrana, 'cellul[ae]', 'corp[io]', catetere, sonda, filo, chiodo,
+    intervento, tecnica, colorazione, reazione, triade, tetralogia, posizione, incisione, maschera,
+    respiro, polso, soffio, valvola, forame]
+  # abbreviations: only followed by a connector ("M. di Crohn"), "M." alone is an initial
+  abbreviations: ['m\.', 'sdr\.?', 's\.']
+  connector: [di, del, della, dello, dei, degli, delle, 'd''', 'd’', secondo, 'sec\.']
+
+context:
+  window: 40              # characters observed before and after the occurrence
+  # what must end right before the occurrence
+  before:
+    - '\b(?:${clinical})(?:\s+(?:${connector}))?'
+    - '\b(?:${abbreviations})\s*(?:${connector})'
+  # what must start right after the occurrence: an outcome ("Giordano negativo", "Murphy pos.",
+  # "Lasègue +"); a sign only at the end of the item, never the " - " separator of a name
+  after:
+    - '(?:debolmente\s+|lievemente\s+)?(?:positiv|negativ)\w*'
+    - '(?:pos|neg)\b\.?'
+    - 'dubbi[oa]\b'
+    - '[+−-](?=\s*(?:[,;.)]|$))'
+  # score after a scale ("Glasgow 15", "Gleason 3+4", "Apgar 9/10", "Killip I"); never an age or
+  # a date ("Clark 45 anni", "Clark 12/03/1980")
+  score: '(?:\d{1,3}(?:[.,]\d)?(?:\s*[+/]\s*\d{1,2})?|[IVX]{1,4}[ab]?(?![A-Za-z]))(?!\s*(?:anni|anno|aa)\b)(?![\d/\-])(?!\.\d)'
+
+# -----------------------------------------------------------------------------
+# Lists
+# -----------------------------------------------------------------------------
+# The entries come from the expected false positives of the synthetic corpus of the anonimizzatore
+# project, plus the eponyms, scales and drugs most common in medical reports.
 eponyms: [
-  Addison, Alzheimer, Apgar, Babinski, Barrett, Basedow, Bell, Blumberg, Brugada, Crohn, Cushing,
-  Doppler, Down, Dupuytren, Fallot, Giordano, Glasgow, Graves, Guillain, Guillain-Barré, Hashimoto,
-  Hodgkin, Holter, Horner, Kaposi, Lachman, Lasègue, Lasegue, Mallory, Mantoux, McMurray, Meniere,
-  Ménière, Murphy, Pap, Parkinson, Raynaud, Romberg, Rovsing, Segond, Sjögren, Sjogren, Valsalva,
+  Addison, Alzheimer, Babinski, Barrett, Basedow, Bell, Blumberg, Brugada, Crohn, Cushing,
+  Down, Dupuytren, Fallot, Giordano, Graves, Guillain, Guillain-Barré, Hashimoto,
+  Hodgkin, Horner, Kaposi, Lachman, Lasègue, Lasegue, Mallory, Mantoux, McMurray, Meniere,
+  Ménière, Murphy, Parkinson, Raynaud, Romberg, Rovsing, Segond, Sjögren, Sjogren, Valsalva,
   Wilson, Wolff-Parkinson-White]
 
-# drug brand names, case-insensitive
+scales: [Apgar, Glasgow]
+
+nouns: [Doppler, Holter, Pap]
+
 drugs: [
   Augmentin, Cardioaspirin, Coumadin, Eutirox, Lasix, Moment, Oki, Tachipirina, Tavor, Xanax]
 
-# common words discarded only when written in lowercase ("globuli rossi", "costa", "capelli bruni"):
-# with a capital initial they remain possible surnames
 common_words: [bianchi, bruno, costa, rossi, neri]

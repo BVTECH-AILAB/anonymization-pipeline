@@ -163,7 +163,7 @@ def redact(
             (s, e, gi)
             for form, gi in forms.items()
             for s, e in find(text, form, anchoring)
-            if not (filtered and eponyms.is_excluded(text[s:e], groups[gi].category))
+            if not (filtered and eponyms.is_excluded(text, s, e, groups[gi].category))
         ]
         chosen: list[tuple[int, int, int]] = []
         for s, e, gi in sorted(candidates, key=lambda x: (-(x[1] - x[0]), x[0])):

@@ -63,17 +63,14 @@ def _anchor(
 ) -> Outcome:
     """Proposed values -> entities anchored to the text.
 
-    Eponyms discarded (when the filter is on); an inactive category falls back to its generic one
-    if active, otherwise the value is discarded; a value not found in the text is a hallucination.
+    Occurrences that are eponyms in their context are discarded (when the filter is on); an
+    inactive category falls back to its generic one if active, otherwise the value is discarded; a
+    value not found in the text is a hallucination.
     """
     reg = registry()
     active = set(cfg.active())
     anchoring = cfg.phases.detection.anchoring
     outcome = Outcome()
-    if cfg.phases.detection.detectors.eponyms:
-        kept = eponyms.filter_proposals(proposals)
-        outcome.eponyms_discarded = len(proposals) - len(kept)
-        proposals = kept
     forms: dict[tuple[str, str], None] = {}
     filtered = cfg.phases.detection.detectors.eponyms
     for proposal in proposals:
@@ -90,7 +87,9 @@ def _anchor(
             continue
         if filtered:
             spans = [
-                (s, e) for s, e in spans if not eponyms.is_excluded(text[s:e], category)
+                (s, e)
+                for s, e in spans
+                if not eponyms.is_excluded(text, s, e, category)
             ]
             if not spans:
                 outcome.eponyms_discarded += 1

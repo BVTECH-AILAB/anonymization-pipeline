@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from anonmyzation_pipeline.privacy import (
+from anonymization_pipeline.privacy import (
     REDACTED,
     PiiRedactingFilter,
     hash_identifier,

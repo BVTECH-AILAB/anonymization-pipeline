@@ -5,7 +5,7 @@ import uuid
 
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-from anonmyzation_pipeline.logging_setup import request_id_var
+from anonymization_pipeline.logging_setup import request_id_var
 
 REQUEST_ID_HEADER = "x-request-id"
 _VALID_REQUEST_ID = re.compile(r"^[A-Za-z0-9_-]{8,64}$")

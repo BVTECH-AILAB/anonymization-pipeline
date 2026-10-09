@@ -12,8 +12,8 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from anonmyzation_pipeline.config import Settings
-from anonmyzation_pipeline.errors import ServiceUnavailableError
+from anonymization_pipeline.config import Settings
+from anonymization_pipeline.errors import ServiceUnavailableError
 
 logger = logging.getLogger(__name__)
 

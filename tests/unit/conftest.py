@@ -6,11 +6,11 @@ from datetime import UTC, datetime
 import pytest
 from fastapi.testclient import TestClient
 
-from anonmyzation_pipeline.config import Settings
-from anonmyzation_pipeline.db.models import Item
-from anonmyzation_pipeline.errors import NotFoundError
-from anonmyzation_pipeline.main import create_app
-from anonmyzation_pipeline.services.items import get_item_service
+from anonymization_pipeline.config import Settings
+from anonymization_pipeline.db.models import Item
+from anonymization_pipeline.errors import NotFoundError
+from anonymization_pipeline.main import create_app
+from anonymization_pipeline.services.items import get_item_service
 
 
 class FakeItemService:

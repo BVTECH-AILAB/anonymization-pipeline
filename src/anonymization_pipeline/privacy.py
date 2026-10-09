@@ -19,7 +19,7 @@ import logging
 import re
 from typing import Any
 
-from anonmyzation_pipeline.config import Settings
+from anonymization_pipeline.config import Settings
 
 REDACTED = "<redacted>"
 

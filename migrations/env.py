@@ -13,9 +13,9 @@ from alembic import context
 from sqlalchemy import Connection, text
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from anonmyzation_pipeline.config import get_settings
-from anonmyzation_pipeline.db.models import Base
-from anonmyzation_pipeline.logging_setup import setup_logging
+from anonymization_pipeline.config import get_settings
+from anonymization_pipeline.db.models import Base
+from anonymization_pipeline.logging_setup import setup_logging
 
 # Arbitrary constant, unique per service database.
 MIGRATION_LOCK_ID = 727_100_001

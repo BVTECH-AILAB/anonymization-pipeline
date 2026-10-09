@@ -7,9 +7,9 @@ from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from anonmyzation_pipeline.db.engine import get_session
-from anonmyzation_pipeline.db.models import Item
-from anonmyzation_pipeline.errors import NotFoundError
+from anonymization_pipeline.db.engine import get_session
+from anonymization_pipeline.db.models import Item
+from anonymization_pipeline.errors import NotFoundError
 
 
 class ItemService:

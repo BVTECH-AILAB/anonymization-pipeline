@@ -51,7 +51,7 @@ export function nuovoLavoro(file: File, o: Options, chiave: string | null): Prom
   const f = new FormData();
   f.append("file", file, file.name);
   f.append("mode", o.mode);
-  if (o.model) f.append("model", o.model);
+  for (const [fase, modello] of Object.entries(o.models ?? {})) if (modello) f.append(`model_${fase}`, modello);
   if (o.verification) f.append("verification", o.verification);
   if (o.extraction) f.append("extraction", o.extraction);
   if (o.enable.length) f.append("enable", o.enable.join(","));

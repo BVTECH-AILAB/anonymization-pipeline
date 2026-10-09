@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { salute } from "../api/client";
 import type { Status } from "../api/tipi";
 import { problemi } from "../componenti/BannerStato";
-import { nomeFonte, nomeModalita, nomeVerifica } from "../lib/nomi";
+import { nomeFase, nomeFonte, nomeModalita, nomeVerifica } from "../lib/nomi";
 
 function Voce({ ok, nome, dettaglio }: { ok: boolean | null | undefined; nome: string; dettaglio?: string }) {
   const stato = ok === null || ok === undefined ? "n.d." : ok ? "ok" : "assente";
@@ -34,7 +34,10 @@ export default function Stato() {
         <thead><tr><th>Componente</th><th>Stato</th><th>Dettaglio</th></tr></thead>
         <tbody>
           <Voce nome="Backend VLM" ok={s.backend.reachable} dettaglio={`${s.backend.kind}${s.backend.error ? " · " + s.backend.error : ""}`} />
-          <Voce nome="Modello" ok={s.model.present} dettaglio={s.model.name} />
+          {s.models.map((m) => (
+            <Voce key={m.name} nome="Modello VLM" ok={m.present}
+                  dettaglio={`${m.name} · ${m.phases.length ? m.phases.map(nomeFase).join(", ") : "nessuna fase predefinita"}`} />
+          ))}
           <Voce nome="NER" ok={r.ner.enabled ? r.ner.present : null} dettaglio={r.ner.enabled ? `${r.ner.model ?? ""}${r.ner.error ? " · " + r.ner.error : ""}` : "disattivato"} />
           <Voce nome="Docling" ok={s.docling.enabled ? !!(s.docling.installed && s.docling.models) : null}
                 dettaglio={s.docling.enabled ? `libreria ${s.docling.installed ? "sì" : "no"} · modelli ${s.docling.models ? "sì" : "no"}` : "motore vlm"} />

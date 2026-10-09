@@ -3,7 +3,7 @@ import { openDB } from "idb";
 import { describe, expect, it } from "vitest";
 import { dividiPagine, paginaDi } from "../lib/pagine";
 import { marca, rehypeMarcatori, segmenti, type Intervallo } from "../lib/evidenzia";
-import { nomeEsito, nomeFase, nomeFonte, nomeModalita, nomeMotivoRifiuto, nomeMotivoVlm, nomeVerifica, testoAvviso } from "../lib/nomi";
+import { etichettaModelli, nomeEsito, nomeFase, nomeFonte, nomeModalita, nomeMotivoRifiuto, nomeMotivoVlm, nomeVerifica, testoAvviso } from "../lib/nomi";
 import { esportaRevisione } from "../lib/revisione";
 import * as storico from "../lib/storico";
 import type { Report } from "../api/tipi";
@@ -64,7 +64,7 @@ describe("revisione", () => {
 
 const REPORT = {
   version: "0.1.0", document: { sha256: "f".repeat(64), kind: "pdf", pages: 2 },
-  extraction: { docling: [1, 2], vlm: [] }, model: { backend: "ollama", name: "gemma4:e4b-it-qat" }, mode: "redaction",
+  extraction: { docling: [1, 2], vlm: [] }, model: { backend: "ollama", phases: { extraction: "gemma4:26b-a4b-it-qat", detection: "gemma4:e4b-it-qat", redaction: "gemma4:e4b-it-qat", verification: "gemma4:26b-a4b-it-qat" } }, mode: "redaction",
   counts: { PERSONA: 2 }, entities: [], detection: { values: 2, sources: { rules: 1, vlm: 2 }, hallucinations_discarded: 0, inactive_categories: 0, eponyms_discarded: 0 },
   redaction: { coreference: "vlm", groups: 1 }, verification: { mode: "fix", outcome: "skipped", iterations: 1, residuals_fixed: 0, residuals: [] },
   vlm: { detection: { calls: 6, errors: 0, truncated: 0, tokens_in: 100, tokens_out: 10, duration_s: 3 } },
@@ -78,6 +78,7 @@ describe("storico", () => {
     await storico.rinomina(e.id, "E4B docling");
     const [x] = await storico.elenco();
     expect(x.etichetta).toBe("E4B docling");
+    expect(x.modello).toBe("gemma4:26b-a4b-it-qat + gemma4:e4b-it-qat");
     expect(x.modalita).toBe("redaction");
     expect(x.esito_verifica).toBe("skipped");
     expect(x.totale_s).toBe(12.1);
@@ -113,6 +114,13 @@ describe("nomi", () => {
     expect(["rules", "labels", "detection"].map(nomeFonte)).toEqual(["regole", "etichette", "rilevamento"]);
     expect(nomeFase("nuova_fase")).toBe("nuova_fase");
     expect(nomeFonte("toString")).toBe("toString");
+  });
+
+  it("modelli del report: nomi distinti in ordine di fase, anche dai report con un solo modello", () => {
+    const stesso = "gemma4:e4b-it-qat";
+    expect(etichettaModelli(REPORT.model)).toBe("gemma4:26b-a4b-it-qat + gemma4:e4b-it-qat");
+    expect(etichettaModelli({ backend: "ollama", phases: { extraction: stesso, detection: stesso, redaction: stesso, verification: stesso } })).toBe(stesso);
+    expect(etichettaModelli({ backend: "ollama", name: stesso })).toBe(stesso); // salvato prima dei modelli per fase
   });
 
   it("avvisi del report", () => {

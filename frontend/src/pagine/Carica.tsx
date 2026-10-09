@@ -2,13 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import * as api from "../api/client";
 import type { Categories, Models, Options, Phase } from "../api/tipi";
-import { nomeFase, nomeModalita, nomeMotivoRifiuto } from "../lib/nomi";
+import { FASI_VLM, nomeFase, nomeModalita, nomeMotivoRifiuto } from "../lib/nomi";
 import { useSessione, type Documento } from "../stato/sessione";
 
 const FASI: Phase[] = ["ingest", "extraction", "detection", "redaction", "verification"];
 const ESTENSIONI = ".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.webp,.txt,.md,.csv,.json,.xml,.html,.eml";
 
-const PREDEFINITE: Options = { model: "", mode: "pseudonym", verification: "", extraction: "", enable: [], disable: [], transcript: false };
+const PREDEFINITE: Options = { models: {}, mode: "pseudonym", verification: "", extraction: "", enable: [], disable: [], transcript: false };
+
+/** "rilevamento gemma4:e4b-it-qat" per le fasi con un modello scelto (le opzioni salvate prima dei modelli
+ *  per fase non hanno models). */
+const modelliScelti = (o: Options) => FASI_VLM.filter((f) => o.models?.[f]).map((f) => `${nomeFase(f)} ${o.models[f]}`);
 
 function Avanzamento({ d }: { d: Documento }) {
   const l = d.lavoro;
@@ -141,14 +145,6 @@ export default function Carica() {
           <h2 style={{ marginTop: 0 }}>Opzioni della richiesta</h2>
           <div className="griglia-opzioni">
             <label>
-              Modello VLM
-              <select value={o.model} onChange={(e) => setO({ ...o, model: e.target.value })} onFocus={leggiModelli}>
-                <option value="">predefinito{mod ? ` (${mod.default})` : ""}</option>
-                {mod?.models.filter((m) => m !== mod.default).map((m) => <option key={m} value={m}>{m}</option>)}
-              </select>
-              {mod?.error && <span className="nota errore">elenco non disponibile: {mod.error}</span>}
-            </label>
-            <label>
               Modalità
               <select value={o.mode} onChange={(e) => setO({ ...o, mode: e.target.value as Options["mode"] })}>
                 <option value="pseudonym">pseudonimo (tag + mappa cifrata)</option>
@@ -175,6 +171,24 @@ export default function Carica() {
               </select>
             </label>
           </div>
+          <h3>Modelli VLM per fase</h3>
+          <div className="griglia-opzioni">
+            {FASI_VLM.map((f) => (
+              <label key={f}>
+                {nomeFase(f)}
+                <select value={o.models[f] ?? ""} onChange={(e) => setO({ ...o, models: { ...o.models, [f]: e.target.value } })}
+                        onFocus={leggiModelli}>
+                  <option value="">predefinito{mod ? ` (${mod.defaults[f]})` : ""}</option>
+                  {mod?.models.filter((m) => m.name !== mod.defaults[f]).map((m) => (
+                    <option key={m.name} value={m.name} disabled={m.present !== true}>
+                      {m.name}{m.present === false ? " (assente nel backend)" : ""}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ))}
+          </div>
+          {mod?.error && <p className="nota errore">elenco dei modelli non disponibile: {mod.error}</p>}
           {cat && (
             <details style={{ marginTop: 10 }}>
               <summary>Gruppi di categorie ({o.disable.length + o.enable.length} modifiche)</summary>
@@ -218,7 +232,7 @@ export default function Carica() {
             {s.documenti.map((d) => (
               <tr key={d.id}>
                 <td>{d.nome}{d.errore && <div className="nota errore">{d.errore}</div>}</td>
-                <td>{nomeModalita(d.opzioni.mode)}{d.opzioni.transcript ? " + trascrizione" : ""}{d.opzioni.model && <div className="nota">{d.opzioni.model}</div>}</td>
+                <td>{nomeModalita(d.opzioni.mode)}{d.opzioni.transcript ? " + trascrizione" : ""}{modelliScelti(d.opzioni).length > 0 && <div className="nota">{modelliScelti(d.opzioni).join(" · ")}</div>}</td>
                 <td><Avanzamento d={d} /></td>
                 <td className="num"><Durata d={d} /></td>
                 <td>

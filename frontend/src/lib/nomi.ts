@@ -1,6 +1,8 @@
 // Nomi italiani, per l'interfaccia, dei valori dell'API (in inglese). Un valore sconosciuto (es. di una
 // versione piu' recente del servizio) resta com'e'.
 
+import type { Report, VlmPhase } from "../api/tipi";
+
 const FASI: Record<string, string> = {
   ingest: "acquisizione",
   extraction: "estrazione",
@@ -55,6 +57,15 @@ export const nomeEsito = (v: string) => nome(ESITI, v);
 export const nomeMotivoRifiuto = (v: string) => nome(MOTIVI_RIFIUTO, v);
 export const nomeMotivoVlm = (v: string) => nome(MOTIVI_VLM, v);
 export const nomeFonte = (v: string) => nome(FONTI, v);
+
+export const FASI_VLM: VlmPhase[] = ["extraction", "detection", "redaction", "verification"];
+
+/** Modelli di un report: i nomi distinti in ordine di fase ("a + b"); il nome unico nei report precedenti. */
+export function etichettaModelli(m: Report["model"]): string {
+  if (!m.phases) return m.name ?? "";
+  const phases = m.phases;
+  return [...new Set(FASI_VLM.map((f) => phases[f]))].join(" + ");
+}
 
 /** "extraction_truncated:page_3" -> "estrazione troncata (pagina 3)", "ner_unavailable" -> "ner non disponibile". */
 export function testoAvviso(a: string): string {

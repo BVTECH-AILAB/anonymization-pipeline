@@ -3,6 +3,8 @@
 
 export type JobStatus = "queued" | "running" | "completed" | "rejected" | "error" | "cancelled";
 export type Phase = "ingest" | "extraction" | "detection" | "redaction" | "verification" | "completed";
+/** Fasi che chiamano il VLM: ognuna ha il suo modello. */
+export type VlmPhase = "extraction" | "detection" | "redaction" | "verification";
 export type Mode = "pseudonym" | "tag" | "redaction";
 export type VerificationMode = "off" | "report" | "fix" | "block";
 export type ExtractionEngine = "docling" | "vlm";
@@ -74,7 +76,8 @@ export interface Report {
   version: string;
   document: { sha256: string; kind: string; pages: number };
   extraction: { docling: number[]; vlm: { page: number; reason: string }[] };
-  model: { backend: string; name: string };
+  // name: report salvati prima dei modelli per fase (un solo modello)
+  model: { backend: string; phases?: Record<VlmPhase, string>; name?: string };
   mode: string;
   counts: Record<string, number>;
   entities: { replacement: string; category: string; variants: number; sources: string[]; occurrences: number | null }[];
@@ -103,8 +106,7 @@ export interface Metrics {
   document: { sha256: string; kind: string; pages: number; bytes: number };
   configuration: {
     backend: string;
-    model: string;
-    context: number;
+    models: Record<VlmPhase, { name: string; context: number }>;
     concurrency: number;
     extraction: string;
     detectors: string[];
@@ -155,7 +157,8 @@ export interface Status {
   status: "ready" | "unavailable";
   version: string;
   backend: { kind: string; reachable: boolean; error: string | null };
-  model: { name: string; present: boolean | null };
+  // catalogo del file dei modelli; phases: le fasi di cui e' il predefinito
+  models: { name: string; present: boolean | null; phases: VlmPhase[] }[];
   detectors: {
     vlm: boolean;
     rules: boolean;
@@ -175,15 +178,16 @@ export interface Categories {
   descriptions: Record<string, string>;
 }
 
+/** GET /models: il catalogo (present: nel backend, null se non raggiungibile) e il predefinito di ogni fase. */
 export interface Models {
-  default: string;
-  models: string[];
+  defaults: Record<VlmPhase, string>;
+  models: { name: string; context: number; present: boolean | null }[];
   error: string | null;
 }
 
 /** Opzioni del modulo di caricamento: i campi di POST /jobs. */
 export interface Options {
-  model: string; // "" = predefinito
+  models: Partial<Record<VlmPhase, string>>; // fase assente o "" = predefinito
   mode: Mode;
   verification: "" | VerificationMode; // "" = predefinita
   extraction: "" | ExtractionEngine; // "" = predefinita

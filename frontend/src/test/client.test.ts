@@ -17,7 +17,10 @@ const STATO: Status = {
   status: "unavailable",
   version: "0.1.0",
   backend: { kind: "ollama", reachable: true, error: null },
-  model: { name: "gemma4:26b-a4b-it-qat", present: false },
+  models: [
+    { name: "gemma4:26b-a4b-it-qat", present: false, phases: ["extraction", "detection", "redaction", "verification"] },
+    { name: "gemma4:e4b-it-qat", present: false, phases: [] }, // nel catalogo, di nessuna fase
+  ],
   detectors: { vlm: true, rules: true, labels: true, eponyms: true, ner: { enabled: true, model: "ner-it", present: false, error: "modello assente" } },
   docling: { enabled: true, installed: true, models: false },
   mode: "pseudonym",
@@ -25,11 +28,13 @@ const STATO: Status = {
   active_categories: 30,
 };
 
+const presenti = (present: boolean | null): Status["models"] => STATO.models.map((m) => ({ ...m, present }));
+
 describe("client API", () => {
   it("accoda un lavoro con le opzioni, senza header di autenticazione", async () => {
     const f = finto(202, { id: "x", status: "queued" });
     const file = new File(["ciao"], "nota.txt");
-    await api.nuovoLavoro(file, { model: "qwen3.5:4b", mode: "pseudonym", verification: "", extraction: "vlm", enable: [], disable: ["sanitari", "date"], transcript: true }, "K");
+    await api.nuovoLavoro(file, { models: { detection: "gemma4:e4b-it-qat", verification: "" }, mode: "pseudonym", verification: "", extraction: "vlm", enable: [], disable: ["sanitari", "date"], transcript: true }, "K");
     const [url, init] = chiamata(f);
     expect(url).toBe("/api/jobs");
     expect(init?.method).toBe("POST");
@@ -37,7 +42,8 @@ describe("client API", () => {
     const body = init?.body as FormData;
     expect(body.get("mode")).toBe("pseudonym");
     expect(body.get("extraction")).toBe("vlm");
-    expect(body.get("model")).toBe("qwen3.5:4b");
+    expect(body.get("model_detection")).toBe("gemma4:e4b-it-qat");
+    for (const campo of ["model", "model_extraction", "model_redaction", "model_verification"]) expect(body.has(campo)).toBe(false);
     expect(body.get("disable")).toBe("sanitari,date");
     expect(body.has("enable")).toBe(false);
     expect(body.get("transcript")).toBe("true");
@@ -47,12 +53,12 @@ describe("client API", () => {
 
   it("la chiave parte solo in modalità pseudonimo", async () => {
     const f = finto(202, { id: "x", status: "queued" });
-    await api.nuovoLavoro(new File(["ciao"], "nota.txt"), { model: "", mode: "tag", verification: "block", extraction: "", enable: ["date"], disable: [], transcript: false }, "K");
+    await api.nuovoLavoro(new File(["ciao"], "nota.txt"), { models: {}, mode: "tag", verification: "block", extraction: "", enable: ["date"], disable: [], transcript: false }, "K");
     const body = chiamata(f)[1]?.body as FormData;
     expect(body.get("mode")).toBe("tag");
     expect(body.get("verification")).toBe("block");
     expect(body.get("enable")).toBe("date");
-    for (const campo of ["key", "model", "extraction", "transcript", "disable"]) expect(body.has(campo)).toBe(false);
+    for (const campo of ["key", "model_detection", "extraction", "transcript", "disable"]) expect(body.has(campo)).toBe(false);
   });
 
   it("percorsi di lavori, risultato, catalogo e ripristino", async () => {
@@ -94,7 +100,7 @@ describe("client API", () => {
   });
 
   it("/readyz: servizio pronto", async () => {
-    const f = finto(200, { ...STATO, status: "ready", model: { ...STATO.model, present: true } });
+    const f = finto(200, { ...STATO, status: "ready", models: presenti(true) });
     expect((await api.salute()).status).toBe("ready");
     expect(chiamata(f)[0]).toBe("/api/readyz");
   });
@@ -124,10 +130,11 @@ describe("client API", () => {
 
 describe("stato del servizio", () => {
   it("backend non raggiungibile, servizio non pronto, componenti spenti", () => {
-    const giu: Status = { ...STATO, backend: { ...STATO.backend, reachable: false, error: "ConnectError" }, model: { ...STATO.model, present: null } };
+    const giu: Status = { ...STATO, backend: { ...STATO.backend, reachable: false, error: "ConnectError" }, models: presenti(null) };
     expect(problemi(giu)[0]).toBe("backend VLM non raggiungibile");
-    expect(problemi({ ...STATO, model: { ...STATO.model, present: true } })[0]).toBe("servizio non pronto");
-    const spenti: Status = { ...STATO, status: "ready", model: { ...STATO.model, present: true }, detectors: { ...STATO.detectors, ner: { enabled: false } }, docling: { enabled: false } };
+    expect(problemi({ ...STATO, models: presenti(true) })[0]).toBe("servizio non pronto");
+    // un modello del catalogo che nessuna fase usa non e' un problema
+    const spenti: Status = { ...STATO, status: "ready", models: [{ ...STATO.models[0], present: true }, STATO.models[1]], detectors: { ...STATO.detectors, ner: { enabled: false } }, docling: { enabled: false } };
     expect(problemi(spenti)).toEqual([]);
   });
 });

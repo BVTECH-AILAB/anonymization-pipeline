@@ -48,9 +48,9 @@ src/
 | Endpoint | Uso |
 |---|---|
 | `GET /readyz` | Banner e pagina Stato. 200 se il servizio è pronto, 503 se non lo è, con lo stesso corpo: l'interfaccia mostra lo stato in entrambi i casi |
-| `GET /models` | Menu Modello VLM (modello predefinito ed elenco del backend) |
+| `GET /models` | Menu dei modelli VLM per fase (catalogo del file dei modelli, predefinito di ogni fase, presenza nel backend) |
 | `GET /categories` | Gruppi di categorie da abilitare o disabilitare; categorie per la revisione |
-| `POST /jobs` | Un lavoro per file (202). Campi: `file`, `mode` (`pseudonym`, `tag`, `redaction`), `model`, `verification` (`off`, `report`, `fix`, `block`), `extraction` (`docling`, `vlm`), `enable`, `disable` (gruppi separati da virgole), `transcript`, `key` (solo in modalità pseudonimo) |
+| `POST /jobs` | Un lavoro per file (202). Campi: `file`, `mode` (`pseudonym`, `tag`, `redaction`), `model_extraction`, `model_detection`, `model_redaction`, `model_verification` (solo le fasi con un modello diverso dal predefinito), `verification` (`off`, `report`, `fix`, `block`), `extraction` (`docling`, `vlm`), `enable`, `disable` (gruppi separati da virgole), `transcript`, `key` (solo in modalità pseudonimo) |
 | `GET /jobs/{id}` | Avanzamento del lavoro: stato, fase, iterazione, chiamate al VLM |
 | `GET /jobs/{id}/result` | Risultato in JSON; con `?format=zip` lo ZIP da scaricare |
 | `DELETE /jobs/{id}` | Rimuovi e Svuota sessione |

@@ -7,7 +7,7 @@ import type { RestoreDetail } from "../api/tipi";
 import VistaOriginale from "../componenti/VistaOriginale";
 import VistaTesto from "../componenti/VistaTesto";
 import { colore, type Intervallo } from "../lib/evidenzia";
-import { nomeFonte } from "../lib/nomi";
+import { etichettaModelli, nomeFonte } from "../lib/nomi";
 import { dividiPagine } from "../lib/pagine";
 import { esportaRevisione, type TipoVoce, type VoceRevisione } from "../lib/revisione";
 import { useSessione } from "../stato/sessione";
@@ -216,7 +216,7 @@ export default function Confronto() {
             <h3 style={{ margin: 0 }}>Revisione ({revisione.length})</h3>
             <button className="piccolo" disabled={!revisione.length}
                     onClick={() => scarica(`${r.report.document.sha256.slice(0, 12)}.revisione.json`,
-                                           JSON.stringify(esportaRevisione(revisione, r.report.document.sha256, r.report.model.name, pagCens), null, 2))}>
+                                           JSON.stringify(esportaRevisione(revisione, r.report.document.sha256, etichettaModelli(r.report.model), pagCens), null, 2))}>
               Esporta revisione
             </button>
           </div>

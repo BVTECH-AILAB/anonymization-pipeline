@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import type { Metrics, Report } from "../api/tipi";
 import { BarreImpilate, BarreOrizzontali } from "../componenti/Grafici";
-import { nomeEsito, nomeFase, nomeFonte, nomeModalita, nomeMotivoVlm, testoAvviso } from "../lib/nomi";
+import { etichettaModelli, FASI_VLM, nomeEsito, nomeFase, nomeFonte, nomeModalita, nomeMotivoVlm, testoAvviso } from "../lib/nomi";
 import * as storico from "../lib/storico";
 import { useSessione } from "../stato/sessione";
 
@@ -122,8 +122,11 @@ function Contenuto({ report: r, metriche: m, titolo }: Dati) {
   return (
     <>
       <p className="nota">
-        {titolo} · impronta <span className="mono">{r.document.sha256.slice(0, 12)}</span> · {r.model.name} ({r.model.backend}) ·
-        modalità {nomeModalita(r.mode)}{m ? ` · estrazione ${m.configuration.extraction} · contesto ${m.configuration.context} · concorrenza ${m.configuration.concurrency}` : ""}
+        {titolo} · impronta <span className="mono">{r.document.sha256.slice(0, 12)}</span> ·{" "}
+        <span title={r.model.phases ? FASI_VLM.map((f) => `${nomeFase(f)}: ${r.model.phases?.[f]}`).join("\n") : undefined}>
+          {etichettaModelli(r.model)}
+        </span>{" "}({r.model.backend}) ·
+        modalità {nomeModalita(r.mode)}{m ? ` · estrazione ${m.configuration.extraction} · concorrenza ${m.configuration.concurrency}` : ""}
       </p>
       <div className="riquadri">
         <Riquadro etichetta="Tempo totale" valore={`${n(tempi.total)} s`} nota={m?.times_s.slot_wait ? `+ ${n(m.times_s.slot_wait)} s in coda` : undefined} />

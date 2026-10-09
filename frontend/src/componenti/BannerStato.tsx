@@ -1,4 +1,4 @@
-// Avviso in alto se un componente del servizio manca (backend, modello, NER, docling).
+// Avviso in alto se un componente del servizio manca (backend, modelli delle fasi, NER, docling).
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { salute } from "../api/client";
@@ -6,8 +6,10 @@ import type { Status } from "../api/tipi";
 
 export function problemi(s: Status): string[] {
   const out: string[] = [];
+  // solo i modelli predefiniti di qualche fase: gli altri del catalogo non servono a essere pronti
+  const assenti = s.models.filter((m) => m.phases.length && m.present === false);
   if (!s.backend.reachable) out.push("backend VLM non raggiungibile");
-  else if (s.model.present === false) out.push(`modello ${s.model.name} assente`);
+  else if (assenti.length) out.push(...assenti.map((m) => `modello ${m.name} assente`));
   else if (s.status !== "ready") out.push("servizio non pronto");
   if (s.detectors.ner.enabled && s.detectors.ner.present === false)
     out.push("NER non disponibile: rilevamento con meno rilevatori");

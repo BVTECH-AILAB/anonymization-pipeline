@@ -2,7 +2,7 @@
 // con l'impronta del documento e un'etichetta dell'operatore. Mai il nome del file ne' il testo.
 import { openDB, type IDBPDatabase } from "idb";
 import type { Metrics, Report } from "../api/tipi";
-import { nomeEsito, nomeModalita } from "./nomi";
+import { etichettaModelli, nomeEsito, nomeModalita } from "./nomi";
 
 export interface Esecuzione {
   id: string;
@@ -47,7 +47,7 @@ export function daRisultato(report: Report, metriche: Metrics | null, etichetta 
     salvato: new Date().toISOString(),
     etichetta,
     impronta: report.document.sha256,
-    modello: report.model.name,
+    modello: etichettaModelli(report.model),
     estrazione: metriche?.configuration.extraction ?? "",
     modalita: report.mode,
     pagine: report.document.pages,

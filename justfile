@@ -44,7 +44,7 @@ sync:
 
 # Run the API on the host against the compose Postgres (`docker compose up -d db` first)
 dev:
-    uv run uvicorn anonmyzation_pipeline.main:app --reload --port 8000
+    uv run uvicorn anonymization_pipeline.main:app --reload --port 8000
 
 # --- Quality ---
 

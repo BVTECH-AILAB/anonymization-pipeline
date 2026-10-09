@@ -2,7 +2,7 @@
 # CloudNativePG clusters in staging/prod).
 # Settings have defaults (${VAR:-default}); credentials do not and must be
 # set in .env (cp .env.example .env), otherwise compose refuses to start.
-name: anonmyzation-pipeline
+name: anonymization-pipeline
 
 services:
   db:
@@ -49,7 +49,7 @@ services:
       - ./pyproject.toml:/app/pyproject.toml:ro
     command: >
       sh -c "alembic upgrade head &&
-             uvicorn anonmyzation_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src"
+             uvicorn anonymization_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src"
 
 volumes:
   pg_data:

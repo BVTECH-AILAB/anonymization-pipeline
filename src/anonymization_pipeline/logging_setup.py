@@ -3,7 +3,7 @@
 Plain-text lines on stdout. In the cluster Grafana Alloy ships them to Loki,
 where KPI-dashboard parses some of them, so the format is a contract:
 
-    2026-10-06 10:00:00,123 INFO anonmyzation_pipeline.api.items [3f2a...]: item_created {"item_id": 1}
+    2026-10-06 10:00:00,123 INFO anonymization_pipeline.api.items [3f2a...]: item_created {"item_id": 1}
 
 Events that a dashboard must read are emitted with ``log_event`` as
 ``<event_name> {json}``. Renaming an event or one of its keys breaks the
@@ -17,8 +17,8 @@ import sys
 from contextvars import ContextVar
 from typing import Any, TextIO
 
-from anonmyzation_pipeline.config import Settings
-from anonmyzation_pipeline.privacy import PiiRedactingFilter
+from anonymization_pipeline.config import Settings
+from anonymization_pipeline.privacy import PiiRedactingFilter
 
 LOG_FORMAT = "%(asctime)s %(levelname)s %(name)s [%(request_id)s]: %(message)s"
 
@@ -28,7 +28,7 @@ _EVENT_NAME = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
 # Uvicorn installs its own handlers with propagate=False: route them
 # through the root handler so they get the same format and redaction.
 _FOREIGN_LOGGERS = ("uvicorn", "uvicorn.error", "uvicorn.access")
-_HANDLER_MARK = "_anonmyzation_pipeline_handler"
+_HANDLER_MARK = "_anonymization_pipeline_handler"
 
 
 class RequestIdFilter(logging.Filter):

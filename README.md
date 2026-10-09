@@ -61,7 +61,7 @@ OpenAPI su `http://localhost:8000/docs` (disattivata in prod).
 ## Struttura
 
 ```
-src/anonmyzation_pipeline/
+src/anonymization_pipeline/
   main.py           create_app(), lifespan, entry point
   config.py         Settings (pydantic-settings, prefisso ANONPIP_)
   logging_setup.py  setup_logging, log_event, request id
@@ -86,7 +86,7 @@ tuo dominio (modello, migrazione, router, service, test).
 Va benissimo: molti servizi sono stateless. Togli la parte DB invece di
 lasciarla inutilizzata:
 
-1. Elimina `src/anonmyzation_pipeline/db/`, `migrations/`, `alembic.ini`,
+1. Elimina `src/anonymization_pipeline/db/`, `migrations/`, `alembic.ini`,
    `scripts/db-init/` e `tests/integration/`.
 2. Elimina l'esempio `items` (`api/items.py`, `services/items.py`, i relativi test).
 3. In `pyproject.toml` rimuovi `sqlalchemy`, `asyncpg` e `alembic`, poi `uv lock`.

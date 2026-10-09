@@ -7,9 +7,9 @@ from typing import Annotated
 from fastapi import APIRouter, Query, Request
 from pydantic import BaseModel, ConfigDict, Field
 
-from anonmyzation_pipeline.logging_setup import log_event
-from anonmyzation_pipeline.privacy import redact_user_text
-from anonmyzation_pipeline.services.items import ItemServiceDep
+from anonymization_pipeline.logging_setup import log_event
+from anonymization_pipeline.privacy import redact_user_text
+from anonymization_pipeline.services.items import ItemServiceDep
 
 logger = logging.getLogger(__name__)
 

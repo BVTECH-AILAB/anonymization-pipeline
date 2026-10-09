@@ -82,7 +82,7 @@ class AnonymizationService:
         mode: str | None = None,
         verification: str | None = None,
         extraction: str | None = None,
-        models: dict[str, str | None] | None = None,
+        models: dict[str, str] | None = None,
         enable: str | None = None,
         disable: str | None = None,
         transcript: bool | None = None,
@@ -91,7 +91,7 @@ class AnonymizationService:
         """Configuration of one request.
 
         Args:
-            models: VLM of some phases (phase -> name; empty = the default of the phase).
+            models: VLM of some phases (phase -> name; a phase not listed uses its default).
             detectors: Active detectors and filters, comma separated (empty = the configured
                 ones).
 
@@ -105,7 +105,7 @@ class AnonymizationService:
             raise BadRequestError(
                 "Trascrizione in chiaro non consentita in questo ambiente."
             )
-        chosen = {phase: name for phase, name in (models or {}).items() if name}
+        chosen = models or {}
         if any(name not in self.config.models for name in chosen.values()):
             raise BadRequestError("Modello non previsto (vedi GET /models).")
         try:
@@ -134,12 +134,11 @@ class AnonymizationService:
         }
         if others:
             # the default models are checked by /readyz; the others must already be in the backend
-            client = self._client_factory(self.config)
-            try:
-                available = await client.models_available()
-            except (httpx.HTTPError, VLMError) as exc:
-                raise VLMUnavailableError() from exc
-            if not all(client.has_model(available, name) for name in others):
+            listing = await self.models()
+            if listing["error"]:
+                raise VLMUnavailableError()
+            present = {m["name"] for m in listing["models"] if m["present"]}
+            if not others <= present:
                 raise BadRequestError(
                     "Modello non presente nel backend (vedi GET /models)."
                 )
@@ -310,13 +309,13 @@ class AnonymizationService:
 
     def _detectors(self) -> dict[str, Any]:
         d = self.config.phases.detection.detectors
-        ner: dict[str, Any] = {"enabled": d.ner.enabled}
-        if d.ner.enabled:
-            try:
-                model_dir(d.ner)
-                ner.update(model=d.ner.model, present=True, error=None)
-            except DetectorUnavailable as exc:
-                ner.update(model=d.ner.model, present=False, error=str(exc))
+        # presence also when off by default: a request may switch NER on
+        ner: dict[str, Any] = {"enabled": d.ner.enabled, "model": d.ner.model}
+        try:
+            model_dir(d.ner)
+            ner.update(present=True, error=None)
+        except DetectorUnavailable as exc:
+            ner.update(present=False, error=str(exc))
         return {
             "vlm": d.vlm,
             "rules": d.rules,
@@ -369,6 +368,7 @@ class AnonymizationService:
             "mode": self.config.phases.redaction.mode,
             "verification": self.config.phases.verification.mode,
             "active_categories": len(self.config.active()),
+            "warnings": self.settings.obsolete(),
         }
 
 

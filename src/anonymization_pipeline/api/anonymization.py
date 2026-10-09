@@ -49,19 +49,37 @@ Key = Annotated[
 KeyHeader = Annotated[str | None, Header(max_length=200)]
 
 
+ObsoleteModel = Annotated[
+    str | None,
+    Form(max_length=200, deprecated=True, description="obsolete: use model_<phase>"),
+]
+
+
 def phase_models(
+    obsolete: str | None,
     extraction: str | None,
     detection: str | None,
     redaction: str | None,
     verification: str | None,
-) -> dict[str, str | None]:
-    """The ``model_<phase>`` form fields as phase -> model."""
-    return {
+) -> dict[str, str]:
+    """The ``model_<phase>`` form fields as phase -> model, only the phases with a value.
+
+    Raises:
+        BadRequestError: The request still sends the single ``model`` field.
+    """
+    if obsolete:
+        # an old client choosing a model would otherwise get the defaults without knowing it
+        raise BadRequestError(
+            "Il campo model non esiste più: usare model_extraction, model_detection, "
+            "model_redaction e model_verification (vedi GET /models)."
+        )
+    chosen = {
         "extraction": extraction,
         "detection": detection,
         "redaction": redaction,
         "verification": verification,
     }
+    return {phase: name for phase, name in chosen.items() if name}
 
 
 @router.post(
@@ -77,6 +95,7 @@ async def anonymize(
     mode: Mode = None,
     verification: Verification = None,
     extraction: Extraction = None,
+    model: ObsoleteModel = None,
     model_extraction: Model = None,
     model_detection: Model = None,
     model_redaction: Model = None,
@@ -90,7 +109,7 @@ async def anonymize(
 ) -> Response:
     data = await read_upload(file, service.settings)
     models = phase_models(
-        model_extraction, model_detection, model_redaction, model_verification
+        model, model_extraction, model_detection, model_redaction, model_verification
     )
     cfg = await service.request_config(
         mode, verification, extraction, models, enable, disable, detectors=detectors

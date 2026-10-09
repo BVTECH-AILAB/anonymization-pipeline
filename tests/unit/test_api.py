@@ -230,6 +230,46 @@ def test_categories(client: TestClient) -> None:
     assert body["descriptions"]["CODICE_FISCALE"]
 
 
+def test_obsolete_settings_are_shown_in_readiness(
+    backend: FakeBackend, make_client: ClientFactory
+) -> None:
+    backend.available = {"gemma4:26b-a4b-it-qat"}
+    client = make_client(vlm_model="gemma4:e4b-it-qat")
+
+    body = client.get("/readyz").json()
+
+    assert body["status"] == "ready"  # the models file applies: only a warning
+    assert body["warnings"] == ["ANONPIP_VLM_MODEL"]
+    assert make_client().get("/readyz").json()["warnings"] == []
+
+
+def test_ner_presence_is_reported_also_when_off_by_default(
+    make_client: ClientFactory, tmp_path: Path
+) -> None:
+    path = tmp_path / "ner.yaml"
+    path.write_text(
+        "phases: {detection: {detectors: {ner: "
+        f"{{enabled: false, model: '{tmp_path / 'missing'}'}}}}}}}}\n"
+    )
+    client = make_client(pipeline_config_file=str(path))
+
+    ner = client.get("/readyz").json()["detectors"]["ner"]
+
+    assert (
+        ner["enabled"] is False and ner["present"] is False
+    )  # a request may switch it on
+
+
+def test_obsolete_model_field_is_rejected(client: TestClient) -> None:
+    for path in ("/anonymize", "/jobs"):
+        response = client.post(
+            path, files=_upload(), data={"mode": "tag", "model": "gemma4:e4b-it-qat"}
+        )
+        assert response.status_code == 400
+        assert "model_detection" in response.json()["detail"]
+        assert "gemma4:e4b-it-qat" not in response.json()["detail"]
+
+
 def test_configuration_hides_secrets(make_client: ClientFactory) -> None:
     body = make_client(vlm_api_key="secret").get("/configuration").json()
 

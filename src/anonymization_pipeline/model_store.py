@@ -15,6 +15,7 @@ import httpx
 
 from anonymization_pipeline.config import Settings, get_settings
 from anonymization_pipeline.detectors.base import DetectorUnavailable
+from anonymization_pipeline.detectors.ner import NER_INSTALLED
 from anonymization_pipeline.detectors.ner import download as download_ner
 from anonymization_pipeline.extraction.native_pdf import (
     DoclingUnavailable,
@@ -31,6 +32,12 @@ logger = logging.getLogger(__name__)
 async def download_all(settings: Settings, http: httpx.AsyncClient) -> bool:
     """Download every missing model of the configuration; return True if all are available."""
     cfg = load_pipeline_config(settings)
+    for name in settings.obsolete():
+        logger.warning(
+            "Obsolete setting %s ignored: the VLMs to download are in the models file "
+            "(ANONPIP_MODELS_FILE)",
+            name,
+        )
     ok = True
     client = create_client(cfg, http)
     for name in cfg.models:
@@ -41,7 +48,8 @@ async def download_all(settings: Settings, http: httpx.AsyncClient) -> bool:
             logger.error("VLM model %s not available: %s", name, exc)
             ok = False
     ner = cfg.phases.detection.detectors.ner
-    if ner.enabled:
+    # a request may switch NER on: download it whenever it can run
+    if ner.enabled or NER_INSTALLED:
         try:
             await asyncio.to_thread(download_ner, ner)
             logger.info("NER model %s available", ner.model)

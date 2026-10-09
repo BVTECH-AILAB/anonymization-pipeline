@@ -158,6 +158,24 @@ def test_user_file_cannot_set_keys_owned_by_the_models_file(
         load_pipeline_config(make_settings(pipeline_config_file=str(path)))
 
 
+def test_user_file_with_the_old_model_section_says_where_it_went(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "mine.yaml"
+    path.write_text("model: {temperature: 0.2}\n")
+
+    with pytest.raises(ValueError, match="generation"):
+        load_pipeline_config(make_settings(pipeline_config_file=str(path)))
+
+
+def test_models_file_is_read_once(tmp_path: Path) -> None:
+    settings = make_settings(models_file=_models_file(tmp_path, TWO_MODELS))
+    load_pipeline_config(settings)
+    Path(settings.models_file).unlink()  # e.g. a ConfigMap changed at runtime
+
+    assert load_pipeline_config(settings).model_for("detection")[0] == "small:1"
+
+
 def test_missing_user_file_is_an_error() -> None:
     with pytest.raises(ValueError, match="not readable"):
         load_pipeline_config(make_settings(pipeline_config_file="/nonexistent.yaml"))

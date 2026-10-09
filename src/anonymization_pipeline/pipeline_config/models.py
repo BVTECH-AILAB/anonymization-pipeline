@@ -4,6 +4,7 @@ The same file drives the download before the service starts (``model_store``: ev
 catalog) and the choice at runtime (a request may pick, for each phase, a model of the catalog).
 """
 
+import functools
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
@@ -44,8 +45,12 @@ class ModelsFile(_Strict):
         return self
 
 
+@functools.cache
 def read_models_file(path: str = "") -> ModelsFile:
     """The models file at ``path``, or the packaged one when ``path`` is empty.
+
+    Read once per path: the catalog cannot change while the service runs, and every request
+    must see the same one as the service configuration.
 
     Raises:
         ValueError: If the file is missing, not valid YAML or not valid.

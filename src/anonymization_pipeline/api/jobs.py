@@ -13,6 +13,7 @@ from anonymization_pipeline.api.anonymization import (
     KeyHeader,
     Mode,
     Model,
+    ObsoleteModel,
     Verification,
     phase_models,
 )
@@ -58,6 +59,7 @@ async def create_job(
     mode: Mode = None,
     verification: Verification = None,
     extraction: Extraction = None,
+    model: ObsoleteModel = None,
     model_extraction: Model = None,
     model_detection: Model = None,
     model_redaction: Model = None,
@@ -73,7 +75,7 @@ async def create_job(
 ) -> dict[str, Any]:
     data = await read_upload(file, service.settings)
     models = phase_models(
-        model_extraction, model_detection, model_redaction, model_verification
+        model, model_extraction, model_detection, model_redaction, model_verification
     )
     cfg = await service.request_config(
         mode, verification, extraction, models, enable, disable, transcript, detectors

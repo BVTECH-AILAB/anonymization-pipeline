@@ -59,6 +59,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         settings.environment,
         ",".join(f"{p}:{service.config.model_for(p)[0]}" for p in PHASES),
     )
+    for name in settings.obsolete():
+        logger.warning(
+            "Obsolete setting %s ignored: the VLMs are chosen in the models file "
+            "(ANONPIP_MODELS_FILE)",
+            name,
+        )
     try:
         yield
     finally:

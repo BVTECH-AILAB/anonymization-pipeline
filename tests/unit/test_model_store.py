@@ -3,7 +3,9 @@ import json
 from pathlib import Path
 
 import httpx
+import pytest
 
+from anonymization_pipeline import model_store
 from anonymization_pipeline.config import Settings
 from anonymization_pipeline.model_store import download_all
 from tests.conftest import make_settings
@@ -70,6 +72,24 @@ def test_pulls_every_model_of_the_catalog(tmp_path: Path) -> None:
 
     assert _run(settings, _ollama(pulled, fail={"small:1"})) is False
     assert pulled == list(catalog)  # a failure does not stop the others
+
+
+def test_downloads_ner_also_when_off_by_default(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # a request may switch NER on: with the 'ner' extra installed it is always downloaded
+    (tmp_path / "ner.yaml").write_text(
+        "phases: {detection: {detectors: {ner: "
+        f"{{enabled: false, model: '{tmp_path / 'missing'}'}}}}}}}}\n"
+    )
+    settings = make_settings(
+        default_extraction="vlm", pipeline_config_file=str(tmp_path / "ner.yaml")
+    )
+
+    monkeypatch.setattr(model_store, "NER_INSTALLED", False)
+    assert _run(settings, _ollama([])) is True  # off and not installed: nothing to do
+    monkeypatch.setattr(model_store, "NER_INSTALLED", True)
+    assert _run(settings, _ollama([])) is False  # the missing folder is reported
 
 
 def test_reports_every_missing_model(tmp_path: Path) -> None:

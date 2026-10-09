@@ -64,6 +64,10 @@ class Settings(BaseSettings):
     # Optional YAML file with the VLM catalog and the model of each phase
     # (see resources/models.yaml, the default when empty).
     models_file: str = ""
+    # Obsolete, replaced by the models file: read only to warn whoever still
+    # sets them (/readyz and the startup log), never used.
+    vlm_model: str = ""
+    vlm_context: str = ""
     # Credential: key or passphrase of the pseudonym map. When empty, requests
     # in pseudonym mode must send their own key.
     vault_key: str = ""
@@ -79,6 +83,14 @@ class Settings(BaseSettings):
     # A request may ask for the transcript IN CLEAR TEXT (debugging the web UI).
     # Forced off in prod by ``_enforce_prod_privacy``.
     allow_transcript: bool = False
+
+    def obsolete(self) -> list[str]:
+        """``ANONPIP_*`` variables still set although the service ignores them."""
+        return [
+            f"ANONPIP_{name.upper()}"
+            for name in ("vlm_model", "vlm_context")
+            if getattr(self, name)
+        ]
 
     @field_validator("log_level")
     @classmethod

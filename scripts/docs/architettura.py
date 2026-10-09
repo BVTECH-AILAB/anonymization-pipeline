@@ -17,7 +17,7 @@ from pathlib import Path
 from xml.sax.saxutils import escape
 
 import yaml
-from reportlab.graphics.shapes import Drawing, Line, Polygon, Rect, String
+from reportlab.graphics.shapes import Circle, Drawing, Line, Polygon, Rect, String
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.pagesizes import A4
@@ -480,110 +480,158 @@ def flow_diagram() -> Drawing:
     return d
 
 
+def _bus(
+    d: Drawing,
+    x1: float,
+    x2: float,
+    y: float,
+    label: str,
+    color: colors.Color,
+    taps: list[tuple[float, float]],
+    right: bool = False,
+) -> None:
+    """Network drawn as a bus line, with a connector down to each container it reaches."""
+    d.add(Line(x1, y, x2, y, strokeColor=color, strokeWidth=3, strokeLineCap=1))
+    d.add(
+        String(
+            x2 if right else x1,
+            y + 6,
+            label,
+            fontName=FONT_B,
+            fontSize=6.8,
+            fillColor=color,
+            textAnchor="end" if right else "start",
+        )
+    )
+    for x, top in taps:
+        d.add(Line(x, y, x, top, strokeColor=color, strokeWidth=1.2))
+        d.add(Circle(x, y, 2.8, fillColor=color, strokeColor=WHITE, strokeWidth=0.8))
+
+
 def deployment_diagram() -> Drawing:
-    """Containers, networks, volumes and the download profile."""
-    d = Drawing(FRAME_W, 270)
+    """Containers on their networks, volumes and the download profile."""
+    d = Drawing(FRAME_W, 296)
     right = FRAME_W
-    _zone(d, 62, 132, 200, 134, "rete edge: porte solo su 127.0.0.1", LIGHT_TEAL)
-    _zone(
+    box_y, box_h, box_w = 196, 58, 112
+    web_x, app_x, ollama_x = 86, 236, right - box_w
+    mid = box_y + box_h / 2
+    top = box_y + box_h
+    # networks: separate buses, the app is the only container on both
+    _bus(
         d,
-        222,
         120,
-        right - 222,
-        134,
+        282,
+        280,
+        "rete edge: porte pubblicate solo su 127.0.0.1",
+        LIGHT_TEAL,
+        [(web_x + box_w / 2, top), (app_x + 26, top)],
+    )
+    _bus(
+        d,
+        302,
+        right - 12,
+        280,
         "rete internal: nessuna rotta verso internet",
         DEEP_TEAL,
+        [(app_x + 86, top), (ollama_x + box_w / 2, top)],
         right=True,
     )
-    _box(d, 0, 176, 52, 46, "Browser", "operatore", fill=MUTED_TEAL, size=8)
+    # containers and requests
+    _box(
+        d, 0, box_y + 6, 54, box_h - 12, "Browser", "operatore", fill=MUTED_TEAL, size=8
+    )
     _box(
         d,
-        76,
-        166,
-        118,
-        66,
+        web_x,
+        box_y,
+        box_w,
+        box_h,
         "web",
-        "React + Vite su nginx, :8080; /api/ verso l'API; CSP",
+        "React + Vite su nginx, :8080; CSP restrittiva",
         fill=DEEP_TEAL,
     )
     _box(
         d,
-        236,
-        162,
-        116,
-        74,
+        app_x,
+        box_y,
+        box_w,
+        box_h,
         "app",
         "FastAPI + uvicorn, :8000; NER e docling su CPU",
         fill=DARK_TEAL,
     )
     _box(
         d,
-        right - 104,
-        162,
-        96,
-        74,
+        ollama_x,
+        box_y,
+        box_w,
+        box_h,
         "ollama",
         "backend VLM su GPU (o vLLM, llama.cpp)",
         fill=MEDIUM_TEAL,
     )
-    _arrow(d, 52, 199, 76, 199)
-    _arrow(d, 194, 199, 236, 199, label="/api/", label_dy=-10)
-    _arrow(d, 352, 199, right - 104, 199, label="API VLM", label_dy=-10)
-    _box(
-        d,
-        236,
-        126,
-        116,
-        26,
-        "volume NER + docling",
-        "sola lettura, HF_HUB_OFFLINE=1",
-        fill=TINT,
-        color=DEEP_TEAL,
-        size=6.8,
-        stroke=GRID,
-    )
-    _box(
-        d,
-        right - 104,
-        126,
-        96,
-        26,
-        "volume modelli VLM",
-        "catalogo di models.yaml",
-        fill=TINT,
-        color=DEEP_TEAL,
-        size=6.8,
-        stroke=GRID,
-    )
-    d.add(Line(294, 152, 294, 162, strokeColor=GRID, strokeWidth=1))
-    d.add(Line(right - 56, 152, right - 56, 162, strokeColor=GRID, strokeWidth=1))
-    _zone(d, 150, 0, right - 150, 100, "", MUTED_TEAL, dash=[3, 2])
+    _arrow(d, 54, mid, web_x, mid, label="HTTP")
+    _arrow(d, web_x + box_w, mid, app_x, mid, label="/api/")
+    _arrow(d, app_x + box_w, mid, ollama_x, mid, label="API VLM")
+    # volumes, read-only at runtime
+    vol_y, vol_h = 150, 28
+    for x, title, body in (
+        (app_x, "volume NER + docling", "sola lettura, HF_HUB_OFFLINE=1"),
+        (ollama_x, "volume modelli VLM", "catalogo di models.yaml"),
+    ):
+        d.add(
+            Line(
+                x + box_w / 2,
+                vol_y + vol_h,
+                x + box_w / 2,
+                box_y,
+                strokeColor=GRID,
+                strokeWidth=1.2,
+            )
+        )
+        _box(
+            d,
+            x,
+            vol_y,
+            box_w,
+            vol_h,
+            title,
+            body,
+            fill=TINT,
+            color=DEEP_TEAL,
+            size=6.8,
+            stroke=GRID,
+        )
+    # download profile, the only one with internet access, aligned under the volumes
+    _zone(d, 214, 0, right - 214, 100, "", MUTED_TEAL, dash=[3, 2])
     d.add(
         String(
-            156,
-            5,
+            222,
+            7,
             "profilo models, rete egress: solo just models, prima dell'avvio",
             fontName=FONT_B,
             fontSize=6.8,
             fillColor=MUTED_TEAL,
         )
     )
+    dl_y, dl_h, inset = 24, 54, 8
+    init_x, pull_x, dl_w = app_x + inset, ollama_x + inset, box_w - 2 * inset
     _box(
         d,
-        168,
-        22,
-        124,
-        54,
+        init_x,
+        dl_y,
+        dl_w,
+        dl_h,
         "models-init",
         "scarica NER, docling e ogni VLM del catalogo",
         fill=MUTED_TEAL,
     )
     _box(
         d,
-        right - 146,
-        22,
-        124,
-        54,
+        pull_x,
+        dl_y,
+        dl_w,
+        dl_h,
         "ollama-models",
         "pull dei VLM nel volume",
         fill=MUTED_TEAL,
@@ -591,9 +639,9 @@ def deployment_diagram() -> Drawing:
     _box(
         d,
         0,
-        22,
-        112,
-        54,
+        dl_y,
+        140,
+        dl_h,
         "Internet",
         "Hugging Face, registry Ollama",
         fill=WHITE,
@@ -601,19 +649,38 @@ def deployment_diagram() -> Drawing:
         stroke=MUTED_TEAL,
         dash=[3, 2],
     )
-    _arrow(d, 168, 49, 112, 49, color=MUTED_TEAL, dash=[3, 2])
     _arrow(
         d,
-        292,
-        49,
-        right - 146,
-        49,
+        init_x,
+        dl_y + dl_h / 2,
+        140,
+        dl_y + dl_h / 2,
         color=MUTED_TEAL,
         dash=[3, 2],
-        label="chiede il pull",
+        label="download",
     )
-    _arrow(d, 250, 76, 280, 124, color=MUTED_TEAL, dash=[3, 2])
-    _arrow(d, right - 84, 76, right - 70, 124, color=MUTED_TEAL, dash=[3, 2])
+    _arrow(
+        d,
+        init_x + dl_w,
+        dl_y + dl_h / 2,
+        pull_x,
+        dl_y + dl_h / 2,
+        color=MUTED_TEAL,
+        dash=[3, 2],
+        label="pull",
+    )
+    for x in (app_x + box_w / 2, ollama_x + box_w / 2):
+        _arrow(d, x, dl_y + dl_h, x, vol_y, color=MUTED_TEAL, dash=[3, 2])
+        d.add(
+            String(
+                x + 5,
+                118,
+                "scrive i modelli",
+                fontName=FONT,
+                fontSize=6.6,
+                fillColor=MUTED_TEAL,
+            )
+        )
     return d
 
 

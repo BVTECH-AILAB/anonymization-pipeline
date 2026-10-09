@@ -59,7 +59,7 @@ services:
       OLLAMA_MAX_LOADED_MODELS: 1             # one model in VRAM at a time: phases with different models swap it
       OLLAMA_NUM_PARALLEL: ${OLLAMA_NUM_PARALLEL:-2}   # at least ANONPIP_VLM_CONCURRENCY
       OLLAMA_FLASH_ATTENTION: 1
-      OLLAMA_KV_CACHE_TYPE: q8_0
+      OLLAMA_KV_CACHE_TYPE: ${OLLAMA_KV_CACHE_TYPE:-q8_0}   # q4_0 halves the context memory again
     healthcheck:
       test: ["CMD", "ollama", "list"]
       interval: 15s

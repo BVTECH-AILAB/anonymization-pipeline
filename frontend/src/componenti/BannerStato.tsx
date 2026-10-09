@@ -15,6 +15,8 @@ export function problemi(s: Status): string[] {
     out.push("NER non disponibile: rilevamento con meno rilevatori");
   if (s.docling.enabled && !(s.docling.installed && s.docling.models))
     out.push("docling non disponibile: PDF nativi estratti con il VLM");
+  for (const v of s.warnings ?? [])
+    out.push(`variabile obsoleta ${v} ignorata: i modelli sono nel file dei modelli (ANONPIP_MODELS_FILE)`);
   return out;
 }
 

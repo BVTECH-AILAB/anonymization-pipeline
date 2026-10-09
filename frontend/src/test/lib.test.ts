@@ -5,8 +5,9 @@ import { dividiPagine, paginaDi } from "../lib/pagine";
 import { marca, rehypeMarcatori, segmenti, type Intervallo } from "../lib/evidenzia";
 import { etichettaModelli, nomeEsito, nomeFase, nomeFonte, nomeModalita, nomeMotivoRifiuto, nomeMotivoVlm, nomeVerifica, testoAvviso } from "../lib/nomi";
 import { esportaRevisione } from "../lib/revisione";
+import { alterna, predefiniti, senzaRilevatori } from "../lib/rilevatori";
 import * as storico from "../lib/storico";
-import type { Report } from "../api/tipi";
+import type { Report, Status } from "../api/tipi";
 
 const MD = "# Uno\nPaziente: [PERSONA_1]\n\n<!-- pagina 2 -->\n\nFirma: [MEDICO_1] e [PERSONA_1]";
 
@@ -131,5 +132,30 @@ describe("nomi", () => {
     expect(testoAvviso("verification_skipped")).toBe("verifica non eseguita");
     expect(testoAvviso("residuals_not_fixed")).toBe("residui non corretti");
     expect(testoAvviso("altro:valore")).toBe("altro:valore");
+  });
+});
+
+describe("rilevatori", () => {
+  const stato = { detectors: { vlm: true, rules: true, labels: true, eponyms: true, ner: { enabled: false } } } as Status;
+
+  it("partono dai predefiniti del servizio e tornano a null quando coincidono", () => {
+    const base = predefiniti(stato);
+    expect(base).toEqual(["vlm", "rules", "labels", "eponyms"]);
+    const senza_vlm = alterna(null, base, "vlm");
+    expect(senza_vlm).toEqual(["rules", "labels", "eponyms"]);
+    expect(alterna(senza_vlm, base, "vlm")).toBeNull(); // di nuovo i predefiniti: nessun campo
+    expect(alterna(null, base, "ner")).toEqual(["vlm", "rules", "labels", "eponyms", "ner"]);
+  });
+
+  it("con lo stato sconosciuto un clic non spegne gli altri rilevatori", () => {
+    expect(predefiniti(null)).toBeNull();
+    expect(alterna(null, null, "rules")).toBeNull();
+    expect(alterna(["ner"], null, "rules")).toEqual(["ner"]);
+  });
+
+  it("il filtro eponimi da solo non basta", () => {
+    expect(senzaRilevatori(null)).toBe(false);
+    expect(senzaRilevatori(["eponyms"])).toBe(true);
+    expect(senzaRilevatori(["ner", "eponyms"])).toBe(false);
   });
 });

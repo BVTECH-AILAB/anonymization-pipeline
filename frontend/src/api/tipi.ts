@@ -173,6 +173,7 @@ export interface Status {
   mode: string;
   verification: string;
   active_categories: number;
+  warnings?: string[]; // variabili ANONPIP_* obsolete ancora impostate (assente nei servizi precedenti)
 }
 
 export interface Categories {

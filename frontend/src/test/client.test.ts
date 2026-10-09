@@ -137,5 +137,8 @@ describe("stato del servizio", () => {
     // un modello del catalogo che nessuna fase usa non e' un problema
     const spenti: Status = { ...STATO, status: "ready", models: [{ ...STATO.models[0], present: true }, STATO.models[1]], detectors: { ...STATO.detectors, ner: { enabled: false } }, docling: { enabled: false } };
     expect(problemi(spenti)).toEqual([]);
+    expect(problemi({ ...spenti, warnings: ["ANONPIP_VLM_MODEL"] })).toEqual([
+      "variabile obsoleta ANONPIP_VLM_MODEL ignorata: i modelli sono nel file dei modelli (ANONPIP_MODELS_FILE)",
+    ]);
   });
 });

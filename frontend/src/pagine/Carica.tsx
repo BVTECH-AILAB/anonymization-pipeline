@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import * as api from "../api/client";
-import type { Categories, Models, Options, Phase, Rilevatore, Status } from "../api/tipi";
+import type { Categories, Models, Options, Phase, Status } from "../api/tipi";
 import { FASI_VLM, nomeFase, nomeModalita, nomeMotivoRifiuto } from "../lib/nomi";
+import { alterna as alternaRilevatore, predefiniti, RILEVATORI, senzaRilevatori } from "../lib/rilevatori";
 import { useSessione, type Documento } from "../stato/sessione";
 
 const FASI: Phase[] = ["ingest", "extraction", "detection", "redaction", "verification"];
@@ -10,22 +11,6 @@ const ESTENSIONI = ".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.webp,.txt,.md,.csv,.js
 
 const PREDEFINITE: Options = { models: {}, mode: "pseudonym", verification: "", extraction: "", enable: [], disable: [], transcript: false, detectors: null };
 
-const RILEVATORI: { r: Rilevatore; nome: string; nota: string }[] = [
-  { r: "vlm", nome: "rilevamento VLM", nota: "il modello legge testo e immagine della pagina" },
-  { r: "rules", nome: "regole", nota: "regex e checksum: codice fiscale, IBAN, partita IVA, telefoni..." },
-  { r: "labels", nome: "etichette", nota: "il valore dopo un'etichetta (\"Paziente: ...\")" },
-  { r: "ner", nome: "NER", nota: "modello di riconoscimento delle entità, su CPU" },
-  { r: "eponyms", nome: "filtro eponimi", nota: "scarta Parkinson, Valsalva, \"globuli rossi\"...: non trova valori" },
-];
-
-/** Rilevatori accesi nella configurazione del servizio (GET /readyz). */
-function predefiniti(s: Status | null): Rilevatore[] {
-  if (!s) return [];
-  const d = s.detectors;
-  return RILEVATORI.map((x) => x.r).filter((r) => (r === "ner" ? d.ner.enabled : d[r]));
-}
-
-const stessi = (a: Rilevatore[], b: Rilevatore[]) => a.length === b.length && a.every((r) => b.includes(r));
 
 /** "rilevamento gemma4:e4b-it-qat" per le fasi con un modello scelto (le opzioni salvate prima dei modelli
  *  per fase non hanno models). */
@@ -101,15 +86,8 @@ export default function Carica() {
   useEffect(() => { api.salute().then(setStato).catch(() => setStato(null)); }, []);
 
   const base = predefiniti(stato);
-  const attivi = o.detectors ?? base;
-  // tornati ai predefiniti: nessun campo inviato, decide il servizio
-  const alternaRilevatore = (r: Rilevatore) =>
-    setO((x) => {
-      const da = x.detectors ?? base;
-      const nuovi = da.includes(r) ? da.filter((y) => y !== r) : [...da, r];
-      return { ...x, detectors: stessi(nuovi, base) ? null : nuovi };
-    });
-  const senza_rilevatori = o.detectors !== null && !o.detectors.some((r) => r !== "eponyms");
+  const attivi = o.detectors ?? base ?? [];
+  const senza_rilevatori = senzaRilevatori(o.detectors);
 
   const manca_chiave = o.mode === "pseudonym" && !s.chiave;
   const avvia = async () => {
@@ -224,14 +202,20 @@ export default function Carica() {
           <div className="griglia-opzioni">
             {RILEVATORI.map(({ r, nome, nota }) => (
               <label key={r} className="inline" title={nota}>
-                <input type="checkbox" checked={attivi.includes(r)} onChange={() => alternaRilevatore(r)} /> {nome}
-                {r === "ner" && stato?.detectors.ner.enabled && stato.detectors.ner.present === false && (
+                <input type="checkbox" checked={attivi.includes(r)} disabled={!base}
+                       onChange={() => setO((x) => ({ ...x, detectors: alternaRilevatore(x.detectors, base, r) }))} /> {nome}
+                {r === "ner" && stato?.detectors.ner.present === false && (
                   <span className="nota errore"> (modello assente)</span>
                 )}
               </label>
             ))}
           </div>
-          {!stato && <p className="nota">Stato del servizio non disponibile: i predefiniti non sono noti.</p>}
+          {!stato && (
+            <p className="nota">
+              Stato del servizio non disponibile: i rilevatori restano quelli predefiniti.{" "}
+              <button className="secondario piccolo" onClick={() => api.salute().then(setStato).catch(() => setStato(null))}>riprova</button>
+            </p>
+          )}
           {cat && (
             <details style={{ marginTop: 10 }}>
               <summary>Gruppi di categorie ({o.disable.length + o.enable.length} modifiche)</summary>

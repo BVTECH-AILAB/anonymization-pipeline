@@ -46,9 +46,10 @@ async def download_all(settings: Settings, http: httpx.AsyncClient) -> bool:
             logger.error("NER model not available: %s", exc)
             ok = False
     native = cfg.phases.extraction.native_pdf
-    if native.engine == "docling" and not models_present(native):
+    if native.engine == "docling":
         try:
-            await asyncio.to_thread(download_docling, native)
+            if not models_present(native):
+                await asyncio.to_thread(download_docling, native)
             logger.info("docling models available in %s", native.models_dir)
         except DoclingUnavailable as exc:
             logger.error("docling models not available: %s", exc)

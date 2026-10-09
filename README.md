@@ -128,14 +128,21 @@ metriche contengono solo conteggi, categorie, pagine e tempi.
   `model_detection`, `model_redaction`, `model_verification`; elenco in
   `GET /models`). Con `OLLAMA_MAX_LOADED_MODELS=1` modelli diversi fra le
   fasi vengono scambiati in VRAM a ogni cambio di fase.
-- Pipeline (prompt, passate del rilevamento, rilevatori, soglie, categorie
-  attive): `src/anonymization_pipeline/resources/default.yaml`. Si cambia
-  con un file YAML parziale indicato da `ANONPIP_PIPELINE_CONFIG_FILE`; le
-  chiavi possedute dalle variabili `ANONPIP_*` e dal file dei modelli non
-  sono ammesse nel file.
+- Pipeline (passate del rilevamento, rilevatori accesi, soglie, timeout):
+  `src/anonymization_pipeline/resources/default.yaml`, con i prompt in
+  `resources/prompts/<fase>.yaml`. Si cambia con un file YAML parziale
+  indicato da `ANONPIP_PIPELINE_CONFIG_FILE`; le chiavi possedute dalle
+  variabili `ANONPIP_*` e dal file dei modelli non sono ammesse nel file
+  (l'elenco è nell'intestazione di `default.yaml`).
   Ogni chiave sconosciuta è un errore e il servizio non parte.
-- Categorie e gruppi: `resources/categories.yaml`; regole, etichette ed
-  eponimi: `resources/detectors/`.
+- Categorie e gruppi: `resources/categories.yaml`, l'unico elenco. Sono
+  tutte attive: `default.yaml` elenca solo quelle spente.
+- Vocabolario dei rilevatori di testo, in `resources/detectors/`:
+  `rules.yaml` (regex e checksum), `labels.yaml` (etichetta -> valore),
+  `ner.yaml` (etichette del modello NER -> categorie, filtri),
+  `eponyms.yaml`. Le regex hanno la stessa sintassi in tutti i file
+  (frammenti `${nome}`, liste come alternative); i file vengono validati
+  all'avvio e non si sovrascrivono dal file utente.
 
 ## Comandi
 
@@ -164,7 +171,7 @@ src/anonymization_pipeline/
   services/           anonymization (slot, errori, stato), jobs (coda in memoria), results
   pipeline.py         orchestrazione delle fasi
   pipeline_config/    schema, caricamento a strati, registro delle categorie
-  resources/          default.yaml, categories.yaml, prompts/, detectors/
+  resources/          default.yaml, models.yaml, categories.yaml, prompts/, detectors/
   ingest/ extraction/ detection/ detectors/ redaction/ verification/ vlm/
   domain.py text.py metrics.py model_store.py
   logging_setup.py privacy.py middleware.py errors.py

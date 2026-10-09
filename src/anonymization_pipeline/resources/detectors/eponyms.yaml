@@ -7,7 +7,7 @@
 #  one of these words; eponyms even when proposed as FARMACO. The comparison ignores
 #  extra spaces.
 #  The entries come from the expected false positives of the synthetic corpus of the anonimizzatore
-#  project, plus the eponyms and drugs most common in medical reports.
+#  project, plus the eponyms and drugs most common in medical reports. An unknown key stops startup.
 # =============================================================================
 
 # case-insensitive

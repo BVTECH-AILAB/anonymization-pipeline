@@ -8,6 +8,8 @@
 #  section (also nested); an expression or a fragment written as a list is an alternation
 #  (items joined with "|", in the given order). The same syntax as labels.yaml
 #  (detectors/patterns.py).
+#  Every section is required; an error (invalid regex, unknown key, nonexistent category,
+#  context or validator) stops startup with a message that names the place.
 # =============================================================================
 
 # -----------------------------------------------------------------------------

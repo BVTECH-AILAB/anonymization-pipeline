@@ -1,19 +1,23 @@
 # =============================================================================
-#  Pipeline configuration (defaults)
+#  Pipeline configuration (defaults): only the tunable parameters.
 #
 #  Layers, from weakest to strongest:
-#    1. this file (plus the prompts in prompts/*.yaml under the key 'prompts')
+#    1. this file, with the prompts (prompts/<phase>.yaml, key 'prompts') and every category
+#       of the registry (categories.yaml) switched on
 #    2. the user file in ANONPIP_PIPELINE_CONFIG_FILE (only the keys to change)
-#    3. the models file (ANONPIP_MODELS_FILE, default resources/models.yaml): the VLM catalog
-#       (`models`) and the model of each phase (`phases.<phase>.model`)
-#    4. the ANONPIP_* settings (config.py): backend and default modes.
-#       The keys of layers 3 and 4 are rejected in the user file.
+#    3. the models file (ANONPIP_MODELS_FILE, default models.yaml)
+#    4. the ANONPIP_* settings (config.py)
 #    5. per-request overrides (API and web UI: model of each phase, mode, verification,
-#       extraction, categories)
+#       extraction, detectors, categories)
 #  Unknown keys are an error: a typo is never silently ignored.
 #
-#  Each phase (extraction, detection, redaction, verification) runs its own VLM, chosen in the
-#  models file. Docling (native PDF pages) and the NER detector have their own models, on CPU.
+#  Keys set only by layers 3 and 4 (never written here, rejected in the user file):
+#    models file      models, phases.<phase>.model
+#    ANONPIP_*        backend.kind, url, api_key, concurrency, pull_missing;
+#                     phases.redaction.mode, phases.verification.mode,
+#                     phases.extraction.native_pdf.engine, native_pdf.models_dir
+#
+#  Elsewhere: the vocabulary of the text detectors in detectors/*.yaml (not overridable).
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -122,11 +126,12 @@ phases:
     tag_format: "[{category}_{n}]"
     redaction_symbol: "█████"
 
-  verification:                 # mode: from the settings. off: no check | report: residuals in the
-                                # report, document returned | block: residuals -> document rejected
+  # The model compares the redacted Markdown with the clear original of the page.
+  # mode (from the settings): off: no check | report: residuals in the report, document returned |
+  # block: residuals -> document rejected
+  verification:
     timeout_s: 300
     max_tokens: 4096
-                                # the model compares the redacted Markdown with the clear original of the page
     required: true              # if the model does not answer the document is rejected (fail-closed)
     passes: null                # null = the detection passes
 

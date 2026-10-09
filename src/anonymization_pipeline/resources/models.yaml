@@ -21,10 +21,10 @@ models:
     context: 8192                 # with the q4_0 KV cache it fits the 8 GB GPU entirely
     vision: false                 # text only (ollama show: no vision)
   - name: glm-ocr
-    context: 8192                # image + page transcription; ~3 GB, entirely on the GPU
+    context: 8192                 # image + page transcription; ~3 GB, entirely on the GPU
     vision: true
   - name: gemma4:26b-a4b-it-qat
-    context: 8192                # image + page transcription; ~3 GB, entirely on the GPU
+    context: 8192                 # image + page transcription
     vision: true
 
 phases:

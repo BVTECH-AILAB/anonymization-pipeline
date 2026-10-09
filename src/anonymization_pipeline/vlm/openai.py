@@ -1,6 +1,6 @@
 """OpenAI dialect: ``/v1/chat/completions`` (vLLM, llama.cpp server, LM Studio, ...).
 
-Images as data URIs before the text (the order recommended for Gemma), answer constrained with
+Images as data URIs before the text, answer constrained with
 ``response_format`` json_schema. ``num_ctx``, ``think`` and ``keep_alive`` do not exist in this
 API: the context is set when the server starts (e.g. vLLM ``--max-model-len``). The options in
 ``generation.options`` are added to the request body as they are (e.g. ``chat_template_kwargs``).

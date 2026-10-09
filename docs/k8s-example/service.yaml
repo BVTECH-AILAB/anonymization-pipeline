@@ -27,15 +27,15 @@ metadata:
   name: anonymization-pipeline-models-file
 data:
   models.yaml: |
-    models:
-      - name: gemma4:26b-a4b-it-qat
+    models:                          # the models chosen by the team: names as in the backend
+      - name: "<vision-model>"
         context: 16384
         vision: true
     phases:
-      extraction: gemma4:26b-a4b-it-qat
-      detection: gemma4:26b-a4b-it-qat
-      redaction: gemma4:26b-a4b-it-qat
-      verification: gemma4:26b-a4b-it-qat
+      extraction: "<vision-model>"
+      detection: "<vision-model>"
+      redaction: "<vision-model>"
+      verification: "<vision-model>"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -177,7 +177,7 @@ spec:
           requests:
             memory: 16Gi
           limits:
-            nvidia.com/gpu: 1       # 24 GB of VRAM for gemma4:26b-a4b-it-qat
+            nvidia.com/gpu: 1       # VRAM sized on the largest model of the models file
         volumeMounts:
         - name: ollama-models
           mountPath: /root/.ollama

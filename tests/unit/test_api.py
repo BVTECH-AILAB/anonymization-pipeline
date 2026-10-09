@@ -14,7 +14,7 @@ from anonymization_pipeline.extraction import native_pdf
 from anonymization_pipeline.main import create_app
 from anonymization_pipeline.redaction.vault import generate_key
 from anonymization_pipeline.vlm import VLMError
-from tests.conftest import FAKE_CF, make_settings
+from tests.conftest import FAKE_CF, TEST_MODEL, make_settings
 from tests.pipeline import FIXTURES, models_file
 from tests.unit.conftest import TEXT, VALUES, FakeBackend
 
@@ -60,13 +60,13 @@ def test_readyz_reflects_the_vlm_backend(
     assert response.status_code == 503
     assert response.json()["models"] == [
         {
-            "name": "gemma4:26b-a4b-it-qat",
+            "name": TEST_MODEL,
             "present": False,
             "phases": ["extraction", "detection", "redaction", "verification"],
         }
     ]
 
-    backend.available = {"gemma4:26b-a4b-it-qat"}
+    backend.available = {TEST_MODEL}
     body = client.get("/readyz").json()
     assert body["status"] == "ready" and body["models"][0]["present"] is True
     assert (
@@ -251,8 +251,8 @@ def test_configuration_hides_secrets(make_client: ClientFactory) -> None:
     body = make_client(vlm_api_key="secret").get("/configuration").json()
 
     assert (
-        body["phases"]["detection"]["model"] == "gemma4:26b-a4b-it-qat"
-        and "gemma4:26b-a4b-it-qat" in body["models"]
+        body["phases"]["detection"]["model"] == TEST_MODEL
+        and TEST_MODEL in body["models"]
         and body["backend"]["api_key"] == "***"
     )
 
@@ -378,7 +378,7 @@ def test_extraction_chosen_per_request(
 
 
 def test_detectors_per_request(backend: FakeBackend, client: TestClient) -> None:
-    backend.available = {"gemma4:26b-a4b-it-qat"}
+    backend.available = {TEST_MODEL}
 
     response = client.post(
         "/anonymize?format=json",

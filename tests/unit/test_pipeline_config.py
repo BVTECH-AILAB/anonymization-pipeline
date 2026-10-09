@@ -27,6 +27,13 @@ def test_defaults_are_valid_with_a_model_per_phase() -> None:
         assert name in cfg.models and spec.context >= 1024
 
 
+def test_packaged_models_file_is_valid() -> None:
+    # whatever models it names: every phase in the catalog, extraction with vision
+    packaged = load_pipeline_config(make_settings(models_file=""))
+
+    assert packaged.models and packaged.model_for("extraction")[1].vision
+
+
 def _models_file(tmp_path: Path, data: dict) -> str:
     path = tmp_path / "models.yaml"
     path.write_text(yaml.safe_dump(data))

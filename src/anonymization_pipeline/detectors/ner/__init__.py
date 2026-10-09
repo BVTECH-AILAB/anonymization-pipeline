@@ -1,4 +1,4 @@
-"""NER detector: Hugging Face token-classification model (default Italian_NER_XXL_v2).
+"""NER detector: Hugging Face token-classification model (``phases.detection.detectors.ner.model``).
 
 The model has fixed labels (NOME, COGNOME, MALATTIA, MEDICINA...): a map in the configuration
 brings them to the anonymizer categories; unmapped labels are ignored. The text is split into

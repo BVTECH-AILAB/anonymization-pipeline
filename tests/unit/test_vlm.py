@@ -20,6 +20,7 @@ from anonymization_pipeline.vlm.responses import (
     parse_entities,
     parse_groups,
 )
+from tests.conftest import TEST_MODEL
 from tests.pipeline import models_file, pipeline_config
 
 SCHEMA = entity_schema(["PERSONA", "CODICE_FISCALE"])
@@ -43,8 +44,8 @@ def test_native_ollama_payload(tmp_path: Path) -> None:
         {"generation": {"options": {"top_k": 1}}},
         models_file=models_file(
             tmp_path,
-            {"big:1": 16384, "gemma4:test": 8192},
-            {"detection": "gemma4:test"},
+            {"big:1": 16384, "vlm:small": 8192},
+            {"detection": "vlm:small"},
         ),
     )
     seen: list[dict] = []
@@ -66,7 +67,7 @@ def test_native_ollama_payload(tmp_path: Path) -> None:
     )
 
     payload = seen[0]
-    assert payload["model"] == "gemma4:test"
+    assert payload["model"] == "vlm:small"
     assert (
         payload["think"] is False
         and payload["keep_alive"] == "30m"
@@ -267,7 +268,7 @@ def test_openai_missing_model() -> None:
     with pytest.raises(VLMModelMissing):
         run(cfg, handler, lambda c: c.call("extraction", "S", "U"))
     with pytest.raises(VLMModelMissing, match="loaded at startup"):
-        run(cfg, handler, lambda c: c.pull("gemma4:26b-a4b-it-qat"))
+        run(cfg, handler, lambda c: c.pull(TEST_MODEL))
 
 
 def test_models_and_availability() -> None:
@@ -275,18 +276,18 @@ def test_models_and_availability() -> None:
 
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
-            200, json={"models": [{"name": "gemma4"}, {"name": "other:7b"}]}
+            200, json={"models": [{"name": "vlm"}, {"name": "other:7b"}]}
         )
 
     (available, ok), client = run(
         cfg, handler, lambda c: asyncio.gather(c.models_available(), c.is_available())
     )
 
-    assert available == {"gemma4:latest", "other:7b"} and ok
-    assert client.has_model(available, "gemma4") and client.has_model(
+    assert available == {"vlm:latest", "other:7b"} and ok
+    assert client.has_model(available, "vlm") and client.has_model(
         available, "other:7b"
     )
-    assert not client.has_model(available, "gemma4:e4b")
+    assert not client.has_model(available, "vlm:other")
     (ok, _) = run(cfg, lambda r: httpx.Response(500), lambda c: c.is_available())
     assert ok is False
 

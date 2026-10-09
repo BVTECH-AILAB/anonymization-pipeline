@@ -18,8 +18,8 @@ const STATO: Status = {
   version: "0.1.0",
   backend: { kind: "ollama", reachable: true, error: null },
   models: [
-    { name: "gemma4:26b-a4b-it-qat", present: false, phases: ["extraction", "detection", "redaction", "verification"] },
-    { name: "gemma4:e4b-it-qat", present: false, phases: [] }, // nel catalogo, di nessuna fase
+    { name: "vlm-grande:1", present: false, phases: ["extraction", "detection", "redaction", "verification"] },
+    { name: "vlm-piccolo:1", present: false, phases: [] }, // nel catalogo, di nessuna fase
   ],
   detectors: { vlm: true, rules: true, labels: true, eponyms: true, ner: { enabled: true, model: "ner-it", present: false, error: "modello assente" } },
   docling: { enabled: true, installed: true, models: false },
@@ -34,7 +34,7 @@ describe("client API", () => {
   it("accoda un lavoro con le opzioni, senza header di autenticazione", async () => {
     const f = finto(202, { id: "x", status: "queued" });
     const file = new File(["ciao"], "nota.txt");
-    await api.nuovoLavoro(file, { models: { detection: "gemma4:e4b-it-qat", verification: "" }, mode: "pseudonym", verification: "", extraction: "vlm", enable: [], disable: ["sanitari", "date"], transcript: true, detectors: ["rules", "ner"] }, "K");
+    await api.nuovoLavoro(file, { models: { detection: "vlm-piccolo:1", verification: "" }, mode: "pseudonym", verification: "", extraction: "vlm", enable: [], disable: ["sanitari", "date"], transcript: true, detectors: ["rules", "ner"] }, "K");
     const [url, init] = chiamata(f);
     expect(url).toBe("/api/jobs");
     expect(init?.method).toBe("POST");
@@ -42,7 +42,7 @@ describe("client API", () => {
     const body = init?.body as FormData;
     expect(body.get("mode")).toBe("pseudonym");
     expect(body.get("extraction")).toBe("vlm");
-    expect(body.get("model_detection")).toBe("gemma4:e4b-it-qat");
+    expect(body.get("model_detection")).toBe("vlm-piccolo:1");
     for (const campo of ["model", "model_extraction", "model_redaction", "model_verification"]) expect(body.has(campo)).toBe(false);
     expect(body.get("disable")).toBe("sanitari,date");
     expect(body.get("detectors")).toBe("rules,ner");
@@ -111,7 +111,7 @@ describe("client API", () => {
     const s = await api.salute();
     expect(s.status).toBe("unavailable");
     expect(problemi(s)).toEqual([
-      "modello gemma4:26b-a4b-it-qat assente",
+      "modello vlm-grande:1 assente",
       "NER non disponibile: rilevamento con meno rilevatori",
       "docling non disponibile: PDF nativi estratti con il VLM",
     ]);

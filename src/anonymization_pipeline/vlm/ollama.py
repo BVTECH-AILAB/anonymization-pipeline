@@ -1,8 +1,9 @@
 """Ollama dialect: native ``/api/chat`` API.
 
 The native API is used instead of the OpenAI-compatible one because only here ``num_ctx`` (the
-image alone takes hundreds of tokens), ``think`` (Gemma 4 reasons by default and the reasoning
-uses up ``num_predict``: the answer comes back empty) and ``keep_alive`` can be set per request.
+image alone takes hundreds of tokens), ``think`` (a model that reasons by default spends
+``num_predict`` on reasoning: the answer comes back empty) and ``keep_alive`` can be set per
+request.
 The JSON answer is constrained with ``format`` = JSON schema (constrained decoding).
 """
 

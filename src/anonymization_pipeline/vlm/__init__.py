@@ -1,4 +1,5 @@
-"""Client of the single VLM (native Ollama or OpenAI-compatible API)."""
+"""VLM client (native Ollama or OpenAI-compatible API); the model of each call comes from the
+phase (models file)."""
 
 import httpx
 

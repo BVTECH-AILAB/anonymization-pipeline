@@ -13,11 +13,11 @@
 #
 #  Different models in different phases are swapped in VRAM at every change of phase when the
 #  backend keeps one model loaded (OLLAMA_MAX_LOADED_MODELS=1).
-#  On an 8 GB GPU: gemma4:e4b-it-qat with context 8192.
+#  Size the GPU on the largest model of the catalog; on a small GPU use smaller models.
 # =============================================================================
 
 models:
-  - name: gemma4:26b-a4b-it-qat   # ~16 GB: 24 GB GPU
+  - name: gemma4:26b-a4b-it-qat
     context: 16384
     vision: true
 

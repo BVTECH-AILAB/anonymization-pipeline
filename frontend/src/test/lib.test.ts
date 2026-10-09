@@ -55,7 +55,7 @@ describe("revisione", () => {
     const f = esportaRevisione(
       [{ tipo: "sfuggito", inizio: 6, fine: 11, categoria: "PERSONA", nota: "nome nel timbro" },
        { tipo: "censura_errata", inizio: 16, fine: 27, categoria: "PERSONA", sostituto: "[PERSONA_1]" }],
-      "abc123", "gemma4:e4b-it-qat", dividiPagine(MD),
+      "abc123", "vlm-piccolo:1", dividiPagine(MD),
     );
     expect(f.voci.map((v) => v.lunghezza)).toEqual([5, 11]);
     expect(f.voci[0]).not.toHaveProperty("valore");
@@ -65,7 +65,7 @@ describe("revisione", () => {
 
 const REPORT = {
   version: "0.1.0", document: { sha256: "f".repeat(64), kind: "pdf", pages: 2 },
-  extraction: { docling: [1, 2], vlm: [] }, model: { backend: "ollama", phases: { extraction: "gemma4:26b-a4b-it-qat", detection: "gemma4:e4b-it-qat", redaction: "gemma4:e4b-it-qat", verification: "gemma4:26b-a4b-it-qat" } }, mode: "redaction",
+  extraction: { docling: [1, 2], vlm: [] }, model: { backend: "ollama", phases: { extraction: "vlm-grande:1", detection: "vlm-piccolo:1", redaction: "vlm-piccolo:1", verification: "vlm-grande:1" } }, mode: "redaction",
   counts: { PERSONA: 2 }, entities: [], detection: { values: 2, sources: { rules: 1, vlm: 2 }, hallucinations_discarded: 0, inactive_categories: 0, eponyms_discarded: 0 },
   redaction: { coreference: "vlm", groups: 1 }, verification: { mode: "block", outcome: "skipped", residuals: [] },
   vlm: { detection: { calls: 6, errors: 0, truncated: 0, tokens_in: 100, tokens_out: 10, duration_s: 3 } },
@@ -76,10 +76,10 @@ describe("storico", () => {
   it("salva, elenca, rinomina, esporta CSV ed elimina", async () => {
     const e = storico.daRisultato(REPORT, null, "prova; con separatore");
     await storico.salva(e);
-    await storico.rinomina(e.id, "E4B docling");
+    await storico.rinomina(e.id, "prova docling");
     const [x] = await storico.elenco();
-    expect(x.etichetta).toBe("E4B docling");
-    expect(x.modello).toBe("gemma4:26b-a4b-it-qat + gemma4:e4b-it-qat");
+    expect(x.etichetta).toBe("prova docling");
+    expect(x.modello).toBe("vlm-grande:1 + vlm-piccolo:1");
     expect(x.modalita).toBe("redaction");
     expect(x.esito_verifica).toBe("skipped");
     expect(x.totale_s).toBe(12.1);
@@ -87,7 +87,7 @@ describe("storico", () => {
     const [colonne, riga] = storico.csv([x]).split("\n").map((r) => r.split(";"));
     const v = Object.fromEntries(colonne.map((c, i) => [c, riga[i]]));
     expect(v).toMatchObject({
-      etichetta: "E4B docling", modalita: "redazione", esito_verifica: "non eseguita", totale_s: "12.1",
+      etichetta: "prova docling", modalita: "redazione", esito_verifica: "non eseguita", totale_s: "12.1",
       acquisizione_s: "0.1", estrazione_s: "2", rilevamento_s: "5", censura_s: "1", verifica_s: "4",
       vlm_chiamate: "6", vlm_token_in: "100", vlm_token_out: "10", valori_regole: "1", valori_vlm: "2", valori_ner: "",
     });
@@ -120,8 +120,8 @@ describe("nomi", () => {
   });
 
   it("modelli del report: nomi distinti in ordine di fase", () => {
-    const stesso = "gemma4:e4b-it-qat";
-    expect(etichettaModelli(REPORT.model)).toBe("gemma4:26b-a4b-it-qat + gemma4:e4b-it-qat");
+    const stesso = "vlm-piccolo:1";
+    expect(etichettaModelli(REPORT.model)).toBe("vlm-grande:1 + vlm-piccolo:1");
     expect(etichettaModelli({ backend: "ollama", phases: { extraction: stesso, detection: stesso, redaction: stesso, verification: stesso } })).toBe(stesso);
   });
 

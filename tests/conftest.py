@@ -6,6 +6,7 @@ Test data is synthetic: the codice fiscale below is the textbook example
 
 import io
 from collections.abc import Iterator
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -15,6 +16,9 @@ from anonymization_pipeline.config import Settings
 from anonymization_pipeline.logging_setup import setup_logging
 
 FAKE_CF = "RSSMRA85M01H501U"
+# models file of the tests and its only model (any name: the code knows no model)
+MODELS_FILE = str(Path(__file__).parent / "fixtures" / "models.yaml")
+TEST_MODEL = "vlm:test"
 
 # main.py builds the app when imported (``main:app``) from Settings(): never from the developer's
 # .env file (variables already exported, e.g. by ``just``, still apply).
@@ -43,7 +47,12 @@ def make_settings(**overrides: Any) -> Settings:
     a test: pydantic-settings reads them even through ``model_validate``.
     """
     return _ExplicitSettings.model_validate(
-        {"environment": "local", "log_level": "DEBUG", **overrides}
+        {
+            "environment": "local",
+            "log_level": "DEBUG",
+            "models_file": MODELS_FILE,
+            **overrides,
+        }
     )
 
 

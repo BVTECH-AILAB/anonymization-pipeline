@@ -8,7 +8,7 @@ import pytest
 from anonymization_pipeline import model_store
 from anonymization_pipeline.config import Settings
 from anonymization_pipeline.model_store import download_all
-from tests.conftest import make_settings
+from tests.conftest import TEST_MODEL, make_settings
 from tests.pipeline import models_file
 
 
@@ -58,7 +58,7 @@ def test_pulls_the_vlm_even_when_runtime_pulls_are_off(tmp_path: Path) -> None:
     pulled: list[str] = []
 
     assert _run(settings, _ollama(pulled)) is True
-    assert pulled == ["gemma4:26b-a4b-it-qat"]
+    assert pulled == [TEST_MODEL]
 
 
 def test_pulls_every_model_of_the_catalog(tmp_path: Path) -> None:

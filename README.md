@@ -48,11 +48,11 @@ file -> ingest -> estrazione -> rilevamento -> censura -> verifica -> Markdown c
 ## Requisiti
 
 - Docker con compose, `uv`, `just`.
-- Per il modello predefinito (`gemma4:26b-a4b-it-qat`, circa 16 GB) una GPU
-  NVIDIA da 24 GB con NVIDIA Container Toolkit (su WSL2: Docker Desktop con
-  backend WSL2). Con 8 GB: un file dei modelli in `./config` con
-  `gemma4:e4b-it-qat` e `ANONPIP_MODELS_FILE=/app/config/<file>.yaml`. Su sola
-  CPU funziona, ma solo per prove.
+- Una GPU NVIDIA con NVIDIA Container Toolkit (su WSL2: Docker Desktop con
+  backend WSL2), con VRAM sufficiente per i modelli del file dei modelli
+  (`resources/models.yaml`, o il proprio in `./config` indicato da
+  `ANONPIP_MODELS_FILE=/app/config/<file>.yaml`). Su sola CPU funziona, ma
+  solo per prove.
 
 ## Primo avvio
 

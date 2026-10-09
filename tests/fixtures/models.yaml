@@ -1,0 +1,12 @@
+# Models file of the unit tests (make_settings): generic names, independent of the packaged one,
+# so a local change to resources/models.yaml never changes a test.
+models:
+  - name: vlm:test
+    context: 16384
+    vision: true
+
+phases:
+  extraction: vlm:test
+  detection: vlm:test
+  redaction: vlm:test
+  verification: vlm:test

@@ -56,7 +56,7 @@ services:
     networks: [internal]
     environment:
       OLLAMA_KEEP_ALIVE: 30m
-      OLLAMA_MAX_LOADED_MODELS: 1             # one model (Gemma 4 26B QAT ~16 GB + KV cache: 24 GB of VRAM)
+      OLLAMA_MAX_LOADED_MODELS: 1             # one model in VRAM at a time: phases with different models swap it
       OLLAMA_NUM_PARALLEL: ${OLLAMA_NUM_PARALLEL:-2}   # at least ANONPIP_VLM_CONCURRENCY
       OLLAMA_FLASH_ATTENTION: 1
       OLLAMA_KV_CACHE_TYPE: q8_0

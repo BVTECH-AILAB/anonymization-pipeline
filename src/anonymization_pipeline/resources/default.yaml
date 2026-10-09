@@ -31,7 +31,7 @@ backend:
 generation:
   temperature: 0
   seed: 42                  # reduces (does not remove) differences between runs
-  think: false              # Gemma 4 reasons by default: the reasoning uses the answer tokens and the
+  think: false              # models that reason by default spend the answer tokens on reasoning and the
                             # answer comes back empty. null = field not sent
   keep_alive: 30m           # the model stays in VRAM between documents (and phases, if it fits)
   options: {}               # extra backend options passed as they are (e.g. top_k)

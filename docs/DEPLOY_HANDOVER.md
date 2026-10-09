@@ -20,8 +20,8 @@ fa il provisioning.
 | Chi chiama (dipendenze) | **solo** il backend VLM interno (Ollama, o un server compatibile OpenAI come vLLM) |
 | Repliche | **1** (vedi "Lavori in memoria") |
 | Risorse API | requests 2 CPU / 6Gi, limits 4 CPU / 10Gi (NER e docling girano su CPU nel pod) |
-| Risorse backend VLM | 1 GPU NVIDIA da 24 GB (`nvidia.com/gpu: 1`), 16Gi di RAM, con il file dei modelli predefinito; con 8 GB di VRAM un file dei modelli con `gemma4:e4b-it-qat` |
-| Volumi | PVC modelli dell'API ~2Gi (NER ~450 MB in `/models/hf`, docling ~700 MB in `/models/docling`), montata in sola lettura; PVC modelli di Ollama: somma dei modelli del catalogo più margine (~40Gi con il catalogo predefinito, ~16 GB) |
+| Risorse backend VLM | 1 GPU NVIDIA (`nvidia.com/gpu: 1`) con VRAM sufficiente per il modello più grande del file dei modelli (più la cache del contesto), 16Gi di RAM |
+| Volumi | PVC modelli dell'API ~2Gi (NER ~450 MB in `/models/hf`, docling ~700 MB in `/models/docling`), montata in sola lettura; PVC modelli di Ollama: somma dei modelli del catalogo più margine |
 | File dei modelli | facoltativo: ConfigMap con `models.yaml` montata nell'API e nel Job di download, indicata da `ANONPIP_MODELS_FILE` (vedi `docs/k8s-example/service.yaml`); senza, vale quello nell'immagine |
 | Migrazioni all'avvio | nessuna |
 

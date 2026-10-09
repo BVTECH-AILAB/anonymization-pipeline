@@ -1,0 +1,301 @@
+# =============================================================================
+#  Pipeline configuration (defaults)
+#
+#  Layers, from weakest to strongest:
+#    1. this file (plus the prompts in prompts/*.yaml under the key 'prompts')
+#    2. the user file in ANONPIP_PIPELINE_CONFIG_FILE (only the keys to change)
+#    3. the ANONPIP_* settings (config.py): backend, model name and context, default modes.
+#       Those keys are owned by the settings and are rejected in the user file.
+#    4. per-request overrides (API and web UI: model, mode, verification, extraction, categories)
+#  Unknown keys are an error: a typo is never silently ignored.
+#
+#  One VLM runs every phase (extraction, detection, redaction, verification). Docling (native PDF
+#  pages) and the NER detector have their own models, on CPU.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+#  Local inference backend (kind, url, api_key, concurrency, pull_missing: from the settings)
+# -----------------------------------------------------------------------------
+backend:
+  retries: 2                # new attempts on network errors, 5xx and invalid JSON
+  retry_wait_s: 2           # wait before the first new attempt (then it doubles)
+  pull_timeout_s: 7200
+  health_timeout_s: 5
+
+# -----------------------------------------------------------------------------
+#  Single model for every phase (name, context: from the settings)
+# -----------------------------------------------------------------------------
+model:
+  temperature: 0
+  seed: 42                  # reduces (does not remove) differences between runs
+  think: false              # Gemma 4 reasons by default: the reasoning uses the answer tokens and the
+                            # answer comes back empty. null = field not sent
+  keep_alive: 30m           # the model stays in VRAM between documents
+  options: {}               # extra backend options passed as they are (e.g. top_k)
+
+# -----------------------------------------------------------------------------
+#  Ingest
+# -----------------------------------------------------------------------------
+images:
+  pdf_dpi: 200              # rendering resolution of PDF pages (native ones too: the VLM uses the image
+                            # in detection and verification)
+  max_side_px: 2048         # longest side of the page image sent to the model
+  format: png               # png | jpeg
+  jpeg_quality: 90
+  max_pixels: 120000000     # larger images are rejected before decoding (decompression bomb)
+  max_pages: 200
+
+text:
+  encodings: [utf-8-sig, cp1252, latin-1]   # tried in order (UTF-16 only with a BOM)
+  max_block_chars: 6000                     # text files are split into blocks (at line ends)
+
+# -----------------------------------------------------------------------------
+#  Phases
+# -----------------------------------------------------------------------------
+phases:
+  extraction:
+    timeout_s: 600
+    max_tokens: 8192
+    # Native PDF pages (readable and visible text layer) are extracted with docling (a few seconds on
+    # CPU, exact text, structured tables); the others (scans, pages with many images or hidden text)
+    # with the VLM. Without docling or its models every page goes to the VLM, with a warning.
+    native_pdf:                 # engine, models_dir: from the settings
+      min_chars: 50             # characters of the text layer (spaces excluded) for a native page
+      max_unreadable: 0.02      # max fraction of undecodable characters (fonts without a Unicode map)
+      max_image_fraction: 0.5   # images over this fraction of the page: scan or content to read
+      min_contrast: 12          # text whose box has no contrast in the rendered page is hidden
+      tables: true              # table structure (TableFormer)
+      threads: 4
+    # Non-text elements: how they are reported in the Markdown (they end up in the extraction prompt).
+    # The text inside stamps and labels must be transcribed: it often holds names and register numbers.
+    # The placeholders between [] are the ones that appear in the Markdown.
+    visual_elements:
+      FIRMA: "[FIRMA] (if the signer's name is legible, transcribe it after the placeholder)"
+      TIMBRO: "[TIMBRO: full transcription of the stamp text]"
+      FOTO: "[FOTO] (photographs, faces, ID photos)"
+      LOGO: "[LOGO: text of the logo, if any]"
+      CODICE_A_BARRE: "[CODICE_A_BARRE] (plus the text printed under the code, if any)"
+      QR_CODE: "[QR_CODE]"
+      IMMAGINE: "[IMMAGINE: short description] (clinical images, charts, traces)"
+      MANOSCRITTO: "handwritten text: transcribe it as normal text"
+
+  detection:
+    timeout_s: 300
+    max_tokens: 4096
+    use_image: true             # besides the Markdown, the model sees the page (context: label or value)
+    # One call per pass and per page. Short passes: with many categories together the models
+    # confuse similar ones and skip some. Each entry is a group or a category.
+    passes:
+      - [anagrafica, residenza, persone_correlate, documenti]
+      - [identificativi, contatti, finanziari, veicoli, identificativi_sanitari, date, organizzazioni]
+      - [sanitari, particolari]
+    # Detectors in union, run in parallel on every page: one is enough to flag a value.
+    # For the same text, between categories of different families the most reliable wins: rules,
+    # labels, ner, vlm. The eponym filter applies to all of them (VLM and verification included).
+    detectors:
+      vlm: true                 # the passes above, with the VLM
+      rules: true               # regex + checksum (CF, IBAN, VAT, cards, phones, ICD-10...): detectors/rules.yaml
+      labels: true              # value after a label ("Codice paziente: ..."): detectors/labels.yaml
+      eponyms: true             # Parkinson, Valsalva, Coumadin... are not people: detectors/eponyms.yaml
+      ner:                      # token classification on CPU (image with the 'ner' extra, model in HF_HOME)
+        enabled: true
+        model: DeepMount00/Italian_NER_XXL_v2
+        revision: null          # model commit (null = the last one downloaded)
+        threshold: 0.6
+        window_words: 300       # the model reads at most 512 tokens: text split into windows
+        overlap_words: 50
+        threads: 4              # torch threads: with every core inference is much slower
+        label_map:              # model label -> category; labels not listed are ignored
+          NOME: NOME
+          COGNOME: COGNOME
+          CODICE_FISCALE: CODICE_FISCALE
+          P_IVA: PARTITA_IVA
+          IBAN: IBAN
+          NUMERO_CARTA: CARTA_CREDITO
+          NUMERO_CONTO: NUMERO_CONTO
+          EMAIL: EMAIL
+          NUMERO_TELEFONO: TELEFONO
+          INDIRIZZO: INDIRIZZO
+          CODICE_POSTALE: CAP
+          LUOGO: LUOGO
+          STATO: STATO
+          DATA: DATA
+          DATA_NASCITA: DATA_NASCITA
+          DATA_MORTE: DATA_DECESSO
+          ETA: ETA
+          PROFESSIONE: PROFESSIONE
+          STATO_CIVILE: STATO_CIVILE
+          CARTELLA_CLINICA: NUMERO_CARTELLA
+          MALATTIA: DIAGNOSI
+          STORIA_CLINICA: PATOLOGIA
+          MEDICINA: FARMACO       # DOSAGGIO not mapped: "1 cpr", "mg/die" alone identify nobody
+          TARGA_VEICOLO: TARGA
+          IP: INDIRIZZO_IP
+          IPV6_1: INDIRIZZO_IP
+          MAC: ID_DISPOSITIVO
+          IMEI: ID_DISPOSITIVO
+          URL: URL_PERSONALE
+          RAGIONE_SOCIALE: ORGANIZZAZIONE
+          N_SENTENZA: DATI_GIUDIZIARI
+        filters:
+          min_length: 3
+          require_capital: [PERSONA, LUOGO, ORGANIZZAZIONE]
+          # words often mistaken for proper names in reports and forms (labels, headings)
+          false_positives: [paziente, cognome, nome, firma, data, referto, diagnosi, terapia, esame, anamnesi,
+                            conclusioni, sesso, codice, fiscale, tessera, sanitaria, repubblica, italiana, comune,
+                            ministero, carta, identità, identita, ospedale, reparto, medico, dott, dott.ssa, dr,
+                            dr.ssa, prof, prof.ssa, sig, sig.ra, tel, email, via, piazza, allergie, intolleranze,
+                            altezza, peso, ambulatorio, indirizzo, fattori, prossimo, controllo, accertamenti,
+                            visita, esito, note, osservazioni, sinistro, polizza, protocollo, accettazione,
+                            prenotazione, ricetta, provetta, campione, vetrino, esenzione, albo, matricola,
+                            infermiera, infermiere, cittadinanza, professione,
+                            # labels and section titles of reports ("Medico di base", "Anamnesi fisiologica")
+                            di, base, referente, curante, provenienza, fisiologica, familiare, patologica,
+                            remota, prossima, obiettivo, decorso, clinico, indicazioni]
+    anchoring:
+      min_length: 2             # shorter values are ignored
+      case_insensitive_over: 3  # over this length the search ignores case
+      fuzzy: 0.9                # minimum similarity when the value is not there verbatim (0 = off)
+
+  redaction:                    # mode: from the settings
+    timeout_s: 300
+    max_tokens: 4096
+    coreference: vlm            # vlm: the model merges variants of the same entity ("Mario Rossi",
+                                # "ROSSI MARIO", "sig. Rossi") under one tag | exact: same normalized form
+    tag_format: "[{category}_{n}]"
+    redaction_symbol: "█████"
+
+  verification:                 # mode (off | report | fix | block): from the settings
+    timeout_s: 300
+    max_tokens: 4096
+    max_iterations: 3           # fix: verifications after the first redaction; residuals still there -> rejected
+    use_image: true             # the model compares the redacted text with the original page
+    required: true              # if the model does not answer the document is rejected (fail-closed)
+    passes: null                # null = the detection passes
+
+# -----------------------------------------------------------------------------
+#  Categories to anonymize (registry and descriptions in categories.yaml).
+#  All active by default: switch off what is not needed, in the user file also by group:
+#  categories: {groups: {organizzazioni: false}, DATORE_LAVORO: true};
+#  a category given in the same file wins over its group.
+# -----------------------------------------------------------------------------
+categories:
+  # --- personal details ---
+  NOME:                      true
+  COGNOME:                   true
+  PERSONA:                   true
+  PATERNITA_MATERNITA:       true
+  SESSO:                     true
+  DATA_NASCITA:              true
+  LUOGO_NASCITA:             true
+  CITTADINANZA:              true
+  STATO_CIVILE:              true
+  PROFESSIONE:               true
+  TITOLO_STUDIO:             true
+  ETA:                       true
+  # --- residence and domicile ---
+  INDIRIZZO:                 true
+  CAP:                       true
+  LUOGO:                     true
+  STATO:                     true
+  # --- tax and administrative identifiers ---
+  CODICE_FISCALE:            true
+  PARTITA_IVA:               true
+  TESSERA_SANITARIA:         true
+  CODICE_STP_ENI:            true
+  CODICE_ESENZIONE:          true
+  NUMERO_POLIZZA:            true
+  NUMERO_PROTOCOLLO:         true
+  # --- identity documents ---
+  NUMERO_CARTA_IDENTITA:     true
+  NUMERO_PASSAPORTO:         true
+  NUMERO_PATENTE:            true
+  NUMERO_PERMESSO_SOGGIORNO: true
+  ENTE_RILASCIO:             true
+  DATA_RILASCIO:             true
+  DATA_SCADENZA:             true
+  ALTEZZA_COLORE_OCCHI:      true
+  MRZ:                       true
+  # --- contacts and digital identity ---
+  EMAIL:                     true
+  PEC:                       true
+  TELEFONO:                  true
+  FAX:                       true
+  USERNAME_SOCIAL:           true
+  INDIRIZZO_IP:              true
+  ID_DISPOSITIVO:            true
+  URL_PERSONALE:             true
+  # --- financial data ---
+  IBAN:                      true
+  CARTA_CREDITO:             true
+  NUMERO_CONTO:              true
+  # --- vehicles ---
+  TARGA:                     true
+  TELAIO:                    true
+  # --- health identifiers ---
+  ID_PAZIENTE:               true
+  NUMERO_CARTELLA:           true
+  NUMERO_ACCETTAZIONE:       true
+  NUMERO_REFERTO:            true
+  NUMERO_RICETTA:            true
+  NUMERO_PRENOTAZIONE:       true
+  ACCESSION_NUMBER:          true
+  CODICE_CAMPIONE:           true
+  # --- staff and related people ---
+  MEDICO:                    true
+  OPERATORE_SANITARIO:       true
+  NUMERO_ALBO:               true
+  FAMILIARE:                 true
+  CONTATTO_EMERGENZA:        true
+  TUTORE_DELEGATO:           true
+  # --- dates ---
+  DATA:                      true
+  DATA_VISITA:               true
+  DATA_REFERTO:              true
+  DATA_RICOVERO:             true
+  DATA_PRESCRIZIONE:         true
+  DATA_DECESSO:              true
+  # --- organizations ---
+  ORGANIZZAZIONE:            true
+  STRUTTURA_SANITARIA:       true
+  REPARTO:                   true
+  DATORE_LAVORO:             true
+  SCUOLA:                    true
+  # --- health data (art. 9 GDPR) ---
+  DIAGNOSI:                  true
+  PATOLOGIA:                 true
+  TERAPIA:                   true
+  FARMACO:                   true
+  ESAME_VALORE:              true
+  INTERVENTO:                true
+  ALLERGIA:                  true
+  GRUPPO_SANGUIGNO:          true
+  INVALIDITA:                true
+  GRAVIDANZA:                true
+  SALUTE_MENTALE:            true
+  DIPENDENZE:                true
+  MALATTIE_INFETTIVE:        true
+  DATO_GENETICO:             true
+  MISURE_ANTROPOMETRICHE:    true
+  DECESSO_CAUSA:             true
+  # --- special categories (art. 9-10 GDPR) ---
+  RELIGIONE:                 true
+  ORIENTAMENTO_SESSUALE:     true
+  OPINIONE_POLITICA:         true
+  SINDACATO:                 true
+  ETNIA:                     true
+  DATI_GIUDIZIARI:           true
+  DATO_BIOMETRICO:           true
+
+# -----------------------------------------------------------------------------
+#  Output
+# -----------------------------------------------------------------------------
+output:
+  # separator between pages in the Markdown (PDF and multi-page images); {n} = page number
+  page_separator: "\n\n<!-- pagina {n} -->\n\n"
+  # DEBUG: also produce the transcript IN CLEAR TEXT (<stem>.trascrizione.md). Never in production:
+  # a request can ask for it only when ANONPIP_ALLOW_TRANSCRIPT=true.
+  save_transcript: false
+  # <stem>.metriche.json: times per phase, sub-phase and page, VLM latencies and tokens, CPU and memory
+  # (no value of the document)
+  save_metrics: true

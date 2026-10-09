@@ -34,3 +34,27 @@ def test_staging_may_enable_user_text() -> None:
 
 def test_invalid_log_level_falls_back_to_info() -> None:
     assert make_settings(log_level="verbose").log_level == "INFO"
+
+
+def test_prod_forbids_the_transcript() -> None:
+    assert (
+        make_settings(environment="prod", allow_transcript=True).allow_transcript
+        is False
+    )
+    assert (
+        make_settings(environment="staging", allow_transcript=True).allow_transcript
+        is True
+    )
+
+
+def test_credentials_have_no_default(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    for name in ("ANONPIP_VLM_API_KEY", "ANONPIP_VAULT_KEY"):
+        monkeypatch.delenv(name, raising=False)
+
+    settings = Settings()
+
+    assert settings.vlm_api_key == ""
+    assert settings.vault_key == ""

@@ -6,16 +6,21 @@ has a safe default: a pod must never crash on startup because a variable is
 missing from its ConfigMap.
 
 When you add a setting, add it in three places: here, ``.env.example`` and
-``docker-compose.yml`` (``${VAR:-default}`` syntax).
+``docker-compose.yml`` (``${VAR:-default}`` syntax), then list it in
+``docs/DEPLOY_HANDOVER.md``.
 """
 
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import field_validator, model_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 Environment = Literal["local", "staging", "prod"]
+VLMBackend = Literal["ollama", "openai"]
+RedactionMode = Literal["pseudonym", "tag", "redaction"]
+VerificationMode = Literal["off", "report", "fix", "block"]
+ExtractionEngine = Literal["docling", "vlm"]
 
 
 class Settings(BaseSettings):
@@ -39,6 +44,41 @@ class Settings(BaseSettings):
     log_mask_prefix: int = 1
     log_mask_suffix: int = 1
 
+    # VLM backend: a local Ollama (native API) or an OpenAI-compatible server
+    # (vLLM, llama.cpp). Documents never leave the deployment.
+    vlm_backend: VLMBackend = "ollama"
+    vlm_url: str = "http://ollama:11434"
+    # Credential: only for OpenAI-compatible backends that require it.
+    vlm_api_key: str = ""
+    vlm_model: str = "gemma4:26b-a4b-it-qat"
+    vlm_context: int = Field(default=16384, ge=1024)
+    vlm_concurrency: int = Field(default=2, ge=1)
+    # Off by default: at runtime the backend has no internet access, models are
+    # downloaded beforehand (`just models`).
+    vlm_pull_missing: bool = False
+
+    default_mode: RedactionMode = "pseudonym"
+    default_verification: VerificationMode = "fix"
+    default_extraction: ExtractionEngine = "docling"
+    docling_models_dir: str = "/models/docling"
+    # Optional YAML file with pipeline overrides (see resources/default.yaml).
+    pipeline_config_file: str = ""
+    # Credential: key or passphrase of the pseudonym map. When empty, requests
+    # in pseudonym mode must send their own key.
+    vault_key: str = ""
+
+    max_upload_mb: float = Field(default=50, gt=0)
+    # Documents processed at the same time (the GPU is the bottleneck).
+    max_concurrent_jobs: int = Field(default=1, ge=1)
+    # Seconds a synchronous request waits for a free slot before a 503.
+    job_wait_s: float = Field(default=30, ge=0)
+    max_queued_jobs: int = Field(default=20, ge=1)
+    max_jobs: int = Field(default=50, ge=1)
+    job_ttl_s: float = Field(default=3600, gt=0)
+    # A request may ask for the transcript IN CLEAR TEXT (debugging the web UI).
+    # Forced off in prod by ``_enforce_prod_privacy``.
+    allow_transcript: bool = False
+
     @field_validator("log_level")
     @classmethod
     def _normalize_log_level(cls, value: str) -> str:
@@ -52,6 +92,7 @@ class Settings(BaseSettings):
         """Never allow verbose or user-text logging in production."""
         if self.environment == "prod":
             self.extended_log_context = False
+            self.allow_transcript = False
             if self.log_level == "DEBUG":
                 self.log_level = "INFO"
         return self

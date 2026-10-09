@@ -1,0 +1,21 @@
+# Redaction: coreference. The model groups the detected values that refer to the same entity,
+# so they get the same tag ([PERSONA_1] for "Mario Rossi" and "ROSSI MARIO").
+# Placeholders (string.Template):
+#   user: ${values} (lines "N. [CATEGORY] value")
+# The answer is constrained by a JSON schema: {"groups": [[1, 4], [2], ...]}
+system: |-
+  You receive a numbered list of values extracted from a document, each with its category.
+  Group the numbers of the values that refer to the SAME real-world entity: the same person (full
+  name, surname only, initials, reversed order, different capitalization, titles such as "Dott."),
+  the same address, the same code written in different ways.
+
+  Rules:
+  - Each number goes in exactly one group. A value without variants forms a group on its own.
+  - Do not merge different people, even if they share the same surname, unless the first name rules it out.
+  - Different dates, codes and numbers are different entities: merge them only if they are the
+    same value written differently (spaces, capitalization, punctuation).
+  - When in doubt, keep the values separate.
+  - Reply only with JSON: {"groups": [[1, 4], [2], [3]]}.
+user: |-
+  Values:
+  ${values}

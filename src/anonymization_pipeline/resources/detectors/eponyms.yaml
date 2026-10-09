@@ -1,0 +1,27 @@
+# =============================================================================
+#  Eponyms and drug names that look like person names (anonymization_pipeline/detectors/eponyms.py)
+#
+#  "Morbo di Parkinson", "manovra di Valsalva", "Coumadin": proper names or brand names that are
+#  not personal data. A value proposed by any detector (VLM included) in a person category
+#  (PERSONA family: NOME, COGNOME, MEDICO, FAMILIARE...) is discarded if it matches, in full,
+#  one of these words; eponyms even when proposed as FARMACO. The comparison ignores
+#  extra spaces.
+#  The entries come from the expected false positives of the synthetic corpus of the anonimizzatore
+#  project, plus the eponyms and drugs most common in medical reports.
+# =============================================================================
+
+# case-insensitive
+eponyms: [
+  Addison, Alzheimer, Apgar, Babinski, Barrett, Basedow, Bell, Blumberg, Brugada, Crohn, Cushing,
+  Doppler, Down, Dupuytren, Fallot, Giordano, Glasgow, Graves, Guillain, Guillain-Barré, Hashimoto,
+  Hodgkin, Holter, Horner, Kaposi, Lachman, Lasègue, Lasegue, Mallory, Mantoux, McMurray, Meniere,
+  Ménière, Murphy, Pap, Parkinson, Raynaud, Romberg, Rovsing, Segond, Sjögren, Sjogren, Valsalva,
+  Wilson, Wolff-Parkinson-White]
+
+# drug brand names, case-insensitive
+drugs: [
+  Augmentin, Cardioaspirin, Coumadin, Eutirox, Lasix, Moment, Oki, Tachipirina, Tavor, Xanax]
+
+# common words discarded only when written in lowercase ("globuli rossi", "costa", "capelli bruni"):
+# with a capital initial they remain possible surnames
+common_words: [bianchi, bruno, costa, rossi, neri]

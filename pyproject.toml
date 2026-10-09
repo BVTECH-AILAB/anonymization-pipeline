@@ -87,9 +87,11 @@ ignore = ["E501"]
 testpaths = ["tests"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
-addopts = "-m 'not integration' --strict-markers"
+addopts = "-m 'not integration and not ner and not docling' --strict-markers"
 markers = [
     "integration: needs the compose Ollama, run with `just test-vlm`",
+    "ner: needs the 'ner' extra and the NER model in HF_HOME",
+    "docling: needs the 'docling' extra and its models",
 ]
 
 [tool.coverage.run]
@@ -100,3 +102,16 @@ branch = true
 fail_under = 80
 show_missing = true
 skip_covered = true
+
+[tool.ty.analysis]
+# Optional extras (ner, docling): not installed by `uv sync`, so lint and CI do not need them.
+allowed-unresolved-imports = [
+    "docling.**",
+    "docling_core.**",
+    "huggingface_hub",
+    "huggingface_hub.**",
+    "torch",
+    "torch.**",
+    "transformers",
+    "transformers.**",
+]

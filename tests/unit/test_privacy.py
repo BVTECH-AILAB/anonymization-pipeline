@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from agenas_service.privacy import (
+from anonmyzation_pipeline.privacy import (
     REDACTED,
     PiiRedactingFilter,
     hash_identifier,

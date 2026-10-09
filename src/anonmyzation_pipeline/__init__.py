@@ -3,6 +3,6 @@
 from importlib.metadata import PackageNotFoundError, version
 
 try:
-    __version__ = version("agenas-service")
+    __version__ = version("anonmyzation-pipeline")
 except PackageNotFoundError:
     __version__ = "0.0.0"

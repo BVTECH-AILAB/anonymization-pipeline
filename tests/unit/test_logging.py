@@ -4,7 +4,7 @@ import logging
 import pytest
 from fastapi.testclient import TestClient
 
-from agenas_service.logging_setup import log_event, setup_logging
+from anonmyzation_pipeline.logging_setup import log_event, setup_logging
 from tests.conftest import FAKE_CF, make_settings
 
 
@@ -30,7 +30,7 @@ def test_setup_logging_is_idempotent_and_keeps_foreign_handlers() -> None:
         setup_logging(settings, stream=io.StringIO())
 
         ours = [
-            h for h in root.handlers if getattr(h, "_agenas_service_handler", False)
+            h for h in root.handlers if getattr(h, "_anonmyzation_pipeline_handler", False)
         ]
         assert len(ours) == 1
         assert foreign in root.handlers

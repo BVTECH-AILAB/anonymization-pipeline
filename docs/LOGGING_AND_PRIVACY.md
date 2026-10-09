@@ -44,7 +44,7 @@ servizio -> stdout (testo) -> Grafana Alloy -> Loki -> Grafana / KPI-dashboard
 | WARNING | Degradazione gestita: retry, fallback, dipendenza giù | `"NER unavailable, request refused (attempt %d)"` | logger.warning per ogni richiesta valida |
 | ERROR | La richiesta è fallita. Passa `exc_info=` per avere il traceback | `logger.error("Unhandled %s on %s", type(exc).__name__, path, exc_info=exc)` | `logger.error(str(exc))` con il body della richiesta |
 
-In staging `TEMPLATE_LOG_LEVEL=DEBUG` è ammesso. In prod il servizio lo
+In staging `ANONPIP_LOG_LEVEL=DEBUG` è ammesso. In prod il servizio lo
 ignora e usa INFO.
 
 ## Cosa non si logga mai (in nessun ambiente)
@@ -67,7 +67,7 @@ In local e staging questi contenuti servono per capire perché una risposta
 
 1. passano da `redact_user_text(text, settings)`, mai direttamente;
 2. sono a livello `DEBUG`;
-3. è attivo `TEMPLATE_EXTENDED_LOG_CONTEXT=true`, che di default è spento.
+3. è attivo `ANONPIP_EXTENDED_LOG_CONTEXT=true`, che di default è spento.
    Si accende per il tempo dell'indagine e poi si rispegne.
 
 ```python
@@ -76,7 +76,7 @@ logger.debug("LLM response: %s", redact_user_text(answer, settings))
 ```
 
 In produzione resta tutto strict senza eccezioni: con
-`TEMPLATE_ENVIRONMENT=prod` il flag viene forzato a `false` e DEBUG a INFO,
+`ANONPIP_ENVIRONMENT=prod` il flag viene forzato a `false` e DEBUG a INFO,
 quindi `redact_user_text` restituisce sempre `<redacted>` anche se qualcuno
 lascia il flag acceso nella ConfigMap. In ogni ambiente i codici fiscali
 dentro il testo restano mascherati.
@@ -87,10 +87,10 @@ dentro il testo restano mascherati.
 |---|---|
 | `hash_identifier(cf)` | SHA256 su `strip().upper()`, stessa normalizzazione di authz: valori confrontabili tra servizi. Per log e DB. |
 | `mask_identifier(cf)` | `R***U`, per log leggibili da un umano. |
-| `redact_user_text(text, settings)` | Per testo utente, prompt e risposte LLM. Restituisce `<redacted>`, tranne in local e staging con `TEMPLATE_EXTENDED_LOG_CONTEXT=true`: lì restituisce il testo, con i codici fiscali comunque mascherati. In prod è sempre `<redacted>`. |
+| `redact_user_text(text, settings)` | Per testo utente, prompt e risposte LLM. Restituisce `<redacted>`, tranne in local e staging con `ANONPIP_EXTENDED_LOG_CONTEXT=true`: lì restituisce il testo, con i codici fiscali comunque mascherati. In prod è sempre `<redacted>`. |
 | `PiiRedactingFilter` | Installato da `setup_logging` sull'handler di stdout: maschera i codici fiscali in messaggi, argomenti e traceback, inclusi i log di uvicorn. È una rete di sicurezza, non un permesso. |
 
-`TEMPLATE_EXTENDED_LOG_CONTEXT` corrisponde a `EXTENDED_LOG_CONTEXT` di
+`ANONPIP_EXTENDED_LOG_CONTEXT` corrisponde a `EXTENDED_LOG_CONTEXT` di
 ai-platform (`src/utils/log_user_input.py::redact_query`).
 
 ## Eventi per le dashboard (contratto con KPI-dashboard)

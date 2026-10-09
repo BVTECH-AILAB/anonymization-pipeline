@@ -8,8 +8,8 @@ fa il provisioning.
 
 | Voce | Valore |
 |---|---|
-| Nome servizio / immagine | `agenas-service` -> `harbor.agenas.oci/agenas/agenas-service` |
-| Repository GitLab | `gitlab.agenas.oci:application/backend/agenas-service` |
+| Nome servizio / immagine | `anonmyzation-pipeline` -> `harbor.agenas.oci/agenas/anonmyzation-pipeline` |
+| Repository GitLab | `gitlab.agenas.oci:application/backend/anonmyzation-pipeline` |
 | Namespace proposto | |
 | Porta | `8000` (nome `web`) |
 | Liveness probe | `GET /healthz` |
@@ -20,7 +20,7 @@ fa il provisioning.
 | Chi chiama (dipendenze) | es. llm-gateway, ner-anonymizer, authz |
 | Repliche | default 2 |
 | Risorse | default requests 100m / 256Mi, limits 500m / 512Mi |
-| Migrazioni all'avvio | `TEMPLATE_RUN_MIGRATIONS=true` (default) |
+| Migrazioni all'avvio | `ANONPIP_RUN_MIGRATIONS=true` (default) |
 
 ### Variabili d'ambiente
 
@@ -29,11 +29,11 @@ nella ConfigMap e nel codice non ha default.
 
 | Variabile | Default | Staging | Prod | Segreto |
 |---|---|---|---|---|
-| `TEMPLATE_ENVIRONMENT` | `prod` | `staging` | `prod` | no |
-| `TEMPLATE_LOG_LEVEL` | `INFO` | `DEBUG` | `INFO` | no |
-| `TEMPLATE_EXTENDED_LOG_CONTEXT` | `false` | `false` (solo per debug mirato) | ignorata | no |
-| `TEMPLATE_DATABASE_URL` | nessuno (credenziale) | secret CNPG | secret CNPG | **sì** |
-| `TEMPLATE_DB_POOL_SIZE` | `5` | | | no |
+| `ANONPIP_ENVIRONMENT` | `prod` | `staging` | `prod` | no |
+| `ANONPIP_LOG_LEVEL` | `INFO` | `DEBUG` | `INFO` | no |
+| `ANONPIP_EXTENDED_LOG_CONTEXT` | `false` | `false` (solo per debug mirato) | ignorata | no |
+| `ANONPIP_DATABASE_URL` | nessuno (credenziale) | secret CNPG | secret CNPG | **sì** |
+| `ANONPIP_DB_POOL_SIZE` | `5` | | | no |
 
 ## Cosa fa il team piattaforma
 
@@ -41,7 +41,7 @@ nella ConfigMap e nel codice non ha default.
 2. **Database** (se serve): cluster CloudNativePG `postgres-<servizio>`
    (Postgres 17, 2 istanze, backup barman su S3 e `ScheduledBackup`).
    CNPG genera il secret `postgres-<servizio>-app`; la chiave `uri` diventa
-   `TEMPLATE_DATABASE_URL`. Il servizio non crea database né utenti.
+   `ANONPIP_DATABASE_URL`. Il servizio non crea database né utenti.
 3. **Segreti**: `ExternalSecret` da Vault (`ClusterSecretStore vault-backend`).
 4. **Manifest applicativo**: ConfigMap, Deployment, Service, Ingress
    (modello in `docs/k8s-example/service.yaml`).

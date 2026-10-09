@@ -12,8 +12,8 @@ from alembic import command
 from alembic.config import Config
 from fastapi.testclient import TestClient
 
-from agenas_service.config import get_settings
-from agenas_service.main import create_app
+from anonmyzation_pipeline.config import get_settings
+from anonmyzation_pipeline.main import create_app
 
 pytestmark = pytest.mark.integration
 

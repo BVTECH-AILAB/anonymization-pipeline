@@ -2,7 +2,7 @@
 # CloudNativePG clusters in staging/prod).
 # Settings have defaults (${VAR:-default}); credentials do not and must be
 # set in .env (cp .env.example .env), otherwise compose refuses to start.
-name: agenas-service
+name: anonmyzation-pipeline
 
 services:
   db:
@@ -30,15 +30,15 @@ services:
       db:
         condition: service_healthy
     environment:
-      TEMPLATE_ENVIRONMENT: ${TEMPLATE_ENVIRONMENT:-local}
-      TEMPLATE_LOG_LEVEL: ${TEMPLATE_LOG_LEVEL:-DEBUG}
-      TEMPLATE_EXTENDED_LOG_CONTEXT: ${TEMPLATE_EXTENDED_LOG_CONTEXT:-false}
-      TEMPLATE_LOG_MASK_PREFIX: ${TEMPLATE_LOG_MASK_PREFIX:-1}
-      TEMPLATE_LOG_MASK_SUFFIX: ${TEMPLATE_LOG_MASK_SUFFIX:-1}
-      TEMPLATE_DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-app}
-      TEMPLATE_DB_POOL_SIZE: ${TEMPLATE_DB_POOL_SIZE:-5}
-      TEMPLATE_DB_MAX_OVERFLOW: ${TEMPLATE_DB_MAX_OVERFLOW:-5}
-      TEMPLATE_DB_CONNECT_TIMEOUT: ${TEMPLATE_DB_CONNECT_TIMEOUT:-5}
+      ANONPIP_ENVIRONMENT: ${ANONPIP_ENVIRONMENT:-local}
+      ANONPIP_LOG_LEVEL: ${ANONPIP_LOG_LEVEL:-DEBUG}
+      ANONPIP_EXTENDED_LOG_CONTEXT: ${ANONPIP_EXTENDED_LOG_CONTEXT:-false}
+      ANONPIP_LOG_MASK_PREFIX: ${ANONPIP_LOG_MASK_PREFIX:-1}
+      ANONPIP_LOG_MASK_SUFFIX: ${ANONPIP_LOG_MASK_SUFFIX:-1}
+      ANONPIP_DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-app}
+      ANONPIP_DB_POOL_SIZE: ${ANONPIP_DB_POOL_SIZE:-5}
+      ANONPIP_DB_MAX_OVERFLOW: ${ANONPIP_DB_MAX_OVERFLOW:-5}
+      ANONPIP_DB_CONNECT_TIMEOUT: ${ANONPIP_DB_CONNECT_TIMEOUT:-5}
     ports:
       - "127.0.0.1:${APP_PORT:-8000}:8000"
     volumes:
@@ -49,7 +49,7 @@ services:
       - ./pyproject.toml:/app/pyproject.toml:ro
     command: >
       sh -c "alembic upgrade head &&
-             uvicorn agenas_service.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src"
+             uvicorn anonmyzation_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src"
 
 volumes:
   pg_data:

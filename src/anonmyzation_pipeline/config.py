@@ -1,7 +1,7 @@
 """Service configuration.
 
-Every setting is read from an environment variable with the ``TEMPLATE_``
-prefix (``TEMPLATE_DATABASE_URL``, ``TEMPLATE_LOG_LEVEL`` ...). Every field
+Every setting is read from an environment variable with the ``ANONPIP_``
+prefix (``ANONPIP_DATABASE_URL``, ``ANONPIP_LOG_LEVEL`` ...). Every field
 has a safe default: a pod must never crash on startup because a variable is
 missing from its ConfigMap.
 
@@ -22,12 +22,12 @@ class Settings(BaseSettings):
     """Typed service settings."""
 
     model_config = SettingsConfigDict(
-        env_prefix="TEMPLATE_",
+        env_prefix="ANONPIP_",
         env_file=".env",
         extra="ignore",
     )
 
-    app_name: str = "agenas-service"
+    app_name: str = "anonmyzation-pipeline"
     # Defaults to "prod" on purpose: a forgotten variable must fall back to
     # the most privacy-conservative behaviour, never the most verbose one.
     environment: Environment = "prod"

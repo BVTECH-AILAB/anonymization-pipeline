@@ -1,4 +1,4 @@
-"""Application factory and ASGI entry point (``agenas_service.main:app``)."""
+"""Application factory and ASGI entry point (``anonmyzation_pipeline.main:app``)."""
 
 import logging
 from collections.abc import AsyncIterator
@@ -6,13 +6,13 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from agenas_service import __version__
-from agenas_service.api import health, items
-from agenas_service.config import Settings, get_settings
-from agenas_service.db.engine import build_engine, build_sessionmaker
-from agenas_service.errors import register_exception_handlers
-from agenas_service.logging_setup import setup_logging
-from agenas_service.middleware import RequestIdMiddleware
+from anonmyzation_pipeline import __version__
+from anonmyzation_pipeline.api import health, items
+from anonmyzation_pipeline.config import Settings, get_settings
+from anonmyzation_pipeline.db.engine import build_engine, build_sessionmaker
+from anonmyzation_pipeline.errors import register_exception_handlers
+from anonmyzation_pipeline.logging_setup import setup_logging
+from anonmyzation_pipeline.middleware import RequestIdMiddleware
 
 logger = logging.getLogger(__name__)
 

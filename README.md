@@ -61,9 +61,9 @@ OpenAPI su `http://localhost:8000/docs` (disattivata in prod).
 ## Struttura
 
 ```
-src/agenas_service/
+src/anonmyzation_pipeline/
   main.py           create_app(), lifespan, entry point
-  config.py         Settings (pydantic-settings, prefisso TEMPLATE_)
+  config.py         Settings (pydantic-settings, prefisso ANONPIP_)
   logging_setup.py  setup_logging, log_event, request id
   privacy.py        hash/mask del codice fiscale, redazione testo utente, filtro di log
   middleware.py     X-Request-ID
@@ -86,7 +86,7 @@ tuo dominio (modello, migrazione, router, service, test).
 Va benissimo: molti servizi sono stateless. Togli la parte DB invece di
 lasciarla inutilizzata:
 
-1. Elimina `src/agenas_service/db/`, `migrations/`, `alembic.ini`,
+1. Elimina `src/anonmyzation_pipeline/db/`, `migrations/`, `alembic.ini`,
    `scripts/db-init/` e `tests/integration/`.
 2. Elimina l'esempio `items` (`api/items.py`, `services/items.py`, i relativi test).
 3. In `pyproject.toml` rimuovi `sqlalchemy`, `asyncpg` e `alembic`, poi `uv lock`.
@@ -136,9 +136,9 @@ Cosa aggiungere:
 
   | Variabile | Default in `config.py` | Note |
   |---|---|---|
-  | `TEMPLATE_LLM_GATEWAY_BASE_URL` | `""` | In cluster: `http://llm-gateway-app.llm-gateway.svc.cluster.local:8000` |
-  | `TEMPLATE_LLM_GATEWAY_API_KEY` | `""` | Credenziale: nessun default. Arriva da Vault |
-  | `TEMPLATE_LLM_GATEWAY_MODEL` | `fast-production` | Alias del gateway: `fast-production` o `strong-production` |
+  | `ANONPIP_LLM_GATEWAY_BASE_URL` | `""` | In cluster: `http://llm-gateway-app.llm-gateway.svc.cluster.local:8000` |
+  | `ANONPIP_LLM_GATEWAY_API_KEY` | `""` | Credenziale: nessun default. Arriva da Vault |
+  | `ANONPIP_LLM_GATEWAY_MODEL` | `fast-production` | Alias del gateway: `fast-production` o `strong-production` |
 
 - **Il client** si crea nel `lifespan` e si salva su `app.state`, come
   l'engine del DB. Non va creato a ogni richiesta.
@@ -148,7 +148,7 @@ Cosa aggiungere:
   prod viene messa in Vault e non passa dagli sviluppatori. Per lo sviluppo
   locale ricevi una chiave di staging da tenere solo nel tuo `.env`: non va
   condivisa, né incollata in chat o ticket, né committata.
-- **In locale** punta `TEMPLATE_LLM_GATEWAY_BASE_URL` al gateway di staging,
+- **In locale** punta `ANONPIP_LLM_GATEWAY_BASE_URL` al gateway di staging,
   raggiungibile dalla rete interna AGENAS.
 - **Nei test** non si chiama mai il gateway vero: sostituisci il client con
   un fake tramite `app.dependency_overrides` o `monkeypatch`.

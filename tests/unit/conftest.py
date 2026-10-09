@@ -6,11 +6,11 @@ from datetime import UTC, datetime
 import pytest
 from fastapi.testclient import TestClient
 
-from agenas_service.config import Settings
-from agenas_service.db.models import Item
-from agenas_service.errors import NotFoundError
-from agenas_service.main import create_app
-from agenas_service.services.items import get_item_service
+from anonmyzation_pipeline.config import Settings
+from anonmyzation_pipeline.db.models import Item
+from anonmyzation_pipeline.errors import NotFoundError
+from anonmyzation_pipeline.main import create_app
+from anonmyzation_pipeline.services.items import get_item_service
 
 
 class FakeItemService:

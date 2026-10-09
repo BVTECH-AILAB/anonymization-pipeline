@@ -9,7 +9,7 @@ default:
     - docker info
 
 variables:
-  IMAGE_NAME: agenas-service
+  IMAGE_NAME: anonmyzation-pipeline
   REGISTRY: harbor.agenas.oci
   REPO_OWNER: agenas
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
@@ -108,8 +108,8 @@ integration-tests:
       docker run --rm --user "$(id -u):$(id -g)" --network "$NET"
       -v "$CI_PROJECT_DIR":/app -w /app
       -e HOME=/tmp -e UV_PROJECT_ENVIRONMENT=/tmp/.venv -e UV_CACHE_DIR=/tmp/uv-cache
-      -e TEMPLATE_ENVIRONMENT=local
-      -e TEMPLATE_DATABASE_URL="postgresql://app:$PG_PASSWORD@pg-$CI_JOB_ID:5432/app_test"
+      -e ANONPIP_ENVIRONMENT=local
+      -e ANONPIP_DATABASE_URL="postgresql://app:$PG_PASSWORD@pg-$CI_JOB_ID:5432/app_test"
       "$UV_IMAGE" sh -c
       "uv sync --frozen &&
       uv run pytest -m integration -q -p no:cacheprovider"

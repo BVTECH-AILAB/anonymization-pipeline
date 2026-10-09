@@ -13,9 +13,9 @@ from alembic import context
 from sqlalchemy import Connection, text
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from agenas_service.config import get_settings
-from agenas_service.db.models import Base
-from agenas_service.logging_setup import setup_logging
+from anonmyzation_pipeline.config import get_settings
+from anonmyzation_pipeline.db.models import Base
+from anonmyzation_pipeline.logging_setup import setup_logging
 
 # Arbitrary constant, unique per service database.
 MIGRATION_LOCK_ID = 727_100_001
@@ -57,7 +57,7 @@ def _run_locked(connection: Connection) -> None:
 
 async def run_migrations_online() -> None:
     if not settings.database_url:
-        raise SystemExit("TEMPLATE_DATABASE_URL is not set: cannot run migrations")
+        raise SystemExit("ANONPIP_DATABASE_URL is not set: cannot run migrations")
     engine = create_async_engine(settings.database_url)
     try:
         async with engine.connect() as connection:

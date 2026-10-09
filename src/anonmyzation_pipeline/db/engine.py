@@ -12,8 +12,8 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from agenas_service.config import Settings
-from agenas_service.errors import ServiceUnavailableError
+from anonmyzation_pipeline.config import Settings
+from anonmyzation_pipeline.errors import ServiceUnavailableError
 
 logger = logging.getLogger(__name__)
 

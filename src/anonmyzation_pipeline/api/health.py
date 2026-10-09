@@ -3,8 +3,8 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
-from agenas_service import __version__
-from agenas_service.db.engine import ping
+from anonmyzation_pipeline import __version__
+from anonmyzation_pipeline.db.engine import ping
 
 router = APIRouter(tags=["health"])
 

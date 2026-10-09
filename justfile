@@ -44,7 +44,7 @@ sync:
 
 # Run the API on the host against the compose Postgres (`docker compose up -d db` first)
 dev:
-    uv run uvicorn agenas_service.main:app --reload --port 8000
+    uv run uvicorn anonmyzation_pipeline.main:app --reload --port 8000
 
 # --- Quality ---
 
@@ -74,7 +74,7 @@ test *args:
 
 # Integration tests against the compose Postgres (database app_test)
 test-int *args:
-    docker compose run --rm -e TEMPLATE_DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/app_test" app pytest -m integration {{args}}
+    docker compose run --rm -e ANONPIP_DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/app_test" app pytest -m integration {{args}}
 
 # Unit tests with coverage (fails under 80%), writes coverage.xml and junit.xml for Sonar
 test-cov:

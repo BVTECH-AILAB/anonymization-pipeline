@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from agenas_service.config import Settings
+from anonmyzation_pipeline.config import Settings
 from tests.conftest import make_settings
 
 
@@ -25,7 +25,7 @@ def test_database_url_has_no_default(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     monkeypatch.chdir(tmp_path)
-    monkeypatch.delenv("TEMPLATE_DATABASE_URL", raising=False)
+    monkeypatch.delenv("ANONPIP_DATABASE_URL", raising=False)
 
     assert Settings().database_url == ""
 
@@ -34,7 +34,7 @@ def test_default_environment_is_prod(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     monkeypatch.chdir(tmp_path)  # no .env here
-    monkeypatch.delenv("TEMPLATE_ENVIRONMENT", raising=False)
+    monkeypatch.delenv("ANONPIP_ENVIRONMENT", raising=False)
 
     assert Settings().environment == "prod"
 

@@ -19,7 +19,7 @@ import logging
 import re
 from typing import Any
 
-from agenas_service.config import Settings
+from anonmyzation_pipeline.config import Settings
 
 REDACTED = "<redacted>"
 

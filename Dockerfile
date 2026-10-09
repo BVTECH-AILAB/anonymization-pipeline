@@ -23,7 +23,7 @@ RUN uv sync --frozen && chown -R appuser:appuser /app
 ENV PATH="/app/.venv/bin:$PATH"
 USER appuser
 EXPOSE 8000
-CMD ["uvicorn", "agenas_service.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "anonmyzation_pipeline.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
 FROM base AS builder
 COPY pyproject.toml uv.lock ./

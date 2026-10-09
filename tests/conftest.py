@@ -10,8 +10,8 @@ from typing import Any
 
 import pytest
 
-from agenas_service.config import Settings
-from agenas_service.logging_setup import setup_logging
+from anonmyzation_pipeline.config import Settings
+from anonmyzation_pipeline.logging_setup import setup_logging
 
 FAKE_CF = "RSSMRA85M01H501U"
 

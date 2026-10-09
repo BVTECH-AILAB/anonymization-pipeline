@@ -111,11 +111,14 @@ async def _ask_vlm(
     text: str,
     categories: list[str],
 ) -> list[Proposal]:
-    """Ask the model for the values of ``categories`` in ``text`` (calls assigned to the page)."""
-    phase_cfg = (
-        cfg.phases.verification if phase == "verification" else cfg.phases.detection
-    )
-    images = [page.encoded_image] if phase_cfg.use_image and page.encoded_image else []
+    """Ask the model for the values of ``categories`` in ``text`` (calls assigned to the page).
+
+    Detection also gives it the page image; verification gets the clear Markdown of the page
+    (``page.text``) as reference instead, to compare with the redacted ``text``.
+    """
+    use_image = phase == "detection" and cfg.phases.detection.use_image
+    images = [page.encoded_image] if use_image and page.encoded_image else []
+    values = {"original": page.text} if phase == "verification" else {}
     system = render(cfg, phase, "system")
     user = render(
         cfg,
@@ -124,6 +127,7 @@ async def _ask_vlm(
         categories=registry().lines(categories),
         text=text,
         page=page.index + 1,
+        **values,
     )
     with metrics.on_page(page.index):
         found, _ = await client.call_json(

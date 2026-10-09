@@ -142,7 +142,7 @@ async def anonymize(
     warnings: list[str] = []
     advance("extraction", pages=len(doc.pages))
     warnings += await extract(doc, client, cfg)
-    if phases.detection.use_image or phases.verification.use_image:
+    if phases.detection.use_image:
         with metrics.measure("extraction.image_encoding"):
             for page in doc.pages:
                 if page.image is not None:

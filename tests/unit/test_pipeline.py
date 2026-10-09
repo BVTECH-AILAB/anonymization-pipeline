@@ -119,9 +119,9 @@ def test_multipage_images_extracted_by_the_vlm() -> None:
         result.markdown
         == "# Pagina uno\nPaziente: [PERSONA_1]\n\n<!-- pagina 2 -->\n\nFirma: [FIRMA] [MEDICO_1]"
     )
-    # detection and verification see the page image too
+    # extraction and detection see the page image; verification reads the clear Markdown instead
     assert all(
-        n == 1
+        n == (0 if phase == "verification" else 1)
         for phase, _, n in client.calls
         if phase in ("extraction", "detection", "verification")
     )
@@ -130,15 +130,22 @@ def test_multipage_images_extracted_by_the_vlm() -> None:
     assert restore(result.markdown, result.encrypted_map, KEY) == original
 
 
+def test_verification_compares_with_the_clear_markdown() -> None:
+    result, client = _run(IdealModel(VALUES, groups=[["Mario Rossi", "Rossi Mario"]]))
+
+    assert result.report["verification"]["outcome"] == "ok"
+    prompts = [user for phase, user, _ in client.calls if phase == "verification"]
+    assert prompts
+    for user in prompts:
+        # the redacted page to check and, as reference, the clear original of the same page
+        assert "Paziente: [PERSONA_1]" in user and "Paziente: Mario Rossi" in user
+        # original first: with the opposite order the model stops seeing a value left in clear
+        assert user.index("Paziente: Mario Rossi") < user.index("Paziente: [PERSONA_1]")
+    assert all(n == 0 for phase, _, n in client.calls if phase == "verification")
+
+
 def test_without_the_image_when_disabled() -> None:
-    cfg = pipeline_config(
-        {
-            "phases": {
-                "detection": {"use_image": False},
-                "verification": {"use_image": False},
-            }
-        }
-    )
+    cfg = pipeline_config({"phases": {"detection": {"use_image": False}}})
 
     _, client = _run(
         IdealModel(VALUES, markdown={400: "Mario Rossi"}), cfg, "a.png", png(400)

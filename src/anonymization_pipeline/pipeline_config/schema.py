@@ -25,7 +25,10 @@ PROMPTS: dict[str, dict[str, tuple[set[str], set[str]]]] = {
     "redaction": {"system": (set(), set()), "user": ({"values"}, {"values"})},
     "verification": {
         "system": (set(), set()),
-        "user": ({"categories", "text", "page"}, {"categories", "text"}),
+        "user": (
+            {"categories", "text", "page", "original"},
+            {"categories", "text", "original"},
+        ),
     },
 }
 
@@ -166,7 +169,6 @@ class Redaction(_Phase):
 class Verification(_Phase):
     mode: Literal["off", "report", "fix", "block"]
     max_iterations: int = Field(ge=1, le=10)
-    use_image: bool
     required: bool
     passes: list[list[str]] | None = None
 

@@ -1,4 +1,4 @@
-"""Verification: the VLM reads the redacted Markdown again (comparing it with the original page)
+"""Verification: the VLM reads the redacted Markdown again (comparing it with the clear Markdown)
 and reports the sensitive data left in clear text. The fix/report/block loop is in ``pipeline.py``.
 
 The residuals are anchored to the redacted text outside the tags and the redaction blocks: a model

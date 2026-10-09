@@ -230,6 +230,12 @@ def test_prompts_are_validated() -> None:
         )
     with pytest.raises(ValueError, match="missing placeholders"):
         pipeline_config({"prompts": {"verification": {"user": "${categories}"}}})
+    with pytest.raises(ValueError, match="missing placeholders"):
+        pipeline_config(
+            {"prompts": {"verification": {"user": "${categories} ${text}"}}}
+        )  # the clear original is required too
+    with pytest.raises(ValueError, match="extra"):  # the image option is gone
+        pipeline_config({"phases": {"verification": {"use_image": True}}})
 
 
 def test_render_prompt() -> None:

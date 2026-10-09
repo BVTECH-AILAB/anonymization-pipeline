@@ -20,7 +20,7 @@ della mappa sono invariati.
 file -> ingest -> estrazione -> rilevamento -> [censura -> verifica]* -> Markdown censurato
           |          |              |               |           |
        pagine     docling (PDF   regole, etichette, coreferenza  il VLM rilegge il testo censurato
-       (PDF a     nativi) o VLM  NER e VLM in       con il VLM,  con la pagina originale e cerca
+       (PDF a     nativi) o VLM  NER e VLM in       con il VLM,  con il Markdown in chiaro e cerca
        200 dpi)   (scansioni)    unione             tag coerenti dati rimasti in chiaro (fail-closed)
 ```
 
@@ -37,7 +37,9 @@ file -> ingest -> estrazione -> rilevamento -> [censura -> verifica]* -> Markdow
    entità ("Mario Rossi", "ROSSI MARIO") sotto un solo tag; la sostituzione è
    meccanica e vale per tutto il documento. Modalità `pseudonym` (tag + mappa
    AES-256-GCM), `tag` o `redaction` (simbolo fisso).
-5. **Verifica** (`verification/`): `off`, `report`, `fix` (default: i residui
+5. **Verifica** (`verification/`): il VLM rilegge il Markdown censurato di
+   ogni pagina confrontandolo con il Markdown originale in chiaro (non
+   riceve l'immagine). Modalità `off`, `report`, `fix` (default: i residui
    vengono censurati e si riverifica) o `block`. Se la verifica non è
    possibile o restano residui il documento viene rifiutato (HTTP 422, mai
    valori nella risposta).

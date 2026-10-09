@@ -16,7 +16,7 @@ class Page:
         index: Zero-based page index.
         image: RGB rendering; None for text files.
         text: Extracted Markdown (or the original text for text files).
-        encoded_image: Image sent to detection and verification.
+        encoded_image: Image sent to detection.
         native: PDF only: readable and visible text layer (extractable with docling).
         reason: PDF only: why the page is not native.
         extracted_with: ``docling`` or ``vlm``.

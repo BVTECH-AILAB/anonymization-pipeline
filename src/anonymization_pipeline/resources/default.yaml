@@ -172,7 +172,7 @@ phases:
     timeout_s: 300
     max_tokens: 4096
     max_iterations: 3           # fix: verifications after the first redaction; residuals still there -> rejected
-    use_image: true             # the model compares the redacted text with the original page
+                                # the model compares the redacted Markdown with the clear original of the page
     required: true              # if the model does not answer the document is rejected (fail-closed)
     passes: null                # null = the detection passes
 

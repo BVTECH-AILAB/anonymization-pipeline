@@ -2,7 +2,6 @@ import io
 import logging
 
 import pytest
-from fastapi.testclient import TestClient
 
 from anonymization_pipeline.logging_setup import log_event, setup_logging
 from tests.conftest import FAKE_CF, make_settings
@@ -30,7 +29,9 @@ def test_setup_logging_is_idempotent_and_keeps_foreign_handlers() -> None:
         setup_logging(settings, stream=io.StringIO())
 
         ours = [
-            h for h in root.handlers if getattr(h, "_anonymization_pipeline_handler", False)
+            h
+            for h in root.handlers
+            if getattr(h, "_anonymization_pipeline_handler", False)
         ]
         assert len(ours) == 1
         assert foreign in root.handlers
@@ -43,18 +44,3 @@ def test_uvicorn_logs_go_through_redaction(log_stream: io.StringIO) -> None:
 
     assert FAKE_CF not in log_stream.getvalue()
     assert "R***U" in log_stream.getvalue()
-
-
-def test_item_creation_never_logs_user_text(
-    client: TestClient, log_stream: io.StringIO
-) -> None:
-    secret = f"il paziente {FAKE_CF} ha la febbre"
-
-    response = client.post("/items", json={"name": "nota", "description": secret})
-
-    assert response.status_code == 201
-    logs = log_stream.getvalue()
-    assert "item_created" in logs
-    assert "<redacted>" in logs
-    assert "febbre" not in logs
-    assert FAKE_CF not in logs

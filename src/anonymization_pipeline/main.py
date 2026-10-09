@@ -7,9 +7,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from anonymization_pipeline import __version__
-from anonymization_pipeline.api import health, items
+from anonymization_pipeline.api import health
 from anonymization_pipeline.config import Settings, get_settings
-from anonymization_pipeline.db.engine import build_engine, build_sessionmaker
 from anonymization_pipeline.errors import register_exception_handlers
 from anonymization_pipeline.logging_setup import setup_logging
 from anonymization_pipeline.middleware import RequestIdMiddleware
@@ -21,13 +20,10 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Create shared resources on startup and release them on shutdown.
 
-    Clients (DB engine, httpx clients ...) live on ``app.state``, never in
-    module-level globals.
+    Clients (httpx clients ...) live on ``app.state``, never in module-level
+    globals.
     """
     settings: Settings = app.state.settings
-    engine = build_engine(settings)
-    app.state.engine = engine
-    app.state.sessionmaker = build_sessionmaker(engine)
     logger.info(
         "Service started: name=%s version=%s environment=%s",
         settings.app_name,
@@ -37,8 +33,6 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     try:
         yield
     finally:
-        if engine is not None:
-            await engine.dispose()
         logger.info("Service stopped")
 
 
@@ -66,7 +60,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     register_exception_handlers(app)
 
     app.include_router(health.router)
-    app.include_router(items.router)
     return app
 
 

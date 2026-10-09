@@ -25,6 +25,14 @@ SETTINGS_KEYS = {
     "phases.extraction.native_pdf.engine": "default_extraction",
     "phases.extraction.native_pdf.models_dir": "docling_models_dir",
 }
+# detectors and filters a request may switch on or off -> configuration key
+DETECTOR_KEYS = {
+    "vlm": "phases.detection.detectors.vlm",
+    "rules": "phases.detection.detectors.rules",
+    "labels": "phases.detection.detectors.labels",
+    "ner": "phases.detection.detectors.ner.enabled",
+    "eponyms": "phases.detection.detectors.eponyms",
+}
 # keys owned by the models file (ANONPIP_MODELS_FILE)
 MODELS_KEYS = ["models", *(f"phases.{phase}.model" for phase in PHASES)]
 
@@ -153,6 +161,7 @@ def request_overrides(
     disable: tuple[str, ...] = (),
     extraction: str | None = None,
     transcript: bool | None = None,
+    detectors: tuple[str, ...] | None = None,
 ) -> dict:
     """Overrides of a single request (API and web UI): only these keys.
 
@@ -164,9 +173,11 @@ def request_overrides(
         disable: Groups or categories to switch off.
         extraction: Engine for native PDF pages (docling | vlm).
         transcript: Also produce the transcript IN CLEAR TEXT (debugging).
+        detectors: The complete set of active detectors and filters (``DETECTOR_KEYS``): the
+            ones not listed are switched off. None: the configured ones.
 
     Raises:
-        ValueError: On an unknown phase, group or category.
+        ValueError: On an unknown phase, detector, group or category.
     """
     out: dict = {}
     if transcript is not None:
@@ -177,6 +188,11 @@ def request_overrides(
         _set(out, "phases.redaction.mode", mode)
     if verification:
         _set(out, "phases.verification.mode", verification)
+    if detectors is not None:
+        if unknown := set(detectors) - set(DETECTOR_KEYS):
+            raise ValueError(f"unknown detectors: {', '.join(sorted(unknown))}")
+        for name, dotted in DETECTOR_KEYS.items():
+            _set(out, dotted, name in detectors)
     for phase, name in (models or {}).items():
         if phase not in PHASES:
             raise ValueError(f"unknown phase: {phase}")

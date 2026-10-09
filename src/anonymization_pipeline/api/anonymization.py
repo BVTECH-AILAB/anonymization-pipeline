@@ -34,6 +34,14 @@ Categories = Annotated[
     str | None,
     Form(max_length=2000, description="categories or groups, comma separated"),
 ]
+Detectors = Annotated[
+    str | None,
+    Form(
+        max_length=200,
+        description="active detectors and filters, comma separated: vlm, rules, labels, ner, "
+        "eponyms (the others are off; empty = the configured ones)",
+    ),
+]
 Key = Annotated[
     str | None,
     Form(max_length=200, description="key or passphrase of the map (or X-Anon-Key)"),
@@ -75,6 +83,7 @@ async def anonymize(
     model_verification: Model = None,
     enable: Categories = None,
     disable: Categories = None,
+    detectors: Detectors = None,
     key: Key = None,
     x_anon_key: KeyHeader = None,
     output: Annotated[Literal["zip", "json"], Query(alias="format")] = "zip",
@@ -84,7 +93,7 @@ async def anonymize(
         model_extraction, model_detection, model_redaction, model_verification
     )
     cfg = await service.request_config(
-        mode, verification, extraction, models, enable, disable
+        mode, verification, extraction, models, enable, disable, detectors=detectors
     )
     result = await service.anonymize_now(
         file.filename or "documento", data, cfg, service.key(key, x_anon_key)

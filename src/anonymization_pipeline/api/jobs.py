@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse, Response
 
 from anonymization_pipeline.api.anonymization import (
     Categories,
+    Detectors,
     Extraction,
     Key,
     KeyHeader,
@@ -63,6 +64,7 @@ async def create_job(
     model_verification: Model = None,
     enable: Categories = None,
     disable: Categories = None,
+    detectors: Detectors = None,
     transcript: Annotated[
         bool | None, Form(description="also the transcript IN CLEAR TEXT (debugging)")
     ] = None,
@@ -74,7 +76,7 @@ async def create_job(
         model_extraction, model_detection, model_redaction, model_verification
     )
     cfg = await service.request_config(
-        mode, verification, extraction, models, enable, disable, transcript
+        mode, verification, extraction, models, enable, disable, transcript, detectors
     )
     secret = service.key(key, x_anon_key)
     if cfg.phases.redaction.mode == "pseudonym" and not secret:

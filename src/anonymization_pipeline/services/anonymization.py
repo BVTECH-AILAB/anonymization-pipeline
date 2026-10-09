@@ -86,11 +86,14 @@ class AnonymizationService:
         enable: str | None = None,
         disable: str | None = None,
         transcript: bool | None = None,
+        detectors: str | None = None,
     ) -> PipelineConfig:
         """Configuration of one request.
 
         Args:
             models: VLM of some phases (phase -> name; empty = the default of the phase).
+            detectors: Active detectors and filters, comma separated (empty = the configured
+                ones).
 
         Raises:
             BadRequestError: Invalid option, transcript not allowed, model not in the models file
@@ -114,13 +117,15 @@ class AnonymizationService:
                 _split(disable),
                 extraction,
                 transcript,
+                _split(detectors) or None,
             )
             cfg = load_pipeline_config(self.settings, overrides)
         except ValueError as exc:
             # generic message: the user input is never echoed back
             raise BadRequestError(
                 "Opzioni non valide: controllare modalità (pseudonym, tag, redaction), verifica "
-                "(off, report, fix, block), estrazione (docling, vlm) e categorie (GET /categories)."
+                "(off, report, fix, block), estrazione (docling, vlm), categorie (GET /categories) e "
+                "rilevatori (vlm, rules, labels, ner, eponyms: almeno uno tra i primi quattro)."
             ) from exc
         others = {
             name

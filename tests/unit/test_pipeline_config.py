@@ -183,6 +183,23 @@ def test_request_overrides_win_over_settings(tmp_path: Path) -> None:
     assert cfg.phases.verification.max_iterations == 5
 
 
+def test_request_chooses_the_detectors() -> None:
+    cfg = pipeline_config(request_overrides(detectors=("ner",)))
+
+    d = cfg.phases.detection.detectors
+    assert d.ner.enabled and not (d.vlm or d.rules or d.labels or d.eponyms)
+    d = pipeline_config(
+        request_overrides(detectors=("rules", "eponyms"))
+    ).phases.detection.detectors
+    assert d.rules and d.eponyms and not (d.vlm or d.labels or d.ner.enabled)
+    with pytest.raises(ValueError, match="unknown detector"):
+        request_overrides(detectors=("ocr",))
+    with pytest.raises(ValueError, match="at least one detector"):
+        pipeline_config(
+            request_overrides(detectors=("eponyms",))
+        )  # a filter finds nothing
+
+
 def test_request_override_outside_the_catalog_is_rejected() -> None:
     with pytest.raises(ValueError, match="not in the models file"):
         pipeline_config(request_overrides(models={"detection": "other:latest"}))

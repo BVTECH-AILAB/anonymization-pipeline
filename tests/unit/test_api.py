@@ -360,6 +360,32 @@ def test_extraction_chosen_per_request(
     assert invalid.status_code == 400
 
 
+def test_detectors_per_request(backend: FakeBackend, client: TestClient) -> None:
+    backend.available = {"gemma4:26b-a4b-it-qat"}
+
+    response = client.post(
+        "/anonymize?format=json",
+        files=_upload(),
+        data={"mode": "tag", "detectors": "rules,labels"},
+    )
+
+    assert response.status_code == 200
+    report = response.json()["report"]
+    assert set(report["detection"]["sources"]) == {"rules", "labels"}
+    assert "detection" not in report["vlm"]  # no VLM call in detection
+    assert response.json()["metrics"]["configuration"]["eponym_filter"] is False
+
+
+@pytest.mark.parametrize("detectors", ["rules,ocr_segreto", "eponyms"])
+def test_invalid_detectors_are_rejected(client: TestClient, detectors: str) -> None:
+    for path in ("/anonymize", "/jobs"):
+        response = client.post(
+            path, files=_upload(), data={"mode": "tag", "detectors": detectors}
+        )
+        assert response.status_code == 400 and "rilevatori" in response.json()["detail"]
+        assert "ocr_segreto" not in response.json()["detail"]  # never echoed
+
+
 CATALOG = {"big:1": 16384, "small:1": 4096, "spare:1": 4096}
 
 

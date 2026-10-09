@@ -267,6 +267,7 @@ def summarize(
             "concurrency": cfg.backend.concurrency,
             "extraction": cfg.phases.extraction.native_pdf.engine,
             "detectors": active,
+            "eponym_filter": det.eponyms,
             "passes": len(cfg.passes("detection")) if det.vlm else 0,
             "verification": cfg.phases.verification.mode,
         },

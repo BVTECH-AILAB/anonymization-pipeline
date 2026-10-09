@@ -58,3 +58,16 @@ def test_credentials_have_no_default(
 
     assert settings.vlm_api_key == ""
     assert settings.vault_key == ""
+
+
+def test_make_settings_ignores_environment_and_dotenv(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / ".env").write_text("ANONPIP_MAX_JOBS=9\n")
+    monkeypatch.setenv("ANONPIP_ALLOW_TRANSCRIPT", "true")
+
+    settings = make_settings()
+
+    assert settings.allow_transcript is False
+    assert settings.max_jobs == Settings.model_fields["max_jobs"].default

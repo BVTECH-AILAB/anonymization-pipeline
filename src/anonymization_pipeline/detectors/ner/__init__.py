@@ -1,7 +1,8 @@
 """NER detector: Hugging Face token-classification model (``phases.detection.detectors.ner.model``).
 
-The model has fixed labels (NOME, COGNOME, MALATTIA, MEDICINA...): a map in the configuration
-brings them to the anonymizer categories; unmapped labels are ignored. The text is split into
+The model has fixed labels (NOME, COGNOME, MALATTIA, MEDICINA...): the map in
+``resources/detectors/ner.yaml`` brings them to the anonymizer categories; unmapped labels are
+ignored. The text is split into
 overlapping word windows (the model reads at most 512 tokens). It runs on CPU, in a thread: the
 GPU stays with the VLM.
 
@@ -11,15 +12,18 @@ the detector raises ``DetectorUnavailable`` and the pipeline skips it with a war
 Ported from the anonimizzatore project (token_classification engine).
 """
 
+import functools
 import logging
 import re
 import threading
 from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from anonymization_pipeline.detectors.base import DetectorUnavailable, Proposal
 from anonymization_pipeline.pipeline_config import registry
+from anonymization_pipeline.pipeline_config.resources import read_yaml
 from anonymization_pipeline.pipeline_config.schema import Ner
 
 try:
@@ -32,6 +36,9 @@ except ImportError:  # image without the 'ner' extra
     NER_INSTALLED = False
 
 logger = logging.getLogger(__name__)
+
+FILE = "detectors/ner.yaml"
+_KEYS = ("label_map", "min_length", "require_capital", "false_positives")
 
 # weight formats that are not needed (only safetensors are downloaded, when the repository has them)
 _EXCLUDED_FORMATS = [
@@ -47,6 +54,58 @@ _EXCLUDED_FORMATS = [
 Pipeline = Callable[
     [str], list[dict[str, Any]]
 ]  # text -> [{start, end, entity_group, score}]
+
+
+@dataclass(frozen=True)
+class Vocabulary:
+    """Content of ``ner.yaml``, validated.
+
+    Attributes:
+        label_map: Model label (uppercase) -> category.
+        min_length: Shorter values are discarded.
+        require_capital: Categories whose values need at least one capitalized word.
+        false_positives: Lowercase words often mistaken for proper names (labels, headings).
+    """
+
+    label_map: dict[str, str]
+    min_length: int
+    require_capital: frozenset[str]
+    false_positives: frozenset[str]
+
+
+@functools.cache
+def vocabulary() -> Vocabulary:
+    """Vocabulary of ``ner.yaml`` (read at first use, then cached).
+
+    Raises:
+        ValueError: On a missing or unknown key, a wrong type or a nonexistent category.
+    """
+    data = read_yaml(FILE)
+    if missing := [k for k in _KEYS if k not in data]:
+        raise ValueError(f"{FILE}: missing keys {', '.join(missing)}")
+    if unknown := sorted(set(data) - set(_KEYS)):
+        raise ValueError(f"{FILE}: unknown keys {', '.join(map(str, unknown))}")
+    if not isinstance(data["label_map"], dict):
+        raise ValueError(f"{FILE}, label_map: expected a mapping label: category")
+    for key in ("require_capital", "false_positives"):
+        if not isinstance(data[key], list):
+            raise ValueError(f"{FILE}, {key}: expected a list")
+    minimum = data["min_length"]
+    if isinstance(minimum, bool) or not isinstance(minimum, int) or minimum < 1:
+        raise ValueError(f"{FILE}, min_length: expected an integer >= 1")
+    label_map = {str(k).upper(): str(v) for k, v in data["label_map"].items()}
+    require_capital = frozenset(str(c) for c in data["require_capital"])
+    categories = set(label_map.values()) | require_capital
+    if unknown := sorted(categories - set(registry().descriptions)):
+        raise ValueError(
+            f"{FILE}: unknown categories {', '.join(unknown)} (see categories.yaml)"
+        )
+    return Vocabulary(
+        label_map=label_map,
+        min_length=minimum,
+        require_capital=require_capital,
+        false_positives=frozenset(str(p).lower() for p in data["false_positives"]),
+    )
 
 
 def _is_local(model: str) -> bool:
@@ -175,7 +234,7 @@ class NerDetector:
             pipeline: For tests; by default the shared model of the process, loaded at first use.
         """
         self.cfg = cfg
-        self.label_map = {k.upper(): v for k, v in cfg.label_map.items()}
+        self.vocabulary = vocabulary()
         self._own = (pipeline, threading.Lock()) if pipeline is not None else None
         reg = registry()
         self.person_categories = {
@@ -190,7 +249,8 @@ class NerDetector:
         with lock:  # the model is not thread-safe: one page at a time
             for s0, e0 in windows(text, self.cfg.window_words, self.cfg.overlap_words):
                 for item in model(text[s0:e0]):
-                    category = self.label_map.get(str(item["entity_group"]).upper())
+                    label = str(item["entity_group"]).upper()
+                    category = self.vocabulary.label_map.get(label)
                     if category and float(item["score"]) >= self.cfg.threshold:
                         key = (s0 + int(item["start"]), s0 + int(item["end"]), category)
                         best[key] = max(best.get(key, 0.0), float(item["score"]))
@@ -223,8 +283,8 @@ class NerDetector:
         self, text: str, s: int, e: int, category: str
     ) -> tuple[int | None, int, str]:
         """Discard labels and common words mistaken for names (start None if the value is ignored)."""
-        f = self.cfg.filters
-        false_positives = {p.lower() for p in f.false_positives}
+        f = self.vocabulary
+        false_positives = f.false_positives
         value = text[s:e].strip()
         s = s + text[s:e].find(value) if value else s
         e = s + len(value)

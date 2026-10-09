@@ -3,14 +3,18 @@ from typing import Any
 
 import pytest
 
+from anonymization_pipeline.detectors import ner
 from anonymization_pipeline.detectors.base import DetectorUnavailable
 from anonymization_pipeline.detectors.ner import (
+    FILE,
     NER_INSTALLED,
     NerDetector,
     download,
     model_dir,
+    vocabulary,
     windows,
 )
+from anonymization_pipeline.pipeline_config.resources import read_yaml
 from anonymization_pipeline.pipeline_config.schema import Ner
 from tests.pipeline import pipeline_config
 
@@ -96,6 +100,27 @@ def test_filters() -> None:
     )
 
     assert detector.detect("Paziente\nDIAGNOSI finale\nvia roma\nIndirizzo: ...") == []
+
+
+def test_vocabulary_is_validated(monkeypatch: pytest.MonkeyPatch) -> None:
+    valid = read_yaml(FILE)
+    broken = [
+        ({**valid, "label_map": {"MALATTIA": "INESISTENTE"}}, "unknown categories"),
+        ({**valid, "require_capital": ["INESISTENTE"]}, "unknown categories"),
+        ({**valid, "threshold": 0.5}, "unknown keys threshold"),
+        (
+            {k: v for k, v in valid.items() if k != "label_map"},
+            "missing keys label_map",
+        ),
+        ({**valid, "min_length": 0}, "min_length"),
+        ({**valid, "false_positives": "paziente"}, "false_positives"),
+    ]
+    for data, message in broken:
+        monkeypatch.setattr(ner, "read_yaml", lambda name, data=data: data)
+        vocabulary.cache_clear()
+        with pytest.raises(ValueError, match=message):
+            vocabulary()
+    vocabulary.cache_clear()
 
 
 def test_overlapping_windows_and_deduplication() -> None:

@@ -111,14 +111,6 @@ class Anchoring(_Section):
     fuzzy: float = Field(ge=0, le=1)
 
 
-class NerFilters(_Section):
-    min_length: int = Field(ge=1)
-    require_capital: list[str]  # proper-name categories: at least one capitalized word
-    false_positives: list[
-        str
-    ]  # words often mistaken for proper names (labels, headings)
-
-
 class Ner(_Section):
     enabled: bool
     model: str = Field(min_length=1)  # Hugging Face hub name or local folder
@@ -127,8 +119,6 @@ class Ner(_Section):
     window_words: int = Field(ge=10)
     overlap_words: int = Field(ge=0)
     threads: int | None = Field(default=None, ge=1)
-    label_map: dict[str, str]  # model label -> category
-    filters: NerFilters
 
 
 class Detectors(_Section):
@@ -231,15 +221,6 @@ class PipelineConfig(_Section):
         ):
             raise ValueError(
                 "phases.detection.detectors: at least one detector must be on"
-            )
-        ner = detectors.ner
-        unknown = sorted(
-            (set(ner.label_map.values()) | set(ner.filters.require_capital))
-            - set(reg.descriptions)
-        )
-        if unknown:
-            raise ValueError(
-                f"phases.detection.detectors.ner: unknown categories {', '.join(unknown)}"
             )
         _check_prompts(self.prompts)
         return self

@@ -32,7 +32,9 @@ file -> ingest -> estrazione -> rilevamento -> censura -> verifica -> Markdown c
 3. **Rilevamento** (`detection/`, `detectors/`): rilevatori in unione, basta
    che uno segnali un valore. Ogni valore deve comparire davvero nel testo,
    altrimenti è un'allucinazione e si scarta. Un filtro comune ignora gli
-   eponimi ("morbo di Parkinson").
+   eponimi, le scale e i farmaci ("morbo di Parkinson", "Glasgow 15",
+   "Coumadin") decidendo dal contesto di ogni occorrenza: un paziente che si
+   chiama Parkinson viene censurato.
 4. **Censura** (`redaction/`): il VLM raggruppa le varianti della stessa
    entità ("Mario Rossi", "ROSSI MARIO") sotto un solo tag; la sostituzione è
    meccanica e vale per tutto il documento. Modalità `pseudonym` (tag + mappa

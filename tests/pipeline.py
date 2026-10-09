@@ -10,7 +10,7 @@ import httpx
 from PIL import Image
 
 from anonymization_pipeline.pipeline_config import PipelineConfig, load_pipeline_config
-from anonymization_pipeline.vlm import VLMClient, VLMResponse
+from anonymization_pipeline.vlm import VLMClient, VLMError, VLMResponse
 from tests.conftest import make_settings
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -53,12 +53,24 @@ class FakeVLM(VLMClient):
 
     kind = "fake"
 
-    def __init__(self, cfg: PipelineConfig, responder: Responder) -> None:
+    def __init__(
+        self,
+        cfg: PipelineConfig,
+        responder: Responder,
+        available: set[str] | None = None,
+    ) -> None:
         super().__init__(
             cfg, httpx.AsyncClient(transport=httpx.MockTransport(_no_network))
         )
         self.responder = responder
+        self.available = available
         self.calls: list[tuple[str, str, int]] = []
+
+    async def models_available(self) -> set[str]:
+        """``available`` models; None simulates an unreachable backend."""
+        if self.available is None:
+            raise VLMError("backend unreachable")
+        return set(self.available)
 
     async def call(
         self,

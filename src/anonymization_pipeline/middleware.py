@@ -1,10 +1,17 @@
-"""Request-id middleware (pure ASGI, safe with streaming responses)."""
+"""Request-id and upload-limit middleware (pure ASGI, safe with streaming responses)."""
 
 import re
 import uuid
 
+from starlette.responses import JSONResponse
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
+from anonymization_pipeline.errors import (
+    LengthRequiredError,
+    PayloadTooLargeError,
+    ServiceError,
+    error_body,
+)
 from anonymization_pipeline.logging_setup import request_id_var
 
 REQUEST_ID_HEADER = "x-request-id"
@@ -45,3 +52,37 @@ class RequestIdMiddleware:
             await self.app(scope, receive, send_with_id)
         finally:
             request_id_var.reset(token)
+
+
+class UploadLimitMiddleware:
+    """Reject request bodies over the limit before they are read.
+
+    FastAPI reads a whole multipart body before the endpoint runs, so the limit is applied here,
+    on ``Content-Length``. The restore endpoints receive two files: ``max_bytes`` is per request.
+    """
+
+    def __init__(self, app: ASGIApp, max_bytes: int) -> None:
+        self.app = app
+        self.max_bytes = max_bytes
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http" or scope["method"] not in ("POST", "PUT", "PATCH"):
+            await self.app(scope, receive, send)
+            return
+        length = ""
+        for name, value in scope.get("headers", []):
+            if name.decode("latin-1").lower() == "content-length":
+                length = value.decode("latin-1")
+                break
+        error: ServiceError | None = None
+        if not length:
+            error = LengthRequiredError()
+        elif not length.isdigit() or int(length) > self.max_bytes:
+            error = PayloadTooLargeError()
+        if error is None:
+            await self.app(scope, receive, send)
+            return
+        response = JSONResponse(
+            status_code=error.status_code, content=error_body(error)
+        )
+        await response(scope, receive, send)

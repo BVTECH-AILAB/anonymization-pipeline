@@ -19,6 +19,7 @@ from anonymization_pipeline.errors import (
     InvalidDocumentError,
     RestoreError,
     ServerBusyError,
+    ServiceError,
     UnredactableContentError,
     VLMUnavailableError,
 )
@@ -40,6 +41,7 @@ from anonymization_pipeline.pipeline_config import (
     request_overrides,
 )
 from anonymization_pipeline.redaction.vault import VaultError, sha256
+from anonymization_pipeline.services.jobs import Job
 from anonymization_pipeline.verification import UnredactableContent
 from anonymization_pipeline.vlm import VLMClient, VLMError
 
@@ -214,20 +216,36 @@ class AnonymizationService:
             result.metrics["times_s"]["slot_wait"] = round(waited, 2)
         return result
 
+    async def run_job(self, job: Job, progress: Progress) -> Result:
+        """Run a queued job: wait for a slot as long as needed."""
+        if job.data is None:
+            raise ServiceError()  # released already: the job was deleted
+        async with self.slot(None):
+            return await self.run(job.name, job.data, job.cfg, job.key, progress)
+
     # --- restore -------------------------------------------------------------------------------
 
-    def restore(
-        self, markdown: str, encrypted_map: bytes, key: str, detail: bool = False
-    ) -> str | dict[str, Any]:
-        """Original text (``detail``: with the position of every tag).
+    def restore(self, markdown: str, encrypted_map: bytes, key: str) -> str:
+        """Original text.
 
         Raises:
             RestoreError: Wrong key, invalid or tampered map, modified text.
         """
         try:
-            if detail:
-                return restore_detail(markdown, encrypted_map, key, self.config)
             return restore(markdown, encrypted_map, key)
+        except VaultError as exc:
+            raise RestoreError(str(exc)) from exc
+
+    def restore_detail(
+        self, markdown: str, encrypted_map: bytes, key: str
+    ) -> dict[str, Any]:
+        """Original text with the position of every tag in the redacted and restored text.
+
+        Raises:
+            RestoreError: Wrong key, invalid or tampered map, modified text.
+        """
+        try:
+            return restore_detail(markdown, encrypted_map, key, self.config)
         except VaultError as exc:
             raise RestoreError(str(exc)) from exc
 

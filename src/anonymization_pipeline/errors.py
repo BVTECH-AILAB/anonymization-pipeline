@@ -5,6 +5,7 @@ SQL errors or the input the user sent.
 """
 
 import logging
+from typing import Any
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -14,11 +15,30 @@ logger = logging.getLogger(__name__)
 
 
 class ServiceError(Exception):
-    """Base class for errors with a known HTTP mapping."""
+    """Base class for errors with a known HTTP mapping.
+
+    Args:
+        detail: Italian message for the user, instead of the generic one. It must never contain
+            document content or personal data.
+        extra: Additional fields of the response body (counts, categories, pages: no values).
+        headers: Additional response headers (``Retry-After``).
+    """
 
     status_code: int = 500
     code: str = "INTERNAL_ERROR"
     user_message: str = "Si è verificato un errore interno. Riprova più tardi."
+
+    def __init__(
+        self,
+        detail: str | None = None,
+        extra: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
+    ) -> None:
+        super().__init__(self.code)
+        if detail:
+            self.user_message = detail
+        self.extra = extra or {}
+        self.headers = headers or {}
 
 
 class NotFoundError(ServiceError):
@@ -33,12 +53,73 @@ class ServiceUnavailableError(ServiceError):
     user_message = "Servizio temporaneamente non disponibile. Riprova più tardi."
 
 
+class BadRequestError(ServiceError):
+    status_code = 400
+    code = "BAD_REQUEST"
+    user_message = "Richiesta non valida."
+
+
+class InvalidDocumentError(ServiceError):
+    status_code = 400
+    code = "INVALID_DOCUMENT"
+    user_message = "Documento non valido o in un formato non supportato."
+
+
+class RestoreError(ServiceError):
+    status_code = 403
+    code = "RESTORE_FAILED"
+    user_message = "Ripristino non riuscito: chiave errata o mappa non valida."
+
+
+class ConflictError(ServiceError):
+    status_code = 409
+    code = "CONFLICT"
+    user_message = "Operazione non possibile nello stato attuale."
+
+
+class LengthRequiredError(ServiceError):
+    status_code = 411
+    code = "LENGTH_REQUIRED"
+    user_message = "Header Content-Length obbligatorio."
+
+
+class PayloadTooLargeError(ServiceError):
+    status_code = 413
+    code = "PAYLOAD_TOO_LARGE"
+    user_message = "File oltre la dimensione massima consentita."
+
+
+class UnredactableContentError(ServiceError):
+    """The document cannot be returned: data left in clear text (fail-closed)."""
+
+    status_code = 422
+    code = "UNREDACTABLE_CONTENT"
+    user_message = "Il documento non può essere anonimizzato in modo sicuro."
+
+
+class VLMUnavailableError(ServiceUnavailableError):
+    code = "VLM_UNAVAILABLE"
+    user_message = "Il modello di anonimizzazione non è disponibile. Riprova più tardi."
+
+
+class ServerBusyError(ServiceUnavailableError):
+    code = "SERVER_BUSY"
+    user_message = "Servizio occupato: riprova più tardi."
+
+    def __init__(self) -> None:
+        super().__init__(headers={"Retry-After": "30"})
+
+
+def error_body(error: ServiceError) -> dict[str, Any]:
+    """Response body of an error: code, Italian message and the error's extra fields."""
+    return {"code": error.code, "detail": error.user_message, **error.extra}
+
+
 async def _service_error_handler(request: Request, exc: Exception) -> JSONResponse:
     error = exc if isinstance(exc, ServiceError) else ServiceError()
     logger.warning("%s on %s %s", error.code, request.method, request.url.path)
     return JSONResponse(
-        status_code=error.status_code,
-        content={"code": error.code, "detail": error.user_message},
+        status_code=error.status_code, content=error_body(error), headers=error.headers
     )
 
 

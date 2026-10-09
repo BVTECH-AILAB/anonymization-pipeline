@@ -57,9 +57,13 @@ _CURRENT: ContextVar[Metrics | None] = ContextVar("metrics", default=None)
 _PAGE: ContextVar[int | None] = ContextVar("metrics_page", default=None)
 
 
-def start() -> Metrics:
-    """Start a collector for the current context (one document)."""
-    collector = Metrics()
+def start(enabled: bool = True) -> Metrics | None:
+    """Start the collector of one document in the current context.
+
+    With ``enabled`` False the context gets no collector, so nothing left by a previous document
+    of the same task is reused.
+    """
+    collector = Metrics() if enabled else None
     _CURRENT.set(collector)
     return collector
 

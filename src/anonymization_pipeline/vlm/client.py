@@ -127,13 +127,6 @@ class VLMClient:
 
     # --- common ----------------------------------------------------------------------------------
 
-    async def is_available(self) -> bool:
-        try:
-            await self.models_available()
-        except (httpx.HTTPError, VLMError):
-            return False
-        return True
-
     async def call(
         self,
         phase: str,

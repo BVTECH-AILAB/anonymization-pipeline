@@ -332,7 +332,7 @@ def test_openai_missing_model() -> None:
         run(cfg, handler, lambda c: c.pull(TEST_MODEL))
 
 
-def test_models_and_availability() -> None:
+def test_models_available() -> None:
     cfg = pipeline_config()
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -340,17 +340,13 @@ def test_models_and_availability() -> None:
             200, json={"models": [{"name": "vlm"}, {"name": "other:7b"}]}
         )
 
-    (available, ok), client = run(
-        cfg, handler, lambda c: asyncio.gather(c.models_available(), c.is_available())
-    )
+    available, client = run(cfg, handler, lambda c: c.models_available())
 
-    assert available == {"vlm:latest", "other:7b"} and ok
+    assert available == {"vlm:latest", "other:7b"}
     assert client.has_model(available, "vlm") and client.has_model(
         available, "other:7b"
     )
     assert not client.has_model(available, "vlm:other")
-    (ok, _) = run(cfg, lambda r: httpx.Response(500), lambda c: c.is_available())
-    assert ok is False
 
 
 def test_parse_entities_and_groups() -> None:

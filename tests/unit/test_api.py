@@ -605,6 +605,6 @@ def test_verification_mode_per_request(client: TestClient) -> None:
         client.get("/configuration").json()["phases"]["verification"]["mode"] == "block"
     )
     response = client.post(
-        "/anonymize", files=_upload(), data={"mode": "tag", "verification": "fix"}
+        "/anonymize", files=_upload(), data={"mode": "tag", "verification": "nonsense"}
     )
-    assert response.status_code == 400  # the correcting mode is gone
+    assert response.status_code == 400

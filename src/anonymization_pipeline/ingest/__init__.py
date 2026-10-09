@@ -26,7 +26,6 @@ logger = logging.getLogger(__name__)
 
 TEXT_EXT = {".txt", ".text", ".md", ".csv", ".log", ".json", ".xml", ".html", ".eml"}
 IMAGE_EXT = {".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp", ".webp"}
-SUPPORTED = TEXT_EXT | IMAGE_EXT | {".pdf"}
 
 # PDFium is not thread-safe: documents are loaded in worker threads
 _PDFIUM_LOCK = threading.Lock()

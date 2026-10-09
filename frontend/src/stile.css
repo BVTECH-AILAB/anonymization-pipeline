@@ -167,7 +167,6 @@ mark {
   color: inherit; border-bottom: 2px solid var(--c, #888); border-radius: 2px; padding: 0 1px; cursor: pointer;
 }
 mark.scelto { background: color-mix(in srgb, var(--c, #888) 55%, transparent); outline: 2px solid var(--c, #888); }
-mark.revisionato { text-decoration: line-through wavy var(--ko); }
 .sfuggito { background: color-mix(in srgb, var(--ko) 25%, transparent); border-bottom: 2px dashed var(--ko); }
 
 .dettaglio-tag { margin-top: 8px; }

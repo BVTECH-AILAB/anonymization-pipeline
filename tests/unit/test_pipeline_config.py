@@ -159,9 +159,8 @@ def test_verification_modes_and_default() -> None:
         pipeline_config(default_verification="report").phases.verification.mode
         == "report"
     )
-    for removed in ("fix", "nonsense"):  # the correcting mode no longer exists
-        with pytest.raises(ValueError):
-            pipeline_config(default_verification=removed)
+    with pytest.raises(ValueError):
+        pipeline_config(default_verification="nonsense")
     with pytest.raises(ValueError, match="extra"):
         pipeline_config({"phases": {"verification": {"max_iterations": 3}}})
 

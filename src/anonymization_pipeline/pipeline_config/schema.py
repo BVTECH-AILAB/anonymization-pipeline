@@ -13,7 +13,6 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 from anonymization_pipeline.pipeline_config.categories import registry
 
 PHASES = ("extraction", "detection", "redaction", "verification")
-Phase = Literal["extraction", "detection", "redaction", "verification"]
 
 # prompt placeholders: phase -> key -> (allowed, required)
 PROMPTS: dict[str, dict[str, tuple[set[str], set[str]]]] = {

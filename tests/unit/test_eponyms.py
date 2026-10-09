@@ -34,6 +34,18 @@ def _excluded(text: str, value: str, category: str = "COGNOME") -> bool:
         ("eseguito Holter delle 24 ore", "Holter"),
         ("in terapia con Coumadin", "Coumadin"),
         ("globuli rossi nella norma", "rossi"),
+        ("Lasègue positivo a destra", "Lasègue"),
+        ("lesione del tendine d'Achille", "Achille"),
+        ("Versamento nel cavo del Douglas", "Douglas"),
+        ("frattura di Colles del radio", "Colles"),
+        ("segno di Chvostek", "Chvostek"),
+        ("adenocarcinoma, Gleason 3+4", "Gleason"),
+        ("Killip I all'ingresso", "Killip"),
+        ("cirrosi Child-Pugh B", "Pugh"),
+        ("sindrome di Von Willebrand", "Willebrand"),
+        ("proteinuria di Bence Jones", "Jones"),
+        ("in terapia con Pantorc", "Pantorc"),
+        ("trasferito in sala operatoria", "sala"),
     ],
 )
 def test_not_a_person_in_a_medical_context(text: str, value: str) -> None:
@@ -55,6 +67,12 @@ def test_not_a_person_in_a_medical_context(text: str, value: str) -> None:
         ("Glasgow Ivan", "Glasgow"),
         ("Rossi Mario, globuli rossi", "Rossi"),
         ("Paziente: Mario Rossi", "Rossi"),
+        ("Giordano negativo al tampone", "Giordano"),
+        ("Smith positivo per HCV", "Smith"),
+        ("Murphy pos. al controllo", "Murphy"),
+        ("Sig. Douglas Mario", "Douglas"),
+        ("Accompagnato da Achille, il figlio", "Achille"),
+        ("Dott. Sala, reparto di chirurgia", "Sala"),
     ],
 )
 def test_a_person_everywhere_else(text: str, value: str) -> None:

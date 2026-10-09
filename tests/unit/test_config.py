@@ -6,30 +6,6 @@ from anonymization_pipeline.config import Settings
 from tests.conftest import make_settings
 
 
-@pytest.mark.parametrize(
-    ("raw", "expected"),
-    [
-        ("postgresql://user@host:5432/db", "postgresql+asyncpg://user@host:5432/db"),
-        ("postgres://user@host:5432/db", "postgresql+asyncpg://user@host:5432/db"),
-        (
-            "postgresql+asyncpg://user@host:5432/db",
-            "postgresql+asyncpg://user@host:5432/db",
-        ),
-    ],
-)
-def test_database_url_accepts_cnpg_uri(raw: str, expected: str) -> None:
-    assert make_settings(database_url=raw).database_url == expected
-
-
-def test_database_url_has_no_default(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
-    monkeypatch.chdir(tmp_path)
-    monkeypatch.delenv("ANONPIP_DATABASE_URL", raising=False)
-
-    assert Settings().database_url == ""
-
-
 def test_default_environment_is_prod(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:

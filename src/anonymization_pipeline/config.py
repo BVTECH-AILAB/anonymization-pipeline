@@ -1,7 +1,7 @@
 """Service configuration.
 
 Every setting is read from an environment variable with the ``ANONPIP_``
-prefix (``ANONPIP_DATABASE_URL``, ``ANONPIP_LOG_LEVEL`` ...). Every field
+prefix (``ANONPIP_LOG_LEVEL``, ``ANONPIP_VLM_URL`` ...). Every field
 has a safe default: a pod must never crash on startup because a variable is
 missing from its ConfigMap.
 
@@ -38,27 +38,6 @@ class Settings(BaseSettings):
     extended_log_context: bool = False
     log_mask_prefix: int = 1
     log_mask_suffix: int = 1
-
-    # Credential: deliberately no default. It comes from the CNPG secret in
-    # the cluster and from .env locally. When empty the service still starts,
-    # and /readyz reports the database as unavailable.
-    database_url: str = ""
-    db_pool_size: int = 5
-    db_max_overflow: int = 5
-    db_connect_timeout: float = 5.0
-
-    @field_validator("database_url")
-    @classmethod
-    def _use_asyncpg_driver(cls, value: str) -> str:
-        """Accept the plain URI that CloudNativePG puts in ``<cluster>-app``.
-
-        CNPG exposes ``postgresql://user:pwd@host:5432/db`` under the ``uri``
-        key; SQLAlchemy needs the driver in the scheme.
-        """
-        for prefix in ("postgresql://", "postgres://"):
-            if value.startswith(prefix):
-                return "postgresql+asyncpg://" + value.removeprefix(prefix)
-        return value
 
     @field_validator("log_level")
     @classmethod

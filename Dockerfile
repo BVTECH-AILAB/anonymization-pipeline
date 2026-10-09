@@ -37,8 +37,6 @@ RUN pip install --no-cache-dir --upgrade "pip>=25.3" \
     && useradd --uid 1000 --create-home appuser
 WORKDIR /app
 COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
-COPY --chown=appuser:appuser alembic.ini ./
-COPY --chown=appuser:appuser migrations ./migrations
 COPY --chown=appuser:appuser scripts/entrypoint.sh ./entrypoint.sh
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \

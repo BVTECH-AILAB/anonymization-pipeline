@@ -1,23 +1,141 @@
-# Local development stack.
-# Settings have defaults (${VAR:-default}); credentials do not and must be
-# set in .env (cp .env.example .env), otherwise compose refuses to start.
+# Local development stack: the service, the local VLM backend (Ollama) and the web UI.
+# In staging/prod there is no compose: Kubernetes manifests from docs/DEPLOY_HANDOVER.md.
+#
+# Settings have defaults (${VAR:-default}). The two credentials (ANONPIP_VLM_API_KEY,
+# ANONPIP_VAULT_KEY) are optional and have no value unless set in .env (cp .env.example .env).
+#
+# Isolation: documents never leave the stack.
+#   internal  no route to the internet: app <-> ollama
+#   edge      only to publish ports on 127.0.0.1 (app API, web UI)
+#   egress    internet, only for the "models" profile (`just models`): the one step that
+#             downloads the VLM, the NER model and the docling models into the volumes
+# Docker cannot publish a port of a container attached only to an internal network, so the
+# app is also on "edge": at runtime it is offline by configuration (internal URLs only,
+# HF_HUB_OFFLINE, docling models from a read-only volume). In the cluster the same rule is a
+# NetworkPolicy (docs/DEPLOY_HANDOVER.md).
+#
+# GPU (NVIDIA): docker compose -f docker-compose.yml -f docker-compose.gpu.yml up (just up-gpu)
 name: anonymization-pipeline
 
+x-app-environment: &app-environment
+  ANONPIP_ENVIRONMENT: ${ANONPIP_ENVIRONMENT:-local}
+  ANONPIP_LOG_LEVEL: ${ANONPIP_LOG_LEVEL:-DEBUG}
+  ANONPIP_EXTENDED_LOG_CONTEXT: ${ANONPIP_EXTENDED_LOG_CONTEXT:-false}
+  ANONPIP_LOG_MASK_PREFIX: ${ANONPIP_LOG_MASK_PREFIX:-1}
+  ANONPIP_LOG_MASK_SUFFIX: ${ANONPIP_LOG_MASK_SUFFIX:-1}
+  ANONPIP_VLM_BACKEND: ${ANONPIP_VLM_BACKEND:-ollama}
+  ANONPIP_VLM_URL: ${ANONPIP_VLM_URL:-http://ollama:11434}
+  ANONPIP_VLM_API_KEY: ${ANONPIP_VLM_API_KEY:-}
+  ANONPIP_VLM_MODEL: ${ANONPIP_VLM_MODEL:-gemma4:26b-a4b-it-qat}
+  ANONPIP_VLM_CONTEXT: ${ANONPIP_VLM_CONTEXT:-16384}
+  ANONPIP_VLM_CONCURRENCY: ${ANONPIP_VLM_CONCURRENCY:-2}
+  ANONPIP_VLM_PULL_MISSING: "false"
+  ANONPIP_DEFAULT_MODE: ${ANONPIP_DEFAULT_MODE:-pseudonym}
+  ANONPIP_DEFAULT_VERIFICATION: ${ANONPIP_DEFAULT_VERIFICATION:-fix}
+  ANONPIP_DEFAULT_EXTRACTION: ${ANONPIP_DEFAULT_EXTRACTION:-docling}
+  ANONPIP_DOCLING_MODELS_DIR: /models/docling
+  ANONPIP_PIPELINE_CONFIG_FILE: ${ANONPIP_PIPELINE_CONFIG_FILE:-}
+  ANONPIP_VAULT_KEY: ${ANONPIP_VAULT_KEY:-}
+  ANONPIP_MAX_UPLOAD_MB: ${ANONPIP_MAX_UPLOAD_MB:-50}
+  ANONPIP_MAX_CONCURRENT_JOBS: ${ANONPIP_MAX_CONCURRENT_JOBS:-1}
+  ANONPIP_JOB_WAIT_S: ${ANONPIP_JOB_WAIT_S:-30}
+  ANONPIP_MAX_QUEUED_JOBS: ${ANONPIP_MAX_QUEUED_JOBS:-20}
+  ANONPIP_MAX_JOBS: ${ANONPIP_MAX_JOBS:-50}
+  ANONPIP_JOB_TTL_S: ${ANONPIP_JOB_TTL_S:-3600}
+  ANONPIP_ALLOW_TRANSCRIPT: ${ANONPIP_ALLOW_TRANSCRIPT:-false}
+
+x-ollama: &ollama
+  image: ollama/ollama:0.35.0   # pinned: upgrade deliberately
+  volumes:
+    - ollama_models:/root/.ollama
+
 services:
+  # VLM backend: no published port, no route to the internet
+  ollama:
+    <<: *ollama
+    restart: unless-stopped
+    networks: [internal]
+    environment:
+      OLLAMA_KEEP_ALIVE: 30m
+      OLLAMA_MAX_LOADED_MODELS: 1             # one model (Gemma 4 26B QAT ~16 GB + KV cache: 24 GB of VRAM)
+      OLLAMA_NUM_PARALLEL: ${OLLAMA_NUM_PARALLEL:-2}   # at least ANONPIP_VLM_CONCURRENCY
+      OLLAMA_FLASH_ATTENTION: 1
+      OLLAMA_KV_CACHE_TYPE: q8_0
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+
   app:
     build:
       context: .
       target: dev
-    environment:
-      ANONPIP_ENVIRONMENT: ${ANONPIP_ENVIRONMENT:-local}
-      ANONPIP_LOG_LEVEL: ${ANONPIP_LOG_LEVEL:-DEBUG}
-      ANONPIP_EXTENDED_LOG_CONTEXT: ${ANONPIP_EXTENDED_LOG_CONTEXT:-false}
-      ANONPIP_LOG_MASK_PREFIX: ${ANONPIP_LOG_MASK_PREFIX:-1}
-      ANONPIP_LOG_MASK_SUFFIX: ${ANONPIP_LOG_MASK_SUFFIX:-1}
+    depends_on:
+      ollama:
+        condition: service_healthy
+    networks: [internal, edge]
+    environment: *app-environment
     ports:
       - "127.0.0.1:${APP_PORT:-8000}:8000"
     volumes:
       - ./src:/app/src
       - ./tests:/app/tests
       - ./pyproject.toml:/app/pyproject.toml:ro
+      - hf_models:/models/hf:ro
+      - docling_models:/models/docling:ro
     command: uvicorn anonymization_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src
+
+  # web UI: static files + /api proxy to app:8000
+  frontend:
+    build:
+      context: frontend
+    depends_on:
+      - app
+    networks: [edge]
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8080}:80"
+
+  # --- profile "models": the only services with internet access (just models) ---
+
+  # a second Ollama on the same volume, used only to download the VLM
+  ollama-models:
+    <<: *ollama
+    profiles: [models]
+    networks: [egress]
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  models-init:
+    build:
+      context: .
+      target: dev
+    profiles: [models]
+    depends_on:
+      ollama-models:
+        condition: service_healthy
+    networks: [egress]
+    environment:
+      <<: *app-environment
+      ANONPIP_VLM_URL: http://ollama-models:11434
+      HF_HUB_OFFLINE: "0"
+      TRANSFORMERS_OFFLINE: "0"
+    volumes:
+      - ./src:/app/src
+      - hf_models:/models/hf
+      - docling_models:/models/docling
+    command: python -m anonymization_pipeline.model_store
+
+networks:
+  internal:
+    internal: true
+  edge: {}
+  egress: {}
+
+volumes:
+  ollama_models:
+  hf_models:
+  docling_models:

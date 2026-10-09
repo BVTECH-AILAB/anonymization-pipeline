@@ -1,0 +1,11 @@
+# NVIDIA GPU override: the model runs in the ollama container.
+# Requirements: NVIDIA driver + NVIDIA Container Toolkit (Linux) or Docker Desktop with the WSL2 backend.
+services:
+  ollama:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

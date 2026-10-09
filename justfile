@@ -6,16 +6,26 @@ set dotenv-load := true
 default:
     @just --list
 
-# --- Compose ---
+# --- Compose (service + Ollama + web UI) ---
 
-# Build and start the stack in the background
+# Download the models into the volumes: the only step with internet access (run it first)
+models:
+    docker compose --profile models build models-init
+    docker compose --profile models run --rm models-init
+    docker compose --profile models rm --stop --force ollama-models
+
+# Build and start the stack in the background, VLM on CPU (slow: for trials only)
 up:
     docker compose up --build -d
+
+# Build and start the stack with the VLM on an NVIDIA GPU
+up-gpu:
+    docker compose -f docker-compose.yml -f docker-compose.gpu.yml up --build -d
 
 down:
     docker compose down
 
-# Stop the stack and delete the volumes
+# Stop the stack and delete the volumes (models included)
 down-v:
     docker compose down -v
 
@@ -56,6 +66,10 @@ check:
 # Unit tests (no network)
 test *args:
     uv run pytest {{args}}
+
+# Integration tests against the compose Ollama (`just models` and `just up` first)
+test-vlm *args:
+    docker compose exec app pytest -m integration -s {{args}}
 
 # Unit tests with coverage (fails under 80%), writes coverage.xml and junit.xml for Sonar
 test-cov:

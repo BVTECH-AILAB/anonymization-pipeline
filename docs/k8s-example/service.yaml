@@ -15,9 +15,26 @@ data:
   ANONPIP_EXTENDED_LOG_CONTEXT: "false"
   ANONPIP_VLM_BACKEND: "ollama"
   ANONPIP_VLM_URL: "http://anonymization-vlm:11434"
-  ANONPIP_VLM_MODEL: "gemma4:26b-a4b-it-qat"
   ANONPIP_VLM_PULL_MISSING: "false"
   ANONPIP_DOCLING_MODELS_DIR: "/models/docling"
+  ANONPIP_MODELS_FILE: "/etc/anonymization-pipeline/models.yaml"
+---
+# Optional: VLM catalog and default model of each phase. The download Job mounts the same
+# ConfigMap, so it pulls exactly the models the API may use. Without it the image default applies.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: anonymization-pipeline-models-file
+data:
+  models.yaml: |
+    models:
+      - name: gemma4:26b-a4b-it-qat
+        context: 16384
+    phases:
+      extraction: gemma4:26b-a4b-it-qat
+      detection: gemma4:26b-a4b-it-qat
+      redaction: gemma4:26b-a4b-it-qat
+      verification: gemma4:26b-a4b-it-qat
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -77,10 +94,16 @@ spec:
         - name: models
           mountPath: /models
           readOnly: true
+        - name: models-file
+          mountPath: /etc/anonymization-pipeline
+          readOnly: true
       volumes:
       - name: models                # NER (hf/) and docling (docling/) models, filled once by the download Job
         persistentVolumeClaim:
           claimName: anonymization-pipeline-models
+      - name: models-file           # ANONPIP_MODELS_FILE
+        configMap:
+          name: anonymization-pipeline-models-file
 ---
 apiVersion: v1
 kind: Service

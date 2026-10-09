@@ -47,8 +47,8 @@ file -> ingest -> estrazione -> rilevamento -> [censura -> verifica]* -> Markdow
 - Docker con compose, `uv`, `just`.
 - Per il modello predefinito (`gemma4:26b-a4b-it-qat`, circa 16 GB) una GPU
   NVIDIA da 24 GB con NVIDIA Container Toolkit (su WSL2: Docker Desktop con
-  backend WSL2). Con 8 GB: `ANONPIP_VLM_MODEL=gemma4:e4b-it-qat`. Su sola
-  CPU funziona, ma solo per prove.
+  backend WSL2). Con 8 GB: `ANONPIP_MODELS_FILE=/app/config/models.8gb.yaml`
+  (`gemma4:e4b-it-qat`). Su sola CPU funziona, ma solo per prove.
 
 ## Primo avvio
 
@@ -56,7 +56,7 @@ file -> ingest -> estrazione -> rilevamento -> [censura -> verifica]* -> Markdow
 cp .env.example .env
 uv sync
 just test                 # unit test (nessuna rete, VLM finto)
-just models               # unico passo con internet: VLM, NER e docling nei volumi
+just models               # unico passo con internet: i VLM del file dei modelli, NER e docling
 just up-gpu               # oppure `just up` (solo CPU)
 curl localhost:8000/readyz
 ```
@@ -109,12 +109,24 @@ metriche contengono solo conteggi, categorie, pagine e tempi.
 ## Configurazione
 
 - Variabili `ANONPIP_*` (`config.py`, `.env.example`, elenco completo in
-  `docs/DEPLOY_HANDOVER.md`): backend e modello VLM, modalità predefinite,
+  `docs/DEPLOY_HANDOVER.md`): backend VLM, modalità predefinite,
   chiave della mappa, limiti e lavori asincroni.
+- Modelli VLM: un file YAML separato,
+  `src/anonymization_pipeline/resources/models.yaml`, oppure quello indicato
+  da `ANONPIP_MODELS_FILE` (in compose `./config` è montata su
+  `/app/config`). Contiene il catalogo (`models`: nome e contesto di ogni
+  modello) e il modello predefinito di ogni fase (`phases`: estrazione,
+  rilevamento, censura, verifica). `just models` scarica tutto il catalogo;
+  a runtime ogni richiesta può scegliere, fase per fase, un modello del
+  catalogo presente nel backend (campi `model_extraction`,
+  `model_detection`, `model_redaction`, `model_verification`; elenco in
+  `GET /models`). Con `OLLAMA_MAX_LOADED_MODELS=1` modelli diversi fra le
+  fasi vengono scambiati in VRAM a ogni cambio di fase.
 - Pipeline (prompt, passate del rilevamento, rilevatori, soglie, categorie
   attive): `src/anonymization_pipeline/resources/default.yaml`. Si cambia
   con un file YAML parziale indicato da `ANONPIP_PIPELINE_CONFIG_FILE`; le
-  chiavi possedute dalle variabili `ANONPIP_*` non sono ammesse nel file.
+  chiavi possedute dalle variabili `ANONPIP_*` e dal file dei modelli non
+  sono ammesse nel file.
   Ogni chiave sconosciuta è un errore e il servizio non parte.
 - Categorie e gruppi: `resources/categories.yaml`; regole, etichette ed
   eponimi: `resources/detectors/`.
@@ -123,7 +135,7 @@ metriche contengono solo conteggi, categorie, pagine e tempi.
 
 | Comando | Cosa fa |
 |---|---|
-| `just models` | Scarica i modelli nei volumi (unico passo con internet) |
+| `just models` | Scarica nei volumi tutti i VLM del file dei modelli, NER e docling (unico passo con internet) |
 | `just up` / `just up-gpu` / `just down` / `just logs` | Stack compose (CPU / GPU NVIDIA) |
 | `just dev` | API sull'host (serve un backend VLM raggiungibile: `ANONPIP_VLM_URL`) |
 | `just lint` | ruff fix + format + ty: prima di ogni commit |

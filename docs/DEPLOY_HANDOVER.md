@@ -13,15 +13,16 @@ fa il provisioning.
 | Namespace proposto | |
 | Porta | API `8000` (nome `web`); interfaccia web `80` |
 | Liveness probe | `GET /healthz` |
-| Readiness probe | `GET /readyz` (controlla il backend VLM e la presenza del modello configurato) |
+| Readiness probe | `GET /readyz` (controlla il backend VLM e la presenza del modello predefinito di ogni fase) |
 | Serve un database? | **no** (servizio stateless; i lavori asincroni sono in memoria) |
 | Esposizione | solo interna (`traefik-int`) / tramite WSO2 API Manager |
 | Chi lo chiama | interfaccia web; altri servizi della piattaforma (da definire) |
 | Chi chiama (dipendenze) | **solo** il backend VLM interno (Ollama, o un server compatibile OpenAI come vLLM) |
 | Repliche | **1** (vedi "Lavori in memoria") |
 | Risorse API | requests 2 CPU / 6Gi, limits 4 CPU / 10Gi (NER e docling girano su CPU nel pod) |
-| Risorse backend VLM | 1 GPU NVIDIA da 24 GB (`nvidia.com/gpu: 1`), 16Gi di RAM; con 8 GB di VRAM usare `ANONPIP_VLM_MODEL=gemma4:e4b-it-qat` |
-| Volumi | PVC modelli dell'API ~2Gi (NER ~450 MB in `/models/hf`, docling ~700 MB in `/models/docling`), montata in sola lettura; PVC modelli di Ollama ~40Gi |
+| Risorse backend VLM | 1 GPU NVIDIA da 24 GB (`nvidia.com/gpu: 1`), 16Gi di RAM, con il file dei modelli predefinito; con 8 GB di VRAM un file dei modelli con `gemma4:e4b-it-qat` (esempio in `config/models.8gb.yaml`) |
+| Volumi | PVC modelli dell'API ~2Gi (NER ~450 MB in `/models/hf`, docling ~700 MB in `/models/docling`), montata in sola lettura; PVC modelli di Ollama: somma dei modelli del catalogo più margine (~40Gi con il catalogo predefinito, ~16 GB) |
+| File dei modelli | facoltativo: ConfigMap con `models.yaml` montata nell'API e nel Job di download, indicata da `ANONPIP_MODELS_FILE` (vedi `docs/k8s-example/service.yaml`); senza, vale quello nell'immagine |
 | Migrazioni all'avvio | nessuna |
 
 ### Deroghe al template (da approvare)
@@ -55,8 +56,10 @@ download iniziale dei modelli.
 - Download dei modelli: un `Job` una tantum (stessa immagine dell'API,
   comando `python -m anonymization_pipeline.model_store`, con
   `HF_HUB_OFFLINE=0` e `TRANSFORMERS_OFFLINE=0`) che riempie le PVC dei
-  modelli; per il VLM serve un Ollama temporaneo con egress sulla stessa PVC
-  (`ollama pull <modello>`). È l'unico componente a cui va concesso egress,
+  modelli; per i VLM serve un Ollama temporaneo con egress sulla stessa PVC,
+  e il Job li scarica tutti: sono i modelli del catalogo del file dei
+  modelli (`ANONPIP_MODELS_FILE`, la stessa ConfigMap dell'API, altrimenti
+  quello dell'immagine). È l'unico componente a cui va concesso egress,
   e solo per la sua durata. In alternativa i modelli si copiano nelle PVC da
   un mirror interno.
 - A runtime l'immagine non scarica nulla: `HF_HUB_OFFLINE=1` e
@@ -79,8 +82,6 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_VLM_BACKEND` | `ollama` | `ollama` | `ollama` | no |
 | `ANONPIP_VLM_URL` | `http://ollama:11434` | URL del Service del backend VLM | idem | no |
 | `ANONPIP_VLM_API_KEY` | nessuno (credenziale) | solo per backend `openai` che la richiedono | idem | **sì** |
-| `ANONPIP_VLM_MODEL` | `gemma4:26b-a4b-it-qat` | | | no |
-| `ANONPIP_VLM_CONTEXT` | `16384` | | | no |
 | `ANONPIP_VLM_CONCURRENCY` | `2` | | | no |
 | `ANONPIP_VLM_PULL_MISSING` | `false` | `false` | `false` | no |
 | `ANONPIP_DEFAULT_MODE` | `pseudonym` | | | no |
@@ -88,6 +89,7 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_DEFAULT_EXTRACTION` | `docling` | | | no |
 | `ANONPIP_DOCLING_MODELS_DIR` | `/models/docling` | | | no |
 | `ANONPIP_PIPELINE_CONFIG_FILE` | vuoto | facoltativo (file montato da ConfigMap) | idem | no |
+| `ANONPIP_MODELS_FILE` | vuoto (file dei modelli nell'immagine) | facoltativo (file montato da ConfigMap, lo stesso per API e Job di download) | idem | no |
 | `ANONPIP_VAULT_KEY` | nessuno (credenziale) | facoltativa: senza, ogni richiesta in modalità pseudonimo porta la sua chiave | idem | **sì** |
 | `ANONPIP_MAX_UPLOAD_MB` | `50` | | | no |
 | `ANONPIP_MAX_CONCURRENT_JOBS` | `1` | | | no |

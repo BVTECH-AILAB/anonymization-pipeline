@@ -1,4 +1,5 @@
-"""Layered loading: default.yaml (+ prompts) -> user file -> settings -> request overrides."""
+"""Layered loading: default.yaml (+ prompts) -> user file -> models file -> settings -> request
+overrides."""
 
 import copy
 import functools
@@ -8,6 +9,7 @@ from typing import Any
 
 from anonymization_pipeline.config import Settings
 from anonymization_pipeline.pipeline_config.categories import registry
+from anonymization_pipeline.pipeline_config.models import models_layer
 from anonymization_pipeline.pipeline_config.resources import parse_yaml, read_yaml
 from anonymization_pipeline.pipeline_config.schema import PHASES, PipelineConfig
 
@@ -18,13 +20,13 @@ SETTINGS_KEYS = {
     "backend.api_key": "vlm_api_key",
     "backend.concurrency": "vlm_concurrency",
     "backend.pull_missing": "vlm_pull_missing",
-    "model.name": "vlm_model",
-    "model.context": "vlm_context",
     "phases.redaction.mode": "default_mode",
     "phases.verification.mode": "default_verification",
     "phases.extraction.native_pdf.engine": "default_extraction",
     "phases.extraction.native_pdf.models_dir": "docling_models_dir",
 }
+# keys owned by the models file (ANONPIP_MODELS_FILE)
+MODELS_KEYS = ["models", *(f"phases.{phase}.model" for phase in PHASES)]
 
 
 def merge(base: dict, above: dict) -> dict:
@@ -103,6 +105,11 @@ def _user_file(path: str) -> dict:
             f"{path}: keys owned by the ANONPIP_* settings: {', '.join(owned)} "
             "(set the variables instead)"
         )
+    if owned := [key for key in MODELS_KEYS if _has(layer, key)]:
+        raise ValueError(
+            f"{path}: keys owned by the models file: {', '.join(owned)} "
+            "(set them in ANONPIP_MODELS_FILE instead)"
+        )
     return layer
 
 
@@ -128,6 +135,7 @@ def load_pipeline_config(
         _user_file(settings.pipeline_config_file)
         if settings.pipeline_config_file
         else {},
+        models_layer(settings.models_file),
         settings_layer(settings),
         overrides or {},
     ]
@@ -140,7 +148,7 @@ def load_pipeline_config(
 def request_overrides(
     mode: str | None = None,
     verification: str | None = None,
-    model: str | None = None,
+    models: dict[str, str] | None = None,
     enable: tuple[str, ...] = (),
     disable: tuple[str, ...] = (),
     extraction: str | None = None,
@@ -151,14 +159,14 @@ def request_overrides(
     Args:
         mode: Redaction mode.
         verification: Verification mode.
-        model: VLM name.
+        models: VLM of some phases (phase -> name of the models file catalog).
         enable: Groups or categories to switch on (comma separated values allowed).
         disable: Groups or categories to switch off.
         extraction: Engine for native PDF pages (docling | vlm).
         transcript: Also produce the transcript IN CLEAR TEXT (debugging).
 
     Raises:
-        ValueError: On an unknown group or category.
+        ValueError: On an unknown phase, group or category.
     """
     out: dict = {}
     if transcript is not None:
@@ -169,8 +177,11 @@ def request_overrides(
         _set(out, "phases.redaction.mode", mode)
     if verification:
         _set(out, "phases.verification.mode", verification)
-    if model:
-        _set(out, "model.name", model)
+    for phase, name in (models or {}).items():
+        if phase not in PHASES:
+            raise ValueError(f"unknown phase: {phase}")
+        if name:
+            _set(out, f"phases.{phase}.model", name)
     reg = registry()
     for entries, enabled in ((enable, True), (disable, False)):
         split = [v for entry in entries for v in entry.split(",") if v.strip()]

@@ -50,8 +50,6 @@ class Settings(BaseSettings):
     vlm_url: str = "http://ollama:11434"
     # Credential: only for OpenAI-compatible backends that require it.
     vlm_api_key: str = ""
-    vlm_model: str = "gemma4:26b-a4b-it-qat"
-    vlm_context: int = Field(default=16384, ge=1024)
     vlm_concurrency: int = Field(default=2, ge=1)
     # Off by default: at runtime the backend has no internet access, models are
     # downloaded beforehand (`just models`).
@@ -63,6 +61,9 @@ class Settings(BaseSettings):
     docling_models_dir: str = "/models/docling"
     # Optional YAML file with pipeline overrides (see resources/default.yaml).
     pipeline_config_file: str = ""
+    # Optional YAML file with the VLM catalog and the model of each phase
+    # (see resources/models.yaml, the default when empty).
+    models_file: str = ""
     # Credential: key or passphrase of the pseudonym map. When empty, requests
     # in pseudonym mode must send their own key.
     vault_key: str = ""

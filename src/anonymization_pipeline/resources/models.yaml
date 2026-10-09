@@ -1,0 +1,24 @@
+# =============================================================================
+#  VLM models (anonymization_pipeline/pipeline_config/models.py)
+#
+#  Replace this file with your own through ANONPIP_MODELS_FILE.
+#    models: the catalog. `just models` downloads every entry before the service starts, and a
+#            request may choose for each phase only a model listed here (and present in the
+#            backend, see GET /models). context = num_ctx of the model (Ollama), >= 1024.
+#    phases: the default model of each phase; every phase must be listed and its model must be
+#            in the catalog.
+#
+#  Different models in different phases are swapped in VRAM at every change of phase when the
+#  backend keeps one model loaded (OLLAMA_MAX_LOADED_MODELS=1).
+#  On an 8 GB GPU: gemma4:e4b-it-qat with context 8192.
+# =============================================================================
+
+models:
+  - name: gemma4:26b-a4b-it-qat   # ~16 GB: 24 GB GPU
+    context: 16384
+
+phases:
+  extraction: gemma4:26b-a4b-it-qat
+  detection: gemma4:26b-a4b-it-qat
+  redaction: gemma4:26b-a4b-it-qat
+  verification: gemma4:26b-a4b-it-qat

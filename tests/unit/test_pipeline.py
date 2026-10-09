@@ -1,6 +1,7 @@
 import asyncio
 import io
 import json
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -23,6 +24,7 @@ from tests.pipeline import (
     Answer,
     FakeVLM,
     IdealModel,
+    models_file,
     pipeline_config,
     png,
     prompt_text,
@@ -366,3 +368,36 @@ def test_report_of_the_detectors() -> None:
     assert result.markdown.startswith("Paziente: [PERSONA_1]\nCF: [CODICE_FISCALE_1]")
     sources = {e["replacement"]: e["sources"] for e in result.report["entities"]}
     assert sources == {"[PERSONA_1]": ["labels"], "[CODICE_FISCALE_1]": ["rules"]}
+
+
+def test_each_phase_runs_its_own_model(tmp_path: Path) -> None:
+    phases = {
+        "extraction": "reader:1",
+        "detection": "finder:1",
+        "redaction": "grouper:1",
+        "verification": "checker:1",
+    }
+    contexts = {
+        "reader:1": 16384,
+        "finder:1": 8192,
+        "grouper:1": 4096,
+        "checker:1": 8192,
+    }
+    cfg = pipeline_config(
+        {"output": {"save_metrics": True}},
+        models_file=models_file(tmp_path, contexts, phases),
+    )
+    buffer = io.BytesIO()
+    Image.new("RGB", (500, 300), "white").save(buffer, "PNG")
+    model = IdealModel(VALUES, markdown={500: TEXT})
+
+    result, client = _run(model, cfg, name="scan.png", data=buffer.getvalue())
+
+    assert {phase for phase, _ in client.used_models} == set(phases)
+    assert all(name == phases[phase] for phase, name in client.used_models)
+    assert result.report["model"] == {"backend": "ollama", "phases": phases}
+    assert result.metrics is not None
+    assert result.metrics["configuration"]["models"] == {
+        phase: {"name": name, "context": contexts[name]}
+        for phase, name in phases.items()
+    }

@@ -15,6 +15,7 @@ from anonymization_pipeline.config import Settings, get_settings
 from anonymization_pipeline.errors import register_exception_handlers
 from anonymization_pipeline.logging_setup import setup_logging
 from anonymization_pipeline.middleware import RequestIdMiddleware, UploadLimitMiddleware
+from anonymization_pipeline.pipeline_config import PHASES
 from anonymization_pipeline.services.anonymization import (
     AnonymizationService,
     ClientFactory,
@@ -52,11 +53,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.jobs = registry
     await registry.start()
     logger.info(
-        "Service started: name=%s version=%s environment=%s model=%s",
+        "Service started: name=%s version=%s environment=%s models=%s",
         settings.app_name,
         __version__,
         settings.environment,
-        service.config.model.name,
+        ",".join(f"{p}:{service.config.model_for(p)[0]}" for p in PHASES),
     )
     try:
         yield

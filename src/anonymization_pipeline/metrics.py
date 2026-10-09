@@ -21,7 +21,7 @@ from typing import Any
 
 from anonymization_pipeline import __version__
 from anonymization_pipeline.domain import Document
-from anonymization_pipeline.pipeline_config import PipelineConfig
+from anonymization_pipeline.pipeline_config import PHASES, PipelineConfig
 
 
 @dataclass
@@ -249,6 +249,7 @@ def summarize(
         )
 
     verification = report.get("verification", {})
+    models = {phase: cfg.model_for(phase) for phase in PHASES}
     return {
         "version": __version__,
         "document": {
@@ -259,8 +260,10 @@ def summarize(
         },
         "configuration": {
             "backend": cfg.backend.kind,
-            "model": cfg.model.name,
-            "context": cfg.model.context,
+            "models": {
+                phase: {"name": name, "context": spec.context}
+                for phase, (name, spec) in models.items()
+            },
             "concurrency": cfg.backend.concurrency,
             "extraction": cfg.phases.extraction.native_pdf.engine,
             "detectors": active,

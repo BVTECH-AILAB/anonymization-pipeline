@@ -1,7 +1,7 @@
 """Run against a real VLM backend: `just test-vlm` (inside the app container of the compose stack).
 
-The backend URL and the model come from the container settings (ANONPIP_VLM_URL, ANONPIP_VLM_MODEL),
-e.g. ANONPIP_VLM_MODEL=gemma4:e4b-it-qat and ANONPIP_VLM_CONTEXT=8192 on a small GPU.
+The backend URL and the models come from the container settings (ANONPIP_VLM_URL,
+ANONPIP_MODELS_FILE), e.g. ANONPIP_MODELS_FILE=/app/config/models.8gb.yaml on a small GPU.
 """
 
 import asyncio
@@ -54,8 +54,7 @@ def test_real_pipeline() -> None:
     settings = make_settings(
         vlm_url=target.vlm_url,
         vlm_backend=target.vlm_backend,
-        vlm_model=target.vlm_model,
-        vlm_context=target.vlm_context,
+        models_file=target.models_file,
         default_mode="tag",
         default_verification="report",
         docling_models_dir=target.docling_models_dir,

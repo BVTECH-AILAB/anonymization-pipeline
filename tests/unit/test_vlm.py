@@ -2,6 +2,7 @@ import asyncio
 import base64
 import json
 from collections.abc import Awaitable, Callable
+from pathlib import Path
 from typing import Any
 
 import httpx
@@ -19,7 +20,7 @@ from anonymization_pipeline.vlm.responses import (
     parse_entities,
     parse_groups,
 )
-from tests.pipeline import pipeline_config
+from tests.pipeline import models_file, pipeline_config
 
 SCHEMA = entity_schema(["PERSONA", "CODICE_FISCALE"])
 
@@ -37,8 +38,15 @@ def run(
     return asyncio.run(main())
 
 
-def test_native_ollama_payload() -> None:
-    cfg = pipeline_config({"model": {"options": {"top_k": 1}}}, vlm_model="gemma4:test")
+def test_native_ollama_payload(tmp_path: Path) -> None:
+    cfg = pipeline_config(
+        {"generation": {"options": {"top_k": 1}}},
+        models_file=models_file(
+            tmp_path,
+            {"big:1": 16384, "gemma4:test": 8192},
+            {"detection": "gemma4:test"},
+        ),
+    )
     seen: list[dict] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -64,7 +72,7 @@ def test_native_ollama_payload() -> None:
         and payload["keep_alive"] == "30m"
         and payload["stream"] is False
     )
-    assert payload["options"]["num_ctx"] == 16384
+    assert payload["options"]["num_ctx"] == 8192  # the context of the detection model
     assert payload["options"]["seed"] == 42 and payload["options"]["top_k"] == 1
     assert payload["options"]["num_predict"] == cfg.phases.detection.max_tokens
     assert payload["format"] == SCHEMA
@@ -73,13 +81,23 @@ def test_native_ollama_payload() -> None:
     assert client.summary()["detection"]["calls"] == 1
 
 
-def test_ollama_pulls_a_missing_model_when_allowed() -> None:
-    cfg = pipeline_config({"backend": {"retry_wait_s": 0}}, vlm_pull_missing=True)
+def test_ollama_pulls_the_missing_model_of_the_phase_when_allowed(
+    tmp_path: Path,
+) -> None:
+    cfg = pipeline_config(
+        {"backend": {"retry_wait_s": 0}},
+        vlm_pull_missing=True,
+        models_file=models_file(
+            tmp_path, {"big:1": 16384, "small:1": 4096}, {"extraction": "small:1"}
+        ),
+    )
     state = {"pull": 0}
+    pulled: list[str] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
         if request.url.path == "/api/pull":
             state["pull"] += 1
+            pulled.append(json.loads(request.content)["model"])
             return httpx.Response(200, json={"status": "success"})
         if request.url.path == "/api/tags":
             return httpx.Response(200, json={"models": []})
@@ -91,7 +109,7 @@ def test_ollama_pulls_a_missing_model_when_allowed() -> None:
 
     response, _ = run(cfg, handler, lambda c: c.call("extraction", "S", "U"))
 
-    assert response.text == "ok" and state["pull"] == 1
+    assert response.text == "ok" and pulled == ["small:1"]
 
 
 def test_ollama_does_not_pull_by_default() -> None:
@@ -207,11 +225,11 @@ def test_openai_missing_model() -> None:
     with pytest.raises(VLMModelMissing):
         run(cfg, handler, lambda c: c.call("extraction", "S", "U"))
     with pytest.raises(VLMModelMissing, match="loaded at startup"):
-        run(cfg, handler, lambda c: c.pull())
+        run(cfg, handler, lambda c: c.pull("gemma4:26b-a4b-it-qat"))
 
 
 def test_models_and_availability() -> None:
-    cfg = pipeline_config(vlm_model="gemma4")
+    cfg = pipeline_config()
 
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
@@ -223,7 +241,10 @@ def test_models_and_availability() -> None:
     )
 
     assert available == {"gemma4:latest", "other:7b"} and ok
-    assert client.has_model(available)
+    assert client.has_model(available, "gemma4") and client.has_model(
+        available, "other:7b"
+    )
+    assert not client.has_model(available, "gemma4:e4b")
     (ok, _) = run(cfg, lambda r: httpx.Response(500), lambda c: c.is_available())
     assert ok is False
 

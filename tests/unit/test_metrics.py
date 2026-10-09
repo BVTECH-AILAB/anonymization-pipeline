@@ -12,6 +12,7 @@ from anonymization_pipeline.domain import Result
 from anonymization_pipeline.extraction import native_pdf
 from anonymization_pipeline.pipeline import anonymize
 from anonymization_pipeline.pipeline_config import PipelineConfig
+from anonymization_pipeline.pipeline_config.schema import ModelSpec
 from anonymization_pipeline.vlm import VLMClient, VLMResponse
 from tests.pipeline import FakeVLM, IdealModel, pipeline_config
 from tests.unit.test_extraction import LINES, pdf_with_text
@@ -45,6 +46,8 @@ class MeasuredClient(FakeVLM):
 
     async def _send(
         self,
+        model: str,
+        spec: ModelSpec,
         system: str,
         user: str,
         images: list[bytes],

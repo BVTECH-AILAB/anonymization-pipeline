@@ -1,7 +1,8 @@
 """Pipeline configuration schema: types, ranges, allowed keys.
 
 Every section rejects unknown keys (``extra="forbid"``): a typo in the user file is an error,
-not an ignored value. The phases have no ``model`` key: there is one model, in ``model``.
+not an ignored value. Each phase names its VLM (``phases.<phase>.model``), one of the catalog in
+``models``: both come from the models file (``models.py``), never from the pipeline file.
 """
 
 import string
@@ -45,14 +46,18 @@ class Backend(_Section):
     health_timeout_s: float = Field(gt=0)
 
 
-class Model(_Section):
-    name: str = Field(min_length=1)
-    context: int = Field(ge=1024)
+class Generation(_Section):
+    """Generation parameters shared by every model."""
+
     temperature: float = Field(ge=0)
     seed: int | None = None
     think: bool | str | None = None
     keep_alive: str | int | None = None
     options: dict[str, Any] = Field(default_factory=dict)
+
+
+class ModelSpec(_Section):
+    context: int = Field(ge=1024)
 
 
 class Images(_Section):
@@ -70,6 +75,7 @@ class Text(_Section):
 
 
 class _Phase(_Section):
+    model: str = Field(min_length=1)
     timeout_s: float = Field(gt=0)
     max_tokens: int = Field(ge=16)
 
@@ -182,7 +188,8 @@ class PipelineConfig(_Section):
     """Effective, validated configuration of one pipeline run."""
 
     backend: Backend
-    model: Model
+    generation: Generation
+    models: dict[str, ModelSpec] = Field(min_length=1)
     images: Images
     text: Text
     phases: Phases
@@ -192,6 +199,12 @@ class PipelineConfig(_Section):
 
     @model_validator(mode="after")
     def _consistency(self) -> "PipelineConfig":
+        for phase in PHASES:
+            name = getattr(self.phases, phase).model
+            if name not in self.models:
+                raise ValueError(
+                    f"phases.{phase}.model: {name} is not in the models file"
+                )
         reg = registry()
         if unknown := sorted(set(self.categories) - set(reg.descriptions)):
             raise ValueError(f"unknown categories: {', '.join(unknown)}")
@@ -224,6 +237,11 @@ class PipelineConfig(_Section):
             )
         _check_prompts(self.prompts)
         return self
+
+    def model_for(self, phase: str) -> tuple[str, ModelSpec]:
+        """Name and parameters of the VLM of ``phase``."""
+        name = getattr(self.phases, phase).model
+        return name, self.models[name]
 
     def active(self) -> list[str]:
         """Active categories, in registry order."""

@@ -34,6 +34,7 @@ from anonymization_pipeline.pipeline import (
     restore_detail,
 )
 from anonymization_pipeline.pipeline_config import (
+    PHASES,
     PipelineConfig,
     effective,
     load_pipeline_config,
@@ -81,26 +82,34 @@ class AnonymizationService:
         mode: str | None = None,
         verification: str | None = None,
         extraction: str | None = None,
-        model: str | None = None,
+        models: dict[str, str | None] | None = None,
         enable: str | None = None,
         disable: str | None = None,
         transcript: bool | None = None,
     ) -> PipelineConfig:
         """Configuration of one request.
 
+        Args:
+            models: VLM of some phases (phase -> name; empty = the default of the phase).
+
         Raises:
-            BadRequestError: Invalid option, transcript not allowed, model not in the backend.
-            VLMUnavailableError: A model was chosen and the backend cannot list its models.
+            BadRequestError: Invalid option, transcript not allowed, model not in the models file
+                or not in the backend.
+            VLMUnavailableError: A model other than the default was chosen and the backend cannot
+                list its models.
         """
         if transcript and not self.settings.allow_transcript:
             raise BadRequestError(
                 "Trascrizione in chiaro non consentita in questo ambiente."
             )
+        chosen = {phase: name for phase, name in (models or {}).items() if name}
+        if any(name not in self.config.models for name in chosen.values()):
+            raise BadRequestError("Modello non previsto (vedi GET /models).")
         try:
             overrides = request_overrides(
                 mode,
                 verification,
-                model or None,
+                chosen,
                 _split(enable),
                 _split(disable),
                 extraction,
@@ -113,12 +122,19 @@ class AnonymizationService:
                 "Opzioni non valide: controllare modalità (pseudonym, tag, redaction), verifica "
                 "(off, report, fix, block), estrazione (docling, vlm) e categorie (GET /categories)."
             ) from exc
-        if model and model != self.config.model.name:
-            # only models already in the backend: a free name could make Ollama download anything
-            listing = await self.models()
-            if listing["error"]:
-                raise VLMUnavailableError()
-            if model not in listing["models"]:
+        others = {
+            name
+            for phase, name in chosen.items()
+            if name != self.config.model_for(phase)[0]
+        }
+        if others:
+            # the default models are checked by /readyz; the others must already be in the backend
+            client = self._client_factory(self.config)
+            try:
+                available = await client.models_available()
+            except (httpx.HTTPError, VLMError) as exc:
+                raise VLMUnavailableError() from exc
+            if not all(client.has_model(available, name) for name in others):
                 raise BadRequestError(
                     "Modello non presente nel backend (vedi GET /models)."
                 )
@@ -252,18 +268,29 @@ class AnonymizationService:
     # --- status --------------------------------------------------------------------------------
 
     async def models(self) -> dict[str, Any]:
-        """Models in the backend (to choose one per request) and the default one. With the backend
-        unreachable the list is empty and ``error`` says why."""
+        """The models file catalog (a request may choose one per phase), whether each model is in
+        the backend, and the default model of each phase. With the backend unreachable
+        ``present`` is None and ``error`` says why."""
         client = self._client_factory(self.config)
         try:
-            available = sorted(await client.models_available())
+            available: set[str] | None = await client.models_available()
+            error = None
         except (httpx.HTTPError, VLMError) as exc:
-            return {
-                "default": self.config.model.name,
-                "models": [],
-                "error": type(exc).__name__,
-            }
-        return {"default": self.config.model.name, "models": available, "error": None}
+            available, error = None, type(exc).__name__
+        return {
+            "defaults": {phase: self.config.model_for(phase)[0] for phase in PHASES},
+            "models": [
+                {
+                    "name": name,
+                    "context": spec.context,
+                    "present": None
+                    if available is None
+                    else client.has_model(available, name),
+                }
+                for name, spec in self.config.models.items()
+            ],
+            "error": error,
+        }
 
     def categories(self) -> dict[str, Any]:
         reg = registry()
@@ -305,13 +332,21 @@ class AnonymizationService:
 
     async def status(self) -> dict[str, Any]:
         """Readiness and components: the service is ready when the VLM backend answers and has the
-        configured model. Missing NER or docling only degrade the service (with warnings)."""
-        client = self._client_factory(self.config)
-        try:
-            present = client.has_model(await client.models_available())
-            reachable, error = True, None
-        except (httpx.HTTPError, VLMError) as exc:
-            present, reachable, error = None, False, type(exc).__name__
+        default model of every phase. Missing NER or docling only degrade the service (with
+        warnings)."""
+        listing = await self.models()
+        reachable, error = listing["error"] is None, listing["error"]
+        models = [
+            {
+                "name": m["name"],
+                "present": m["present"],
+                "phases": [
+                    p for p, name in listing["defaults"].items() if name == m["name"]
+                ],
+            }
+            for m in listing["models"]
+        ]
+        present = all(m["present"] for m in models if m["phases"])
         detectors, docling = await asyncio.to_thread(
             lambda: (self._detectors(), self._docling())
         )
@@ -323,7 +358,7 @@ class AnonymizationService:
                 "reachable": reachable,
                 "error": error,
             },
-            "model": {"name": self.config.model.name, "present": present},
+            "models": models,
             "detectors": detectors,
             "docling": docling,
             "mode": self.config.phases.redaction.mode,

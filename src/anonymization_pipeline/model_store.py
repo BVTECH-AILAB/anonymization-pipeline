@@ -1,4 +1,5 @@
-"""Download of the models before the service starts: the VLM (in the backend), NER and docling.
+"""Download of the models before the service starts: every VLM of the models file catalog (in the
+backend), NER and docling.
 
 This is the only step that needs internet access. In compose it runs in the ``models-init``
 service (``just models``), the only one attached to a network with egress; at runtime the service
@@ -31,12 +32,14 @@ async def download_all(settings: Settings, http: httpx.AsyncClient) -> bool:
     """Download every missing model of the configuration; return True if all are available."""
     cfg = load_pipeline_config(settings)
     ok = True
-    try:
-        await create_client(cfg, http).pull(force=True)
-        logger.info("VLM model %s available", cfg.model.name)
-    except (httpx.HTTPError, VLMError) as exc:
-        logger.error("VLM model %s not available: %s", cfg.model.name, exc)
-        ok = False
+    client = create_client(cfg, http)
+    for name in cfg.models:
+        try:
+            await client.pull(name, force=True)
+            logger.info("VLM model %s available", name)
+        except (httpx.HTTPError, VLMError) as exc:
+            logger.error("VLM model %s not available: %s", name, exc)
+            ok = False
     ner = cfg.phases.detection.detectors.ner
     if ner.enabled:
         try:

@@ -1,8 +1,8 @@
 """VLM client: common interface, concurrency limit, retries, per-phase statistics.
 
 The dialects (``ollama.py``, ``openai.py``) implement only the transport (``_send``,
-``models_available``, ``pull``). There is one model for every phase (``cfg.model``); the phase
-only sets timeout and max tokens.
+``models_available``, ``pull``). The phase picks the model (``phases.<phase>.model``, one of the
+models file catalog), the timeout and the max tokens.
 """
 
 import asyncio
@@ -17,6 +17,7 @@ import httpx
 
 from anonymization_pipeline import metrics
 from anonymization_pipeline.pipeline_config import PipelineConfig
+from anonymization_pipeline.pipeline_config.schema import ModelSpec
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +74,7 @@ class VLMClient:
     def __init__(self, cfg: PipelineConfig, http: httpx.AsyncClient) -> None:
         self.cfg = cfg
         self.backend = cfg.backend
-        self.model = cfg.model
+        self.generation = cfg.generation
         self._http = http
         self._headers = (
             {"Authorization": f"Bearer {cfg.backend.api_key}"}
@@ -103,6 +104,8 @@ class VLMClient:
 
     async def _send(
         self,
+        model: str,
+        spec: ModelSpec,
         system: str,
         user: str,
         images: list[bytes],
@@ -115,12 +118,12 @@ class VLMClient:
     async def models_available(self) -> set[str]:
         raise NotImplementedError
 
-    async def pull(self, force: bool = False) -> None:
+    async def pull(self, name: str, force: bool = False) -> None:
         raise NotImplementedError
 
-    def has_model(self, available: set[str]) -> bool:
-        """True if the configured model is among ``available``."""
-        return self.model.name in available
+    def has_model(self, available: set[str], name: str) -> bool:
+        """True if the model ``name`` is among ``available``."""
+        return name in available
 
     # --- common ----------------------------------------------------------------------------------
 
@@ -145,6 +148,7 @@ class VLMClient:
             VLMError: The backend is unreachable or keeps failing.
         """
         phase_cfg = getattr(self.cfg.phases, phase)
+        model, spec = self.cfg.model_for(phase)
         stats = self.stats[phase]
         last: Exception | None = None
         waited = 0.0  # time spent on the concurrency semaphore, over every attempt
@@ -157,6 +161,8 @@ class VLMClient:
                     t0 = time.perf_counter()
                     waited += t0 - queued
                     response = await self._send(
+                        model,
+                        spec,
                         system,
                         user,
                         list(images or []),

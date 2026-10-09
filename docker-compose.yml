@@ -26,8 +26,6 @@ x-app-environment: &app-environment
   ANONPIP_VLM_BACKEND: ${ANONPIP_VLM_BACKEND:-ollama}
   ANONPIP_VLM_URL: ${ANONPIP_VLM_URL:-http://ollama:11434}
   ANONPIP_VLM_API_KEY: ${ANONPIP_VLM_API_KEY:-}
-  ANONPIP_VLM_MODEL: ${ANONPIP_VLM_MODEL:-gemma4:26b-a4b-it-qat}
-  ANONPIP_VLM_CONTEXT: ${ANONPIP_VLM_CONTEXT:-16384}
   ANONPIP_VLM_CONCURRENCY: ${ANONPIP_VLM_CONCURRENCY:-2}
   ANONPIP_VLM_PULL_MISSING: "false"
   ANONPIP_DEFAULT_MODE: ${ANONPIP_DEFAULT_MODE:-pseudonym}
@@ -35,6 +33,7 @@ x-app-environment: &app-environment
   ANONPIP_DEFAULT_EXTRACTION: ${ANONPIP_DEFAULT_EXTRACTION:-docling}
   ANONPIP_DOCLING_MODELS_DIR: /models/docling
   ANONPIP_PIPELINE_CONFIG_FILE: ${ANONPIP_PIPELINE_CONFIG_FILE:-}
+  ANONPIP_MODELS_FILE: ${ANONPIP_MODELS_FILE:-}
   ANONPIP_VAULT_KEY: ${ANONPIP_VAULT_KEY:-}
   ANONPIP_MAX_UPLOAD_MB: ${ANONPIP_MAX_UPLOAD_MB:-50}
   ANONPIP_MAX_CONCURRENT_JOBS: ${ANONPIP_MAX_CONCURRENT_JOBS:-1}
@@ -82,6 +81,7 @@ services:
       - ./src:/app/src
       - ./tests:/app/tests
       - ./pyproject.toml:/app/pyproject.toml:ro
+      - ./config:/app/config:ro
       - hf_models:/models/hf:ro
       - docling_models:/models/docling:ro
     command: uvicorn anonymization_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src
@@ -98,7 +98,7 @@ services:
 
   # --- profile "models": the only services with internet access (just models) ---
 
-  # a second Ollama on the same volume, used only to download the VLM
+  # a second Ollama on the same volume, used only to download the VLMs of the models file
   ollama-models:
     <<: *ollama
     profiles: [models]
@@ -125,6 +125,7 @@ services:
       TRANSFORMERS_OFFLINE: "0"
     volumes:
       - ./src:/app/src
+      - ./config:/app/config:ro
       - hf_models:/models/hf
       - docling_models:/models/docling
     command: python -m anonymization_pipeline.model_store

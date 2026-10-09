@@ -4,13 +4,16 @@
 #  Layers, from weakest to strongest:
 #    1. this file (plus the prompts in prompts/*.yaml under the key 'prompts')
 #    2. the user file in ANONPIP_PIPELINE_CONFIG_FILE (only the keys to change)
-#    3. the ANONPIP_* settings (config.py): backend, model name and context, default modes.
-#       Those keys are owned by the settings and are rejected in the user file.
-#    4. per-request overrides (API and web UI: model, mode, verification, extraction, categories)
+#    3. the models file (ANONPIP_MODELS_FILE, default resources/models.yaml): the VLM catalog
+#       (`models`) and the model of each phase (`phases.<phase>.model`)
+#    4. the ANONPIP_* settings (config.py): backend and default modes.
+#       The keys of layers 3 and 4 are rejected in the user file.
+#    5. per-request overrides (API and web UI: model of each phase, mode, verification,
+#       extraction, categories)
 #  Unknown keys are an error: a typo is never silently ignored.
 #
-#  One VLM runs every phase (extraction, detection, redaction, verification). Docling (native PDF
-#  pages) and the NER detector have their own models, on CPU.
+#  Each phase (extraction, detection, redaction, verification) runs its own VLM, chosen in the
+#  models file. Docling (native PDF pages) and the NER detector have their own models, on CPU.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -23,14 +26,14 @@ backend:
   health_timeout_s: 5
 
 # -----------------------------------------------------------------------------
-#  Single model for every phase (name, context: from the settings)
+#  Generation parameters, the same for every model (models: from the models file)
 # -----------------------------------------------------------------------------
-model:
+generation:
   temperature: 0
   seed: 42                  # reduces (does not remove) differences between runs
   think: false              # Gemma 4 reasons by default: the reasoning uses the answer tokens and the
                             # answer comes back empty. null = field not sent
-  keep_alive: 30m           # the model stays in VRAM between documents
+  keep_alive: 30m           # the model stays in VRAM between documents (and phases, if it fits)
   options: {}               # extra backend options passed as they are (e.g. top_k)
 
 # -----------------------------------------------------------------------------

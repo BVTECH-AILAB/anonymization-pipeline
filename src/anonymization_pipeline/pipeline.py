@@ -18,7 +18,7 @@ from anonymization_pipeline.detection import detect
 from anonymization_pipeline.domain import Document, Group, Occurrence, Residual, Result
 from anonymization_pipeline.extraction import extract
 from anonymization_pipeline.ingest import load
-from anonymization_pipeline.pipeline_config import PipelineConfig
+from anonymization_pipeline.pipeline_config import PHASES, PipelineConfig
 from anonymization_pipeline.redaction import group_entities, redact, vault
 from anonymization_pipeline.text import find, replacement_spans, tag_category
 from anonymization_pipeline.verification import UnredactableContent, verify
@@ -243,7 +243,10 @@ async def anonymize(
                 if p.extracted_with == "vlm"
             ],
         },
-        "model": {"backend": cfg.backend.kind, "name": cfg.model.name},
+        "model": {
+            "backend": cfg.backend.kind,
+            "phases": {phase: cfg.model_for(phase)[0] for phase in PHASES},
+        },
         "mode": phases.redaction.mode,
         "counts": dict(sorted(Counter(o.category for o in joined).items())),
         "entities": [

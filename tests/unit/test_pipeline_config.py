@@ -4,6 +4,7 @@ import pytest
 import yaml
 
 from anonymization_pipeline.pipeline_config import (
+    PHASES,
     effective,
     load_pipeline_config,
     registry,
@@ -15,25 +16,78 @@ from tests.conftest import make_settings
 from tests.pipeline import pipeline_config
 
 
-def test_defaults_are_valid_and_the_model_is_single() -> None:
+def test_defaults_are_valid_with_a_model_per_phase() -> None:
     cfg = pipeline_config()
 
-    assert cfg.model.name == "gemma4:26b-a4b-it-qat"
     assert cfg.backend.kind == "ollama"
     assert cfg.backend.api_key is None
-    assert cfg.model.think is False
-    for phase in ("extraction", "detection", "redaction", "verification"):
-        assert "model" not in getattr(cfg.phases, phase).model_dump()
+    assert cfg.generation.think is False
+    for phase in PHASES:
+        name, spec = cfg.model_for(phase)
+        assert name in cfg.models and spec.context >= 1024
+
+
+def _models_file(tmp_path: Path, data: dict) -> str:
+    path = tmp_path / "models.yaml"
+    path.write_text(yaml.safe_dump(data))
+    return str(path)
+
+
+TWO_MODELS = {
+    "models": [
+        {"name": "big:1", "context": 16384},
+        {"name": "small:1", "context": 4096},
+    ],
+    "phases": {
+        "extraction": "big:1",
+        "detection": "small:1",
+        "redaction": "small:1",
+        "verification": "big:1",
+    },
+}
+
+
+def test_models_file_sets_the_catalog_and_the_model_of_each_phase(
+    tmp_path: Path,
+) -> None:
+    cfg = pipeline_config(models_file=_models_file(tmp_path, TWO_MODELS))
+
+    assert list(cfg.models) == ["big:1", "small:1"]
+    assert cfg.model_for("extraction") == ("big:1", cfg.models["big:1"])
+    assert cfg.model_for("detection")[1].context == 4096
+
+
+@pytest.mark.parametrize(
+    ("change", "message"),
+    [
+        ({"phases": {**TWO_MODELS["phases"], "detection": "absent:1"}}, "absent:1"),
+        ({"phases": {"extraction": "big:1"}}, "detection"),
+        ({"other": 1}, "other"),
+        ({"models": [{"name": "big:1", "context": 8192}] * 2}, "twice"),
+        ({"models": [{"name": "big:1", "context": 100}]}, "context"),
+        ({"models": []}, "models"),
+    ],
+)
+def test_invalid_models_file_is_rejected(
+    tmp_path: Path, change: dict, message: str
+) -> None:
+    path = _models_file(tmp_path, {**TWO_MODELS, **change})
+
+    with pytest.raises(ValueError, match=message):
+        pipeline_config(models_file=path)
+
+
+def test_missing_models_file_is_an_error() -> None:
+    with pytest.raises(ValueError, match="not readable"):
+        pipeline_config(models_file="/nonexistent.yaml")
 
 
 def test_defaults_list_every_registry_category() -> None:
     assert set(base()["categories"]) == set(registry().descriptions)
 
 
-def test_settings_own_backend_model_and_modes() -> None:
+def test_settings_own_backend_and_modes() -> None:
     cfg = pipeline_config(
-        vlm_model="gemma4:31b",
-        vlm_context=8192,
         vlm_backend="openai",
         vlm_api_key="secret",
         default_mode="tag",
@@ -42,7 +96,6 @@ def test_settings_own_backend_model_and_modes() -> None:
         docling_models_dir="/srv/docling",
     )
 
-    assert (cfg.model.name, cfg.model.context) == ("gemma4:31b", 8192)
     assert (cfg.backend.kind, cfg.backend.api_key) == ("openai", "secret")
     assert cfg.phases.redaction.mode == "tag"
     assert cfg.phases.verification.mode == "block"
@@ -52,7 +105,7 @@ def test_settings_own_backend_model_and_modes() -> None:
 
 def test_unknown_key_is_rejected() -> None:
     with pytest.raises(ValueError, match="(?i)extra"):
-        pipeline_config({"phases": {"detection": {"model": "other"}}})
+        pipeline_config({"phases": {"detection": {"modell": "other"}}})
 
 
 def test_invalid_values_are_rejected() -> None:
@@ -72,7 +125,7 @@ def test_user_file_with_groups(tmp_path: Path) -> None:
         yaml.safe_dump(
             {
                 "categories": {"groups": {"sanitari": False}, "DIAGNOSI": True},
-                "model": {"temperature": 0.2},
+                "generation": {"temperature": 0.2},
             }
         )
     )
@@ -81,14 +134,27 @@ def test_user_file_with_groups(tmp_path: Path) -> None:
 
     assert cfg.categories["FARMACO"] is False
     assert cfg.categories["DIAGNOSI"] is True
-    assert cfg.model.temperature == 0.2
+    assert cfg.generation.temperature == 0.2
 
 
 def test_user_file_cannot_set_keys_owned_by_settings(tmp_path: Path) -> None:
     path = tmp_path / "mine.yaml"
-    path.write_text("model: {name: from_file}\n")
+    path.write_text("backend: {url: http://elsewhere}\n")
 
-    with pytest.raises(ValueError, match="model.name"):
+    with pytest.raises(ValueError, match="backend.url"):
+        load_pipeline_config(make_settings(pipeline_config_file=str(path)))
+
+
+@pytest.mark.parametrize(
+    "content", ["models: {x: {context: 4096}}\n", "phases: {detection: {model: x}}\n"]
+)
+def test_user_file_cannot_set_keys_owned_by_the_models_file(
+    tmp_path: Path, content: str
+) -> None:
+    path = tmp_path / "mine.yaml"
+    path.write_text(content)
+
+    with pytest.raises(ValueError, match="models file"):
         load_pipeline_config(make_settings(pipeline_config_file=str(path)))
 
 
@@ -100,15 +166,26 @@ def test_missing_user_file_is_an_error() -> None:
 def test_request_overrides_win_over_settings(tmp_path: Path) -> None:
     path = tmp_path / "mine.yaml"
     path.write_text("phases: {verification: {max_iterations: 5}}\n")
-    settings = make_settings(pipeline_config_file=str(path), default_mode="tag")
+    settings = make_settings(
+        pipeline_config_file=str(path),
+        default_mode="tag",
+        models_file=_models_file(tmp_path, TWO_MODELS),
+    )
 
     cfg = load_pipeline_config(
-        settings, request_overrides(mode="redaction", model="other:latest")
+        settings,
+        request_overrides(mode="redaction", models={"detection": "big:1"}),
     )
 
     assert cfg.phases.redaction.mode == "redaction"
-    assert cfg.model.name == "other:latest"
+    assert cfg.model_for("detection")[0] == "big:1"
+    assert cfg.model_for("redaction")[0] == "small:1"
     assert cfg.phases.verification.max_iterations == 5
+
+
+def test_request_override_outside_the_catalog_is_rejected() -> None:
+    with pytest.raises(ValueError, match="not in the models file"):
+        pipeline_config(request_overrides(models={"detection": "other:latest"}))
 
 
 def test_prompts_are_validated() -> None:

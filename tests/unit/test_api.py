@@ -15,7 +15,7 @@ from anonymization_pipeline.main import create_app
 from anonymization_pipeline.redaction.vault import generate_key
 from anonymization_pipeline.vlm import VLMError
 from tests.conftest import FAKE_CF, make_settings
-from tests.pipeline import FIXTURES
+from tests.pipeline import FIXTURES, models_file
 from tests.unit.conftest import TEXT, VALUES, FakeBackend
 
 KEY = generate_key()
@@ -57,11 +57,18 @@ def test_readyz_reflects_the_vlm_backend(
 
     backend.available = {"other:1b"}
     response = client.get("/readyz")
-    assert response.status_code == 503 and response.json()["model"]["present"] is False
+    assert response.status_code == 503
+    assert response.json()["models"] == [
+        {
+            "name": "gemma4:26b-a4b-it-qat",
+            "present": False,
+            "phases": ["extraction", "detection", "redaction", "verification"],
+        }
+    ]
 
     backend.available = {"gemma4:26b-a4b-it-qat"}
     body = client.get("/readyz").json()
-    assert body["status"] == "ready" and body["model"]["present"] is True
+    assert body["status"] == "ready" and body["models"][0]["present"] is True
     assert (
         body["detectors"]["ner"]["enabled"] is True
         and body["docling"]["enabled"] is True
@@ -227,7 +234,8 @@ def test_configuration_hides_secrets(make_client: ClientFactory) -> None:
     body = make_client(vlm_api_key="secret").get("/configuration").json()
 
     assert (
-        body["model"]["name"] == "gemma4:26b-a4b-it-qat"
+        body["phases"]["detection"]["model"] == "gemma4:26b-a4b-it-qat"
+        and "gemma4:26b-a4b-it-qat" in body["models"]
         and body["backend"]["api_key"] == "***"
     )
 
@@ -352,45 +360,99 @@ def test_extraction_chosen_per_request(
     assert invalid.status_code == 400
 
 
-def test_model_per_request(backend: FakeBackend, client: TestClient) -> None:
-    backend.available = {"gemma4:e4b-it-qat", "qwen3.5:4b"}
+CATALOG = {"big:1": 16384, "small:1": 4096, "spare:1": 4096}
+
+
+def _catalog_client(make_client: ClientFactory, tmp_path: Path) -> TestClient:
+    return make_client(
+        models_file=models_file(tmp_path, CATALOG, {"detection": "small:1"})
+    )
+
+
+def test_model_per_phase(
+    backend: FakeBackend, make_client: ClientFactory, tmp_path: Path
+) -> None:
+    client = _catalog_client(make_client, tmp_path)
+    backend.available = {"big:1", "small:latest", "other:7b"}
 
     body = client.get("/models").json()
     assert body == {
-        "default": "gemma4:26b-a4b-it-qat",
-        "models": ["gemma4:e4b-it-qat", "qwen3.5:4b"],
+        "defaults": {
+            "extraction": "big:1",
+            "detection": "small:1",
+            "redaction": "big:1",
+            "verification": "big:1",
+        },
+        "models": [  # only the catalog: other:7b is not offered
+            {"name": "big:1", "context": 16384, "present": True},
+            {"name": "small:1", "context": 4096, "present": False},
+            {"name": "spare:1", "context": 4096, "present": False},
+        ],
         "error": None,
     }
 
+    backend.available = {"big:1", "small:1"}
     response = client.post(
         "/anonymize?format=json",
         files=_upload(),
-        data={"mode": "tag", "model": "qwen3.5:4b"},
+        data={"mode": "tag", "model_detection": "big:1", "model_redaction": "small:1"},
     )
-    assert (
-        response.status_code == 200
-        and response.json()["report"]["model"]["name"] == "qwen3.5:4b"
-    )
-    response = client.post(
-        "/anonymize", files=_upload(), data={"mode": "tag", "model": "unknown:1b"}
-    )
-    assert response.status_code == 400 and "non presente" in response.json()["detail"]
-    assert (
-        client.post(
-            "/jobs", files=_upload(), data={"mode": "tag", "model": "unknown:1b"}
-        ).status_code
-        == 400
-    )
+    assert response.status_code == 200
+    assert response.json()["report"]["model"]["phases"] == {
+        "extraction": "big:1",
+        "detection": "big:1",
+        "redaction": "small:1",
+        "verification": "big:1",
+    }
 
 
-def test_models_with_an_unreachable_backend(client: TestClient) -> None:
+@pytest.mark.parametrize(
+    ("data", "detail"),
+    [
+        (
+            {"model_detection": "other:7b"},
+            "non previsto",
+        ),  # in the backend, not in the catalog
+        (
+            {"model_verification": "spare:1"},
+            "non presente",
+        ),  # in the catalog, not in the backend
+    ],
+)
+def test_model_outside_the_catalog_or_the_backend_is_rejected(
+    backend: FakeBackend,
+    make_client: ClientFactory,
+    tmp_path: Path,
+    data: dict[str, str],
+    detail: str,
+) -> None:
+    client = _catalog_client(make_client, tmp_path)
+    backend.available = {"big:1", "small:1", "other:7b"}
+
+    for path in ("/anonymize", "/jobs"):
+        response = client.post(path, files=_upload(), data={"mode": "tag", **data})
+        assert response.status_code == 400 and detail in response.json()["detail"]
+        assert data[next(iter(data))] not in response.json()["detail"]  # never echoed
+
+
+def test_models_with_an_unreachable_backend(
+    make_client: ClientFactory, tmp_path: Path
+) -> None:
+    client = _catalog_client(make_client, tmp_path)
+
     body = client.get("/models").json()  # the error is reported, not raised
 
-    assert body["models"] == [] and body["error"] == "VLMError"
+    assert body["error"] == "VLMError"
+    assert {m["name"]: m["present"] for m in body["models"]} == dict.fromkeys(CATALOG)
     response = client.post(
-        "/anonymize", files=_upload(), data={"mode": "tag", "model": "x:1b"}
+        "/anonymize", files=_upload(), data={"mode": "tag", "model_detection": "big:1"}
     )
     assert response.status_code == 503
+    # the default model of the phase needs no check of the backend
+    response = client.post(
+        "/jobs", files=_upload(), data={"mode": "tag", "model_detection": "small:1"}
+    )
+    assert response.status_code == 202
 
 
 def test_busy_server_answers_503(make_client: ClientFactory) -> None:

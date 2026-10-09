@@ -28,7 +28,7 @@ Extraction = Annotated[
 ]
 Model = Annotated[
     str | None,
-    Form(max_length=200, description="VLM for this request (one of GET /models)"),
+    Form(max_length=200, description="VLM of the phase (one of GET /models)"),
 ]
 Categories = Annotated[
     str | None,
@@ -39,6 +39,21 @@ Key = Annotated[
     Form(max_length=200, description="key or passphrase of the map (or X-Anon-Key)"),
 ]
 KeyHeader = Annotated[str | None, Header(max_length=200)]
+
+
+def phase_models(
+    extraction: str | None,
+    detection: str | None,
+    redaction: str | None,
+    verification: str | None,
+) -> dict[str, str | None]:
+    """The ``model_<phase>`` form fields as phase -> model."""
+    return {
+        "extraction": extraction,
+        "detection": detection,
+        "redaction": redaction,
+        "verification": verification,
+    }
 
 
 @router.post(
@@ -54,7 +69,10 @@ async def anonymize(
     mode: Mode = None,
     verification: Verification = None,
     extraction: Extraction = None,
-    model: Model = None,
+    model_extraction: Model = None,
+    model_detection: Model = None,
+    model_redaction: Model = None,
+    model_verification: Model = None,
     enable: Categories = None,
     disable: Categories = None,
     key: Key = None,
@@ -62,8 +80,11 @@ async def anonymize(
     output: Annotated[Literal["zip", "json"], Query(alias="format")] = "zip",
 ) -> Response:
     data = await read_upload(file, service.settings)
+    models = phase_models(
+        model_extraction, model_detection, model_redaction, model_verification
+    )
     cfg = await service.request_config(
-        mode, verification, extraction, model, enable, disable
+        mode, verification, extraction, models, enable, disable
     )
     result = await service.anonymize_now(
         file.filename or "documento", data, cfg, service.key(key, x_anon_key)

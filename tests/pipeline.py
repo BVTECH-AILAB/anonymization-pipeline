@@ -7,9 +7,14 @@ from pathlib import Path
 from typing import Any
 
 import httpx
+import yaml
 from PIL import Image
 
-from anonymization_pipeline.pipeline_config import PipelineConfig, load_pipeline_config
+from anonymization_pipeline.pipeline_config import (
+    PHASES,
+    PipelineConfig,
+    load_pipeline_config,
+)
 from anonymization_pipeline.vlm import VLMClient, VLMError, VLMResponse
 from tests.conftest import make_settings
 
@@ -22,6 +27,22 @@ Responder = Callable[[str, str, str, list[bytes], dict[str, Any] | None], Answer
 def pipeline_config(overrides: dict | None = None, **settings: Any) -> PipelineConfig:
     """Pipeline configuration from explicit settings only (no environment, no .env)."""
     return load_pipeline_config(make_settings(**settings), overrides)
+
+
+def models_file(directory: Path, models: dict[str, int], phases: dict[str, str]) -> str:
+    """A models file in ``directory``: catalog name -> context, phase -> model (missing phases
+    use the first model)."""
+    first = next(iter(models))
+    path = directory / "models.yaml"
+    path.write_text(
+        yaml.safe_dump(
+            {
+                "models": [{"name": n, "context": c} for n, c in models.items()],
+                "phases": {p: phases.get(p, first) for p in PHASES},
+            }
+        )
+    )
+    return str(path)
 
 
 def _no_network(request: httpx.Request) -> httpx.Response:
@@ -65,6 +86,7 @@ class FakeVLM(VLMClient):
         self.responder = responder
         self.available = available
         self.calls: list[tuple[str, str, int]] = []
+        self.used_models: list[tuple[str, str]] = []  # (phase, model) of every call
 
     async def models_available(self) -> set[str]:
         """``available`` models; None simulates an unreachable backend."""
@@ -81,6 +103,7 @@ class FakeVLM(VLMClient):
         schema: dict[str, Any] | None = None,
     ) -> VLMResponse:
         self.calls.append((phase, user, len(images or [])))
+        self.used_models.append((phase, self.cfg.model_for(phase)[0]))
         answer = self.responder(phase, system, user, list(images or []), schema)
         if isinstance(answer, Exception):
             self.stats[phase].errors += 1

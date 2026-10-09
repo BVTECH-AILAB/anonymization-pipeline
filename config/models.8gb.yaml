@@ -1,0 +1,13 @@
+# Models file for an 8 GB GPU: ANONPIP_MODELS_FILE=/app/config/models.8gb.yaml in .env,
+# then `just models` (downloads the catalog) and `just up`.
+# Same schema as src/anonymization_pipeline/resources/models.yaml.
+
+models:
+  - name: gemma4:e4b-it-qat
+    context: 8192
+
+phases:
+  extraction: gemma4:e4b-it-qat
+  detection: gemma4:e4b-it-qat
+  redaction: gemma4:e4b-it-qat
+  verification: gemma4:e4b-it-qat

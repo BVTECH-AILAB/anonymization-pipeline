@@ -86,7 +86,7 @@ export default function Carica() {
   useEffect(() => { api.salute().then(setStato).catch(() => setStato(null)); }, []);
 
   const base = predefiniti(stato);
-  const attivi = o.detectors ?? base ?? [];
+  const attivi = o.detectors ?? base ?? []; // base null: le checkbox non sono mostrate
   const senza_rilevatori = senzaRilevatori(o.detectors);
 
   const manca_chiave = o.mode === "pseudonym" && !s.chiave;
@@ -199,17 +199,19 @@ export default function Carica() {
           </div>
           {mod?.error && <p className="nota errore">elenco dei modelli non disponibile: {mod.error}</p>}
           <h3>Rilevatori {o.detectors === null && <span className="tenue">(predefiniti del servizio)</span>}</h3>
+          {base && (
           <div className="griglia-opzioni">
             {RILEVATORI.map(({ r, nome, nota }) => (
               <label key={r} className="inline" title={nota}>
-                <input type="checkbox" checked={attivi.includes(r)} disabled={!base}
+                <input type="checkbox" checked={attivi.includes(r)}
                        onChange={() => setO((x) => ({ ...x, detectors: alternaRilevatore(x.detectors, base, r) }))} /> {nome}
                 {r === "ner" && stato?.detectors.ner.present === false && (
-                  <span className="nota errore"> (modello assente)</span>
+                  <span className="nota errore" title={stato.detectors.ner.error ?? undefined}> (non disponibile)</span>
                 )}
               </label>
             ))}
           </div>
+          )}
           {!stato && (
             <p className="nota">
               Stato del servizio non disponibile: i rilevatori restano quelli predefiniti.{" "}

@@ -92,7 +92,12 @@ def _expand_groups(layer: dict) -> dict:
 
 @functools.cache
 def _base() -> dict:
-    cfg = read_yaml("default.yaml")
+    """default.yaml over every category of the registry switched on, plus the prompts."""
+    cfg = _expand_groups(read_yaml("default.yaml"))
+    cfg["categories"] = {
+        **dict.fromkeys(registry().descriptions, True),
+        **(cfg.get("categories") or {}),
+    }
     cfg["prompts"] = {phase: read_yaml(f"prompts/{phase}.yaml") for phase in PHASES}
     return cfg
 

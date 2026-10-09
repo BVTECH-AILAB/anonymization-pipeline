@@ -177,118 +177,13 @@ phases:
     passes: null                # null = the detection passes
 
 # -----------------------------------------------------------------------------
-#  Categories to anonymize (registry and descriptions in categories.yaml).
-#  All active by default: switch off what is not needed, in the user file also by group:
+#  Categories to anonymize (registry, groups and descriptions in categories.yaml).
+#  Every category of the registry is on: list here only the ones off by default.
+#  Here, in the user file and per request also by group:
 #  categories: {groups: {organizzazioni: false}, DATORE_LAVORO: true};
 #  a category given in the same file wins over its group.
 # -----------------------------------------------------------------------------
-categories:
-  # --- personal details ---
-  NOME:                      true
-  COGNOME:                   true
-  PERSONA:                   true
-  PATERNITA_MATERNITA:       true
-  SESSO:                     true
-  DATA_NASCITA:              true
-  LUOGO_NASCITA:             true
-  CITTADINANZA:              true
-  STATO_CIVILE:              true
-  PROFESSIONE:               true
-  TITOLO_STUDIO:             true
-  ETA:                       true
-  # --- residence and domicile ---
-  INDIRIZZO:                 true
-  CAP:                       true
-  LUOGO:                     true
-  STATO:                     true
-  # --- tax and administrative identifiers ---
-  CODICE_FISCALE:            true
-  PARTITA_IVA:               true
-  TESSERA_SANITARIA:         true
-  CODICE_STP_ENI:            true
-  CODICE_ESENZIONE:          true
-  NUMERO_POLIZZA:            true
-  NUMERO_PROTOCOLLO:         true
-  # --- identity documents ---
-  NUMERO_CARTA_IDENTITA:     true
-  NUMERO_PASSAPORTO:         true
-  NUMERO_PATENTE:            true
-  NUMERO_PERMESSO_SOGGIORNO: true
-  ENTE_RILASCIO:             true
-  DATA_RILASCIO:             true
-  DATA_SCADENZA:             true
-  ALTEZZA_COLORE_OCCHI:      true
-  MRZ:                       true
-  # --- contacts and digital identity ---
-  EMAIL:                     true
-  PEC:                       true
-  TELEFONO:                  true
-  FAX:                       true
-  USERNAME_SOCIAL:           true
-  INDIRIZZO_IP:              true
-  ID_DISPOSITIVO:            true
-  URL_PERSONALE:             true
-  # --- financial data ---
-  IBAN:                      true
-  CARTA_CREDITO:             true
-  NUMERO_CONTO:              true
-  # --- vehicles ---
-  TARGA:                     true
-  TELAIO:                    true
-  # --- health identifiers ---
-  ID_PAZIENTE:               true
-  NUMERO_CARTELLA:           true
-  NUMERO_ACCETTAZIONE:       true
-  NUMERO_REFERTO:            true
-  NUMERO_RICETTA:            true
-  NUMERO_PRENOTAZIONE:       true
-  ACCESSION_NUMBER:          true
-  CODICE_CAMPIONE:           true
-  # --- staff and related people ---
-  MEDICO:                    true
-  OPERATORE_SANITARIO:       true
-  NUMERO_ALBO:               true
-  FAMILIARE:                 true
-  CONTATTO_EMERGENZA:        true
-  TUTORE_DELEGATO:           true
-  # --- dates ---
-  DATA:                      true
-  DATA_VISITA:               true
-  DATA_REFERTO:              true
-  DATA_RICOVERO:             true
-  DATA_PRESCRIZIONE:         true
-  DATA_DECESSO:              true
-  # --- organizations ---
-  ORGANIZZAZIONE:            true
-  STRUTTURA_SANITARIA:       true
-  REPARTO:                   true
-  DATORE_LAVORO:             true
-  SCUOLA:                    true
-  # --- health data (art. 9 GDPR) ---
-  DIAGNOSI:                  true
-  PATOLOGIA:                 true
-  TERAPIA:                   true
-  FARMACO:                   true
-  ESAME_VALORE:              true
-  INTERVENTO:                true
-  ALLERGIA:                  true
-  GRUPPO_SANGUIGNO:          true
-  INVALIDITA:                true
-  GRAVIDANZA:                true
-  SALUTE_MENTALE:            true
-  DIPENDENZE:                true
-  MALATTIE_INFETTIVE:        true
-  DATO_GENETICO:             true
-  MISURE_ANTROPOMETRICHE:    true
-  DECESSO_CAUSA:             true
-  # --- special categories (art. 9-10 GDPR) ---
-  RELIGIONE:                 true
-  ORIENTAMENTO_SESSUALE:     true
-  OPINIONE_POLITICA:         true
-  SINDACATO:                 true
-  ETNIA:                     true
-  DATI_GIUDIZIARI:           true
-  DATO_BIOMETRICO:           true
+categories: {}
 
 # -----------------------------------------------------------------------------
 #  Output

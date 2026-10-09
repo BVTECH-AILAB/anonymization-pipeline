@@ -5,8 +5,8 @@
 #  verification prompts (lines "- CATEGORY: description"), so it is written for the model, in
 #  English like the prompts. Category and group names are data (they appear in tags such as
 #  [PERSONA_1] and in the API options): they stay in Italian.
-#  default.yaml must list exactly these categories (section categories:) with their default
-#  on/off value: a test checks it.
+#  This file is the only list of the categories: every one is on by default, default.yaml
+#  lists only the ones switched off.
 #
 #  generic: generic category -> the specific ones it contains. Used for two things:
 #   - if the model returns a specific category that is off and the generic one is on, the value

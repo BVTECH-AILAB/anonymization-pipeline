@@ -90,6 +90,7 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_DOCLING_MODELS_DIR` | `/models/docling` | | | no |
 | `ANONPIP_PIPELINE_CONFIG_FILE` | vuoto | facoltativo (file montato da ConfigMap) | idem | no |
 | `ANONPIP_MODELS_FILE` | vuoto (file dei modelli nell'immagine) | facoltativo (file montato da ConfigMap, lo stesso per API e Job di download) | idem | no |
+| `ANONPIP_VLM_MODEL`, `ANONPIP_VLM_CONTEXT` | **obsolete**: da togliere dalle ConfigMap | ignorate; se ancora impostate il servizio lo segnala nel log di avvio e in `/readyz` (`warnings`) | idem | no |
 | `ANONPIP_VAULT_KEY` | nessuno (credenziale) | facoltativa: senza, ogni richiesta in modalità pseudonimo porta la sua chiave | idem | **sì** |
 | `ANONPIP_MAX_UPLOAD_MB` | `50` | | | no |
 | `ANONPIP_MAX_CONCURRENT_JOBS` | `1` | | | no |

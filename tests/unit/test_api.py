@@ -268,6 +268,11 @@ def test_obsolete_model_field_is_rejected(client: TestClient) -> None:
         assert response.status_code == 400
         assert "model_detection" in response.json()["detail"]
         assert "gemma4:e4b-it-qat" not in response.json()["detail"]
+    # checked before reading the upload: an empty file would be another error
+    response = client.post(
+        "/jobs", files=_upload(text=""), data={"mode": "tag", "model": "x"}
+    )
+    assert "model_detection" in response.json()["detail"]
 
 
 def test_configuration_hides_secrets(make_client: ClientFactory) -> None:

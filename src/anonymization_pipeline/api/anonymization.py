@@ -107,10 +107,10 @@ async def anonymize(
     x_anon_key: KeyHeader = None,
     output: Annotated[Literal["zip", "json"], Query(alias="format")] = "zip",
 ) -> Response:
-    data = await read_upload(file, service.settings)
     models = phase_models(
         model, model_extraction, model_detection, model_redaction, model_verification
     )
+    data = await read_upload(file, service.settings)
     cfg = await service.request_config(
         mode, verification, extraction, models, enable, disable, detectors=detectors
     )

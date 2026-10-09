@@ -102,7 +102,9 @@ def base() -> dict:
     return copy.deepcopy(_base())
 
 
+@functools.cache
 def _user_file(path: str) -> dict:
+    """The user pipeline file, read once per path (every request sees the service one)."""
     try:
         text = Path(path).read_text(encoding="utf-8")
     except OSError as exc:

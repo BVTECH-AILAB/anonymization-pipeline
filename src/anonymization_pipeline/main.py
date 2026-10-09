@@ -11,7 +11,7 @@ from fastapi import FastAPI
 
 from anonymization_pipeline import __version__
 from anonymization_pipeline.api import anonymization, catalog, health, jobs
-from anonymization_pipeline.config import Settings, get_settings
+from anonymization_pipeline.config import Settings, get_settings, log_obsolete
 from anonymization_pipeline.errors import register_exception_handlers
 from anonymization_pipeline.logging_setup import setup_logging
 from anonymization_pipeline.middleware import RequestIdMiddleware, UploadLimitMiddleware
@@ -59,12 +59,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         settings.environment,
         ",".join(f"{p}:{service.config.model_for(p)[0]}" for p in PHASES),
     )
-    for name in settings.obsolete():
-        logger.warning(
-            "Obsolete setting %s ignored: the VLMs are chosen in the models file "
-            "(ANONPIP_MODELS_FILE)",
-            name,
-        )
+    log_obsolete(settings)
     try:
         yield
     finally:

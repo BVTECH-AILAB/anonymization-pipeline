@@ -176,6 +176,16 @@ def test_models_file_is_read_once(tmp_path: Path) -> None:
     assert load_pipeline_config(settings).model_for("detection")[0] == "small:1"
 
 
+def test_user_file_is_read_once(tmp_path: Path) -> None:
+    path = tmp_path / "mine.yaml"
+    path.write_text("phases: {verification: {max_iterations: 5}}\n")
+    settings = make_settings(pipeline_config_file=str(path))
+    load_pipeline_config(settings)
+    path.unlink()  # e.g. a ConfigMap changed at runtime
+
+    assert load_pipeline_config(settings).phases.verification.max_iterations == 5
+
+
 def test_missing_user_file_is_an_error() -> None:
     with pytest.raises(ValueError, match="not readable"):
         load_pipeline_config(make_settings(pipeline_config_file="/nonexistent.yaml"))

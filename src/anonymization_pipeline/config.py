@@ -10,6 +10,7 @@ When you add a setting, add it in three places: here, ``.env.example`` and
 ``docs/DEPLOY_HANDOVER.md``.
 """
 
+import logging
 from functools import lru_cache
 from typing import Literal
 
@@ -21,6 +22,8 @@ VLMBackend = Literal["ollama", "openai"]
 RedactionMode = Literal["pseudonym", "tag", "redaction"]
 VerificationMode = Literal["off", "report", "fix", "block"]
 ExtractionEngine = Literal["docling", "vlm"]
+
+logger = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
@@ -125,3 +128,12 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Return the process-wide settings, built once."""
     return Settings()
+
+
+def log_obsolete(settings: Settings) -> None:
+    """Warn about the obsolete ``ANONPIP_*`` variables still set (service and model download)."""
+    for name in settings.obsolete():
+        logger.warning(
+            "Obsolete setting %s ignored: the VLMs are in the models file (ANONPIP_MODELS_FILE)",
+            name,
+        )

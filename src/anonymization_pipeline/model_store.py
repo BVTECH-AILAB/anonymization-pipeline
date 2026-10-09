@@ -13,7 +13,7 @@ import logging
 
 import httpx
 
-from anonymization_pipeline.config import Settings, get_settings
+from anonymization_pipeline.config import Settings, get_settings, log_obsolete
 from anonymization_pipeline.detectors.base import DetectorUnavailable
 from anonymization_pipeline.detectors.ner import NER_INSTALLED
 from anonymization_pipeline.detectors.ner import download as download_ner
@@ -32,12 +32,7 @@ logger = logging.getLogger(__name__)
 async def download_all(settings: Settings, http: httpx.AsyncClient) -> bool:
     """Download every missing model of the configuration; return True if all are available."""
     cfg = load_pipeline_config(settings)
-    for name in settings.obsolete():
-        logger.warning(
-            "Obsolete setting %s ignored: the VLMs to download are in the models file "
-            "(ANONPIP_MODELS_FILE)",
-            name,
-        )
+    log_obsolete(settings)
     ok = True
     client = create_client(cfg, http)
     for name in cfg.models:
@@ -53,9 +48,18 @@ async def download_all(settings: Settings, http: httpx.AsyncClient) -> bool:
         try:
             await asyncio.to_thread(download_ner, ner)
             logger.info("NER model %s available", ner.model)
-        except DetectorUnavailable as exc:
-            logger.error("NER model not available: %s", exc)
-            ok = False
+        except (
+            DetectorUnavailable,
+            OSError,
+        ) as exc:  # OSError: network, Hugging Face hub
+            if ner.enabled:
+                logger.error("NER model not available: %s", exc)
+                ok = False
+            else:  # optional: only requests that switch it on miss it
+                logger.warning(
+                    "NER model not available (off by default, requests cannot use it): %s",
+                    exc,
+                )
     native = cfg.phases.extraction.native_pdf
     if native.engine == "docling":
         try:

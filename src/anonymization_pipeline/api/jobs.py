@@ -73,10 +73,10 @@ async def create_job(
     key: Key = None,
     x_anon_key: KeyHeader = None,
 ) -> dict[str, Any]:
-    data = await read_upload(file, service.settings)
     models = phase_models(
         model, model_extraction, model_detection, model_redaction, model_verification
     )
+    data = await read_upload(file, service.settings)
     cfg = await service.request_config(
         mode, verification, extraction, models, enable, disable, transcript, detectors
     )

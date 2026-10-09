@@ -240,14 +240,17 @@ class VLMClient:
         max_tokens: int | None = None,
     ) -> tuple[T, VLMResponse]:
         """Call with a JSON answer: ``parse(text)`` returns None when the answer is not valid, and
-        the call is retried, unless the answer was cut by the token limit: with temperature 0
-        and a fixed seed the same request is cut again (a model repeating itself)."""
+        the call is retried, unless the answer was cut by the token limit and generation is
+        deterministic (temperature 0, fixed seed): the same request would be cut again (a model
+        repeating itself)."""
+        g = self.generation
+        deterministic = g.temperature == 0 and g.seed is not None
         for attempt in range(self.backend.retries + 1):
             response = await self.call(phase, system, user, images, schema, max_tokens)
             data = parse(response.text)
             if data is not None:
                 return data, response
-            if response.truncated:
+            if response.truncated and deterministic:
                 raise VLMError(f"answer cut at the token limit (phase {phase})")
             logger.warning(
                 "Answer is not valid JSON (%s, attempt %d/%d, truncated=%s)",

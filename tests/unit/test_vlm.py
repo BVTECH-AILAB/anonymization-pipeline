@@ -195,6 +195,22 @@ def test_truncated_answer_is_not_retried() -> None:
         )
     assert len(seen) == 1 and seen[0]["options"]["num_predict"] == 100
 
+    # with sampling the next attempt may differ: retried as before
+    seen.clear()
+    sampled = pipeline_config(
+        {
+            "backend": {"retry_wait_s": 0, "retries": 2},
+            "generation": {"temperature": 0.7},
+        }
+    )
+    with pytest.raises(VLMError, match="invalid model answer"):
+        run(
+            sampled,
+            handler,
+            lambda c: c.call_json("redaction", "S", "U", None, SCHEMA, parse_groups),
+        )
+    assert len(seen) == 3
+
 
 def test_openai_payload() -> None:
     cfg = pipeline_config(

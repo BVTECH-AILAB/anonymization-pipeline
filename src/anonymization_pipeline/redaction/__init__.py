@@ -22,9 +22,11 @@ from anonymization_pipeline.text import find
 from anonymization_pipeline.vlm import VLMClient, VLMError
 from anonymization_pipeline.vlm.responses import groups_schema, parse_groups
 
-# coreference answer: about one number, a comma and a bracket per value, plus the JSON around
+# coreference answer: about one number, a comma and a bracket per value, plus the JSON around;
+# never under _TOKENS_MIN, for models that reason before answering (the phase limit still applies)
 _TOKENS_PER_VALUE = 16
 _TOKENS_BASE = 64
+_TOKENS_MIN = 1024
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +112,9 @@ async def group_entities(
                 None,
                 groups_schema(len(values)),
                 parse_groups,
-                max_tokens=_TOKENS_BASE + _TOKENS_PER_VALUE * len(values),
+                max_tokens=max(
+                    _TOKENS_MIN, _TOKENS_BASE + _TOKENS_PER_VALUE * len(values)
+                ),
             )
             used: set[int] = set()
             for group in groups:

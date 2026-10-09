@@ -78,7 +78,8 @@ def test_coreference_answer_is_bounded_by_the_number_of_values() -> None:
     groups = schemas[0]["properties"]["groups"]
     assert groups["maxItems"] == 3 and groups["items"]["maxItems"] == 3
     assert groups["items"]["items"] == {"type": "integer", "minimum": 1, "maximum": 3}
-    assert client.max_tokens == [64 + 16 * 3]  # well under phases.redaction.max_tokens
+    # bounded, but with room for a model that reasons before answering
+    assert client.max_tokens == [1024]
 
 
 def test_redaction_mode() -> None:

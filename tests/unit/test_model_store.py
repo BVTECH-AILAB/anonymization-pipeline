@@ -86,10 +86,17 @@ def test_downloads_ner_also_when_off_by_default(
         default_extraction="vlm", pipeline_config_file=str(tmp_path / "ner.yaml")
     )
 
+    attempts: list[str] = []
+    real = model_store.download_ner
+    monkeypatch.setattr(
+        model_store, "download_ner", lambda cfg: attempts.append(cfg.model) or real(cfg)
+    )
+
     monkeypatch.setattr(model_store, "NER_INSTALLED", False)
-    assert _run(settings, _ollama([])) is True  # off and not installed: nothing to do
+    assert _run(settings, _ollama([])) is True and attempts == []  # nothing to do
     monkeypatch.setattr(model_store, "NER_INSTALLED", True)
-    assert _run(settings, _ollama([])) is False  # the missing folder is reported
+    # attempted, but NER is optional when off: a failure does not fail the download
+    assert _run(settings, _ollama([])) is True and len(attempts) == 1
 
 
 def test_reports_every_missing_model(tmp_path: Path) -> None:

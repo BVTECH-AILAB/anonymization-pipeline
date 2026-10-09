@@ -1,6 +1,10 @@
 # REFERENCE ONLY - not applied by anything.
 # What the platform team adds to oke-staging/<namespace>/ for this service,
 # modelled on oke-staging/doctor-authz/doctor-authz.yaml.
+# Three parts: the API (this service), the VLM backend (Ollama on a GPU node,
+# no egress) and the network policies that keep documents inside the cluster.
+# The web UI (anonymization-pipeline-web) is a plain nginx Deployment + Service
+# whose /api/ proxy points to the anonymization-pipeline Service.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,6 +13,11 @@ data:
   ANONPIP_ENVIRONMENT: "staging"
   ANONPIP_LOG_LEVEL: "DEBUG"
   ANONPIP_EXTENDED_LOG_CONTEXT: "false"
+  ANONPIP_VLM_BACKEND: "ollama"
+  ANONPIP_VLM_URL: "http://anonymization-vlm:11434"
+  ANONPIP_VLM_MODEL: "gemma4:26b-a4b-it-qat"
+  ANONPIP_VLM_PULL_MISSING: "false"
+  ANONPIP_DOCLING_MODELS_DIR: "/models/docling"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -19,7 +28,7 @@ metadata:
   labels:
     app: anonymization-pipeline
 spec:
-  replicas: 2
+  replicas: 1                       # asynchronous jobs live in memory: one replica (see DEPLOY_HANDOVER)
   selector:
     matchLabels:
       app: anonymization-pipeline
@@ -28,16 +37,6 @@ spec:
       labels:
         app: anonymization-pipeline
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - anonymization-pipeline
-            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: anonymization-pipeline
         image: harbor.agenas.oci/agenas/anonymization-pipeline:2026.10.06-test.1791280000 # {"$imagepolicy": "flux-system:anonymization-pipeline-test"}
@@ -46,11 +45,12 @@ spec:
         - configMapRef:
             name: anonymization-pipeline-config-env
         env:
-        - name: ANONPIP_DATABASE_URL
+        - name: ANONPIP_VAULT_KEY
           valueFrom:
             secretKeyRef:
-              name: postgres-anonymization-pipeline-app
-              key: uri
+              name: anonymization-pipeline-secrets
+              key: vault_key
+              optional: true
         ports:
         - containerPort: 8000
           name: web
@@ -58,21 +58,29 @@ spec:
           httpGet:
             path: /readyz
             port: web
-          initialDelaySeconds: 5
+          initialDelaySeconds: 10
           periodSeconds: 10
         livenessProbe:
           httpGet:
             path: /healthz
             port: web
-          initialDelaySeconds: 10
+          initialDelaySeconds: 20
           periodSeconds: 20
         resources:
           requests:
-            cpu: 100m
-            memory: 256Mi
+            cpu: "2"
+            memory: 6Gi
           limits:
-            cpu: 500m
-            memory: 512Mi
+            cpu: "4"
+            memory: 10Gi
+        volumeMounts:
+        - name: models
+          mountPath: /models
+          readOnly: true
+      volumes:
+      - name: models                # NER (hf/) and docling (docling/) models, filled once by the download Job
+        persistentVolumeClaim:
+          claimName: anonymization-pipeline-models
 ---
 apiVersion: v1
 kind: Service
@@ -106,3 +114,108 @@ spec:
             name: anonymization-pipeline
             port:
               name: web
+---
+# VLM backend: Ollama on a GPU node, models on a PVC, no egress
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anonymization-vlm
+  labels:
+    app: anonymization-vlm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anonymization-vlm
+  template:
+    metadata:
+      labels:
+        app: anonymization-vlm
+    spec:
+      containers:
+      - name: ollama
+        image: ollama/ollama:0.35.0
+        env:
+        - name: OLLAMA_KEEP_ALIVE
+          value: "30m"
+        - name: OLLAMA_MAX_LOADED_MODELS
+          value: "1"
+        - name: OLLAMA_NUM_PARALLEL
+          value: "2"
+        - name: OLLAMA_FLASH_ATTENTION
+          value: "1"
+        - name: OLLAMA_KV_CACHE_TYPE
+          value: "q8_0"
+        ports:
+        - containerPort: 11434
+          name: ollama
+        resources:
+          requests:
+            memory: 16Gi
+          limits:
+            nvidia.com/gpu: 1       # 24 GB of VRAM for gemma4:26b-a4b-it-qat
+        volumeMounts:
+        - name: ollama-models
+          mountPath: /root/.ollama
+      volumes:
+      - name: ollama-models
+        persistentVolumeClaim:
+          claimName: anonymization-vlm-models
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anonymization-vlm
+spec:
+  ports:
+    - name: ollama
+      port: 11434
+      targetPort: ollama
+  selector:
+    app: anonymization-vlm
+  type: ClusterIP
+---
+# The API may reach only the VLM backend (and the cluster DNS)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: anonymization-pipeline-egress
+spec:
+  podSelector:
+    matchLabels:
+      app: anonymization-pipeline
+  policyTypes: [Egress]
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: anonymization-vlm
+    ports:
+    - port: 11434
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - port: 53
+      protocol: UDP
+---
+# The VLM backend has no egress and accepts traffic only from the API
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: anonymization-vlm-isolation
+spec:
+  podSelector:
+    matchLabels:
+      app: anonymization-vlm
+  policyTypes: [Ingress, Egress]
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: anonymization-pipeline
+    ports:
+    - port: 11434
+  egress: []

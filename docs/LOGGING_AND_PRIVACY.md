@@ -25,7 +25,7 @@ servizio -> stdout (testo) -> Grafana Alloy -> Loki -> Grafana / KPI-dashboard
 ## Formato
 
 ```
-2026-10-06 10:00:00,123 INFO my_service.api.items [3f2a9c...]: item_created {"item_id": 42, "description_chars": 120}
+2026-10-06 10:00:00,123 INFO anonymization_pipeline.services.anonymization [3f2a9c...]: document_anonymized {"document": "9f1c2ab04e7d", "kind": "pdf", "pages": 2, "mode": "pseudonym", "verification": "ok", "counts": {"PERSONA": 2}, "total_s": 41.2}
 ```
 
 `%(asctime)s %(levelname)s %(name)s [%(request_id)s]: %(message)s`
@@ -40,7 +40,7 @@ servizio -> stdout (testo) -> Grafana Alloy -> Loki -> Grafana / KPI-dashboard
 | Livello | Quando | Esempio corretto | Esempio sbagliato |
 |---|---|---|---|
 | DEBUG | Dettaglio diagnostico. Solo local e staging: in prod è forzato a INFO | `"Prompt: %s", redact_user_text(prompt, settings)` | `"Prompt: %s", prompt` |
-| INFO | Avvio e arresto, eventi di business senza contenuto | `log_event(logger, "item_created", {"item_id": 42})` | `"Utente %s ha scritto %s"` |
+| INFO | Avvio e arresto, eventi di business senza contenuto | `log_event(logger, "job_queued", {"job": "a1b2c3d4", "document": "9f1c2ab04e7d"})` | `"Documento %s di %s"` con il nome del file |
 | WARNING | Degradazione gestita: retry, fallback, dipendenza giù | `"NER unavailable, request refused (attempt %d)"` | logger.warning per ogni richiesta valida |
 | ERROR | La richiesta è fallita. Passa `exc_info=` per avere il traceback | `logger.error("Unhandled %s on %s", type(exc).__name__, path, exc_info=exc)` | `logger.error(str(exc))` con il body della richiesta |
 
@@ -56,6 +56,23 @@ ignora e usa INFO.
 - Il campo `input` degli errori di validazione: l'handler 422 lo rimuove già.
 - Messaggi di eccezione dei driver, che possono contenere host, utente o dati.
   Logga `type(exc).__name__`.
+
+## Documenti da anonimizzare
+
+Questo servizio riceve documenti sanitari interi. In aggiunta alle regole
+sopra:
+
+- Il **nome del file** non si logga mai: spesso contiene il nome del
+  paziente. Un documento si identifica con `document`, i primi 12 caratteri
+  dello SHA256 del contenuto.
+- Il **testo del documento**, i valori rilevati, i prompt e le risposte del
+  VLM non si loggano, nemmeno a livello DEBUG.
+- Gli errori del backend VLM si loggano con `type(exc).__name__`.
+- La trascrizione **in chiaro** (`transcript`) esiste solo se la richiesta
+  la chiede e `ANONPIP_ALLOW_TRANSCRIPT=true` (forzato a `false` in prod):
+  serve al confronto nell'interfaccia web, non viene mai loggata né salvata.
+- Report e metriche contengono solo conteggi, categorie, pagine e tempi:
+  lo verificano i test (`tests/unit/test_pipeline.py`, `test_metrics.py`).
 
 ## Cosa si logga solo per il debug (mai in produzione)
 
@@ -107,6 +124,17 @@ righe. Esempi dei formati esistenti:
 | rag-system | access log uvicorn `"POST /chat/stream HTTP/1.1" 200` | Success rate, uptime |
 
 Inventario completo: `KPI-dashboard/documentation/loki-query-inventory.md`.
+
+Eventi di questo servizio (nomi e chiavi coperti da
+`tests/unit/test_api.py::test_dashboard_events_keep_their_names_and_keys` e
+`tests/unit/test_jobs.py::test_jobs_never_log_document_content`):
+
+| Evento | Chiavi | Quando |
+|---|---|---|
+| `document_anonymized` | `document`, `kind`, `pages`, `mode`, `verification`, `counts`, `total_s` | Documento restituito |
+| `document_rejected` | `document`, `reason` (`residuals`, `invariant`, `verification_unavailable`) | Documento rifiutato (fail-closed, HTTP 422) |
+| `job_queued` | `job` (primi 8 caratteri dell'id), `document` | Lavoro asincrono accodato |
+| `job_finished` | `job`, `status`, `duration_s` | Lavoro concluso (`completed`, `rejected`, `error`) |
 
 Regole per i nuovi eventi:
 

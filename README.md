@@ -17,7 +17,7 @@ della mappa sono invariati.
 ## Come funziona
 
 ```
-file -> ingest -> estrazione -> rilevamento -> [censura -> verifica]* -> Markdown censurato
+file -> ingest -> estrazione -> rilevamento -> censura -> verifica -> Markdown censurato
           |          |              |               |           |
        pagine     docling (PDF   regole, etichette, coreferenza  il VLM rilegge il testo censurato
        (PDF a     nativi) o VLM  NER e VLM in       con il VLM,  con il Markdown in chiaro e cerca
@@ -39,10 +39,11 @@ file -> ingest -> estrazione -> rilevamento -> [censura -> verifica]* -> Markdow
    AES-256-GCM), `tag` o `redaction` (simbolo fisso).
 5. **Verifica** (`verification/`): il VLM rilegge il Markdown censurato di
    ogni pagina confrontandolo con il Markdown originale in chiaro (non
-   riceve l'immagine). Modalità `off`, `report`, `fix` (default: i residui
-   vengono censurati e si riverifica) o `block`. Se la verifica non è
-   possibile o restano residui il documento viene rifiutato (HTTP 422, mai
-   valori nella risposta).
+   riceve l'immagine), una sola volta. Modalità `off` (nessun controllo),
+   `report` (i residui vanno nel report, il documento viene restituito) o
+   `block` (default: con residui il documento viene rifiutato, HTTP 422,
+   mai valori nella risposta). Se la verifica non è possibile il documento
+   viene rifiutato.
 
 ## Requisiti
 
@@ -93,8 +94,9 @@ scaricare i modelli. Nel cluster le stesse regole sono NetworkPolicy
 | `GET /models`, `GET /categories`, `GET /configuration` | Modelli nel backend, categorie, configurazione effettiva (senza segreti) |
 
 Campi multipart di `/anonymize` e `/jobs`: `file`, `mode`
-(`pseudonym`, `tag`, `redaction`), `verification` (`off`, `report`, `fix`,
-`block`), `extraction` (`docling`, `vlm`), `model` (uno di `GET /models`),
+(`pseudonym`, `tag`, `redaction`), `verification` (`off`, `report`, `block`),
+`extraction` (`docling`, `vlm`), `model_extraction`, `model_detection`,
+`model_redaction`, `model_verification` (uno di `GET /models`), `detectors`,
 `enable`/`disable` (categorie o gruppi separati da virgola), `key` (oppure
 header `X-Anon-Key`; senza, vale `ANONPIP_VAULT_KEY`), `transcript` (solo
 `/jobs` e solo con `ANONPIP_ALLOW_TRANSCRIPT=true`: trascrizione in chiaro

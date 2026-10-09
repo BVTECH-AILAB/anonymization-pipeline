@@ -167,8 +167,7 @@ class Redaction(_Phase):
 
 
 class Verification(_Phase):
-    mode: Literal["off", "report", "fix", "block"]
-    max_iterations: int = Field(ge=1, le=10)
+    mode: Literal["off", "report", "block"]
     required: bool
     passes: list[list[str]] | None = None
 

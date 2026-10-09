@@ -38,7 +38,7 @@ function Avanzamento({ d }: { d: Documento }) {
         ))}
       </div>
       <span className="nota">
-        {l.status === "completed" ? "completato" : `${fase}${l.iteration && (l.phase === "verification" || l.phase === "redaction") ? ` (iterazione ${l.iteration})` : ""}`}
+        {l.status === "completed" ? "completato" : fase}
         {" · "}chiamate VLM {l.vlm_calls}
       </span>
     </div>
@@ -164,7 +164,6 @@ export default function Carica() {
               Verifica
               <select value={o.verification} onChange={(e) => setO({ ...o, verification: e.target.value as Options["verification"] })}>
                 <option value="">predefinita</option>
-                <option value="fix">correggi</option>
                 <option value="report">segnala</option>
                 <option value="block">blocca</option>
                 <option value="off">off</option>

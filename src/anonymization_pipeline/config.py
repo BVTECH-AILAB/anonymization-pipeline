@@ -19,7 +19,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 Environment = Literal["local", "staging", "prod"]
 VLMBackend = Literal["ollama", "openai"]
 RedactionMode = Literal["pseudonym", "tag", "redaction"]
-VerificationMode = Literal["off", "report", "fix", "block"]
+VerificationMode = Literal["off", "report", "block"]
 ExtractionEngine = Literal["docling", "vlm"]
 
 
@@ -56,7 +56,7 @@ class Settings(BaseSettings):
     vlm_pull_missing: bool = False
 
     default_mode: RedactionMode = "pseudonym"
-    default_verification: VerificationMode = "fix"
+    default_verification: VerificationMode = "block"
     default_extraction: ExtractionEngine = "docling"
     docling_models_dir: str = "/models/docling"
     # Optional YAML file with pipeline overrides (see resources/default.yaml).

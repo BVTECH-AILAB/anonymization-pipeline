@@ -50,8 +50,8 @@ src/
 | `GET /readyz` | Banner e pagina Stato. 200 se il servizio è pronto, 503 se non lo è, con lo stesso corpo: l'interfaccia mostra lo stato in entrambi i casi |
 | `GET /models` | Menu dei modelli VLM per fase (catalogo del file dei modelli, predefinito di ogni fase, presenza nel backend) |
 | `GET /categories` | Gruppi di categorie da abilitare o disabilitare; categorie per la revisione |
-| `POST /jobs` | Un lavoro per file (202). Campi: `file`, `mode` (`pseudonym`, `tag`, `redaction`), `model_extraction`, `model_detection`, `model_redaction`, `model_verification` (solo le fasi con un modello diverso dal predefinito), `verification` (`off`, `report`, `fix`, `block`), `extraction` (`docling`, `vlm`), `enable`, `disable` (gruppi separati da virgole), `detectors` (insieme completo di rilevatori e filtri attivi, tra `vlm`, `rules`, `labels`, `ner`, `eponyms`; assente = predefiniti), `transcript`, `key` (solo in modalità pseudonimo) |
-| `GET /jobs/{id}` | Avanzamento del lavoro: stato, fase, iterazione, chiamate al VLM |
+| `POST /jobs` | Un lavoro per file (202). Campi: `file`, `mode` (`pseudonym`, `tag`, `redaction`), `model_extraction`, `model_detection`, `model_redaction`, `model_verification` (solo le fasi con un modello diverso dal predefinito), `verification` (`off`, `report`, `block`), `extraction` (`docling`, `vlm`), `enable`, `disable` (gruppi separati da virgole), `detectors` (insieme completo di rilevatori e filtri attivi, tra `vlm`, `rules`, `labels`, `ner`, `eponyms`; assente = predefiniti), `transcript`, `key` (solo in modalità pseudonimo) |
+| `GET /jobs/{id}` | Avanzamento del lavoro: stato, fase, chiamate al VLM |
 | `GET /jobs/{id}/result` | Risultato in JSON; con `?format=zip` lo ZIP da scaricare |
 | `DELETE /jobs/{id}` | Rimuovi e Svuota sessione |
 | `POST /restore/detail` | Testo in chiaro con le posizioni dei tag. Campi: `markdown`, `map` (file) e `key` |

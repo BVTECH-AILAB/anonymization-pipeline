@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import type { Metrics, Report } from "../api/tipi";
 import { BarreImpilate, BarreOrizzontali } from "../componenti/Grafici";
-import { etichettaModelli, FASI_VLM, nomeEsito, nomeFase, nomeFonte, nomeModalita, nomeMotivoVlm, testoAvviso } from "../lib/nomi";
+import { etichettaModelli, FASI_VLM, nomeEsito, nomeFase, nomeFonte, nomeModalita, nomeMotivoVlm, nomeVerifica, testoAvviso } from "../lib/nomi";
 import * as storico from "../lib/storico";
 import { useSessione } from "../stato/sessione";
 
@@ -135,7 +135,7 @@ function Contenuto({ report: r, metriche: m, titolo }: Dati) {
         <Riquadro etichetta="Tempo totale" valore={`${n(tempi.total)} s`} nota={m?.times_s.slot_wait ? `+ ${n(m.times_s.slot_wait)} s in coda` : undefined} />
         <Riquadro etichetta="Pagine" valore={String(r.document.pages)} nota={`${r.extraction.docling.length} docling · ${r.extraction.vlm.length} VLM`} />
         <Riquadro etichetta="Secondi per pagina" valore={n(m?.throughput.s_per_page ?? (tempi.total ?? 0) / Math.max(1, r.document.pages))} />
-        <Riquadro etichetta="Verifica" valore={nomeEsito(r.verification.outcome)} nota={`${r.verification.iterations} iterazioni · ${r.verification.residuals_fixed} residui corretti`} />
+        <Riquadro etichetta="Verifica" valore={nomeEsito(r.verification.outcome)} nota={`modalità ${nomeVerifica(r.verification.mode)} · ${r.verification.residuals.length} residui`} />
         <Riquadro etichetta="Valori censurati" valore={String(Object.values(r.counts).reduce((a, b) => a + b, 0))} nota={`${r.entities.length} entità`} />
         <Riquadro etichetta="Chiamate al VLM" valore={String(totVlm.chiamate)} nota={`${n(totVlm.tin, 0)} token in · ${n(totVlm.tout, 0)} out`} />
         {m && <Riquadro etichetta="CPU / memoria" valore={`${n(m.resources.process_cpu_s)} s`} nota={`picco ${n(m.resources.process_peak_rss_mb, 0)} MB (processo)`} />}
@@ -202,7 +202,7 @@ function Contenuto({ report: r, metriche: m, titolo }: Dati) {
                 <tbody>
                   <tr><td>Codifica delle immagini</td><td className="num">{n(m.extraction.image_encoding_s, 2)} s</td></tr>
                   <tr><td>Unione dei rilevatori</td><td className="num">{n(m.detection.union_s as number, 3)} s</td></tr>
-                  <tr><td>Coreferenza ({m.redaction.iterations} iterazioni)</td><td className="num">{n(m.redaction.coreference_s, 2)} s</td></tr>
+                  <tr><td>Coreferenza</td><td className="num">{n(m.redaction.coreference_s, 2)} s</td></tr>
                   <tr><td>Sostituzione</td><td className="num">{n(m.redaction.replacement_s, 3)} s</td></tr>
                 </tbody>
               </table>

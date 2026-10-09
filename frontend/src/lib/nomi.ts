@@ -13,7 +13,7 @@ const FASI: Record<string, string> = {
   slot_wait: "attesa in coda",
 };
 const MODALITA: Record<string, string> = { pseudonym: "pseudonimo", tag: "tag", redaction: "redazione" };
-const VERIFICHE: Record<string, string> = { off: "off", report: "segnala", fix: "correggi", block: "blocca" };
+const VERIFICHE: Record<string, string> = { off: "off", report: "segnala", block: "blocca" };
 const ESITI: Record<string, string> = { off: "off", ok: "ok", skipped: "non eseguita", residuals: "residui" };
 const MOTIVI_RIFIUTO: Record<string, string> = {
   residuals: "residui",

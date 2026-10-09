@@ -16,6 +16,10 @@ from anonymization_pipeline.logging_setup import setup_logging
 
 FAKE_CF = "RSSMRA85M01H501U"
 
+# main.py builds the app when imported (``main:app``) from Settings(): never from the developer's
+# .env file (variables already exported, e.g. by ``just``, still apply).
+Settings.model_config["env_file"] = None
+
 
 class _ExplicitSettings(Settings):
     """Settings that read only the values passed to the constructor."""

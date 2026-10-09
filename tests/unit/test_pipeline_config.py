@@ -137,6 +137,19 @@ def test_user_file_with_groups(tmp_path: Path) -> None:
     assert cfg.generation.temperature == 0.2
 
 
+def test_verification_modes_and_default() -> None:
+    assert pipeline_config().phases.verification.mode == "block"
+    assert (
+        pipeline_config(default_verification="report").phases.verification.mode
+        == "report"
+    )
+    for removed in ("fix", "nonsense"):  # the correcting mode no longer exists
+        with pytest.raises(ValueError):
+            pipeline_config(default_verification=removed)
+    with pytest.raises(ValueError, match="extra"):
+        pipeline_config({"phases": {"verification": {"max_iterations": 3}}})
+
+
 def test_user_file_cannot_set_keys_owned_by_settings(tmp_path: Path) -> None:
     path = tmp_path / "mine.yaml"
     path.write_text("backend: {url: http://elsewhere}\n")
@@ -168,12 +181,12 @@ def test_models_file_is_read_once(tmp_path: Path) -> None:
 
 def test_user_file_is_read_once(tmp_path: Path) -> None:
     path = tmp_path / "mine.yaml"
-    path.write_text("phases: {verification: {max_iterations: 5}}\n")
+    path.write_text("phases: {verification: {timeout_s: 120}}\n")
     settings = make_settings(pipeline_config_file=str(path))
     load_pipeline_config(settings)
     path.unlink()  # e.g. a ConfigMap changed at runtime
 
-    assert load_pipeline_config(settings).phases.verification.max_iterations == 5
+    assert load_pipeline_config(settings).phases.verification.timeout_s == 120
 
 
 def test_missing_user_file_is_an_error() -> None:
@@ -183,7 +196,7 @@ def test_missing_user_file_is_an_error() -> None:
 
 def test_request_overrides_win_over_settings(tmp_path: Path) -> None:
     path = tmp_path / "mine.yaml"
-    path.write_text("phases: {verification: {max_iterations: 5}}\n")
+    path.write_text("phases: {verification: {timeout_s: 120}}\n")
     settings = make_settings(
         pipeline_config_file=str(path),
         default_mode="tag",
@@ -198,7 +211,7 @@ def test_request_overrides_win_over_settings(tmp_path: Path) -> None:
     assert cfg.phases.redaction.mode == "redaction"
     assert cfg.model_for("detection")[0] == "big:1"
     assert cfg.model_for("redaction")[0] == "small:1"
-    assert cfg.phases.verification.max_iterations == 5
+    assert cfg.phases.verification.timeout_s == 120
 
 
 def test_request_chooses_the_detectors() -> None:

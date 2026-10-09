@@ -67,7 +67,7 @@ const REPORT = {
   version: "0.1.0", document: { sha256: "f".repeat(64), kind: "pdf", pages: 2 },
   extraction: { docling: [1, 2], vlm: [] }, model: { backend: "ollama", phases: { extraction: "gemma4:26b-a4b-it-qat", detection: "gemma4:e4b-it-qat", redaction: "gemma4:e4b-it-qat", verification: "gemma4:26b-a4b-it-qat" } }, mode: "redaction",
   counts: { PERSONA: 2 }, entities: [], detection: { values: 2, sources: { rules: 1, vlm: 2 }, hallucinations_discarded: 0, inactive_categories: 0, eponyms_discarded: 0 },
-  redaction: { coreference: "vlm", groups: 1 }, verification: { mode: "fix", outcome: "skipped", iterations: 1, residuals_fixed: 0, residuals: [] },
+  redaction: { coreference: "vlm", groups: 1 }, verification: { mode: "block", outcome: "skipped", residuals: [] },
   vlm: { detection: { calls: 6, errors: 0, truncated: 0, tokens_in: 100, tokens_out: 10, duration_s: 3 } },
   times_s: { ingest: 0.1, extraction: 2, detection: 5, redaction: 1, verification: 4, total: 12.1 }, warnings: ["verification_skipped"],
 } satisfies Report;
@@ -110,7 +110,7 @@ describe("nomi", () => {
     expect(["ingest", "extraction", "detection", "redaction", "verification", "completed"].map(nomeFase))
       .toEqual(["acquisizione", "estrazione", "rilevamento", "censura", "verifica", "completato"]);
     expect(["pseudonym", "tag", "redaction"].map(nomeModalita)).toEqual(["pseudonimo", "tag", "redazione"]);
-    expect(["off", "report", "fix", "block"].map(nomeVerifica)).toEqual(["off", "segnala", "correggi", "blocca"]);
+    expect(["off", "report", "block"].map(nomeVerifica)).toEqual(["off", "segnala", "blocca"]);
     expect(["off", "ok", "skipped", "residuals"].map(nomeEsito)).toEqual(["off", "ok", "non eseguita", "residui"]);
     expect(nomeMotivoRifiuto("verification_unavailable")).toBe("verifica non disponibile");
     expect(nomeMotivoVlm("little_text")).toBe("poco testo");

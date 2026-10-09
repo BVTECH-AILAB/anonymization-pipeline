@@ -46,7 +46,6 @@ class Job:
     created: float = field(default_factory=time.time)
     status: JobStatus = "queued"
     phase: str | None = None
-    iteration: int | None = None
     started: float | None = None
     finished: float | None = None
     expires: float | None = None
@@ -64,7 +63,6 @@ class Job:
             "name": self.name,
             "status": self.status,
             "phase": self.phase,
-            "iteration": self.iteration,
             "vlm_calls": len(self.collector.calls) if self.collector else 0,
             "created": self.created,
             "started": self.started,
@@ -189,8 +187,6 @@ class JobRegistry:
 
         def progress(phase: str, details: dict[str, Any]) -> None:
             job.phase = phase
-            if "iteration" in details:
-                job.iteration = details["iteration"]
             if details.get("metrics") is not None:
                 job.collector = details["metrics"]
 

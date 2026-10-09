@@ -2,7 +2,6 @@ import asyncio
 import io
 import json
 from pathlib import Path
-from typing import Any
 
 import pytest
 from PIL import Image
@@ -21,13 +20,11 @@ from anonymization_pipeline.redaction.vault import generate_key
 from anonymization_pipeline.verification import UnredactableContent
 from anonymization_pipeline.vlm import VLMError
 from tests.pipeline import (
-    Answer,
     FakeVLM,
     IdealModel,
     models_file,
     pipeline_config,
     png,
-    prompt_text,
 )
 from tests.unit.test_extraction import LINES, pdf_with_text
 
@@ -81,10 +78,8 @@ def test_text_end_to_end_and_restore() -> None:
     for value in VALUES:  # report without values
         assert value not in report
     assert result.report["verification"] == {
-        "mode": "fix",
+        "mode": "block",  # the default
         "outcome": "ok",
-        "iterations": 1,
-        "residuals_fixed": 0,
         "residuals": [],
     }
     assert result.report["counts"] == {
@@ -161,29 +156,11 @@ def test_hallucinations_are_discarded() -> None:
     assert "Giuseppe Verdi" not in result.markdown
 
 
-def test_verification_fixes_a_missed_value() -> None:
-    result, _ = _run(
-        IdealModel(VALUES, missed=("RSSMRA80A01H501U",)),
-        pipeline_config({"phases": VLM_ONLY}),
-    )
-
-    assert "RSSMRA80A01H501U" not in result.markdown
-    verification = result.report["verification"]
-    assert verification["outcome"] == "ok" and verification["iterations"] == 2
-    assert verification["residuals_fixed"] == 1
-    sources = [
-        e["category"]
-        for e in result.report["entities"]
-        if e["sources"] == ["verification"]
-    ]
-    assert sources == ["CODICE_FISCALE"]
-
-
-def test_verification_blocks_and_reports() -> None:
+def test_verification_blocks_by_default_and_can_report() -> None:
     model = IdealModel(VALUES, missed=("RSSMRA80A01H501U",))
 
     with pytest.raises(UnredactableContent) as error:
-        _run(model, pipeline_config({"phases": VLM_ONLY}, default_verification="block"))
+        _run(model, pipeline_config({"phases": VLM_ONLY}))  # block is the default
     assert error.value.as_dict() == {
         "reason": "residuals",
         "residuals": [{"category": "CODICE_FISCALE", "page": 1}],
@@ -200,46 +177,6 @@ def test_verification_blocks_and_reports() -> None:
     assert result.report["verification"]["residuals"] == [
         {"category": "CODICE_FISCALE", "page": 1}
     ]
-
-
-def test_residuals_over_max_iterations() -> None:
-    text = "Codici: AAA1 AAA2 AAA3 AAA4"
-    values = {f"AAA{i}": "ID_PAZIENTE" for i in range(1, 5)}
-
-    class OneAtATime(IdealModel):  # verification finds a new residual at every round
-        def __call__(
-            self,
-            phase: str,
-            system: str,
-            user: str,
-            images: list[bytes],
-            schema: dict[str, Any] | None,
-        ) -> Answer:
-            if phase == "verification":
-                for value in self.values:
-                    if value in prompt_text(user):
-                        return json.dumps(
-                            {"entities": [{"text": value, "category": "ID_PAZIENTE"}]}
-                        )
-                return '{"entities": []}'
-            return super().__call__(phase, system, user, images, schema)
-
-    model = OneAtATime(values, missed=tuple(values))
-    with pytest.raises(UnredactableContent, match="residuals"):
-        _run(
-            model,
-            pipeline_config({"phases": {"verification": {"max_iterations": 2}}}),
-            data=text.encode(),
-        )
-    result, _ = _run(
-        model,
-        pipeline_config({"phases": {"verification": {"max_iterations": 5}}}),
-        data=text.encode(),
-    )
-    assert (
-        result.report["verification"]["residuals_fixed"] == 4
-        and "AAA" not in result.markdown
-    )
 
 
 def test_fail_closed_when_verification_does_not_answer() -> None:
@@ -316,7 +253,7 @@ def test_progress_and_tag_positions() -> None:
         "verification",
         "completed",
     ]
-    assert phases[0][1]["metrics"] is not None and phases[4][1] == {"iteration": 1}
+    assert phases[0][1]["metrics"] is not None and phases[4][1] == {}
     # tags: positions in the redacted text, without values
     assert result.tags and all(
         result.markdown[t["start"] : t["end"]] == t["replacement"] for t in result.tags

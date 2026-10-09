@@ -21,7 +21,7 @@ Mode = Annotated[
     str | None, Form(max_length=20, description="pseudonym | tag | redaction")
 ]
 Verification = Annotated[
-    str | None, Form(max_length=20, description="off | report | fix | block")
+    str | None, Form(max_length=20, description="off | report | block")
 ]
 Extraction = Annotated[
     str | None, Form(max_length=20, description="native PDF pages: docling | vlm")

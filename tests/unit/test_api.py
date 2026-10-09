@@ -383,7 +383,7 @@ def test_detectors_per_request(backend: FakeBackend, client: TestClient) -> None
     response = client.post(
         "/anonymize?format=json",
         files=_upload(),
-        data={"mode": "tag", "detectors": "rules,labels"},
+        data={"mode": "tag", "detectors": "rules,labels", "verification": "report"},
     )
 
     assert response.status_code == 200
@@ -586,3 +586,23 @@ def test_dashboard_events_keep_their_names_and_keys(
     )
     (rejected,) = _events(logs, "document_rejected")
     assert rejected == {"document": anonymized["document"], "reason": "residuals"}
+
+
+def test_verification_mode_per_request(client: TestClient) -> None:
+    for mode in ("off", "report", "block"):
+        response = client.post(
+            "/anonymize?format=json",
+            files=_upload(),
+            data={"mode": "tag", "verification": mode},
+        )
+        assert (
+            response.status_code == 200
+            and response.json()["report"]["verification"]["mode"] == mode
+        )
+    assert (
+        client.get("/configuration").json()["phases"]["verification"]["mode"] == "block"
+    )
+    response = client.post(
+        "/anonymize", files=_upload(), data={"mode": "tag", "verification": "fix"}
+    )
+    assert response.status_code == 400  # the correcting mode is gone

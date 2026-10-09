@@ -124,7 +124,7 @@ class AnonymizationService:
             # generic message: the user input is never echoed back
             raise BadRequestError(
                 "Opzioni non valide: controllare modalità (pseudonym, tag, redaction), verifica "
-                "(off, report, fix, block), estrazione (docling, vlm), categorie (GET /categories) e "
+                "(off, report, block), estrazione (docling, vlm), categorie (GET /categories) e "
                 "rilevatori (vlm, rules, labels, ner, eponyms: almeno uno tra i primi quattro)."
             ) from exc
         others = {

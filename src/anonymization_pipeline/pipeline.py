@@ -15,7 +15,7 @@ from typing import Any
 
 from anonymization_pipeline import __version__, metrics
 from anonymization_pipeline.detection import detect
-from anonymization_pipeline.domain import Document, Group, Occurrence, Residual, Result
+from anonymization_pipeline.domain import Document, Occurrence, Residual, Result
 from anonymization_pipeline.extraction import extract
 from anonymization_pipeline.ingest import load
 from anonymization_pipeline.pipeline_config import PHASES, PipelineConfig
@@ -159,25 +159,17 @@ async def anonymize(
     verification: dict[str, Any] = {
         "mode": phases.verification.mode,
         "outcome": "off",
-        "iterations": 0,
-        "residuals_fixed": 0,
         "residuals": [],
     }
     discarded_by_verification = 0
-    groups: list[Group] = []
-    coreference: dict[str, Any] = {}
-    pages: list[str] = []
-    occurrences: list[list[Occurrence]] = []
-    while True:
-        advance("redaction", iteration=verification["iterations"] + 1)
-        with metrics.measure("redaction.coreference"):
-            groups, coreference = await group_entities(entities, client, cfg)
-        with metrics.measure("redaction.replacement"):
-            pages, occurrences = redact(texts, groups, cfg)
-        mark("redaction")
-        if phases.verification.mode == "off":
-            break
-        advance("verification", iteration=verification["iterations"] + 1)
+    advance("redaction")
+    with metrics.measure("redaction.coreference"):
+        groups, coreference = await group_entities(entities, client, cfg)
+    with metrics.measure("redaction.replacement"):
+        pages, occurrences = redact(texts, groups, cfg)
+    mark("redaction")
+    if phases.verification.mode != "off":
+        advance("verification")
         try:
             found = await verify(doc, pages, client, cfg)
         except VLMError as exc:
@@ -186,36 +178,20 @@ async def anonymize(
                 raise UnredactableContent("verification_unavailable") from exc
             warnings.append("verification_skipped")
             verification["outcome"] = "skipped"
-            break
-        mark("verification")
-        verification["iterations"] += 1
-        discarded_by_verification += found.hallucinations_discarded
-        if not found.entities:
-            verification["outcome"] = "ok"
-            break
-        residuals = [Residual(e.category, e.page + 1) for e in found.entities]
-        if phases.verification.mode == "report":
-            verification["outcome"] = "residuals"
-            verification["residuals"] = UnredactableContent(
-                "residuals", residuals
-            ).as_dict()["residuals"]
-            warnings.append("residuals_not_fixed")
-            break
-        known = {(e.text, e.category) for e in entities}
-        new = [e for e in found.entities if (e.text, e.category) not in known]
-        if (
-            phases.verification.mode == "block"
-            or not new
-            or verification["iterations"] >= phases.verification.max_iterations
-        ):
-            raise UnredactableContent("residuals", residuals)
-        logger.info(
-            "Verification %d: %d residuals, redacting again",
-            verification["iterations"],
-            len(new),
-        )
-        entities += new
-        verification["residuals_fixed"] += len(new)
+        else:
+            mark("verification")
+            discarded_by_verification = found.hallucinations_discarded
+            residuals = [Residual(e.category, e.page + 1) for e in found.entities]
+            if not residuals:
+                verification["outcome"] = "ok"
+            elif phases.verification.mode == "block":
+                raise UnredactableContent("residuals", residuals)
+            else:
+                verification["outcome"] = "residuals"
+                verification["residuals"] = UnredactableContent(
+                    "residuals", residuals
+                ).as_dict()["residuals"]
+                warnings.append("residuals_not_fixed")
 
     check_invariant(pages, occurrences, cfg)
     markdown, joined = _join_pages(doc, pages, occurrences, cfg)

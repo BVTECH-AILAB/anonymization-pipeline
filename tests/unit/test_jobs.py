@@ -168,7 +168,7 @@ async def test_queue_progress_cancellation_and_expiry() -> None:
     release = asyncio.Event()
 
     async def run(job: Job, progress: Progress) -> Result:
-        progress("detection", {"metrics": None, "iteration": 1})
+        progress("detection", {"metrics": None})
         await release.wait()
         if job.name == "reject":
             raise UnredactableContentError(
@@ -205,7 +205,9 @@ async def test_queue_progress_cancellation_and_expiry() -> None:
                 break
             await asyncio.sleep(0.01)
         assert (
-            first.status == "completed" and first.data is None and first.iteration == 1
+            first.status == "completed"
+            and first.data is None
+            and first.phase == "detection"
         )
         assert third.status == "rejected" and third.residuals == [
             {"category": "PERSONA", "page": 1}

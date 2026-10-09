@@ -85,7 +85,7 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_VLM_CONCURRENCY` | `2` | | | no |
 | `ANONPIP_VLM_PULL_MISSING` | `false` | `false` | `false` | no |
 | `ANONPIP_DEFAULT_MODE` | `pseudonym` | | | no |
-| `ANONPIP_DEFAULT_VERIFICATION` | `fix` | | | no |
+| `ANONPIP_DEFAULT_VERIFICATION` | `block` | | | no |
 | `ANONPIP_DEFAULT_EXTRACTION` | `docling` | | | no |
 | `ANONPIP_DOCLING_MODELS_DIR` | `/models/docling` | | | no |
 | `ANONPIP_PIPELINE_CONFIG_FILE` | vuoto | facoltativo (file montato da ConfigMap) | idem | no |

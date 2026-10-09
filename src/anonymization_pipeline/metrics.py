@@ -248,7 +248,6 @@ def summarize(
             }
         )
 
-    verification = report.get("verification", {})
     models = {phase: cfg.model_for(phase) for phase in PHASES}
     return {
         "version": __version__,
@@ -279,12 +278,10 @@ def summarize(
         "extraction": extraction,
         "detection": detection,
         "redaction": {
-            "iterations": len(by_name.get("redaction.coreference", [])),
             "coreference_s": total("redaction.coreference"),
             "replacement_s": total("redaction.replacement"),
         },
         "verification": {
-            "iterations": verification.get("iterations", 0),
             "duration_s": times.get("verification", 0.0),
         },
         "vlm": vlm,

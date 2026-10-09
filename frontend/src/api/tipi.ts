@@ -8,7 +8,7 @@ export type Rilevatore = "vlm" | "rules" | "labels" | "ner" | "eponyms";
 /** Fasi che chiamano il VLM: ognuna ha il suo modello. */
 export type VlmPhase = "extraction" | "detection" | "redaction" | "verification";
 export type Mode = "pseudonym" | "tag" | "redaction";
-export type VerificationMode = "off" | "report" | "fix" | "block";
+export type VerificationMode = "off" | "report" | "block";
 export type ExtractionEngine = "docling" | "vlm";
 
 /** Corpo degli errori: codice stabile, messaggio in italiano (`detail`) e campi in piu' (es. `reason`). */
@@ -28,7 +28,6 @@ export interface Job {
   name: string;
   status: JobStatus;
   phase: Phase | null;
-  iteration: number | null;
   vlm_calls: number;
   created: number;
   started: number | null;
@@ -93,8 +92,6 @@ export interface Report {
   verification: {
     mode: string;
     outcome: string;
-    iterations: number;
-    residuals_fixed: number;
     residuals: Residual[];
   };
   vlm: Record<string, VlmStats>;
@@ -124,8 +121,8 @@ export interface Metrics {
   };
   // un oggetto per rilevatore, piu' il numero union_s
   detection: Record<string, { duration_s: number; max_page_s: number; values: number | null } | number>;
-  redaction: { iterations: number; coreference_s: number; replacement_s: number };
-  verification: { iterations: number; duration_s: number };
+  redaction: { coreference_s: number; replacement_s: number };
+  verification: { duration_s: number };
   vlm: Record<string, VlmStats>;
   pages: {
     page: number;

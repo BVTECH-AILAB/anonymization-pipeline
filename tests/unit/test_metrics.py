@@ -119,7 +119,7 @@ def test_metrics_per_phase_and_per_page() -> None:
         m["extraction"]["vlm"]["pages"] == 2
         and m["extraction"]["docling"]["pages"] == 0
     )
-    assert m["redaction"]["iterations"] == 1 and m["verification"]["iterations"] == 1
+    assert "iterations" not in m["redaction"] and "iterations" not in m["verification"]
     assert (
         m["detection"]["rules"]["values"]
         == result.report["detection"]["sources"]["rules"]

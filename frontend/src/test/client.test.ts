@@ -24,7 +24,7 @@ const STATO: Status = {
   detectors: { vlm: true, rules: true, labels: true, eponyms: true, ner: { enabled: true, model: "ner-it", present: false, error: "modello assente" } },
   docling: { enabled: true, installed: true, models: false },
   mode: "pseudonym",
-  verification: "fix",
+  verification: "block",
   active_categories: 30,
 };
 

@@ -15,6 +15,7 @@ from typing import Any
 
 from anonymization_pipeline import __version__, metrics
 from anonymization_pipeline.detection import detect
+from anonymization_pipeline.detectors import eponyms
 from anonymization_pipeline.domain import Document, Occurrence, Residual, Result
 from anonymization_pipeline.extraction import extract
 from anonymization_pipeline.ingest import load
@@ -69,11 +70,18 @@ def check_invariant(
         UnredactableContent: A replaced value is still in clear text.
     """
     anchoring = cfg.phases.detection.anchoring.model_copy(update={"fuzzy": 0})
+    filtered = cfg.phases.detection.detectors.eponyms
     values = {(o.original, o.category) for found in occurrences for o in found}
     for i, text in enumerate(pages):
         exclude = replacement_spans(text, cfg)
         left = [
-            Residual(c, i + 1) for v, c in values if find(text, v, anchoring, exclude)
+            Residual(c, i + 1)
+            for v, c in values
+            if any(
+                # the occurrences redaction leaves on purpose ("globuli rossi") are not residuals
+                not (filtered and eponyms.is_excluded(text[s:e], c))
+                for s, e in find(text, v, anchoring, exclude)
+            )
         ]
         if left:
             raise UnredactableContent("invariant", left)

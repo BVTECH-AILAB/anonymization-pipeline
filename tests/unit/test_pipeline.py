@@ -371,3 +371,20 @@ def test_detection_sends_the_image_only_to_models_with_vision(tmp_path: Path) ->
     assert [n for phase, _, n in blind.calls if phase == "detection"]
     assert all(n == 0 for phase, _, n in blind.calls if phase == "detection")
     assert all(n == 1 for phase, _, n in blind.calls if phase == "extraction")
+
+
+def test_common_word_left_in_lowercase_does_not_break_the_invariant() -> None:
+    # "ROSSI" is the patient, "globuli rossi" is not: redaction leaves the common word and the
+    # final check must not take it for the surname left in clear text
+    text = (
+        "Paziente: ROSSI MARIO\nCampione: Rossi M.\nEritrociti (globuli rossi) 5,11\n"
+    )
+    model = IdealModel({"ROSSI MARIO": "PERSONA", "Rossi": "COGNOME"})
+    cfg = pipeline_config(
+        {"phases": VLM_ONLY}, default_verification="report", default_mode="tag"
+    )
+
+    result, _ = _run(model, cfg, data=text.encode(), key=None)
+
+    assert "globuli rossi" in result.markdown
+    assert "ROSSI" not in result.markdown and "Rossi M." not in result.markdown

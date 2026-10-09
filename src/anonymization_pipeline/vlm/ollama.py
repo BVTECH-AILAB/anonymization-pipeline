@@ -5,18 +5,32 @@ image alone takes hundreds of tokens), ``think`` (a model that reasons by defaul
 ``num_predict`` on reasoning: the answer comes back empty) and ``keep_alive`` can be set per
 request.
 The JSON answer is constrained with ``format`` = JSON schema (constrained decoding).
+
+The answer is streamed: when a model does not stop and Ollama aborts it for repetition, the text
+received so far is kept as a truncated answer instead of being lost (an OCR model may transcribe
+the whole page and then repeat its end).
 """
 
 import base64
+import json
 import logging
 from typing import Any
 
 import httpx
 
 from anonymization_pipeline.pipeline_config.schema import ModelSpec
-from anonymization_pipeline.vlm.client import VLMClient, VLMModelMissing, VLMResponse
+from anonymization_pipeline.vlm.client import (
+    VLMClient,
+    VLMError,
+    VLMModelMissing,
+    VLMResponse,
+    VLMTransientError,
+)
 
 logger = logging.getLogger(__name__)
+
+# Ollama error that ends a stream when the model keeps repeating the same tokens
+_REPEAT_ABORT = "token repeat limit"
 
 
 def with_tag(name: str) -> str:
@@ -31,6 +45,37 @@ def _model_missing(response: httpx.Response) -> bool:
         return "not found" in str(response.json().get("error", "")).lower()
     except ValueError:
         return True
+
+
+async def _collect(response: httpx.Response) -> VLMResponse:
+    """Join the streamed chunks; an abort for repetition keeps the text as a truncated answer.
+
+    Raises:
+        VLMTransientError: Another error inside the stream (retried).
+    """
+    parts: list[str] = []
+    last: dict[str, Any] = {}
+    async for line in response.aiter_lines():
+        if not line.strip():
+            continue
+        chunk = json.loads(line)
+        if "error" in chunk:
+            error = str(chunk["error"])
+            if _REPEAT_ABORT in error:
+                logger.warning(
+                    "Model aborted for repetition: answer kept up to the abort (%d characters)",
+                    sum(len(p) for p in parts),
+                )
+                return VLMResponse(text="".join(parts), truncated=True)
+            raise VLMTransientError(f"error in the answer stream: {error[:300]}")
+        parts.append((chunk.get("message") or {}).get("content") or "")
+        last = chunk
+    return VLMResponse(
+        text="".join(parts),
+        truncated=last.get("done_reason") == "length",
+        tokens_in=int(last.get("prompt_eval_count") or 0),
+        tokens_out=int(last.get("eval_count") or 0),
+    )
 
 
 class OllamaClient(VLMClient):
@@ -59,7 +104,7 @@ class OllamaClient(VLMClient):
             options["seed"] = g.seed
         payload: dict[str, Any] = {
             "model": model,
-            "stream": False,
+            "stream": True,
             "options": {**options, **g.options},
             "messages": [{"role": "system", "content": system}, user_message],
         }
@@ -83,18 +128,30 @@ class OllamaClient(VLMClient):
         timeout: float,
     ) -> VLMResponse:
         payload = self.payload(model, spec, system, user, images, schema, max_tokens)
-        response = await self._post("/api/chat", payload, timeout)
-        if _model_missing(response):
+        answer = await self._chat(payload, timeout)
+        if isinstance(answer, httpx.Response) and _model_missing(answer):
             await self.pull(model)
-            response = await self._post("/api/chat", payload, timeout)
-        self.check(response)
-        data = response.json()
-        return VLMResponse(
-            text=(data.get("message") or {}).get("content") or "",
-            truncated=data.get("done_reason") == "length",
-            tokens_in=int(data.get("prompt_eval_count") or 0),
-            tokens_out=int(data.get("eval_count") or 0),
-        )
+            answer = await self._chat(payload, timeout)
+        if isinstance(answer, httpx.Response):
+            self.check(answer)
+            raise VLMError(f"unexpected HTTP {answer.status_code} from /api/chat")
+        return answer
+
+    async def _chat(
+        self, payload: dict[str, Any], timeout: float
+    ) -> VLMResponse | httpx.Response:
+        """The streamed answer, or the response itself (body read) when the status is an error."""
+        async with self._http.stream(
+            "POST",
+            self.url("/api/chat"),
+            json=payload,
+            headers=self._headers,
+            timeout=timeout,
+        ) as response:
+            if response.status_code != 200:
+                await response.aread()
+                return response
+            return await _collect(response)
 
     async def models_available(self) -> set[str]:
         response = await self._get("/api/tags", self.backend.health_timeout_s)

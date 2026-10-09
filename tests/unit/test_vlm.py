@@ -71,7 +71,7 @@ def test_native_ollama_payload(tmp_path: Path) -> None:
     assert (
         payload["think"] is False
         and payload["keep_alive"] == "30m"
-        and payload["stream"] is False
+        and payload["stream"] is True  # streamed: an aborted answer keeps what arrived
     )
     assert payload["options"]["num_ctx"] == 8192  # the context of the detection model
     assert payload["options"]["seed"] == 42 and payload["options"]["top_k"] == 1
@@ -111,6 +111,67 @@ def test_ollama_pulls_the_missing_model_of_the_phase_when_allowed(
     response, _ = run(cfg, handler, lambda c: c.call("extraction", "S", "U"))
 
     assert response.text == "ok" and pulled == ["small:1"]
+
+
+def _ndjson(*lines: dict) -> httpx.Response:
+    return httpx.Response(
+        200, text="\n".join(json.dumps(line) for line in lines) + "\n"
+    )
+
+
+def test_ollama_streamed_answer_is_assembled() -> None:
+    chunks = (
+        {"message": {"content": "Paziente: "}, "done": False},
+        {"message": {"content": "Mario"}, "done": False},
+        {
+            "message": {"content": ""},
+            "done": True,
+            "done_reason": "stop",
+            "prompt_eval_count": 120,
+            "eval_count": 3,
+        },
+    )
+
+    response, _ = run(
+        pipeline_config(),
+        lambda r: _ndjson(*chunks),
+        lambda c: c.call("extraction", "S", "U"),
+    )
+
+    assert response.text == "Paziente: Mario" and not response.truncated
+    assert (response.tokens_in, response.tokens_out) == (120, 3)
+
+
+def test_answer_aborted_for_repetition_keeps_what_arrived() -> None:
+    # a model that does not stop at the end of the page: Ollama aborts the stream, the
+    # transcription received so far is kept as a truncated answer, with no new attempt
+    cfg = pipeline_config({"backend": {"retry_wait_s": 0, "retries": 2}})
+    calls: list[int] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(1)
+        return _ndjson(
+            {"message": {"content": "Pag. 1 di 1"}, "done": False},
+            {"error": "prediction aborted, token repeat limit reached"},
+        )
+
+    response, _ = run(cfg, handler, lambda c: c.call("extraction", "S", "U"))
+
+    assert response.text == "Pag. 1 di 1" and response.truncated
+    assert len(calls) == 1
+
+
+def test_other_stream_errors_are_retried() -> None:
+    cfg = pipeline_config({"backend": {"retry_wait_s": 0, "retries": 1}})
+    calls: list[int] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(1)
+        return _ndjson({"error": "llama runner process has terminated"})
+
+    with pytest.raises(VLMError, match="unreachable or failing"):
+        run(cfg, handler, lambda c: c.call("extraction", "S", "U"))
+    assert len(calls) == 2
 
 
 def test_ollama_does_not_pull_by_default() -> None:

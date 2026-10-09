@@ -11,11 +11,13 @@ from anonymization_pipeline import __version__
 from anonymization_pipeline.config import Settings
 from anonymization_pipeline.errors import NotFoundError
 from anonymization_pipeline.extraction import native_pdf
+from anonymization_pipeline.ingest import load_pdf
 from anonymization_pipeline.main import create_app
 from anonymization_pipeline.redaction.vault import generate_key
 from anonymization_pipeline.vlm import VLMError
+from anonymization_pipeline.vlm.images import encode_image
 from tests.conftest import FAKE_CF, TEST_MODEL, make_settings
-from tests.pipeline import FIXTURES, models_file
+from tests.pipeline import FIXTURES, models_file, pipeline_config, width
 from tests.unit.conftest import TEXT, VALUES, FakeBackend
 
 KEY = generate_key()
@@ -353,9 +355,11 @@ def test_extraction_chosen_per_request(
         lambda data, pages, c: {i: "Paziente: Mario Rossi" for i in pages},
     )
     pdf = (FIXTURES / "referto_pdf_nativo.pdf").read_bytes()
-    backend.model.markdown = {
-        1448: "Paziente: Mario Rossi"
-    }  # width of the page sent to the VLM (max side 2048)
+    cfg = pipeline_config()
+    image = load_pdf(pdf, cfg).pages[0].image
+    assert image is not None
+    sent = encode_image(image, cfg)
+    backend.model.markdown = {width(sent): "Paziente: Mario Rossi"}
     expected = {
         "docling": {"docling": [1], "vlm": []},
         "vlm": {"docling": [], "vlm": [{"page": 1, "reason": "vlm_engine"}]},

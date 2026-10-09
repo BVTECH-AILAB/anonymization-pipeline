@@ -57,6 +57,7 @@ export function nuovoLavoro(file: File, o: Options, chiave: string | null): Prom
   if (o.enable.length) f.append("enable", o.enable.join(","));
   if (o.disable.length) f.append("disable", o.disable.join(","));
   if (o.transcript) f.append("transcript", "true");
+  if (o.detectors) f.append("detectors", o.detectors.join(","));
   if (chiave && o.mode === "pseudonym") f.append("key", chiave);
   return json<Job>(chiama("/jobs", { method: "POST", body: f }));
 }

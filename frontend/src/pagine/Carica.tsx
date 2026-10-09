@@ -1,14 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import * as api from "../api/client";
-import type { Categories, Models, Options, Phase } from "../api/tipi";
+import type { Categories, Models, Options, Phase, Rilevatore, Status } from "../api/tipi";
 import { FASI_VLM, nomeFase, nomeModalita, nomeMotivoRifiuto } from "../lib/nomi";
 import { useSessione, type Documento } from "../stato/sessione";
 
 const FASI: Phase[] = ["ingest", "extraction", "detection", "redaction", "verification"];
 const ESTENSIONI = ".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.webp,.txt,.md,.csv,.json,.xml,.html,.eml";
 
-const PREDEFINITE: Options = { models: {}, mode: "pseudonym", verification: "", extraction: "", enable: [], disable: [], transcript: false };
+const PREDEFINITE: Options = { models: {}, mode: "pseudonym", verification: "", extraction: "", enable: [], disable: [], transcript: false, detectors: null };
+
+const RILEVATORI: { r: Rilevatore; nome: string; nota: string }[] = [
+  { r: "vlm", nome: "rilevamento VLM", nota: "il modello legge testo e immagine della pagina" },
+  { r: "rules", nome: "regole", nota: "regex e checksum: codice fiscale, IBAN, partita IVA, telefoni..." },
+  { r: "labels", nome: "etichette", nota: "il valore dopo un'etichetta (\"Paziente: ...\")" },
+  { r: "ner", nome: "NER", nota: "modello di riconoscimento delle entità, su CPU" },
+  { r: "eponyms", nome: "filtro eponimi", nota: "scarta Parkinson, Valsalva, \"globuli rossi\"...: non trova valori" },
+];
+
+/** Rilevatori accesi nella configurazione del servizio (GET /readyz). */
+function predefiniti(s: Status | null): Rilevatore[] {
+  if (!s) return [];
+  const d = s.detectors;
+  return RILEVATORI.map((x) => x.r).filter((r) => (r === "ner" ? d.ner.enabled : d[r]));
+}
+
+const stessi = (a: Rilevatore[], b: Rilevatore[]) => a.length === b.length && a.every((r) => b.includes(r));
 
 /** "rilevamento gemma4:e4b-it-qat" per le fasi con un modello scelto (le opzioni salvate prima dei modelli
  *  per fase non hanno models). */
@@ -73,6 +90,7 @@ export default function Carica() {
   const [sopra, setSopra] = useState(false);
   const [cat, setCat] = useState<Categories | null>(null);
   const [mod, setMod] = useState<Models | null>(null);
+  const [stato, setStato] = useState<Status | null>(null);
   const [errore, setErrore] = useState<string | null>(null);
   const [invio, setInvio] = useState(false);
   const input = useRef<HTMLInputElement>(null);
@@ -80,6 +98,18 @@ export default function Carica() {
   useEffect(() => { api.categorie().then(setCat).catch(() => setCat(null)); }, []);
   const leggiModelli = () => api.modelli().then(setMod).catch(() => setMod(null));
   useEffect(() => { leggiModelli(); }, []);
+  useEffect(() => { api.salute().then(setStato).catch(() => setStato(null)); }, []);
+
+  const base = predefiniti(stato);
+  const attivi = o.detectors ?? base;
+  // tornati ai predefiniti: nessun campo inviato, decide il servizio
+  const alternaRilevatore = (r: Rilevatore) =>
+    setO((x) => {
+      const da = x.detectors ?? base;
+      const nuovi = da.includes(r) ? da.filter((y) => y !== r) : [...da, r];
+      return { ...x, detectors: stessi(nuovi, base) ? null : nuovi };
+    });
+  const senza_rilevatori = o.detectors !== null && !o.detectors.some((r) => r !== "eponyms");
 
   const manca_chiave = o.mode === "pseudonym" && !s.chiave;
   const avvia = async () => {
@@ -127,7 +157,7 @@ export default function Carica() {
             </ul>
           )}
           <div className="riga" style={{ marginTop: 10 }}>
-            <button disabled={!file.length || invio || manca_chiave} onClick={avvia}>
+            <button disabled={!file.length || invio || manca_chiave || senza_rilevatori} onClick={avvia}>
               Anonimizza {file.length > 1 ? `${file.length} documenti` : ""}
             </button>
             {manca_chiave && (
@@ -138,6 +168,7 @@ export default function Carica() {
               </span>
             )}
           </div>
+          {senza_rilevatori && <p className="nota errore">Scegli almeno un rilevatore: il filtro eponimi da solo non trova valori.</p>}
           {errore && <p className="errore">{errore}</p>}
         </div>
 
@@ -189,6 +220,18 @@ export default function Carica() {
             ))}
           </div>
           {mod?.error && <p className="nota errore">elenco dei modelli non disponibile: {mod.error}</p>}
+          <h3>Rilevatori {o.detectors === null && <span className="tenue">(predefiniti del servizio)</span>}</h3>
+          <div className="griglia-opzioni">
+            {RILEVATORI.map(({ r, nome, nota }) => (
+              <label key={r} className="inline" title={nota}>
+                <input type="checkbox" checked={attivi.includes(r)} onChange={() => alternaRilevatore(r)} /> {nome}
+                {r === "ner" && stato?.detectors.ner.enabled && stato.detectors.ner.present === false && (
+                  <span className="nota errore"> (modello assente)</span>
+                )}
+              </label>
+            ))}
+          </div>
+          {!stato && <p className="nota">Stato del servizio non disponibile: i predefiniti non sono noti.</p>}
           {cat && (
             <details style={{ marginTop: 10 }}>
               <summary>Gruppi di categorie ({o.disable.length + o.enable.length} modifiche)</summary>
@@ -232,7 +275,8 @@ export default function Carica() {
             {s.documenti.map((d) => (
               <tr key={d.id}>
                 <td>{d.nome}{d.errore && <div className="nota errore">{d.errore}</div>}</td>
-                <td>{nomeModalita(d.opzioni.mode)}{d.opzioni.transcript ? " + trascrizione" : ""}{modelliScelti(d.opzioni).length > 0 && <div className="nota">{modelliScelti(d.opzioni).join(" · ")}</div>}</td>
+                <td>{nomeModalita(d.opzioni.mode)}{d.opzioni.transcript ? " + trascrizione" : ""}{modelliScelti(d.opzioni).length > 0 && <div className="nota">{modelliScelti(d.opzioni).join(" · ")}</div>}
+                  {d.opzioni.detectors && <div className="nota">rilevatori: {d.opzioni.detectors.map((r) => RILEVATORI.find((x) => x.r === r)?.nome ?? r).join(", ")}</div>}</td>
                 <td><Avanzamento d={d} /></td>
                 <td className="num"><Durata d={d} /></td>
                 <td>

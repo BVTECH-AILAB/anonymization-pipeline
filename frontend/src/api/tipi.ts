@@ -3,6 +3,8 @@
 
 export type JobStatus = "queued" | "running" | "completed" | "rejected" | "error" | "cancelled";
 export type Phase = "ingest" | "extraction" | "detection" | "redaction" | "verification" | "completed";
+/** Rilevatori (vlm = il VLM nella fase di rilevamento) e filtro eponimi, accendibili per richiesta. */
+export type Rilevatore = "vlm" | "rules" | "labels" | "ner" | "eponyms";
 /** Fasi che chiamano il VLM: ognuna ha il suo modello. */
 export type VlmPhase = "extraction" | "detection" | "redaction" | "verification";
 export type Mode = "pseudonym" | "tag" | "redaction";
@@ -110,6 +112,7 @@ export interface Metrics {
     concurrency: number;
     extraction: string;
     detectors: string[];
+    eponym_filter?: boolean; // assente nelle metriche precedenti
     passes: number;
     verification: string;
   };
@@ -194,4 +197,5 @@ export interface Options {
   enable: string[];
   disable: string[];
   transcript: boolean;
+  detectors: Rilevatore[] | null; // insieme completo degli attivi; null = predefiniti del servizio
 }

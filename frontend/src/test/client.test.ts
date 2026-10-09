@@ -34,7 +34,7 @@ describe("client API", () => {
   it("accoda un lavoro con le opzioni, senza header di autenticazione", async () => {
     const f = finto(202, { id: "x", status: "queued" });
     const file = new File(["ciao"], "nota.txt");
-    await api.nuovoLavoro(file, { models: { detection: "gemma4:e4b-it-qat", verification: "" }, mode: "pseudonym", verification: "", extraction: "vlm", enable: [], disable: ["sanitari", "date"], transcript: true }, "K");
+    await api.nuovoLavoro(file, { models: { detection: "gemma4:e4b-it-qat", verification: "" }, mode: "pseudonym", verification: "", extraction: "vlm", enable: [], disable: ["sanitari", "date"], transcript: true, detectors: ["rules", "ner"] }, "K");
     const [url, init] = chiamata(f);
     expect(url).toBe("/api/jobs");
     expect(init?.method).toBe("POST");
@@ -45,6 +45,7 @@ describe("client API", () => {
     expect(body.get("model_detection")).toBe("gemma4:e4b-it-qat");
     for (const campo of ["model", "model_extraction", "model_redaction", "model_verification"]) expect(body.has(campo)).toBe(false);
     expect(body.get("disable")).toBe("sanitari,date");
+    expect(body.get("detectors")).toBe("rules,ner");
     expect(body.has("enable")).toBe(false);
     expect(body.get("transcript")).toBe("true");
     expect(body.get("key")).toBe("K");
@@ -53,12 +54,12 @@ describe("client API", () => {
 
   it("la chiave parte solo in modalità pseudonimo", async () => {
     const f = finto(202, { id: "x", status: "queued" });
-    await api.nuovoLavoro(new File(["ciao"], "nota.txt"), { models: {}, mode: "tag", verification: "block", extraction: "", enable: ["date"], disable: [], transcript: false }, "K");
+    await api.nuovoLavoro(new File(["ciao"], "nota.txt"), { models: {}, mode: "tag", verification: "block", extraction: "", enable: ["date"], disable: [], transcript: false, detectors: null }, "K");
     const body = chiamata(f)[1]?.body as FormData;
     expect(body.get("mode")).toBe("tag");
     expect(body.get("verification")).toBe("block");
     expect(body.get("enable")).toBe("date");
-    for (const campo of ["key", "model_detection", "extraction", "transcript", "disable"]) expect(body.has(campo)).toBe(false);
+    for (const campo of ["key", "model_detection", "extraction", "transcript", "disable", "detectors"]) expect(body.has(campo)).toBe(false);
   });
 
   it("percorsi di lavori, risultato, catalogo e ripristino", async () => {

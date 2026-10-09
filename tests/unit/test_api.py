@@ -1,4 +1,5 @@
 import io
+import json
 import zipfile
 from collections.abc import Callable
 from pathlib import Path
@@ -439,3 +440,44 @@ def test_rejection_never_logs_document_content(
     assert "document_rejected" in logs
     for value in VALUES:
         assert value not in logs
+
+
+def _events(logs: str, name: str) -> list[dict]:
+    return [
+        json.loads(line.split(f"{name} ", 1)[1])
+        for line in logs.splitlines()
+        if f": {name} {{" in line
+    ]
+
+
+def test_dashboard_events_keep_their_names_and_keys(
+    backend: FakeBackend,
+    make_client: ClientFactory,
+    log_stream: io.StringIO,
+    tmp_path: Path,
+) -> None:
+    client = make_client()
+    client.post("/anonymize", files=_upload(), data={"mode": "tag"})
+    client = make_client(pipeline_config_file=_vlm_only(tmp_path))
+    backend.model.missed = {FAKE_CF}
+    client.post(
+        "/anonymize", files=_upload(), data={"mode": "tag", "verification": "block"}
+    )
+
+    logs = log_stream.getvalue()
+    (anonymized,) = _events(logs, "document_anonymized")
+    assert set(anonymized) == {
+        "document",
+        "kind",
+        "pages",
+        "mode",
+        "verification",
+        "counts",
+        "total_s",
+    }
+    assert (
+        anonymized["counts"] == {"CODICE_FISCALE": 1, "PERSONA": 1}
+        and len(anonymized["document"]) == 12
+    )
+    (rejected,) = _events(logs, "document_rejected")
+    assert rejected == {"document": anonymized["document"], "reason": "residuals"}

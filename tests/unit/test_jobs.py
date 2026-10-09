@@ -145,9 +145,23 @@ def test_jobs_never_log_document_content(
     _wait(client, response.json()["id"])
 
     logs = log_stream.getvalue()
-    assert "job_queued" in logs and "job_finished" in logs
     for value in [*VALUES, "Rossi_Mario", KEY]:
         assert value not in logs
+    queued = [
+        json.loads(line.split("job_queued ", 1)[1])
+        for line in logs.splitlines()
+        if ": job_queued {" in line
+    ]
+    finished = [
+        json.loads(line.split("job_finished ", 1)[1])
+        for line in logs.splitlines()
+        if ": job_finished {" in line
+    ]
+    assert [set(e) for e in queued] == [{"job", "document"}]
+    assert [set(e) for e in finished] == [{"job", "status", "duration_s"}]
+    assert (
+        finished[0]["status"] == "completed" and finished[0]["job"] == queued[0]["job"]
+    )
 
 
 async def test_queue_progress_cancellation_and_expiry() -> None:

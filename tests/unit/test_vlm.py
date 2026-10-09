@@ -170,6 +170,32 @@ def test_call_json_retries_then_fails() -> None:
         )
 
 
+def test_truncated_answer_is_not_retried() -> None:
+    # temperature 0 and a fixed seed: the same request would be cut at the same point again
+    cfg = pipeline_config({"backend": {"retry_wait_s": 0, "retries": 2}})
+    seen: list[dict] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(json.loads(request.content))
+        return httpx.Response(
+            200,
+            json={
+                "message": {"content": '{"groups": [[1], [1'},
+                "done_reason": "length",
+            },
+        )
+
+    with pytest.raises(VLMError, match="token limit"):
+        run(
+            cfg,
+            handler,
+            lambda c: c.call_json(
+                "redaction", "S", "U", None, SCHEMA, parse_groups, max_tokens=100
+            ),
+        )
+    assert len(seen) == 1 and seen[0]["options"]["num_predict"] == 100
+
+
 def test_openai_payload() -> None:
     cfg = pipeline_config(
         {"images": {"format": "jpeg"}},

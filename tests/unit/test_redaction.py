@@ -58,6 +58,29 @@ def test_longest_span_wins_and_propagation() -> None:
     assert pages == ["[PERSONA_1]; la sig.ra [COGNOME_1]"]
 
 
+def test_coreference_answer_is_bounded_by_the_number_of_values() -> None:
+    cfg = pipeline_config()
+    schemas: list[dict[str, Any]] = []
+
+    def answer(phase: str, system: str, user: str, images: list, schema: Any) -> str:
+        schemas.append(schema)
+        return '{"groups": [[1, 2], [3]]}'
+
+    client = FakeVLM(cfg, answer)
+    values = [
+        E("Mario Rossi", "PERSONA"),
+        E("ROSSI MARIO", "PERSONA"),
+        E("Anna Bianchi", "MEDICO"),
+    ]
+
+    asyncio.run(group_entities(values, client, cfg))
+
+    groups = schemas[0]["properties"]["groups"]
+    assert groups["maxItems"] == 3 and groups["items"]["maxItems"] == 3
+    assert groups["items"]["items"] == {"type": "integer", "minimum": 1, "maximum": 3}
+    assert client.max_tokens == [64 + 16 * 3]  # well under phases.redaction.max_tokens
+
+
 def test_redaction_mode() -> None:
     cfg = pipeline_config(default_mode="redaction")
     groups, _ = _groups(cfg, [E("RSSMRA80A01H501U", "CODICE_FISCALE")])

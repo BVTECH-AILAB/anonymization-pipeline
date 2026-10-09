@@ -87,6 +87,9 @@ class FakeVLM(VLMClient):
         self.available = available
         self.calls: list[tuple[str, str, int]] = []
         self.used_models: list[tuple[str, str]] = []  # (phase, model) of every call
+        self.max_tokens: list[
+            int | None
+        ] = []  # token limit asked by every call (None: the phase one)
 
     async def models_available(self) -> set[str]:
         """``available`` models; None simulates an unreachable backend."""
@@ -101,8 +104,10 @@ class FakeVLM(VLMClient):
         user: str,
         images: list[bytes] | None = None,
         schema: dict[str, Any] | None = None,
+        max_tokens: int | None = None,
     ) -> VLMResponse:
         self.calls.append((phase, user, len(images or [])))
+        self.max_tokens.append(max_tokens)
         self.used_models.append((phase, self.cfg.model_for(phase)[0]))
         answer = self.responder(phase, system, user, list(images or []), schema)
         if isinstance(answer, Exception):

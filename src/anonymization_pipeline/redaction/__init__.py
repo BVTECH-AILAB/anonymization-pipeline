@@ -20,7 +20,11 @@ from anonymization_pipeline.pipeline_config import (
 )
 from anonymization_pipeline.text import find
 from anonymization_pipeline.vlm import VLMClient, VLMError
-from anonymization_pipeline.vlm.responses import GROUPS_SCHEMA, parse_groups
+from anonymization_pipeline.vlm.responses import groups_schema, parse_groups
+
+# coreference answer: about one number, a comma and a bracket per value, plus the JSON around
+_TOKENS_PER_VALUE = 16
+_TOKENS_BASE = 64
 
 logger = logging.getLogger(__name__)
 
@@ -104,8 +108,9 @@ async def group_entities(
                 render(cfg, "redaction", "system"),
                 render(cfg, "redaction", "user", values=lines),
                 None,
-                GROUPS_SCHEMA,
+                groups_schema(len(values)),
                 parse_groups,
+                max_tokens=_TOKENS_BASE + _TOKENS_PER_VALUE * len(values),
             )
             used: set[int] = set()
             for group in groups:

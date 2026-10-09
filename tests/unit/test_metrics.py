@@ -39,10 +39,13 @@ class MeasuredClient(FakeVLM):
         user: str,
         images: list[bytes] | None = None,
         schema: dict[str, Any] | None = None,
+        max_tokens: int | None = None,
     ) -> VLMResponse:
         self.calls.append((phase, user, len(images or [])))
         _PHASE.set(phase)  # local to the task of the call
-        return await VLMClient.call(self, phase, system, user, images, schema)
+        return await VLMClient.call(
+            self, phase, system, user, images, schema, max_tokens
+        )
 
     async def _send(
         self,

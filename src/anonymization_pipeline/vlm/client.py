@@ -141,8 +141,12 @@ class VLMClient:
         user: str,
         images: list[bytes] | None = None,
         schema: dict[str, Any] | None = None,
+        max_tokens: int | None = None,
     ) -> VLMResponse:
         """One model call, with retries on transient errors.
+
+        Args:
+            max_tokens: Token limit of the answer, at most the phase one (None: the phase one).
 
         Raises:
             VLMError: The backend is unreachable or keeps failing.
@@ -167,7 +171,7 @@ class VLMClient:
                         user,
                         list(images or []),
                         schema,
-                        phase_cfg.max_tokens,
+                        min(max_tokens or phase_cfg.max_tokens, phase_cfg.max_tokens),
                         phase_cfg.timeout_s,
                     )
                     response.duration_s = time.perf_counter() - t0
@@ -233,14 +237,18 @@ class VLMClient:
         images: list[bytes] | None,
         schema: dict[str, Any],
         parse: Callable[[str], T | None],
+        max_tokens: int | None = None,
     ) -> tuple[T, VLMResponse]:
         """Call with a JSON answer: ``parse(text)`` returns None when the answer is not valid, and
-        the call is retried."""
+        the call is retried, unless the answer was cut by the token limit: with temperature 0
+        and a fixed seed the same request is cut again (a model repeating itself)."""
         for attempt in range(self.backend.retries + 1):
-            response = await self.call(phase, system, user, images, schema)
+            response = await self.call(phase, system, user, images, schema, max_tokens)
             data = parse(response.text)
             if data is not None:
                 return data, response
+            if response.truncated:
+                raise VLMError(f"answer cut at the token limit (phase {phase})")
             logger.warning(
                 "Answer is not valid JSON (%s, attempt %d/%d, truncated=%s)",
                 phase,

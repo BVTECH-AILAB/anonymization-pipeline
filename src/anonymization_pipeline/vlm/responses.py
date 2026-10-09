@@ -39,17 +39,25 @@ def entity_schema(categories: list[str]) -> dict[str, Any]:
     }
 
 
-GROUPS_SCHEMA: dict[str, Any] = {
-    "type": "object",
-    "properties": {
-        "groups": {
-            "type": "array",
-            "items": {"type": "array", "items": {"type": "integer"}},
-        }
-    },
-    "required": ["groups"],
-    "additionalProperties": False,
-}
+def groups_schema(values: int) -> dict[str, Any]:
+    """JSON schema of a coreference answer for ``values`` numbered values: bounded lists, so a
+    model repeating itself cannot write past them."""
+    return {
+        "type": "object",
+        "properties": {
+            "groups": {
+                "type": "array",
+                "maxItems": values,
+                "items": {
+                    "type": "array",
+                    "maxItems": values,
+                    "items": {"type": "integer", "minimum": 1, "maximum": values},
+                },
+            }
+        },
+        "required": ["groups"],
+        "additionalProperties": False,
+    }
 
 
 def strip_fence(text: str) -> str:

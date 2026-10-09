@@ -158,6 +158,7 @@ metriche contengono solo conteggi, categorie, pagine e tempi.
 | `just test` / `just test-cov` | Unit test / con coverage (minimo 80%) |
 | `just test-vlm` | Test di integrazione con il VLM reale (nel container `app`) |
 | `just audit` | Vulnerabilità nelle dipendenze |
+| `just docs-pdf` | Rigenera il PDF di documentazione tecnica (`docs/architettura-anonymization-pipeline.pdf`) |
 
 Gli extra opzionali `ner` (torch CPU + transformers) e `docling` sono
 nell'immagine Docker; in locale `uv sync --all-extras` li installa, e

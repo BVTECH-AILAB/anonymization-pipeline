@@ -78,3 +78,9 @@ test-cov:
 # Known vulnerabilities in the dependencies
 audit:
     uv run pip-audit --skip-editable
+
+# --- Docs ---
+
+# Technical documentation PDF (docs/architettura-anonymization-pipeline.pdf, BV TECH style)
+docs-pdf:
+    uv run scripts/docs/architettura.py

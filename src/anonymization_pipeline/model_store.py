@@ -13,7 +13,7 @@ import logging
 
 import httpx
 
-from anonymization_pipeline.config import Settings, get_settings, log_obsolete
+from anonymization_pipeline.config import Settings, get_settings
 from anonymization_pipeline.detectors.base import DetectorUnavailable
 from anonymization_pipeline.detectors.ner import NER_INSTALLED
 from anonymization_pipeline.detectors.ner import download as download_ner
@@ -32,7 +32,6 @@ logger = logging.getLogger(__name__)
 async def download_all(settings: Settings, http: httpx.AsyncClient) -> bool:
     """Download every missing model of the configuration; return True if all are available."""
     cfg = load_pipeline_config(settings)
-    log_obsolete(settings)
     ok = True
     client = create_client(cfg, http)
     for name in cfg.models:

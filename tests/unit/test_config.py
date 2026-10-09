@@ -71,10 +71,3 @@ def test_make_settings_ignores_environment_and_dotenv(
 
     assert settings.allow_transcript is False
     assert settings.max_jobs == Settings.model_fields["max_jobs"].default
-
-
-def test_obsolete_settings_are_reported() -> None:
-    assert make_settings().obsolete() == []
-    settings = make_settings(vlm_model="gemma4:e4b-it-qat", vlm_context="8192")
-
-    assert settings.obsolete() == ["ANONPIP_VLM_MODEL", "ANONPIP_VLM_CONTEXT"]

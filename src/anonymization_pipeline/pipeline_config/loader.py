@@ -110,11 +110,6 @@ def _user_file(path: str) -> dict:
     except OSError as exc:
         raise ValueError(f"Pipeline configuration file not readable: {path}") from exc
     layer = parse_yaml(text, path)
-    if "model" in layer:
-        raise ValueError(
-            f"{path}: the 'model' section is now 'generation'; the VLMs and their context are "
-            "in the models file (ANONPIP_MODELS_FILE)"
-        )
     if owned := [key for key in SETTINGS_KEYS if _has(layer, key)]:
         raise ValueError(
             f"{path}: keys owned by the ANONPIP_* settings: {', '.join(owned)} "

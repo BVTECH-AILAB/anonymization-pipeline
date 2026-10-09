@@ -10,7 +10,6 @@ When you add a setting, add it in three places: here, ``.env.example`` and
 ``docs/DEPLOY_HANDOVER.md``.
 """
 
-import logging
 from functools import lru_cache
 from typing import Literal
 
@@ -22,8 +21,6 @@ VLMBackend = Literal["ollama", "openai"]
 RedactionMode = Literal["pseudonym", "tag", "redaction"]
 VerificationMode = Literal["off", "report", "fix", "block"]
 ExtractionEngine = Literal["docling", "vlm"]
-
-logger = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
@@ -67,10 +64,6 @@ class Settings(BaseSettings):
     # Optional YAML file with the VLM catalog and the model of each phase
     # (see resources/models.yaml, the default when empty).
     models_file: str = ""
-    # Obsolete, replaced by the models file: read only to warn whoever still
-    # sets them (/readyz and the startup log), never used.
-    vlm_model: str = ""
-    vlm_context: str = ""
     # Credential: key or passphrase of the pseudonym map. When empty, requests
     # in pseudonym mode must send their own key.
     vault_key: str = ""
@@ -86,14 +79,6 @@ class Settings(BaseSettings):
     # A request may ask for the transcript IN CLEAR TEXT (debugging the web UI).
     # Forced off in prod by ``_enforce_prod_privacy``.
     allow_transcript: bool = False
-
-    def obsolete(self) -> list[str]:
-        """``ANONPIP_*`` variables still set although the service ignores them."""
-        return [
-            f"ANONPIP_{name.upper()}"
-            for name in ("vlm_model", "vlm_context")
-            if getattr(self, name)
-        ]
 
     @field_validator("log_level")
     @classmethod
@@ -128,12 +113,3 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Return the process-wide settings, built once."""
     return Settings()
-
-
-def log_obsolete(settings: Settings) -> None:
-    """Warn about the obsolete ``ANONPIP_*`` variables still set (service and model download)."""
-    for name in settings.obsolete():
-        logger.warning(
-            "Obsolete setting %s ignored: the VLMs are in the models file (ANONPIP_MODELS_FILE)",
-            name,
-        )

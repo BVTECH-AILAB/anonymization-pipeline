@@ -49,30 +49,13 @@ Key = Annotated[
 KeyHeader = Annotated[str | None, Header(max_length=200)]
 
 
-ObsoleteModel = Annotated[
-    str | None,
-    Form(max_length=200, deprecated=True, description="obsolete: use model_<phase>"),
-]
-
-
 def phase_models(
-    obsolete: str | None,
     extraction: str | None,
     detection: str | None,
     redaction: str | None,
     verification: str | None,
 ) -> dict[str, str]:
-    """The ``model_<phase>`` form fields as phase -> model, only the phases with a value.
-
-    Raises:
-        BadRequestError: The request still sends the single ``model`` field.
-    """
-    if obsolete:
-        # an old client choosing a model would otherwise get the defaults without knowing it
-        raise BadRequestError(
-            "Il campo model non esiste più: usare model_extraction, model_detection, "
-            "model_redaction e model_verification (vedi GET /models)."
-        )
+    """The ``model_<phase>`` form fields as phase -> model, only the phases with a value."""
     chosen = {
         "extraction": extraction,
         "detection": detection,
@@ -95,7 +78,6 @@ async def anonymize(
     mode: Mode = None,
     verification: Verification = None,
     extraction: Extraction = None,
-    model: ObsoleteModel = None,
     model_extraction: Model = None,
     model_detection: Model = None,
     model_redaction: Model = None,
@@ -108,7 +90,7 @@ async def anonymize(
     output: Annotated[Literal["zip", "json"], Query(alias="format")] = "zip",
 ) -> Response:
     models = phase_models(
-        model, model_extraction, model_detection, model_redaction, model_verification
+        model_extraction, model_detection, model_redaction, model_verification
     )
     data = await read_upload(file, service.settings)
     cfg = await service.request_config(

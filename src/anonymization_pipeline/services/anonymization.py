@@ -368,7 +368,6 @@ class AnonymizationService:
             "mode": self.config.phases.redaction.mode,
             "verification": self.config.phases.verification.mode,
             "active_categories": len(self.config.active()),
-            "warnings": self.settings.obsolete(),
         }
 
 

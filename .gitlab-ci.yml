@@ -10,11 +10,13 @@ default:
 
 variables:
   IMAGE_NAME: anonymization-pipeline
+  WEB_IMAGE_NAME: anonymization-pipeline-web
   REGISTRY: harbor.agenas.oci
   REPO_OWNER: agenas
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
   GIT_DEPTH: "0"
   UV_IMAGE: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+  NODE_IMAGE: node:24-alpine
 
 stages:
   - generate-vars
@@ -91,6 +93,19 @@ tests:
     reports:
       junit: junit.xml
 
+# Web UI (frontend/): type check, unit tests and production build.
+frontend-tests:
+  extends: .quality-base
+  script:
+    - >
+      docker run --rm --user "$(id -u):$(id -g)"
+      -v "$CI_PROJECT_DIR/frontend":/web -w /web
+      -e HOME=/tmp -e npm_config_cache=/tmp/npm-cache
+      "$NODE_IMAGE" sh -c
+      "npm ci --no-audit --no-fund &&
+      npm test &&
+      npm run build"
+
 # Analysis only: allow_failure so an unreachable Sonar never blocks the pipeline.
 build-sonar:
   stage: build-sonar
@@ -121,6 +136,9 @@ build-image:
     - echo "Build $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX"
     - docker build --target runtime -t $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX .
     - docker push $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX
+    - echo "Build $REGISTRY/$REPO_OWNER/$WEB_IMAGE_NAME:$IMAGE_TAG_SUFFIX"
+    - docker build -t $REGISTRY/$REPO_OWNER/$WEB_IMAGE_NAME:$IMAGE_TAG_SUFFIX frontend
+    - docker push $REGISTRY/$REPO_OWNER/$WEB_IMAGE_NAME:$IMAGE_TAG_SUFFIX
 
 download-harbor-csv:
   stage: download-harbor-csv
@@ -131,26 +149,27 @@ download-harbor-csv:
   script:
     - echo "Controllo scansione per il tag $IMAGE_TAG_SUFFIX..."
     - |
-      STATUS="running"
-      while [ "$STATUS" != "Success" ]; do
-        echo "Stato scansione: $STATUS... attendo 10 secondi"
-        sleep 10
-        STATUS=$(curl -u "$HARBOR_CREDENTIALS" -s -X GET \
-          "$REGISTRY/api/v2.0/projects/$REPO_OWNER/repositories/$IMAGE_NAME/artifacts/$IMAGE_TAG_SUFFIX?with_scan_overview=true" \
-          | jq -r '.scan_overview | to_entries[0].value.scan_status // "Not Scanned"')
-        if [ "$STATUS" == "Error" ]; then echo "Errore nella scansione su Harbor"; exit 1; fi
-        if [ "$STATUS" == "Not Scanned" ]; then echo "Scansione non ancora partita"; STATUS="waiting"; fi
+      for NAME in "$IMAGE_NAME" "$WEB_IMAGE_NAME"; do
+        STATUS="running"
+        while [ "$STATUS" != "Success" ]; do
+          echo "Stato scansione di $NAME: $STATUS... attendo 10 secondi"
+          sleep 10
+          STATUS=$(curl -u "$HARBOR_CREDENTIALS" -s -X GET \
+            "$REGISTRY/api/v2.0/projects/$REPO_OWNER/repositories/$NAME/artifacts/$IMAGE_TAG_SUFFIX?with_scan_overview=true" \
+            | jq -r '.scan_overview | to_entries[0].value.scan_status // "Not Scanned"')
+          if [ "$STATUS" == "Error" ]; then echo "Errore nella scansione su Harbor"; exit 1; fi
+          if [ "$STATUS" == "Not Scanned" ]; then echo "Scansione non ancora partita"; STATUS="waiting"; fi
+        done
+        curl -u "$HARBOR_CREDENTIALS" -s -X GET \
+          "$REGISTRY/api/v2.0/projects/$REPO_OWNER/repositories/$NAME/artifacts/$IMAGE_TAG_SUFFIX/additions/vulnerabilities" \
+          -H "Accept: application/json" | jq -r '
+            ( .[ ] | .vulnerabilities ) as $vulns |
+            ["CVE_ID", "Severity", "Package", "Version", "Fix_Version", "Description"],
+            ($vulns[] | [.id, .severity, .package, .version, .fix_version, .description])
+            | @csv' > "report_vulnerabilita_${NAME}_$IMAGE_TAG_SUFFIX.csv"
       done
-    - |
-      curl -u "$HARBOR_CREDENTIALS" -s -X GET \
-        "$REGISTRY/api/v2.0/projects/$REPO_OWNER/repositories/$IMAGE_NAME/artifacts/$IMAGE_TAG_SUFFIX/additions/vulnerabilities" \
-        -H "Accept: application/json" | jq -r '
-          ( .[ ] | .vulnerabilities ) as $vulns |
-          ["CVE_ID", "Severity", "Package", "Version", "Fix_Version", "Description"],
-          ($vulns[] | [.id, .severity, .package, .version, .fix_version, .description])
-          | @csv' > report_vulnerabilita_$IMAGE_TAG_SUFFIX.csv
   artifacts:
     when: always
     paths:
-      - report_vulnerabilita_$IMAGE_TAG_SUFFIX.csv
+      - report_vulnerabilita_*_$IMAGE_TAG_SUFFIX.csv
     expire_in: 1 month

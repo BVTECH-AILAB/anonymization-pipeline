@@ -95,11 +95,13 @@ describe("storico", () => {
     expect(await storico.elenco()).toEqual([]);
   });
 
-  it("non legge le esecuzioni della versione precedente (database con le chiavi in italiano)", async () => {
-    const vecchio = await openDB("anonimizzatore-vlm", 1, { upgrade(d) { d.createObjectStore("esecuzioni", { keyPath: "id" }); } });
-    await vecchio.put("esecuzioni", { id: "vecchia", salvato: "2026-01-01T00:00:00.000Z", report: { conteggi: {}, tempi_s: {} } });
-    vecchio.close();
-    expect((await storico.elenco()).map((e) => e.id)).not.toContain("vecchia");
+  it("non legge le esecuzioni delle versioni precedenti (chiavi in italiano, un solo modello)", async () => {
+    for (const nome of ["anonimizzatore-vlm", "anonpip-storico"]) {
+      const vecchio = await openDB(nome, 1, { upgrade(d) { d.createObjectStore("esecuzioni", { keyPath: "id" }); } });
+      await vecchio.put("esecuzioni", { id: `vecchia-${nome}`, salvato: "2026-01-01T00:00:00.000Z", report: { model: { name: "x" } } });
+      vecchio.close();
+    }
+    expect((await storico.elenco()).map((e) => e.id).filter((id) => id.startsWith("vecchia"))).toEqual([]);
   });
 });
 
@@ -117,11 +119,10 @@ describe("nomi", () => {
     expect(nomeFonte("toString")).toBe("toString");
   });
 
-  it("modelli del report: nomi distinti in ordine di fase, anche dai report con un solo modello", () => {
+  it("modelli del report: nomi distinti in ordine di fase", () => {
     const stesso = "gemma4:e4b-it-qat";
     expect(etichettaModelli(REPORT.model)).toBe("gemma4:26b-a4b-it-qat + gemma4:e4b-it-qat");
     expect(etichettaModelli({ backend: "ollama", phases: { extraction: stesso, detection: stesso, redaction: stesso, verification: stesso } })).toBe(stesso);
-    expect(etichettaModelli({ backend: "ollama", name: stesso })).toBe(stesso); // salvato prima dei modelli per fase
   });
 
   it("avvisi del report", () => {

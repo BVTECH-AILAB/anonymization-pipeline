@@ -20,9 +20,9 @@ export interface Esecuzione {
   metriche: Metrics | null;
 }
 
-// database con il prefisso del servizio: le esecuzioni della versione precedente (report con le chiavi in
-// italiano) restano nel database vecchio e non si leggono
-const DB = "anonpip-storico";
+// le esecuzioni delle versioni precedenti (report con le chiavi in italiano, poi con un solo modello VLM)
+// restano nei database vecchi e non si leggono
+const DB = "anonpip-storico-2";
 
 let db: Promise<IDBPDatabase> | null = null;
 

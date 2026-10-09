@@ -12,9 +12,8 @@ const ESTENSIONI = ".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.webp,.txt,.md,.csv,.js
 const PREDEFINITE: Options = { models: {}, mode: "pseudonym", verification: "", extraction: "", enable: [], disable: [], transcript: false, detectors: null };
 
 
-/** "rilevamento gemma4:e4b-it-qat" per le fasi con un modello scelto (le opzioni salvate prima dei modelli
- *  per fase non hanno models). */
-const modelliScelti = (o: Options) => FASI_VLM.filter((f) => o.models?.[f]).map((f) => `${nomeFase(f)} ${o.models[f]}`);
+/** "rilevamento gemma4:e4b-it-qat" per le fasi con un modello scelto. */
+const modelliScelti = (o: Options) => FASI_VLM.filter((f) => o.models[f]).map((f) => `${nomeFase(f)} ${o.models[f]}`);
 
 function Avanzamento({ d }: { d: Documento }) {
   const l = d.lavoro;

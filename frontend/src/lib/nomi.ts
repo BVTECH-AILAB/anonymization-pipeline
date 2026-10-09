@@ -60,12 +60,8 @@ export const nomeFonte = (v: string) => nome(FONTI, v);
 
 export const FASI_VLM: VlmPhase[] = ["extraction", "detection", "redaction", "verification"];
 
-/** Modelli di un report: i nomi distinti in ordine di fase ("a + b"); il nome unico nei report precedenti. */
-export function etichettaModelli(m: Report["model"]): string {
-  if (!m.phases) return m.name ?? "";
-  const phases = m.phases;
-  return [...new Set(FASI_VLM.map((f) => phases[f]))].join(" + ");
-}
+/** Modelli di un report: i nomi distinti in ordine di fase ("a + b"). */
+export const etichettaModelli = (m: Report["model"]) => [...new Set(FASI_VLM.map((f) => m.phases[f]))].join(" + ");
 
 /** "extraction_truncated:page_3" -> "estrazione troncata (pagina 3)", "ner_unavailable" -> "ner non disponibile". */
 export function testoAvviso(a: string): string {

@@ -11,9 +11,12 @@ import { useSessione } from "../stato/sessione";
 
 interface Dati { report: Report; metriche: Metrics | null; titolo: string }
 
-// file di questa versione del servizio (quelli precedenti hanno le chiavi in italiano)
-const eReport = (j: unknown): j is Report => !!j && typeof j === "object" && "counts" in j && "times_s" in j;
-const eMetriche = (j: unknown): j is Metrics => !!j && typeof j === "object" && "configuration" in j && "throughput" in j;
+// file di questa versione del servizio: le precedenti hanno le chiavi in italiano o un solo modello VLM
+const oggetto = (j: unknown): j is Record<string, unknown> => !!j && typeof j === "object";
+const eReport = (j: unknown): j is Report =>
+  oggetto(j) && "counts" in j && "times_s" in j && oggetto(j.model) && oggetto(j.model.phases);
+const eMetriche = (j: unknown): j is Metrics =>
+  oggetto(j) && "throughput" in j && oggetto(j.configuration) && oggetto(j.configuration.models);
 
 const n = (v: number | null | undefined, cifre = 1) =>
   v === null || v === undefined ? "–" : v.toLocaleString("it-IT", { maximumFractionDigits: cifre });
@@ -123,7 +126,7 @@ function Contenuto({ report: r, metriche: m, titolo }: Dati) {
     <>
       <p className="nota">
         {titolo} · impronta <span className="mono">{r.document.sha256.slice(0, 12)}</span> ·{" "}
-        <span title={r.model.phases ? FASI_VLM.map((f) => `${nomeFase(f)}: ${r.model.phases?.[f]}`).join("\n") : undefined}>
+        <span title={FASI_VLM.map((f) => `${nomeFase(f)}: ${r.model.phases[f]}`).join("\n")}>
           {etichettaModelli(r.model)}
         </span>{" "}({r.model.backend}) ·
         modalità {nomeModalita(r.mode)}{m ? ` · estrazione ${m.configuration.extraction} · concorrenza ${m.configuration.concurrency}` : ""}

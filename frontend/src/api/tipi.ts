@@ -78,8 +78,7 @@ export interface Report {
   version: string;
   document: { sha256: string; kind: string; pages: number };
   extraction: { docling: number[]; vlm: { page: number; reason: string }[] };
-  // name: report salvati prima dei modelli per fase (un solo modello)
-  model: { backend: string; phases?: Record<VlmPhase, string>; name?: string };
+  model: { backend: string; phases: Record<VlmPhase, string> };
   mode: string;
   counts: Record<string, number>;
   entities: { replacement: string; category: string; variants: number; sources: string[]; occurrences: number | null }[];
@@ -112,7 +111,7 @@ export interface Metrics {
     concurrency: number;
     extraction: string;
     detectors: string[];
-    eponym_filter?: boolean; // assente nelle metriche precedenti
+    eponym_filter: boolean;
     passes: number;
     verification: string;
   };
@@ -173,7 +172,6 @@ export interface Status {
   mode: string;
   verification: string;
   active_categories: number;
-  warnings?: string[]; // variabili ANONPIP_* obsolete ancora impostate (assente nei servizi precedenti)
 }
 
 export interface Categories {

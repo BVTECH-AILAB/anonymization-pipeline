@@ -51,9 +51,10 @@ function scrivi(k: string, v: string) {
   }
 }
 
-// chiavi di sessionStorage (prefisso anonpip): quelle della versione precedente non si leggono
+// chiavi di sessionStorage (prefisso anonpip): quelle delle versioni precedenti non si leggono
+// (lavori.2: opzioni con un modello per fase e i rilevatori)
 const CHIAVE = "anonpip.chiave";
-const LAVORI = "anonpip.lavori";
+const LAVORI = "anonpip.lavori.2";
 
 const FINITI = new Set<JobStatus>(["completed", "rejected", "error", "cancelled"]);
 

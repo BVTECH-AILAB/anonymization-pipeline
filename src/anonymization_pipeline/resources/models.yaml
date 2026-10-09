@@ -23,6 +23,9 @@ models:
   - name: glm-ocr
     context: 8192                # image + page transcription; ~3 GB, entirely on the GPU
     vision: true
+  - name: gemma4:26b-a4b-it-qat
+    context: 8192                # image + page transcription; ~3 GB, entirely on the GPU
+    vision: true
 
 phases:
   extraction: glm-ocr

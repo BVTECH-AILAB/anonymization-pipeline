@@ -42,7 +42,7 @@ generation:
 images:
   pdf_dpi: 200              # rendering resolution of PDF pages (native ones too: the VLM uses the image
                             # in detection and verification)
-  max_side_px: 2048         # longest side of the page image sent to the model
+  max_side_px: 1600         # longest side of the page image sent to the model
   format: png               # png | jpeg
   jpeg_quality: 90
   max_pixels: 120000000     # larger images are rejected before decoding (decompression bomb)

@@ -7,6 +7,7 @@ them all: it builds them, only when active in the configuration, in the reliabil
 the union.
 """
 
+from anonymization_pipeline.detectors import eponyms, labels, ner, rules
 from anonymization_pipeline.detectors.base import (
     Detector,
     DetectorUnavailable,
@@ -34,4 +35,25 @@ def active(cfg: PipelineConfig) -> list[Detector]:
     return out
 
 
-__all__ = ["ORDER", "Detector", "DetectorUnavailable", "Proposal", "active"]
+def load_resources() -> None:
+    """Read and validate every detector file (then cached), whether the detector is on or not.
+
+    Called at startup: a wrong file stops the service instead of failing the first request.
+
+    Raises:
+        ValueError: If a file is invalid (the message names the file).
+    """
+    rules.rules()
+    labels.rules()
+    ner.vocabulary()
+    eponyms.lists()
+
+
+__all__ = [
+    "ORDER",
+    "Detector",
+    "DetectorUnavailable",
+    "Proposal",
+    "active",
+    "load_resources",
+]

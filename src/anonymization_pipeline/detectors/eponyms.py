@@ -21,7 +21,12 @@ def _normalize(s: str) -> str:
 
 
 @functools.cache
-def _lists() -> tuple[frozenset[str], frozenset[str], frozenset[str]]:
+def lists() -> tuple[frozenset[str], frozenset[str], frozenset[str]]:
+    """Eponyms, drugs and common words of ``eponyms.yaml`` (read at first use, then cached).
+
+    Raises:
+        ValueError: On an unknown key.
+    """
     data = read_yaml(FILE)
     if unknown := set(data) - {"eponyms", "drugs", "common_words"}:
         raise ValueError(f"{FILE}: unknown keys {', '.join(sorted(unknown))}")
@@ -35,7 +40,7 @@ def _lists() -> tuple[frozenset[str], frozenset[str], frozenset[str]]:
 def is_excluded(value: str, category: str) -> bool:
     """True for an eponym (proposed as a person or a drug), or a drug or a common word proposed as
     a person."""
-    eponyms, drugs, common = _lists()
+    eponyms, drugs, common = lists()
     v = _normalize(value)
     if category == "FARMACO":
         return v.lower() in eponyms

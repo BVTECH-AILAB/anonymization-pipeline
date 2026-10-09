@@ -11,6 +11,7 @@ from fastapi import Depends, Request
 
 from anonymization_pipeline import __version__
 from anonymization_pipeline.config import Settings
+from anonymization_pipeline.detectors import load_resources
 from anonymization_pipeline.detectors.base import DetectorUnavailable
 from anonymization_pipeline.detectors.ner import model_dir
 from anonymization_pipeline.domain import Result
@@ -72,6 +73,7 @@ class AnonymizationService:
     ) -> None:
         self.settings = settings
         self.config = load_pipeline_config(settings)
+        load_resources()
         self._client_factory = client_factory
         self._slots = slots
 

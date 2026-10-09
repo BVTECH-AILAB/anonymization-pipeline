@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 
 from anonymization_pipeline import __version__
 from anonymization_pipeline.config import Settings
+from anonymization_pipeline.detectors import ner
 from anonymization_pipeline.errors import NotFoundError
 from anonymization_pipeline.extraction import native_pdf
 from anonymization_pipeline.ingest import load_pdf
@@ -139,6 +140,20 @@ def test_invalid_pipeline_file_stops_the_startup(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="phases.redaction.mode"), TestClient(app):
         pass
+
+
+def test_invalid_detector_file_stops_the_startup(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(ner, "read_yaml", lambda name: {"label_map": {}})
+    ner.vocabulary.cache_clear()
+    app = create_app(make_settings())
+
+    try:
+        with pytest.raises(ValueError, match="detectors/ner.yaml"), TestClient(app):
+            pass
+    finally:
+        ner.vocabulary.cache_clear()
 
 
 # --- anonymization and restore -------------------------------------------------------------------

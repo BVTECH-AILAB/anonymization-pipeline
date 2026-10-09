@@ -1,14 +1,34 @@
 [project]
 name = "anonymization-pipeline"
 version = "0.1.0"
-description = "AGENAS MIA platform service (generated from agenas-python-template)"
+description = "Anonymization of Italian documents (PDF, images, text) with a local VLM, docling and rule/label/NER detectors"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "cryptography>=42",
     "fastapi>=0.115",
     "httpx>=0.28",
+    "pillow>=10.3",
     "pydantic>=2.10",
     "pydantic-settings>=2.7",
+    "pypdfium2>=4.30,<6",
+    "python-multipart>=0.0.18",
+    "pyyaml>=6",
     "uvicorn[standard]>=0.34",
+]
+
+[project.optional-dependencies]
+# NER detector (phases.detection.detectors.ner). torch comes from the CPU index (see [tool.uv.sources]).
+ner = [
+    "huggingface-hub>=0.30",
+    "torch>=2.6",
+    "transformers>=4.51.3,<5.17",
+]
+# Extraction of native PDF pages (phases.extraction.native_pdf).
+docling = [
+    "docling>=2.130,<3",
+    "opencv-python-headless>=4.10",
+    "torch>=2.6",
+    "torchvision>=0.21",
 ]
 
 [dependency-groups]
@@ -21,6 +41,21 @@ dev = [
     "ruff>=0.15",
     "ty>=0.0.1a0",
 ]
+
+[tool.uv]
+# docling pulls opencv-python, which needs X11 libraries missing from the slim image: the headless
+# build (in the docling extra) provides the same cv2 module.
+override-dependencies = ["opencv-python; sys_platform == 'never'"]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+# PyPI wheels of torch are built for CUDA: the GPU is used only by the VLM backend.
+torch = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }
 
 [build-system]
 requires = ["hatchling"]

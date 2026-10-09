@@ -408,7 +408,9 @@ CATALOG = {"big:1": 16384, "small:1": 4096, "spare:1": 4096}
 
 def _catalog_client(make_client: ClientFactory, tmp_path: Path) -> TestClient:
     return make_client(
-        models_file=models_file(tmp_path, CATALOG, {"detection": "small:1"})
+        models_file=models_file(
+            tmp_path, CATALOG, {"detection": "small:1"}, text_only=("spare:1",)
+        )
     )
 
 
@@ -427,9 +429,9 @@ def test_model_per_phase(
             "verification": "big:1",
         },
         "models": [  # only the catalog: other:7b is not offered
-            {"name": "big:1", "context": 16384, "present": True},
-            {"name": "small:1", "context": 4096, "present": False},
-            {"name": "spare:1", "context": 4096, "present": False},
+            {"name": "big:1", "context": 16384, "vision": True, "present": True},
+            {"name": "small:1", "context": 4096, "vision": True, "present": False},
+            {"name": "spare:1", "context": 4096, "vision": False, "present": False},
         ],
         "error": None,
     }

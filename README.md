@@ -50,8 +50,9 @@ file -> ingest -> estrazione -> rilevamento -> censura -> verifica -> Markdown c
 - Docker con compose, `uv`, `just`.
 - Per il modello predefinito (`gemma4:26b-a4b-it-qat`, circa 16 GB) una GPU
   NVIDIA da 24 GB con NVIDIA Container Toolkit (su WSL2: Docker Desktop con
-  backend WSL2). Con 8 GB: `ANONPIP_MODELS_FILE=/app/config/models.8gb.yaml`
-  (`gemma4:e4b-it-qat`). Su sola CPU funziona, ma solo per prove.
+  backend WSL2). Con 8 GB: un file dei modelli in `./config` con
+  `gemma4:e4b-it-qat` e `ANONPIP_MODELS_FILE=/app/config/<file>.yaml`. Su sola
+  CPU funziona, ma solo per prove.
 
 ## Primo avvio
 
@@ -119,7 +120,8 @@ metriche contengono solo conteggi, categorie, pagine e tempi.
   `src/anonymization_pipeline/resources/models.yaml`, oppure quello indicato
   da `ANONPIP_MODELS_FILE` (in compose `./config` è montata su
   `/app/config`). Contiene il catalogo (`models`: nome e contesto di ogni
-  modello) e il modello predefinito di ogni fase (`phases`: estrazione,
+  modello, e se accetta immagini: `vision`, da `ollama show <modello>`) e il
+  modello predefinito di ogni fase (`phases`: estrazione,
   rilevamento, censura, verifica). `just models` scarica tutto il catalogo;
   a runtime ogni richiesta può scegliere, fase per fase, un modello del
   catalogo presente nel backend (campi `model_extraction`,

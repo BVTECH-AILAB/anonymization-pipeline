@@ -30,6 +30,7 @@ data:
     models:
       - name: gemma4:26b-a4b-it-qat
         context: 16384
+        vision: true
     phases:
       extraction: gemma4:26b-a4b-it-qat
       detection: gemma4:26b-a4b-it-qat

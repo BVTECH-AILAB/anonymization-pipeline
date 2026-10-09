@@ -61,6 +61,7 @@ class Generation(_Section):
 
 class ModelSpec(_Section):
     context: int = Field(ge=1024)
+    vision: bool  # accepts images
 
 
 class Images(_Section):
@@ -206,6 +207,11 @@ class PipelineConfig(_Section):
                 raise ValueError(
                     f"phases.{phase}.model: {name} is not in the models file"
                 )
+        extraction = self.phases.extraction.model
+        if not self.models[extraction].vision:
+            raise ValueError(
+                f"phases.extraction.model: {extraction} has no vision, it cannot read pages"
+            )
         reg = registry()
         if unknown := sorted(set(self.categories) - set(reg.descriptions)):
             raise ValueError(f"unknown categories: {', '.join(unknown)}")

@@ -5,6 +5,9 @@
 #    models: the catalog. `just models` downloads every entry before the service starts, and a
 #            request may choose for each phase only a model listed here (and present in the
 #            backend, see GET /models). context = num_ctx of the model (Ollama), >= 1024.
+#            vision = the model accepts images (`ollama show <model>`: "vision" among the
+#            capabilities). Required for extraction (it reads scanned pages); detection sends
+#            the page image only to models with vision, text-only models get the Markdown alone.
 #    phases: the default model of each phase; every phase must be listed and its model must be
 #            in the catalog.
 #
@@ -16,6 +19,7 @@
 models:
   - name: gemma4:26b-a4b-it-qat   # ~16 GB: 24 GB GPU
     context: 16384
+    vision: true
 
 phases:
   extraction: gemma4:26b-a4b-it-qat

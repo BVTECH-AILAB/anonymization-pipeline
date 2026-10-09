@@ -29,15 +29,23 @@ def pipeline_config(overrides: dict | None = None, **settings: Any) -> PipelineC
     return load_pipeline_config(make_settings(**settings), overrides)
 
 
-def models_file(directory: Path, models: dict[str, int], phases: dict[str, str]) -> str:
+def models_file(
+    directory: Path,
+    models: dict[str, int],
+    phases: dict[str, str],
+    text_only: tuple[str, ...] = (),
+) -> str:
     """A models file in ``directory``: catalog name -> context, phase -> model (missing phases
-    use the first model)."""
+    use the first model); every model sees images except the ``text_only`` ones."""
     first = next(iter(models))
     path = directory / "models.yaml"
     path.write_text(
         yaml.safe_dump(
             {
-                "models": [{"name": n, "context": c} for n, c in models.items()],
+                "models": [
+                    {"name": n, "context": c, "vision": n not in text_only}
+                    for n, c in models.items()
+                ],
                 "phases": {p: phases.get(p, first) for p in PHASES},
             }
         )

@@ -287,6 +287,7 @@ class AnonymizationService:
                 {
                     "name": name,
                     "context": spec.context,
+                    "vision": spec.vision,
                     "present": None
                     if available is None
                     else client.has_model(available, name),

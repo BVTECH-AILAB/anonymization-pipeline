@@ -345,3 +345,29 @@ def test_each_phase_runs_its_own_model(tmp_path: Path) -> None:
         phase: {"name": name, "context": contexts[name]}
         for phase, name in phases.items()
     }
+
+
+def test_detection_sends_the_image_only_to_models_with_vision(tmp_path: Path) -> None:
+    def run(text_only: tuple[str, ...]) -> FakeVLM:
+        directory = tmp_path / (
+            "blind" if text_only else "seer"
+        )  # the file is read once
+        directory.mkdir()
+        cfg = pipeline_config(
+            models_file=models_file(
+                directory,
+                {"seer:1": 8192, "reader:1": 8192},
+                {"detection": "reader:1"},
+                text_only,
+            )
+        )
+        model = IdealModel(VALUES, markdown={400: TEXT})
+        _, client = _run(model, cfg, "a.png", png(400))
+        return client
+
+    seen = run(())
+    assert all(n == 1 for phase, _, n in seen.calls if phase == "detection")
+    blind = run(("reader:1",))
+    assert [n for phase, _, n in blind.calls if phase == "detection"]
+    assert all(n == 0 for phase, _, n in blind.calls if phase == "detection")
+    assert all(n == 1 for phase, _, n in blind.calls if phase == "extraction")

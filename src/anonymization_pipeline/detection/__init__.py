@@ -103,6 +103,11 @@ def _anchor(
     return outcome
 
 
+def _sees_images(cfg: PipelineConfig) -> bool:
+    """Detection gets the page image: switched on and the detection model has vision."""
+    return cfg.phases.detection.use_image and cfg.model_for("detection")[1].vision
+
+
 async def _ask_vlm(
     client: VLMClient,
     cfg: PipelineConfig,
@@ -113,10 +118,11 @@ async def _ask_vlm(
 ) -> list[Proposal]:
     """Ask the model for the values of ``categories`` in ``text`` (calls assigned to the page).
 
-    Detection also gives it the page image; verification gets the clear Markdown of the page
-    (``page.text``) as reference instead, to compare with the redacted ``text``.
+    Detection also gives it the page image, when on and the model has vision; verification gets
+    the clear Markdown of the page (``page.text``) as reference instead, to compare with the
+    redacted ``text``.
     """
-    use_image = phase == "detection" and cfg.phases.detection.use_image
+    use_image = phase == "detection" and _sees_images(cfg)
     images = [page.encoded_image] if use_image and page.encoded_image else []
     values = {"original": page.text} if phase == "verification" else {}
     system = render(cfg, phase, "system")

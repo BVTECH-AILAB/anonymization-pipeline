@@ -187,8 +187,9 @@ export default function Carica() {
                         onFocus={leggiModelli}>
                   <option value="">predefinito{mod ? ` (${mod.defaults[f]})` : ""}</option>
                   {mod?.models.filter((m) => m.name !== mod.defaults[f]).map((m) => (
-                    <option key={m.name} value={m.name} disabled={m.present !== true}>
-                      {m.name}{m.present === false ? " (assente nel backend)" : ""}
+                    // l'estrazione legge le pagine scansionate: solo modelli con visione
+                    <option key={m.name} value={m.name} disabled={m.present !== true || (f === "extraction" && !m.vision)}>
+                      {m.name}{m.vision ? "" : " (solo testo)"}{m.present === false ? " (assente nel backend)" : ""}
                     </option>
                   ))}
                 </select>

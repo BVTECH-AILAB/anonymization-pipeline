@@ -35,8 +35,8 @@ def _models_file(tmp_path: Path, data: dict) -> str:
 
 TWO_MODELS = {
     "models": [
-        {"name": "big:1", "context": 16384},
-        {"name": "small:1", "context": 4096},
+        {"name": "big:1", "context": 16384, "vision": True},
+        {"name": "small:1", "context": 4096, "vision": False},
     ],
     "phases": {
         "extraction": "big:1",
@@ -55,6 +55,7 @@ def test_models_file_sets_the_catalog_and_the_model_of_each_phase(
     assert list(cfg.models) == ["big:1", "small:1"]
     assert cfg.model_for("extraction") == ("big:1", cfg.models["big:1"])
     assert cfg.model_for("detection")[1].context == 4096
+    assert cfg.models["big:1"].vision and not cfg.models["small:1"].vision
 
 
 @pytest.mark.parametrize(
@@ -63,8 +64,16 @@ def test_models_file_sets_the_catalog_and_the_model_of_each_phase(
         ({"phases": {**TWO_MODELS["phases"], "detection": "absent:1"}}, "absent:1"),
         ({"phases": {"extraction": "big:1"}}, "detection"),
         ({"other": 1}, "other"),
-        ({"models": [{"name": "big:1", "context": 8192}] * 2}, "twice"),
-        ({"models": [{"name": "big:1", "context": 100}]}, "context"),
+        ({"models": [{"name": "big:1", "context": 8192, "vision": True}] * 2}, "twice"),
+        ({"models": [{"name": "big:1", "context": 100, "vision": True}]}, "context"),
+        (
+            {"models": [{"name": "big:1", "context": 8192}]},
+            "vision",
+        ),  # must be declared
+        (
+            {"phases": {**TWO_MODELS["phases"], "extraction": "small:1"}},
+            "extraction",
+        ),  # reading scanned pages needs a model that sees images
         ({"models": []}, "models"),
     ],
 )
@@ -229,6 +238,15 @@ def test_request_chooses_the_detectors() -> None:
         pipeline_config(
             request_overrides(detectors=("eponyms",))
         )  # a filter finds nothing
+
+
+def test_request_cannot_extract_with_a_text_only_model(tmp_path: Path) -> None:
+    settings = make_settings(models_file=_models_file(tmp_path, TWO_MODELS))
+
+    with pytest.raises(ValueError, match="vision"):
+        load_pipeline_config(
+            settings, request_overrides(models={"extraction": "small:1"})
+        )
 
 
 def test_request_override_outside_the_catalog_is_rejected() -> None:

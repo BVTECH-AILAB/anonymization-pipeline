@@ -21,6 +21,9 @@ class _Strict(BaseModel):
 class _Entry(_Strict):
     name: str = Field(min_length=1)
     context: int = Field(ge=1024)
+    vision: (
+        bool  # accepts images: required to extract scans, else detection gets text only
+    )
 
 
 class _PhaseModels(_Strict):
@@ -73,7 +76,9 @@ def models_layer(path: str = "") -> dict:
     """The pipeline configuration keys that come from the models file."""
     models = read_models_file(path)
     return {
-        "models": {m.name: {"context": m.context} for m in models.models},
+        "models": {
+            m.name: {"context": m.context, "vision": m.vision} for m in models.models
+        },
         "phases": {
             phase: {"model": name} for phase, name in models.phases.model_dump().items()
         },

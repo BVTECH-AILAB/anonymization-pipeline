@@ -1,7 +1,7 @@
 """Run against a real VLM backend: `just test-vlm` (inside the app container of the compose stack).
 
 The backend URL and the models come from the container settings (ANONPIP_VLM_URL,
-ANONPIP_MODELS_FILE), e.g. ANONPIP_MODELS_FILE=/app/config/models.8gb.yaml on a small GPU.
+ANONPIP_MODELS_FILE), e.g. a file in ./config with gemma4:e4b-it-qat (ANONPIP_MODELS_FILE=/app/config/<file>.yaml) on a small GPU.
 """
 
 import asyncio

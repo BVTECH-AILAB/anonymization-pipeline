@@ -180,7 +180,7 @@ export interface Categories {
 /** GET /models: il catalogo (present: nel backend, null se non raggiungibile) e il predefinito di ogni fase. */
 export interface Models {
   defaults: Record<VlmPhase, string>;
-  models: { name: string; context: number; present: boolean | null }[];
+  models: { name: string; context: number; vision: boolean; present: boolean | null }[];
   error: string | null;
 }
 

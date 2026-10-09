@@ -239,53 +239,103 @@ def _spec(
     )
 
 
+_SECTIONS = {
+    "": (
+        "fragments",
+        "context",
+        "contexts",
+        "keywords",
+        "refinements",
+        "ocr",
+        "patterns",
+    ),
+    "context": ("window", "keyword_distance"),
+    "refinements": ("dates", "pec", "province"),
+    "ocr": ("cf_letters", "cf_digits", "cf_digit_positions", "cf_omocodia", "date"),
+}
+
+
+def _section(data: Any, name: str) -> dict:
+    """``data`` with exactly the keys of section ``name`` of ``_SECTIONS`` ("" = the file)."""
+    where = name or "file"
+    if not isinstance(data, dict):
+        raise _error(where, "expected a mapping")
+    keys = _SECTIONS[name]
+    if missing := [k for k in keys if k not in data]:
+        raise _error(where, f"missing keys: {', '.join(missing)}")
+    if unknown := sorted(set(map(str, data)) - set(keys)):
+        raise _error(where, f"unknown keys: {', '.join(unknown)}")
+    return data
+
+
+def _positive(value: Any, where: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+        raise _error(where, f"expected an integer >= 1, found {value!r}")
+    return value
+
+
+def _patterns(
+    section: Any, raw: dict[str, str], where: str
+) -> dict[str, re.Pattern[str]]:
+    if not isinstance(section, dict):
+        raise _error(where, "expected a mapping name -> regex")
+    return {str(k): _compile(v, raw, f"{where}.{k}", re.I) for k, v in section.items()}
+
+
+def _table(value: Any, where: str) -> dict[str, str]:
+    if not isinstance(value, dict):
+        raise _error(where, "expected a mapping character -> character")
+    return {str(k): str(v) for k, v in value.items()}
+
+
 @functools.cache
 def rules() -> Rules:
-    """Rules of ``rules.yaml`` (read and compiled at first use, then cached)."""
-    data = read_yaml(FILE)
-    raw = fragments(data.get("fragments") or {}, f"invalid {FILE} (fragments)")
-    contexts = {
-        str(k): _compile(v, raw, f"contexts.{k}", re.I)
-        for k, v in (data.get("contexts") or {}).items()
-    }
+    """Rules of ``rules.yaml`` (read and compiled at first use, then cached).
+
+    Raises:
+        ValueError: On a missing or unknown key, an invalid expression, an unknown category,
+            context, keyword or validator.
+    """
+    data = _section(read_yaml(FILE), "")
+    raw = fragments(data["fragments"], f"invalid {FILE} (fragments)")
+    context = _section(data["context"], "context")
+    contexts = _patterns(data["contexts"], raw, "contexts")
     if "birth" not in contexts or contexts["birth"].groups < 1:
         raise _error("contexts.birth", "required, with the keyword in the first group")
-    keywords = {
-        str(k): _compile(v, raw, f"keywords.{k}", re.I)
-        for k, v in (data.get("keywords") or {}).items()
-    }
-    date_keywords = tuple(
-        (
-            _compile(d.get("regex"), raw, f"dates {i}", re.I),
-            _category(d.get("category"), f"dates {i}"),
+    keywords = _patterns(data["keywords"], raw, "keywords")
+    refinements = _section(data["refinements"], "refinements")
+    if not isinstance(refinements["dates"], list):
+        raise _error("refinements.dates", "expected a list of {regex, category}")
+    date_keywords = []
+    for i, entry in enumerate(refinements["dates"], 1):
+        where = f"refinements.dates {i}"
+        if not isinstance(entry, dict) or set(entry) != {"regex", "category"}:
+            raise _error(where, "expected exactly the keys regex and category")
+        date_keywords.append(
+            (
+                _compile(entry["regex"], raw, where, re.I),
+                _category(entry["category"], where),
+            )
         )
-        for i, d in enumerate(data.get("dates") or [], 1)
-    )
-    context_cfg = data.get("context") or {}
-    ocr = data.get("ocr") or {}
+    ocr = _section(data["ocr"], "ocr")
+    if not isinstance(data["patterns"], list) or not data["patterns"]:
+        raise _error("patterns", "expected a non-empty list")
     specs = tuple(
-        _spec(i, d, raw, contexts, keywords)
-        for i, d in enumerate(data.get("patterns") or [], 1)
+        _spec(i, d, raw, contexts, keywords) for i, d in enumerate(data["patterns"], 1)
     )
-    if not specs:
-        raise ValueError(f"{FILE} defines no pattern")
     return Rules(
         specs=specs,
         contexts=contexts,
-        date_keywords=date_keywords,
-        pec=_compile(data.get("pec"), raw, "pec", re.I),
-        province=_compile(data.get("province"), raw, "province"),
-        window=int(context_cfg.get("window", 60)),
-        distance=int(context_cfg.get("keyword_distance", 40)),
-        cf_letters={str(k): str(v) for k, v in (ocr.get("cf_letters") or {}).items()},
-        cf_digits={str(k): str(v) for k, v in (ocr.get("cf_digits") or {}).items()},
-        cf_digit_positions=frozenset(
-            int(p) for p in ocr.get("cf_digit_positions") or ()
-        ),
-        cf_omocodia=str(ocr.get("cf_omocodia") or ""),
-        ocr_date=str.maketrans(
-            {str(k): str(v) for k, v in (ocr.get("date") or {}).items()}
-        ),
+        date_keywords=tuple(date_keywords),
+        pec=_compile(refinements["pec"], raw, "refinements.pec", re.I),
+        province=_compile(refinements["province"], raw, "refinements.province"),
+        window=_positive(context["window"], "context.window"),
+        distance=_positive(context["keyword_distance"], "context.keyword_distance"),
+        cf_letters=_table(ocr["cf_letters"], "ocr.cf_letters"),
+        cf_digits=_table(ocr["cf_digits"], "ocr.cf_digits"),
+        cf_digit_positions=frozenset(int(p) for p in ocr["cf_digit_positions"] or ()),
+        cf_omocodia=str(ocr["cf_omocodia"]),
+        ocr_date=str.maketrans(_table(ocr["date"], "ocr.date")),
     )
 
 

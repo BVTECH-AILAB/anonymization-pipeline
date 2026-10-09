@@ -10,10 +10,6 @@
 #  (detectors/patterns.py).
 # =============================================================================
 
-context:
-  window: 60                  # characters before the value in which contexts and keywords are searched
-  keyword_distance: 40        # a keyword counts if it is at most this far from the value, on the same line
-
 # -----------------------------------------------------------------------------
 # Fragments reused in the expressions
 # -----------------------------------------------------------------------------
@@ -45,10 +41,15 @@ fragments:
   indirizzo_citta_provincia: '[ ,]+(?P<citta2>[A-ZÀ-Ü][\wÀ-ÿ'']+(?:\s+[A-ZÀ-Ü][\wÀ-ÿ'']+)?[ ,]+\(?[A-Z]{2}\)?)(?![A-Za-z0-9])'
 
 # -----------------------------------------------------------------------------
+# Context of a value: the text before it
+# -----------------------------------------------------------------------------
+context:
+  window: 60                  # characters before the value in which contexts and keywords are searched
+  keyword_distance: 40        # a keyword counts if it is at most this far from the value, on the same line
+
 # Contexts: text preceding the value (case-insensitive).
 # 'birth' turns a date into a date of birth: the first group is the keyword
 # ("date of birth": bilingual label of CIE and passport)
-# -----------------------------------------------------------------------------
 contexts:
   birth: '(nat[oaie]\b|nascita|date of birth|data\s+di\s+n\.)[^\n]{0,40}\n?[^\n]{0,12}$'
   piva: '(p\.?\s?iva|partita\s+iva|c\.?f\.?\s*/\s*p\.?\s?iva)[^\n]{0,15}$'
@@ -72,22 +73,26 @@ keywords:
   fax: '\bfax\b'
   tel: '\btel\b|telefono|\bcell\b|cellulare'
 
-# Contexts that make a date specific (the closest one wins; the English forms are those of
-# CIE and passport). The date of birth uses the 'birth' context.
-dates:
-  - {regex: 'decedut[oaie]|decesso|\bmort[eoa]\b', category: DATA_DECESSO}
-  - {regex: 'ricover[oaie]|ricovero|dimess[oaie]|dimission[ei]', category: DATA_RICOVERO}
-  - {regex: 'referto|refertat[oa]', category: DATA_REFERTO}
-  - {regex: 'prescrizion[ei]|prescritt[oa]|ricetta', category: DATA_PRESCRIZIONE}
-  - {regex: 'visita|prestazione|esame\s+eseguito', category: DATA_VISITA}
-  - {regex: 'rilasciat[oa]|rilascio|date\s+of\s+issue', category: DATA_RILASCIO}
-  - {regex: 'scadenza|scade|valid[oa]\s+fino|date\s+of\s+expiry|expir', category: DATA_SCADENZA}
+# -----------------------------------------------------------------------------
+# Refinements of a value already found
+# -----------------------------------------------------------------------------
+refinements:
+  # Contexts that make a date specific (the closest one wins; the English forms are those of
+  # CIE and passport). The date of birth uses the 'birth' context.
+  dates:
+    - {regex: 'decedut[oaie]|decesso|\bmort[eoa]\b', category: DATA_DECESSO}
+    - {regex: 'ricover[oaie]|ricovero|dimess[oaie]|dimission[ei]', category: DATA_RICOVERO}
+    - {regex: 'referto|refertat[oa]', category: DATA_REFERTO}
+    - {regex: 'prescrizion[ei]|prescritt[oa]|ricetta', category: DATA_PRESCRIZIONE}
+    - {regex: 'visita|prestazione|esame\s+eseguito', category: DATA_VISITA}
+    - {regex: 'rilasciat[oa]|rilascio|date\s+of\s+issue', category: DATA_RILASCIO}
+    - {regex: 'scadenza|scade|valid[oa]\s+fino|date\s+of\s+expiry|expir', category: DATA_SCADENZA}
 
-# an EMAIL with this domain becomes PEC (case-insensitive)
-pec: '@(?:[\w.\-]*\.)?(?:${domini_pec})\.'
+  # an EMAIL with this domain becomes PEC (case-insensitive)
+  pec: '@(?:[\w.\-]*\.)?(?:${domini_pec})\.'
 
-# province code after an address: "TORINO TO", "Torino (TO)", "Milano, MI" (case-sensitive)
-province: '[ ,]*\(?[A-Z]{2}\)?(?![A-Za-z0-9])'
+  # province code after an address: "TORINO TO", "Torino (TO)", "Milano, MI" (case-sensitive)
+  province: '[ ,]*\(?[A-Z]{2}\)?(?![A-Za-z0-9])'
 
 # -----------------------------------------------------------------------------
 # Typical OCR errors
@@ -113,7 +118,7 @@ ocr:
 #   context_categories    {keyword: category}: the keyword closest to the value wins;
 #                         include the base category's keyword too, so "Fax ... tel 333..." stays a TELEFONO
 #   parts                 {named group: category}: the groups become separate entities (addresses)
-# Patterns of category DATA are refined with 'dates' and 'contexts.birth'.
+# Patterns of category DATA are refined with 'refinements.dates' and 'contexts.birth'.
 # -----------------------------------------------------------------------------
 patterns:
   - category: EMAIL

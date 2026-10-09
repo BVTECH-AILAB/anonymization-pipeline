@@ -1,4 +1,15 @@
-from anonymization_pipeline.detectors.rules import RulesDetector, fix_cf_ocr
+import copy
+from typing import Any
+
+import pytest
+
+from anonymization_pipeline.detectors import rules as rules_module
+from anonymization_pipeline.detectors.rules import (
+    FILE,
+    RulesDetector,
+    fix_cf_ocr,
+    rules,
+)
 from anonymization_pipeline.detectors.rules.validators import (
     luhn,
     valid_card,
@@ -90,3 +101,41 @@ def test_icd10_codes() -> None:
         for c, v in _found("Diagnosi E11.9, vitamina B12 nella norma")
         if c == "DIAGNOSI"
     } == {"E11.9"}
+
+
+def _broken(change: Any) -> dict:
+    data = copy.deepcopy(rules_module.read_yaml(FILE))
+    change(data)
+    return data
+
+
+@pytest.mark.parametrize(
+    ("change", "message"),
+    [
+        (lambda d: d.update(pec="@pec\\."), r"unknown keys: pec"),
+        (lambda d: d.pop("ocr"), r"\(file\): missing keys: ocr"),
+        (lambda d: d["context"].pop("window"), r"\(context\): missing keys: window"),
+        (lambda d: d["context"].update(window=0), r"context.window"),
+        (lambda d: d["refinements"].update(extra=1), r"unknown keys: extra"),
+        (
+            lambda d: d["refinements"]["dates"].append({"regex": "x"}),
+            r"refinements.dates 8",
+        ),
+        (
+            lambda d: d["patterns"][0].update(category="INESISTENTE"),
+            r"unknown category",
+        ),
+        (lambda d: d.update(patterns=[]), r"\(patterns\): expected a non-empty list"),
+    ],
+)
+def test_rules_file_is_strict(
+    monkeypatch: pytest.MonkeyPatch, change: Any, message: str
+) -> None:
+    data = _broken(change)
+    monkeypatch.setattr(rules_module, "read_yaml", lambda name: data)
+    rules.cache_clear()
+    try:
+        with pytest.raises(ValueError, match=message):
+            rules()
+    finally:
+        rules.cache_clear()

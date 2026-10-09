@@ -4,7 +4,7 @@
 # Three parts: the API (this service), the VLM backend (Ollama on a GPU node,
 # no egress) and the network policies that keep documents inside the cluster.
 # The web UI (anonymization-pipeline-web) is a plain nginx Deployment + Service
-# whose /api/ proxy points to the anonymization-pipeline Service.
+# with API_UPSTREAM=http://anonymization-pipeline:8000 (its /api/ proxy target).
 apiVersion: v1
 kind: ConfigMap
 metadata:

@@ -100,9 +100,12 @@ nella ConfigMap e nel codice non ha default.
 Variabili dell'immagine (già nel Dockerfile, non vanno nella ConfigMap):
 `HF_HOME=/models/hf`, `HF_HUB_OFFLINE=1`, `TRANSFORMERS_OFFLINE=1`.
 
-L'interfaccia web (nginx) fa da proxy di `/api/` verso l'API: in compose il
-servizio si chiama `app` (`frontend/nginx.conf`); nel cluster il proxy va
-puntato al Service dell'API.
+L'interfaccia web (nginx) fa da proxy di `/api/` verso l'API indicata da
+`API_UPSTREAM` (variabile del container web, default `http://app:8000`, il
+nome del servizio in compose; nel cluster:
+`API_UPSTREAM=http://anonymization-pipeline:8000`). Il proxy ammette upload
+fino a 101 MB: se si alza `ANONPIP_MAX_UPLOAD_MB` va alzato anche
+`client_max_body_size` in `frontend/nginx.conf.template`.
 
 ## Cosa fa il team piattaforma
 

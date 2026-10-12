@@ -21,6 +21,9 @@ export interface ApiError {
 export interface Residual {
   category: string;
   page: number;
+  // offset nel Markdown censurato, dove il valore e' rimasto in chiaro (assenti nei report meno recenti)
+  start?: number;
+  end?: number;
 }
 
 export interface Job {

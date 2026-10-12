@@ -194,6 +194,9 @@ mark.scelto { background: color-mix(in srgb, var(--c, #888) 55%, transparent); o
 .residuo { background: color-mix(in srgb, var(--ko) 15%, transparent); outline: 2px dashed var(--ko); outline-offset: 1px; }
 
 .dettaglio-tag { margin-top: 8px; }
+.residui { border-color: var(--ko); }
+.residui tr.scelta td { background: var(--superficie-2); }
+.pallino { display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--c); margin-right: 6px; vertical-align: -1px; }
 .legenda { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--testo-2); }
 .legenda span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: var(--c); margin-right: 4px; vertical-align: -1px; }
 

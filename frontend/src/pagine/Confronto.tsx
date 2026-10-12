@@ -1,5 +1,5 @@
 // Confronto fianco a fianco: documento originale, Markdown in chiaro, Markdown censurato, pagina per pagina,
-// con i tag evidenziati e la revisione dell'operatore.
+// con i tag evidenziati, i residui trovati dalla verifica e la revisione dell'operatore.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { categorie as leggiCategorie } from "../api/client";
@@ -8,7 +8,7 @@ import VistaOriginale from "../componenti/VistaOriginale";
 import VistaTesto from "../componenti/VistaTesto";
 import { colore, type Intervallo } from "../lib/evidenzia";
 import { etichettaModelli, nomeFonte } from "../lib/nomi";
-import { dividiPagine } from "../lib/pagine";
+import { dividiPagine, paginaDi } from "../lib/pagine";
 import { esportaRevisione, type TipoVoce, type VoceRevisione } from "../lib/revisione";
 import { useSessione } from "../stato/sessione";
 
@@ -36,6 +36,7 @@ export default function Confronto() {
   const [selezione, setSelezione] = useState<[number, number] | null>(null);
   const [categorieTutte, setCategorieTutte] = useState<string[]>([]);
   const [modulo, setModulo] = useState<{ categoria: string; nota: string }>({ categoria: "", nota: "" });
+  const [salto, setSalto] = useState(0);
 
   useEffect(() => { setPagina(1); setScelto(null); setSelezione(null); }, [d?.id]);
   useEffect(() => {
@@ -66,10 +67,16 @@ export default function Confronto() {
   const pk = pagChiaro.find((p) => p.numero === pagina) ?? pagChiaro[0];
 
   const revisione = d?.revisione ?? [];
+  const residui = useMemo<Intervallo[]>(
+    () => (r?.report.verification.residuals ?? []).flatMap((x, i) =>
+      x.start != null && x.end != null ? [{ inizio: x.start, fine: x.end, chiave: `res:${i}`, categoria: x.category, classe: "residuo" }] : []),
+    [r],
+  );
   const intCens = useMemo<Intervallo[]>(() => [
     ...(r?.tags ?? []).map((t) => ({ inizio: t.start, fine: t.end, chiave: t.replacement, categoria: t.category })),
     ...revisione.filter((v) => v.tipo === "sfuggito").map((v, i) => ({ inizio: v.inizio, fine: v.fine, chiave: `rev:${i}`, categoria: v.categoria, classe: "sfuggito" })),
-  ], [r, revisione]);
+    ...residui,
+  ], [r, revisione, residui]);
   const intChiaro = useMemo<Intervallo[]>(
     () => (chiaro?.occurrences ?? []).map((o) => ({ inizio: o.original_start, fine: o.original_end, chiave: o.replacement, categoria: o.category })),
     [chiaro],
@@ -77,6 +84,9 @@ export default function Confronto() {
 
   // scorrimento sincronizzato (in proporzione) tra i due testi
   const refCens = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (salto) refCens.current?.querySelector("mark.scelto")?.scrollIntoView({ block: "center" });
+  }, [salto]);
   const refChiaro = useRef<HTMLDivElement>(null);
   const guida = useRef<"c" | "k" | null>(null);
   const sincronizza = useCallback((da: "c" | "k") => () => {
@@ -104,6 +114,14 @@ export default function Confronto() {
   const occorrenze = scelto ? r.tags.filter((t) => t.replacement === scelto.chiave).length : 0;
 
   const aggiungi = (v: VoceRevisione) => s.aggiorna(d.id, (x) => ({ revisione: [...x.revisione, v] }));
+  const vaiA = (x: Intervallo) => {
+    setPagina(paginaDi(pagCens, x.inizio));
+    setScelto(x);
+    setSelezione(null);
+    setSalto((n) => n + 1);
+  };
+  const giaSegnalato = (x: Intervallo) => revisione.some((v) => v.tipo === "sfuggito" && v.inizio === x.inizio && v.fine === x.fine);
+  const residuoScelto = scelto?.chiave.startsWith("res:") ? scelto : null;
   const segnaTag = (tipo: TipoVoce) => {
     if (!scelto) return;
     const t = r.tags.find((x) => x.replacement === scelto.chiave && x.start === scelto.inizio) ?? r.tags.find((x) => x.replacement === scelto.chiave)!;
@@ -163,9 +181,57 @@ export default function Confronto() {
         </div>
       </div>
 
+      {r.report.verification.outcome === "residuals" && (
+        <div className="scheda residui" style={{ marginTop: 10 }}>
+          <h3 style={{ marginTop: 0 }}>Residui non censurati ({r.report.verification.residuals.length})</h3>
+          <p className="nota">
+            Valori che la verifica ha trovato ancora in chiaro nel testo censurato, evidenziati con il bordo rosso tratteggiato.
+            Segnali come sfuggiti quelli confermati, così finiscono nella revisione esportata.
+          </p>
+          {residui.length ? (
+            <table className="tabella">
+              <thead><tr><th>Categoria</th><th className="num">Pagina</th><th>Valore</th><th /></tr></thead>
+              <tbody>
+                {residui.map((x) => (
+                  <tr key={x.chiave} className={x.chiave === scelto?.chiave ? "scelta" : undefined}>
+                    <td><span className="pallino" style={{ "--c": colore(x.categoria) } as React.CSSProperties} />{x.categoria}</td>
+                    <td className="num">{paginaDi(pagCens, x.inizio)}</td>
+                    <td className="mono">{r.markdown.slice(x.inizio, x.fine)}</td>
+                    <td>
+                      <div className="riga">
+                        <button className="secondario piccolo" onClick={() => vaiA(x)}>vai</button>
+                        <button className="secondario piccolo" disabled={giaSegnalato(x)}
+                                onClick={() => aggiungi({ tipo: "sfuggito", inizio: x.inizio, fine: x.fine, categoria: x.categoria, nota: "residuo della verifica" })}>
+                          {giaSegnalato(x) ? "segnalato" : "segna come sfuggito"}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <>
+              <p className="tenue">Questo report non ha le posizioni dei residui (versione precedente del servizio): solo categoria e pagina.</p>
+              <ul>{r.report.verification.residuals.map((x, i) => <li key={i}>{x.category} · pagina {x.page}</li>)}</ul>
+            </>
+          )}
+        </div>
+      )}
+
       <div className="griglia-2" style={{ marginTop: 10 }}>
         <div className="scheda">
-          {scelto && !scelto.chiave.startsWith("rev:") ? (
+          {residuoScelto ? (
+            <div className="dettaglio-tag">
+              <h3 style={{ marginTop: 0 }}>Residuo segnalato dalla verifica</h3>
+              <dl className="coppie">
+                <dt>Categoria</dt><dd>{residuoScelto.categoria}</dd>
+                <dt>Pagina</dt><dd>{paginaDi(pagCens, residuoScelto.inizio)}</dd>
+                <dt>Valore</dt><dd className="mono">{r.markdown.slice(residuoScelto.inizio, residuoScelto.fine)}</dd>
+              </dl>
+              <p className="nota">Il valore è rimasto in chiaro nel testo censurato: la verifica lo ha trovato ma non è stato corretto.</p>
+            </div>
+          ) : scelto && !scelto.chiave.startsWith("rev:") ? (
             <div className="dettaglio-tag">
               <h3 style={{ marginTop: 0 }}>
                 <mark style={{ "--c": colore(scelto.categoria) } as React.CSSProperties}>{scelto.chiave}</mark>{" "}

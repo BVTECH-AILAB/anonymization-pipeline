@@ -109,6 +109,12 @@ function Contenuto({ report: r, metriche: m, titolo }: Dati) {
   const vlm = m?.vlm ?? r.vlm;
   const totVlm = Object.values(vlm).reduce((a, x) => ({ chiamate: a.chiamate + x.calls, tin: a.tin + x.tokens_in, tout: a.tout + x.tokens_out }), { chiamate: 0, tin: 0, tout: 0 });
   const conteggi = useMemo(() => Object.entries(r.counts).map(([nome, valore]) => ({ nome, valore })).sort((a, b) => b.valore - a.valore), [r]);
+  const residui = useMemo(() => {
+    const per: Record<string, number> = {};
+    for (const x of r.verification.residuals) per[x.category] = (per[x.category] ?? 0) + 1;
+    return Object.entries(per).map(([nome, valore]) => ({ nome, valore })).sort((a, b) => b.valore - a.valore);
+  }, [r]);
+  const pagineResidui = [...new Set(r.verification.residuals.map((x) => x.page))].sort((a, b) => a - b);
   const rilevatori = m ? m.configuration.detectors : Object.keys(r.detection.sources);
   const perPagina = useMemo(() => (m?.pages ?? []).map((p) => ({
     nome: `p. ${p.page}`,
@@ -135,7 +141,7 @@ function Contenuto({ report: r, metriche: m, titolo }: Dati) {
         <Riquadro etichetta="Tempo totale" valore={`${n(tempi.total)} s`} nota={m?.times_s.slot_wait ? `+ ${n(m.times_s.slot_wait)} s in coda` : undefined} />
         <Riquadro etichetta="Pagine" valore={String(r.document.pages)} nota={`${r.extraction.docling.length} docling · ${r.extraction.vlm.length} VLM`} />
         <Riquadro etichetta="Secondi per pagina" valore={n(m?.throughput.s_per_page ?? (tempi.total ?? 0) / Math.max(1, r.document.pages))} />
-        <Riquadro etichetta="Verifica" valore={nomeEsito(r.verification.outcome)} nota={`modalità ${nomeVerifica(r.verification.mode)} · ${r.verification.residuals.length} residui`} />
+        <Riquadro etichetta="Verifica" valore={nomeEsito(r.verification.outcome)} nota={`modalità ${nomeVerifica(r.verification.mode)} · ${r.verification.residuals.length} ${r.verification.residuals.length === 1 ? "residuo" : "residui"}`} />
         <Riquadro etichetta="Valori censurati" valore={String(Object.values(r.counts).reduce((a, b) => a + b, 0))} nota={`${r.entities.length} entità`} />
         <Riquadro etichetta="Chiamate al VLM" valore={String(totVlm.chiamate)} nota={`${n(totVlm.tin, 0)} token in · ${n(totVlm.tout, 0)} out`} />
         {m && <Riquadro etichetta="CPU / memoria" valore={`${n(m.resources.process_cpu_s)} s`} nota={`picco ${n(m.resources.process_peak_rss_mb, 0)} MB (processo)`} />}
@@ -156,6 +162,13 @@ function Contenuto({ report: r, metriche: m, titolo }: Dati) {
           <h2 style={{ marginTop: 0 }}>Valori censurati per categoria</h2>
           {conteggi.length ? <BarreOrizzontali nome="occorrenze" dati={conteggi} /> : <p className="tenue">Nessun valore censurato.</p>}
         </div>
+        {residui.length > 0 && (
+          <div className="scheda residui">
+            <h2 style={{ marginTop: 0 }}>Residui per categoria</h2>
+            <BarreOrizzontali nome="residui" dati={residui} />
+            <p className="nota">Dalla verifica: valori rimasti in chiaro nel testo censurato · pagine {pagineResidui.join(", ")}. Il dettaglio è nel Confronto.</p>
+          </div>
+        )}
       </div>
 
       {m && perPagina.length > 0 && (

@@ -181,7 +181,7 @@ export default function OpzioniRichiesta({ o, setO, predefinite, cat, mod, stato
 
       {cat && (
         <Sezione titolo="Categorie" aperta
-                 riassunto={`${accese}/${tutte.length} attive${nCat ? ` · ${nCat} modifiche` : ""}`}>
+                 riassunto={`${accese}/${tutte.length} attive${nCat ? ` · ${nCat} ${nCat === 1 ? "modifica" : "modifiche"}` : ""}`}>
           <Categorie o={o} setO={setO} cat={cat} />
         </Sezione>
       )}

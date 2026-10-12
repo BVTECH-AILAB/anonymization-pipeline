@@ -18,11 +18,14 @@ interface Props {
   onScroll?: React.UIEventHandler<HTMLDivElement>;
 }
 
+const TITOLI: Record<string, string> = { sfuggito: "segnalato come sfuggito", residuo: "residuo della verifica" };
+
 function stileMark(x: Intervallo, scelto: string | null) {
+  const segnalato = x.classe === "sfuggito" || x.classe === "residuo";
   return {
     className: [x.chiave === scelto ? "scelto" : "", x.classe ?? ""].join(" ").trim() || undefined,
-    style: { "--c": x.classe === "sfuggito" ? "var(--ko)" : colore(x.categoria) } as React.CSSProperties,
-    title: x.classe === "sfuggito" ? "segnalato come sfuggito" : x.categoria ?? "",
+    style: { "--c": segnalato ? "var(--ko)" : colore(x.categoria) } as React.CSSProperties,
+    title: [x.classe ? TITOLI[x.classe] : "", x.categoria ?? ""].filter(Boolean).join(": "),
   };
 }
 

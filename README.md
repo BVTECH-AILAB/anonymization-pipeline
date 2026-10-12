@@ -43,7 +43,9 @@ file -> ingest -> estrazione -> rilevamento -> censura -> verifica -> Markdown c
 5. **Verifica** (`verification/`): il VLM rilegge il Markdown censurato di
    ogni pagina confrontandolo con il Markdown originale in chiaro (non
    riceve l'immagine), una sola volta. Modalità `off` (nessun controllo),
-   `report` (i residui vanno nel report, il documento viene restituito) o
+   `report` (i residui vanno nel report con categoria, pagina e posizione
+   `start`/`end` nel Markdown censurato, mai il valore; il documento viene
+   restituito) o
    `block` (default: con residui il documento viene rifiutato, HTTP 422,
    mai valori nella risposta). Se la verifica non è possibile il documento
    viene rifiutato.

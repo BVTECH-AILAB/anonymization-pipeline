@@ -49,8 +49,8 @@ src/
 |---|---|
 | `GET /readyz` | Banner e pagina Stato. 200 se il servizio è pronto, 503 se non lo è, con lo stesso corpo: l'interfaccia mostra lo stato in entrambi i casi |
 | `GET /models` | Menu dei modelli VLM per fase (catalogo del file dei modelli, predefinito di ogni fase, presenza nel backend) |
-| `GET /categories` | Gruppi di categorie da abilitare o disabilitare; categorie per la revisione |
-| `POST /jobs` | Un lavoro per file (202). Campi: `file`, `mode` (`pseudonym`, `tag`, `redaction`), `model_extraction`, `model_detection`, `model_redaction`, `model_verification` (solo le fasi con un modello diverso dal predefinito), `verification` (`off`, `report`, `block`), `extraction` (`docling`, `vlm`), `enable`, `disable` (gruppi separati da virgole), `detectors` (insieme completo di rilevatori e filtri attivi, tra `vlm`, `rules`, `labels`, `ner`, `eponyms`; assente = predefiniti), `transcript`, `key` (solo in modalità pseudonimo) |
+| `GET /categories` | Gruppi e categorie da abilitare o disabilitare (le attive del servizio sono il punto di partenza); categorie per la revisione |
+| `POST /jobs` | Un lavoro per file (202). Campi: `file`, `mode` (`pseudonym`, `tag`, `redaction`), `model_extraction`, `model_detection`, `model_verification` (solo le fasi con un modello diverso dal predefinito), `verification` (`off`, `report`, `block`), `extraction` (`docling`, `vlm`), `enable`, `disable` (gruppi interi o categorie singole separati da virgole, solo le differenze dalle attive del servizio; un gruppo intero viaggia con il suo nome), `detectors` (insieme completo di rilevatori e filtri attivi, tra `vlm`, `rules`, `labels`, `ner`, `eponyms`; assente = predefiniti), `transcript`, `layout`, `key` (solo in modalità pseudonimo) |
 | `GET /jobs/{id}` | Avanzamento del lavoro: stato, fase, chiamate al VLM |
 | `GET /jobs/{id}/result` | Risultato in JSON; con `?format=zip` lo ZIP da scaricare |
 | `DELETE /jobs/{id}` | Rimuovi e Svuota sessione |
@@ -68,13 +68,15 @@ Stati, fasi, modalità, esiti e avvisi arrivano in inglese e sono mostrati in it
    chiaro viene da `transcript` + `occurrences` (se la richiesta l'ha chiesta), altrimenti da
    `POST /restore/detail` con la mappa del risultato (`encrypted_map_b64`) e la chiave della sessione.
    Pagine divise sui separatori `<!-- pagina N -->`; l'originale è il `File` caricato, mostrato nel
-   browser (pdf.js per i PDF), mai rimandato al server.
+   browser (pdf.js per i PDF), mai rimandato al server. Con la verifica in modalità `report` i residui
+   (`report.verification.residuals`: categoria, pagina, `start`/`end` nel Markdown censurato) sono
+   evidenziati nel censurato ed elencati in una sezione apposita, da cui si possono segnare come sfuggiti.
 3. **Revisione**: clic su un tag (censura errata, categoria sbagliata) o selezione di un testo nel
    censurato in vista grezza (valore sfuggito). `<impronta>.revisione.json` contiene tipo, posizione e
    lunghezza nel Markdown censurato, pagina, categorie e note: nessun valore.
 4. **Dashboard**: report e metriche di un documento della sessione, di un'esecuzione dello storico o di file
    aperti dal disco (`.report.json`, `.metriche.json` o lo ZIP del risultato) prodotti da questa versione
-   del servizio.
+   del servizio. Con residui, il grafico dei residui per categoria accanto a quello dei valori censurati.
 5. **Ripristino**: `POST /restore/detail` con il `.anon.md`, la `.mappa.enc` e la chiave.
 
 I file prodotti mantengono i nomi di sempre: `<nome>.anon.md`, `.report.json`, `.mappa.enc`,

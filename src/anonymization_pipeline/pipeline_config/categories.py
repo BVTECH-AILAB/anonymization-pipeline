@@ -15,14 +15,12 @@ class Registry:
         groups: group -> its categories.
         generic: specific category -> its generic category.
         partial: categories that hold only a part of an entity (NOME, COGNOME).
-        free_coreference: families whose different spellings may share a tag.
     """
 
     descriptions: dict[str, str]
     groups: dict[str, tuple[str, ...]]
     generic: dict[str, str]
     partial: frozenset[str] = frozenset()
-    free_coreference: frozenset[str] = frozenset()
 
     def family(self, category: str) -> str:
         """Generic category of reference: values of different families never share a tag."""
@@ -75,15 +73,12 @@ def _build(data: dict) -> Registry:
                 )
         for category in specifics:
             generic[category] = general
-    sets = {k: frozenset(data.get(k) or []) for k in ("partial", "free_coreference")}
-    for key, values in sets.items():
-        if unknown := values - set(descriptions):
-            raise ValueError(
-                f"categories.yaml: unknown categories in {key}: {', '.join(sorted(unknown))}"
-            )
-    return Registry(
-        descriptions, groups, generic, sets["partial"], sets["free_coreference"]
-    )
+    partial = frozenset(data.get("partial") or [])
+    if unknown := partial - set(descriptions):
+        raise ValueError(
+            f"categories.yaml: unknown categories in partial: {', '.join(sorted(unknown))}"
+        )
+    return Registry(descriptions, groups, generic, partial)
 
 
 @functools.cache

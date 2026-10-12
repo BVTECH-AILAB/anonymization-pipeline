@@ -63,13 +63,13 @@ def _run(
 
 
 def test_text_end_to_end_and_restore() -> None:
-    result, client = _run(IdealModel(VALUES, groups=[["Mario Rossi", "Rossi Mario"]]))
+    result, client = _run(IdealModel(VALUES))
 
     for value in VALUES:
         assert value not in result.markdown
     assert (
         "Paziente: [PERSONA_1]" in result.markdown
-        and "sig. [PERSONA_1] rientra" in result.markdown
+        and "sig. [PERSONA_2] rientra" in result.markdown
     )
     assert "[MEDICO_1]" in result.markdown and "[CODICE_FISCALE_1]" in result.markdown
     assert "[DIAGNOSI_1]" in result.markdown
@@ -101,7 +101,6 @@ def test_patient_with_an_eponym_surname_is_redacted(log_stream: io.StringIO) -> 
     )
     model = IdealModel(
         {"Parkinson Mario": "PERSONA", "Parkinson": "COGNOME"},
-        groups=[["Parkinson Mario", "Parkinson"]],
     )
     cfg = pipeline_config(
         {"categories": {"groups": {"sanitari": False}}}, default_mode="tag"
@@ -111,7 +110,7 @@ def test_patient_with_an_eponym_surname_is_redacted(log_stream: io.StringIO) -> 
 
     assert result.markdown == (
         "Paziente: [PERSONA_1]\nAffetto da morbo di Parkinson.\n"
-        "Il sig. [PERSONA_1] rientra a domicilio.\n"
+        "Il sig. [PERSONA_2] rientra a domicilio.\n"
     )
     assert result.report["verification"]["outcome"] == "ok"
     assert "Parkinson" not in log_stream.getvalue()
@@ -150,7 +149,7 @@ def test_multipage_images_extracted_by_the_vlm() -> None:
 
 
 def test_verification_compares_with_the_clear_markdown() -> None:
-    result, client = _run(IdealModel(VALUES, groups=[["Mario Rossi", "Rossi Mario"]]))
+    result, client = _run(IdealModel(VALUES))
 
     assert result.report["verification"]["outcome"] == "ok"
     prompts = [user for phase, user, _ in client.calls if phase == "verification"]
@@ -342,13 +341,11 @@ def test_each_phase_runs_its_own_model(tmp_path: Path) -> None:
     phases = {
         "extraction": "reader:1",
         "detection": "finder:1",
-        "redaction": "grouper:1",
         "verification": "checker:1",
     }
     contexts = {
         "reader:1": 16384,
         "finder:1": 8192,
-        "grouper:1": 4096,
         "checker:1": 8192,
     }
     cfg = pipeline_config(

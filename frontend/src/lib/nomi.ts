@@ -58,7 +58,7 @@ export const nomeMotivoRifiuto = (v: string) => nome(MOTIVI_RIFIUTO, v);
 export const nomeMotivoVlm = (v: string) => nome(MOTIVI_VLM, v);
 export const nomeFonte = (v: string) => nome(FONTI, v);
 
-export const FASI_VLM: VlmPhase[] = ["extraction", "detection", "redaction", "verification"];
+export const FASI_VLM: VlmPhase[] = ["extraction", "detection", "verification"];
 
 /** Modelli di un report: i nomi distinti in ordine di fase ("a + b"). */
 export const etichettaModelli = (m: Report["model"]) => [...new Set(FASI_VLM.map((f) => m.phases[f]))].join(" + ");

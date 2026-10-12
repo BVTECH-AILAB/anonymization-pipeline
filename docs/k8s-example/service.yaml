@@ -34,7 +34,6 @@ data:
     phases:
       extraction: "<vision-model>"
       detection: "<vision-model>"
-      redaction: "<vision-model>"
       verification: "<vision-model>"
 ---
 apiVersion: apps/v1

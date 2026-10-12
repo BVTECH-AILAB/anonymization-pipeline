@@ -12,7 +12,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 from anonymization_pipeline.pipeline_config.categories import registry
 
-PHASES = ("extraction", "detection", "redaction", "verification")
+PHASES = ("extraction", "detection", "verification")
 
 # prompt placeholders: phase -> key -> (allowed, required)
 PROMPTS: dict[str, dict[str, tuple[set[str], set[str]]]] = {
@@ -21,7 +21,6 @@ PROMPTS: dict[str, dict[str, tuple[set[str], set[str]]]] = {
         "system": (set(), set()),
         "user": ({"categories", "text", "page"}, {"categories", "text"}),
     },
-    "redaction": {"system": (set(), set()), "user": ({"values"}, {"values"})},
     "verification": {
         "system": (set(), set()),
         "user": (
@@ -186,9 +185,8 @@ class Detection(_Phase):
     detectors: Detectors
 
 
-class Redaction(_Phase):
+class Redaction(_Section):
     mode: Literal["pseudonym", "tag", "redaction"]
-    coreference: Literal["vlm", "exact"]
     tag_format: str
     redaction_symbol: str = Field(min_length=1)
 

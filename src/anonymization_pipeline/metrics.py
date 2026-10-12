@@ -278,7 +278,6 @@ def summarize(
         "extraction": extraction,
         "detection": detection,
         "redaction": {
-            "coreference_s": total("redaction.coreference"),
             "replacement_s": total("redaction.replacement"),
         },
         "verification": {

@@ -65,7 +65,7 @@ def test_readyz_reflects_the_vlm_backend(
         {
             "name": TEST_MODEL,
             "present": False,
-            "phases": ["extraction", "detection", "redaction", "verification"],
+            "phases": ["extraction", "detection", "verification"],
         }
     ]
 
@@ -444,7 +444,6 @@ def test_model_per_phase(
         "defaults": {
             "extraction": "big:1",
             "detection": "small:1",
-            "redaction": "big:1",
             "verification": "big:1",
         },
         "models": [  # only the catalog: other:7b is not offered
@@ -459,14 +458,17 @@ def test_model_per_phase(
     response = client.post(
         "/anonymize?format=json",
         files=_upload(),
-        data={"mode": "tag", "model_detection": "big:1", "model_redaction": "small:1"},
+        data={
+            "mode": "tag",
+            "model_detection": "big:1",
+            "model_verification": "small:1",
+        },
     )
     assert response.status_code == 200
     assert response.json()["report"]["model"]["phases"] == {
         "extraction": "big:1",
         "detection": "big:1",
-        "redaction": "small:1",
-        "verification": "big:1",
+        "verification": "small:1",
     }
 
 

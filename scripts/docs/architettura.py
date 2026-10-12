@@ -131,7 +131,6 @@ def _facts() -> dict[str, object]:
     labels = {
         "extraction": "estrazione",
         "detection": "rilevamento",
-        "redaction": "censura",
         "verification": "verifica",
     }
     for phase, model in models["phases"].items():
@@ -396,7 +395,7 @@ def flow_diagram() -> Drawing:
         ("1  Ingest", "PDF a 200 dpi, immagini, testo; pagina nativa o no"),
         ("2  Estrazione", "pagine native: docling; scansioni e immagini: VLM"),
         ("3  Rilevamento", "VLM, regole, etichette, NER in unione; ancoraggio"),
-        ("4  Censura", "coreferenza VLM, tag coerenti, sostituzione meccanica"),
+        ("4  Censura", "tag coerenti per forma, sostituzione meccanica"),
         ("5  Verifica", "il VLM confronta censurato e originale"),
     ]
     gap, w, h, y = 13, (FRAME_W - 4 * 13) / 5, 64, 132
@@ -1007,10 +1006,10 @@ def page_flow() -> list[Flowable]:
         ],
         [
             f"<b>Censura</b><br/>{c('redaction/')}",
-            "Il VLM raggruppa le varianti della stessa entità (coreferenza); il codice sostituisce "
-            "ogni forma in tutto il documento. Modalità pseudonym (tag e mappa), tag o redaction "
+            "Stessa forma (a meno di spazi e maiuscole) e stessa famiglia: stesso tag; il codice "
+            "sostituisce ogni forma in tutto il documento. Modalità pseudonym (tag e mappa), tag o redaction "
             "(simbolo fisso).",
-            "Varianti fuse solo nella stessa famiglia; mappa AES-256-GCM, chiave casuale o "
+            "Mai lo stesso tag fra famiglie diverse; mappa AES-256-GCM, chiave casuale o "
             "passphrase con scrypt, intestazione autenticata.",
         ],
         [
@@ -1223,7 +1222,7 @@ def page_operations() -> list[Flowable]:
         [
             c("categories.yaml"),
             f"Registro delle {FACTS['categories']} categorie, gruppi, "
-            "famiglie generiche, coreferenza libera.",
+            "famiglie generiche.",
         ],
         [
             c("prompts/<fase>.yaml"),

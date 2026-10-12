@@ -48,7 +48,6 @@ TWO_MODELS = {
     "phases": {
         "extraction": "big:1",
         "detection": "small:1",
-        "redaction": "small:1",
         "verification": "big:1",
     },
 }
@@ -63,6 +62,17 @@ def test_models_file_sets_the_catalog_and_the_model_of_each_phase(
     assert cfg.model_for("extraction") == ("big:1", cfg.models["big:1"])
     assert cfg.model_for("detection")[1].context == 4096
     assert cfg.models["big:1"].vision and not cfg.models["small:1"].vision
+
+
+def test_models_file_with_the_old_redaction_phase_still_loads(tmp_path: Path) -> None:
+    phases = {"extraction": "big:1", "detection": "small:1", "verification": "big:1"}
+    legacy = {**TWO_MODELS, "phases": {**phases, "redaction": "big:1"}}
+
+    cfg = pipeline_config(models_file=_models_file(tmp_path, legacy))
+
+    assert cfg.model_for("detection")[0] == "small:1"
+    with pytest.raises(ValueError, match="unknown phase"):
+        request_overrides(models={"redaction": "big:1"})
 
 
 @pytest.mark.parametrize(
@@ -302,7 +312,7 @@ def test_request_overrides_win_over_settings(tmp_path: Path) -> None:
 
     assert cfg.phases.redaction.mode == "redaction"
     assert cfg.model_for("detection")[0] == "big:1"
-    assert cfg.model_for("redaction")[0] == "small:1"
+    assert cfg.model_for("verification")[0] == "big:1"
     assert cfg.phases.verification.timeout_s == 120
 
 

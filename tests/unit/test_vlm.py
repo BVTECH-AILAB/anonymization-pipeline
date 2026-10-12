@@ -15,11 +15,7 @@ from anonymization_pipeline.vlm import (
     VLMModelMissing,
     create_client,
 )
-from anonymization_pipeline.vlm.responses import (
-    entity_schema,
-    parse_entities,
-    parse_groups,
-)
+from anonymization_pipeline.vlm.responses import entity_schema, parse_entities
 from tests.conftest import TEST_MODEL
 from tests.pipeline import models_file, pipeline_config
 
@@ -234,7 +230,12 @@ def test_call_json_retries_then_fails() -> None:
 
 def test_truncated_answer_is_not_retried() -> None:
     # temperature 0 and a fixed seed: the same request would be cut at the same point again
-    cfg = pipeline_config({"backend": {"retry_wait_s": 0, "retries": 2}})
+    cfg = pipeline_config(
+        {
+            "backend": {"retry_wait_s": 0, "retries": 2},
+            "phases": {"detection": {"max_tokens": 100}},
+        }
+    )
     seen: list[dict] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -242,7 +243,7 @@ def test_truncated_answer_is_not_retried() -> None:
         return httpx.Response(
             200,
             json={
-                "message": {"content": '{"groups": [[1], [1'},
+                "message": {"content": '{"entities": [{"text": "A'},
                 "done_reason": "length",
             },
         )
@@ -251,9 +252,7 @@ def test_truncated_answer_is_not_retried() -> None:
         run(
             cfg,
             handler,
-            lambda c: c.call_json(
-                "redaction", "S", "U", None, SCHEMA, parse_groups, max_tokens=100
-            ),
+            lambda c: c.call_json("detection", "S", "U", None, SCHEMA, parse_entities),
         )
     assert len(seen) == 1 and seen[0]["options"]["num_predict"] == 100
 
@@ -269,7 +268,7 @@ def test_truncated_answer_is_not_retried() -> None:
         run(
             sampled,
             handler,
-            lambda c: c.call_json("redaction", "S", "U", None, SCHEMA, parse_groups),
+            lambda c: c.call_json("detection", "S", "U", None, SCHEMA, parse_entities),
         )
     assert len(seen) == 3
 
@@ -349,7 +348,7 @@ def test_models_available() -> None:
     assert not client.has_model(available, "vlm:other")
 
 
-def test_parse_entities_and_groups() -> None:
+def test_parse_entities() -> None:
     assert parse_entities(
         '```json\n{"entities": [{"text": " Mario ", "category": "persona"}]}\n```'
     ) == [{"text": "Mario", "category": "PERSONA"}]
@@ -364,5 +363,3 @@ def test_parse_entities_and_groups() -> None:
         '{"entities": [{"text": "A", "category": "X"}, {"text": "A", "category": "X"}, {"text": ""}]}'
     ) == [{"text": "A", "category": "X"}]
     assert parse_entities("no json") is None
-    assert parse_groups('{"groups": [[1, 2], [3, "x", true]]}') == [[1, 2], [3]]
-    assert parse_groups("??") is None

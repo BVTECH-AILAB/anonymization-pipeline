@@ -18,7 +18,7 @@ const STATO: Status = {
   version: "0.1.0",
   backend: { kind: "ollama", reachable: true, error: null },
   models: [
-    { name: "vlm-grande:1", present: false, phases: ["extraction", "detection", "redaction", "verification"] },
+    { name: "vlm-grande:1", present: false, phases: ["extraction", "detection", "verification"] },
     { name: "vlm-piccolo:1", present: false, phases: [] }, // nel catalogo, di nessuna fase
   ],
   detectors: { vlm: true, rules: true, labels: true, eponyms: true, ner: { enabled: true, model: "ner-it", present: false, error: "modello assente" } },
@@ -43,7 +43,7 @@ describe("client API", () => {
     expect(body.get("mode")).toBe("pseudonym");
     expect(body.get("extraction")).toBe("vlm");
     expect(body.get("model_detection")).toBe("vlm-piccolo:1");
-    for (const campo of ["model", "model_extraction", "model_redaction", "model_verification"]) expect(body.has(campo)).toBe(false);
+    for (const campo of ["model", "model_extraction", "model_verification"]) expect(body.has(campo)).toBe(false);
     expect(body.get("disable")).toBe("sanitari,date");
     expect(body.get("detectors")).toBe("rules,ner");
     expect(body.has("enable")).toBe(false);

@@ -6,7 +6,7 @@ export type Phase = "ingest" | "extraction" | "detection" | "redaction" | "verif
 /** Rilevatori (vlm = il VLM nella fase di rilevamento) e filtro eponimi, accendibili per richiesta. */
 export type Rilevatore = "vlm" | "rules" | "labels" | "ner" | "eponyms";
 /** Fasi che chiamano il VLM: ognuna ha il suo modello. */
-export type VlmPhase = "extraction" | "detection" | "redaction" | "verification";
+export type VlmPhase = "extraction" | "detection" | "verification";
 export type Mode = "pseudonym" | "tag" | "redaction";
 export type VerificationMode = "off" | "report" | "block";
 export type ExtractionEngine = "docling" | "vlm";
@@ -88,7 +88,7 @@ export interface Report {
     inactive_categories: number;
     eponyms_discarded: number;
   };
-  redaction: { coreference: string; groups: number };
+  redaction: { groups: number };
   verification: {
     mode: string;
     outcome: string;
@@ -121,7 +121,7 @@ export interface Metrics {
   };
   // un oggetto per rilevatore, piu' il numero union_s
   detection: Record<string, { duration_s: number; max_page_s: number; values: number | null } | number>;
-  redaction: { coreference_s: number; replacement_s: number };
+  redaction: { replacement_s: number };
   verification: { duration_s: number };
   vlm: Record<string, VlmStats>;
   pages: {

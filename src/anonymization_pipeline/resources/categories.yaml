@@ -11,8 +11,7 @@
 #  generic: generic category -> the specific ones it contains. Used for two things:
 #   - if the model returns a specific category that is off and the generic one is on, the value
 #     is redacted with the generic one (e.g. OPERATORE_SANITARIO off, PERSONA on -> PERSONA);
-#   - coreference can put under the same tag only values of the same family
-#     (e.g. "Mario Rossi" PERSONA and "Rossi" COGNOME), never a name with an address.
+#   - only values of the same family share a tag, never a name with an address.
 # =============================================================================
 
 groups:
@@ -126,12 +125,6 @@ groups:
 # partial: categories that hold only a part of an entity. The tag of a group takes the most
 # informative category: specific (MEDICO) > generic (PERSONA) > partial (COGNOME).
 partial: [NOME, COGNOME]
-
-# free_coreference: families (generic categories, or categories without a generic one) in which the
-# model may merge different spellings of the same value ("Mario Rossi" / "ROSSI M." / "sig. Rossi").
-# In the others (codes, dates, numbers, health data) only values equal up to spaces, case and
-# punctuation are merged: two different dates or codes never share a tag.
-free_coreference: [PERSONA, LUOGO, INDIRIZZO, ORGANIZZAZIONE]
 
 generic:
   PERSONA: [NOME, COGNOME, PATERNITA_MATERNITA, MEDICO, OPERATORE_SANITARIO, FAMILIARE, CONTATTO_EMERGENZA,

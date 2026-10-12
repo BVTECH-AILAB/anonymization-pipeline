@@ -33,5 +33,4 @@ models:
 phases:
   extraction: glm-ocr
   detection: qwen3.8:27b
-  redaction: qwen3.8:27b
   verification: gemma4:26b-a4b-it-qat

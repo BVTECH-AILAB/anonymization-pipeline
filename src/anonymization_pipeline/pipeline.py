@@ -171,8 +171,7 @@ async def anonymize(
     }
     discarded_by_verification = 0
     advance("redaction")
-    with metrics.measure("redaction.coreference"):
-        groups, coreference = await group_entities(entities, client, cfg)
+    groups = group_entities(entities)
     with metrics.measure("redaction.replacement"):
         pages, occurrences = redact(texts, groups, cfg)
     mark("redaction")
@@ -252,10 +251,7 @@ async def anonymize(
             "inactive_categories": outcome.inactive_categories,
             "eponyms_discarded": outcome.eponyms_discarded,
         },
-        "redaction": {
-            "coreference": coreference["method"],
-            "groups": coreference["groups"],
-        },
+        "redaction": {"groups": len(groups)},
         "verification": verification,
         "vlm": client.summary(),
         "times_s": times,

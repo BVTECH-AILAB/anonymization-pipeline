@@ -39,13 +39,10 @@ class MeasuredClient(FakeVLM):
         user: str,
         images: list[bytes] | None = None,
         schema: dict[str, Any] | None = None,
-        max_tokens: int | None = None,
     ) -> VLMResponse:
         self.calls.append((phase, user, len(images or [])))
         _PHASE.set(phase)  # local to the task of the call
-        return await VLMClient.call(
-            self, phase, system, user, images, schema, max_tokens
-        )
+        return await VLMClient.call(self, phase, system, user, images, schema)
 
     async def _send(
         self,
@@ -93,7 +90,7 @@ def test_metrics_per_phase_and_per_page() -> None:
         "detection", "redaction", "verification", "vlm", "pages", "resources",
     }  # fmt: skip
     assert m["times_s"] == result.report["times_s"] and m["document"]["pages"] == 2
-    for phase in ("extraction", "detection", "redaction", "verification"):
+    for phase in ("extraction", "detection", "verification"):
         assert m["vlm"][phase]["calls"] == result.report["vlm"][phase]["calls"]
         assert m["vlm"][phase]["latency_s"]["max"] >= 0.01
         assert m["vlm"][phase]["tokens_out_per_s"] > 0

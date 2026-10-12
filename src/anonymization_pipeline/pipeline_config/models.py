@@ -6,6 +6,7 @@ catalog) and the choice at runtime (a request may pick, for each phase, a model 
 
 import functools
 from pathlib import Path
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
@@ -29,13 +30,23 @@ class _Entry(_Strict):
 class _PhaseModels(_Strict):
     extraction: str = Field(min_length=1)
     detection: str = Field(min_length=1)
-    redaction: str = Field(min_length=1)
     verification: str = Field(min_length=1)
 
 
 class ModelsFile(_Strict):
     models: list[_Entry] = Field(min_length=1)
     phases: _PhaseModels
+
+    @model_validator(mode="before")
+    @classmethod
+    def _legacy(cls, data: Any) -> Any:
+        """Files written when redaction had its own model still load: the key is ignored."""
+        if isinstance(data, dict) and isinstance(data.get("phases"), dict):
+            data = {
+                **data,
+                "phases": {k: v for k, v in data["phases"].items() if k != "redaction"},
+            }
+        return data
 
     @model_validator(mode="after")
     def _consistency(self) -> "ModelsFile":

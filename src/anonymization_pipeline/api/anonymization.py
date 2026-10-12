@@ -52,14 +52,12 @@ KeyHeader = Annotated[str | None, Header(max_length=200)]
 def phase_models(
     extraction: str | None,
     detection: str | None,
-    redaction: str | None,
     verification: str | None,
 ) -> dict[str, str]:
     """The ``model_<phase>`` form fields as phase -> model, only the phases with a value."""
     chosen = {
         "extraction": extraction,
         "detection": detection,
-        "redaction": redaction,
         "verification": verification,
     }
     return {phase: name for phase, name in chosen.items() if name}
@@ -80,7 +78,6 @@ async def anonymize(
     extraction: Extraction = None,
     model_extraction: Model = None,
     model_detection: Model = None,
-    model_redaction: Model = None,
     model_verification: Model = None,
     enable: Categories = None,
     disable: Categories = None,
@@ -89,9 +86,7 @@ async def anonymize(
     x_anon_key: KeyHeader = None,
     output: Annotated[Literal["zip", "json"], Query(alias="format")] = "zip",
 ) -> Response:
-    models = phase_models(
-        model_extraction, model_detection, model_redaction, model_verification
-    )
+    models = phase_models(model_extraction, model_detection, model_verification)
     data = await read_upload(file, service.settings)
     cfg = await service.request_config(
         mode, verification, extraction, models, enable, disable, detectors=detectors

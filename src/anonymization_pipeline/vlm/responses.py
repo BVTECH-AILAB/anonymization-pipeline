@@ -39,27 +39,6 @@ def entity_schema(categories: list[str]) -> dict[str, Any]:
     }
 
 
-def groups_schema(values: int) -> dict[str, Any]:
-    """JSON schema of a coreference answer for ``values`` numbered values: bounded lists, so a
-    model repeating itself cannot write past them."""
-    return {
-        "type": "object",
-        "properties": {
-            "groups": {
-                "type": "array",
-                "maxItems": values,
-                "items": {
-                    "type": "array",
-                    "maxItems": values,
-                    "items": {"type": "integer", "minimum": 1, "maximum": values},
-                },
-            }
-        },
-        "required": ["groups"],
-        "additionalProperties": False,
-    }
-
-
 def strip_fence(text: str) -> str:
     """Remove a ```...``` block that wraps the whole answer."""
     match = _FENCE.match(text)
@@ -129,16 +108,3 @@ def parse_entities(text: str) -> list[dict[str, str]] | None:
             seen.add(key)
             out.append({"text": key[0], "category": key[1]})
     return out
-
-
-def parse_groups(text: str) -> list[list[int]] | None:
-    """``[[1, 4], [2]]``; None if the answer cannot be parsed."""
-    data = parse_json(text)
-    items = data.get("groups") if isinstance(data, dict) else data
-    if not isinstance(items, list):
-        return None
-    return [
-        [x for x in group if isinstance(x, int) and not isinstance(x, bool)]
-        for group in items
-        if isinstance(group, list)
-    ]

@@ -19,7 +19,7 @@ Stato rilevato il 12/10/2026 sul branch `feat/integrate-anonimizzatore-vlm`.
 | PA-05 | Requisiti | Quali formati di input (PDF, scansione, immagine, DOCX) e di output? | 1.1, 4.3, 7.1 | Aperto |
 | PA-06 | Processo | Come funziona la richiesta del documento originale con i dati sensibili? | 1.6, 4.15, 4.17 | Aperto |
 | PA-07 | Requisiti | Valutare JEV | 1.8 | Aperto |
-| PA-08 | Modelli | Il modello di verifica deve essere diverso da quelli di detection e redaction? | 4.1, M2 | Aperto |
+| PA-08 | Modelli | Il modello di verifica deve essere diverso da quello di detection? | 4.1, M2 | Aperto |
 | PA-09 | Processo | Dove vanno i documenti rifiutati (quarantena) e chi li rivede? | 1.5, 4.16 | Aperto |
 | PA-10 | Integrazione | Chi chiama il servizio, in modo sincrono o asincrono, con quali volumi? | 1.7, 8.4 | Aperto |
 | PA-11 | Governance | Il platform team approva le deroghe al template? | 1.7, 6.7 | Aperto |
@@ -122,7 +122,7 @@ In ogni caso va valutato un ruolo separato per `/restore` e `/restore/detail`
 confrontare su latenza e accuratezza.
 
 **Stato attuale.** Un modello per fase, scelto da `resources/models.yaml`. Nella
-copia di lavoro: estrazione `glm-ocr`, detection e redaction `qwen3.8:27b`
+copia di lavoro: estrazione `glm-ocr`, detection `qwen3.8:27b`
 (solo testo, sostituisce `granite4.2:8b`), verifica `gemma4:26b-a4b-it-qat`.
 Le pagine native vanno a docling. Il frontend (Storico, Dashboard) confronta
 già le configurazioni sulle metriche prestazionali; manca la misura
@@ -204,11 +204,10 @@ strumento, requisito, valutazione esterna), poi quali criteri usare.
 
 ## PA-08 Modello di verifica diverso
 
-**Domanda.** Il modello di verifica deve essere diverso da quelli di detection
-e redaction?
+**Domanda.** Il modello di verifica deve essere diverso da quello di detection?
 
 **Stato attuale.** Già configurabile per fase. Oggi la verifica usa
-`gemma4:26b-a4b-it-qat`, diverso da detection e redaction. La verifica rilegge
+`gemma4:26b-a4b-it-qat`, diverso da detection. La verifica rilegge
 solo il testo (Markdown censurato contro Markdown in chiaro) e non riceve
 l'immagine, quindi la capacità vision del modello resta inutilizzata. In
 modalità `block` (default) un residuo rifiuta il documento; se la verifica non

@@ -19,9 +19,9 @@ della mappa sono invariati.
 ```
 file -> ingest -> estrazione -> rilevamento -> censura -> verifica -> Markdown censurato
           |          |              |               |           |
-       pagine     docling (PDF   regole, etichette, coreferenza  il VLM rilegge il testo censurato
-       (PDF a     nativi) o VLM  NER e VLM in       con il VLM,  con il Markdown in chiaro e cerca
-       200 dpi)   (scansioni)    unione             tag coerenti dati rimasti in chiaro (fail-closed)
+       pagine     docling (PDF   regole, etichette, tag coerenti il VLM rilegge il testo censurato
+       (PDF a     nativi) o VLM  NER e VLM in       per forma   con il Markdown in chiaro e cerca
+       200 dpi)   (scansioni)    unione             esatta      dati rimasti in chiaro (fail-closed)
 ```
 
 1. **Ingest** (`ingest/`): PDF, immagini (png, jpg, tif, bmp, webp) o testo.
@@ -35,9 +35,10 @@ file -> ingest -> estrazione -> rilevamento -> censura -> verifica -> Markdown c
    eponimi, le scale e i farmaci ("morbo di Parkinson", "Glasgow 15",
    "Coumadin") decidendo dal contesto di ogni occorrenza: un paziente che si
    chiama Parkinson viene censurato.
-4. **Censura** (`redaction/`): il VLM raggruppa le varianti della stessa
-   entità ("Mario Rossi", "ROSSI MARIO") sotto un solo tag; la sostituzione è
-   meccanica e vale per tutto il documento. Modalità `pseudonym` (tag + mappa
+4. **Censura** (`redaction/`): i valori con la stessa forma (a meno di spazi
+   e maiuscole) nella stessa famiglia di categorie hanno lo stesso tag ("Mario
+   Rossi" e "MARIO ROSSI" sì, "Rossi Mario" no); la sostituzione è meccanica e
+   vale per tutto il documento. Modalità `pseudonym` (tag + mappa
    AES-256-GCM), `tag` o `redaction` (simbolo fisso).
 5. **Verifica** (`verification/`): il VLM rilegge il Markdown censurato di
    ogni pagina confrontandolo con il Markdown originale in chiaro (non
@@ -99,7 +100,7 @@ scaricare i modelli. Nel cluster le stesse regole sono NetworkPolicy
 Campi multipart di `/anonymize` e `/jobs`: `file`, `mode`
 (`pseudonym`, `tag`, `redaction`), `verification` (`off`, `report`, `block`),
 `extraction` (`docling`, `vlm`), `model_extraction`, `model_detection`,
-`model_redaction`, `model_verification` (uno di `GET /models`), `detectors`,
+`model_verification` (uno di `GET /models`), `detectors`,
 `enable`/`disable` (categorie o gruppi separati da virgola), `key` (oppure
 header `X-Anon-Key`; senza, vale `ANONPIP_VAULT_KEY`), `transcript` (solo
 `/jobs` e solo con `ANONPIP_ALLOW_TRANSCRIPT=true`: trascrizione in chiaro
@@ -124,10 +125,10 @@ metriche contengono solo conteggi, categorie, pagine e tempi.
   `/app/config`). Contiene il catalogo (`models`: nome e contesto di ogni
   modello, e se accetta immagini: `vision`, da `ollama show <modello>`) e il
   modello predefinito di ogni fase (`phases`: estrazione,
-  rilevamento, censura, verifica). `just models` scarica tutto il catalogo;
+  rilevamento, verifica). `just models` scarica tutto il catalogo;
   a runtime ogni richiesta può scegliere, fase per fase, un modello del
   catalogo presente nel backend (campi `model_extraction`,
-  `model_detection`, `model_redaction`, `model_verification`; elenco in
+  `model_detection`, `model_verification`; elenco in
   `GET /models`). Con `OLLAMA_MAX_LOADED_MODELS=1` modelli diversi fra le
   fasi vengono scambiati in VRAM a ogni cambio di fase.
 - docling (pagine native dei PDF): un file YAML separato,

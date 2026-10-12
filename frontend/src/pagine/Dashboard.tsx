@@ -202,7 +202,6 @@ function Contenuto({ report: r, metriche: m, titolo }: Dati) {
                 <tbody>
                   <tr><td>Codifica delle immagini</td><td className="num">{n(m.extraction.image_encoding_s, 2)} s</td></tr>
                   <tr><td>Unione dei rilevatori</td><td className="num">{n(m.detection.union_s as number, 3)} s</td></tr>
-                  <tr><td>Coreferenza</td><td className="num">{n(m.redaction.coreference_s, 2)} s</td></tr>
                   <tr><td>Sostituzione</td><td className="num">{n(m.redaction.replacement_s, 3)} s</td></tr>
                 </tbody>
               </table>

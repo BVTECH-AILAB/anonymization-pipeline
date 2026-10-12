@@ -65,9 +65,9 @@ describe("revisione", () => {
 
 const REPORT = {
   version: "0.1.0", document: { sha256: "f".repeat(64), kind: "pdf", pages: 2 },
-  extraction: { docling: [1, 2], vlm: [] }, model: { backend: "ollama", phases: { extraction: "vlm-grande:1", detection: "vlm-piccolo:1", redaction: "vlm-piccolo:1", verification: "vlm-grande:1" } }, mode: "redaction",
+  extraction: { docling: [1, 2], vlm: [] }, model: { backend: "ollama", phases: { extraction: "vlm-grande:1", detection: "vlm-piccolo:1", verification: "vlm-grande:1" } }, mode: "redaction",
   counts: { PERSONA: 2 }, entities: [], detection: { values: 2, sources: { rules: 1, vlm: 2 }, hallucinations_discarded: 0, inactive_categories: 0, eponyms_discarded: 0 },
-  redaction: { coreference: "vlm", groups: 1 }, verification: { mode: "block", outcome: "skipped", residuals: [] },
+  redaction: { groups: 1 }, verification: { mode: "block", outcome: "skipped", residuals: [] },
   vlm: { detection: { calls: 6, errors: 0, truncated: 0, tokens_in: 100, tokens_out: 10, duration_s: 3 } },
   times_s: { ingest: 0.1, extraction: 2, detection: 5, redaction: 1, verification: 4, total: 12.1 }, warnings: ["verification_skipped"],
 } satisfies Report;
@@ -122,7 +122,7 @@ describe("nomi", () => {
   it("modelli del report: nomi distinti in ordine di fase", () => {
     const stesso = "vlm-piccolo:1";
     expect(etichettaModelli(REPORT.model)).toBe("vlm-grande:1 + vlm-piccolo:1");
-    expect(etichettaModelli({ backend: "ollama", phases: { extraction: stesso, detection: stesso, redaction: stesso, verification: stesso } })).toBe(stesso);
+    expect(etichettaModelli({ backend: "ollama", phases: { extraction: stesso, detection: stesso, verification: stesso } })).toBe(stesso);
   });
 
   it("avvisi del report", () => {

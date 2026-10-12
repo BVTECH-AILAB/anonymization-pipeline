@@ -11,10 +11,11 @@ import logging
 import time
 from collections import Counter
 from collections.abc import Callable
+from dataclasses import asdict
 from typing import Any
 
 from anonymization_pipeline import __version__, metrics
-from anonymization_pipeline.detection import detect
+from anonymization_pipeline.detection import Outcome, detect
 from anonymization_pipeline.domain import Document, Group, Occurrence, Residual, Result
 from anonymization_pipeline.extraction import extract
 from anonymization_pipeline.ingest import load
@@ -41,6 +42,24 @@ class MissingKeyError(ValueError):
     """Pseudonym mode without a key for the map (Italian message for users)."""
 
 
+def _separator(doc: Document, i: int, cfg: PipelineConfig) -> str:
+    """Text placed before page ``i`` in the Markdown of the document."""
+    if i and doc.visual:
+        return cfg.output.page_separator.replace("{n}", str(i + 1))
+    return ""
+
+
+def _page_starts(doc: Document, pages: list[str], cfg: PipelineConfig) -> list[int]:
+    """Offset of every page in the Markdown of the document."""
+    starts: list[int] = []
+    length = 0
+    for i, text in enumerate(pages):
+        length += len(_separator(doc, i, cfg))
+        starts.append(length)
+        length += len(text)
+    return starts
+
+
 def _join_pages(
     doc: Document,
     pages: list[str],
@@ -48,23 +67,33 @@ def _join_pages(
     cfg: PipelineConfig,
 ) -> tuple[str, list[Occurrence]]:
     """Markdown of the document and occurrences with offsets in the whole document."""
-    parts: list[str] = []
-    found: list[Occurrence] = []
-    length = 0
-    for i, (text, page_occurrences) in enumerate(zip(pages, occurrences, strict=True)):
-        if i and doc.visual:
-            separator = cfg.output.page_separator.replace("{n}", str(i + 1))
-            parts.append(separator)
-            length += len(separator)
-        found += [
-            Occurrence(
-                o.start + length, o.end + length, o.replacement, o.original, o.category
-            )
-            for o in page_occurrences
-        ]
-        parts.append(text)
-        length += len(text)
+    starts = _page_starts(doc, pages, cfg)
+    found = [
+        Occurrence(
+            o.start + start, o.end + start, o.replacement, o.original, o.category
+        )
+        for start, page_occurrences in zip(starts, occurrences, strict=True)
+        for o in page_occurrences
+    ]
+    parts = [_separator(doc, i, cfg) + text for i, text in enumerate(pages)]
     return "".join(parts), found
+
+
+def _located_residuals(
+    doc: Document, pages: list[str], found: Outcome, cfg: PipelineConfig
+) -> list[dict[str, Any]]:
+    """One residual per span left in clear text, with offsets in the Markdown of the document
+    (no values: the text is already in the returned Markdown)."""
+    starts = _page_starts(doc, pages, cfg)
+    seen: set[tuple[int, int]] = set()
+    out: list[Residual] = []
+    for (page, _, category), spans in found.spans.items():
+        for s, e in spans:
+            span = (starts[page] + s, starts[page] + e)
+            if span not in seen:
+                seen.add(span)
+                out.append(Residual(category, page + 1, *span))
+    return [asdict(r) for r in sorted(out, key=lambda r: r.start or 0)]
 
 
 def check_invariant(
@@ -221,9 +250,7 @@ async def anonymize(
                 raise UnredactableContent("residuals", residuals)
             else:
                 verification["outcome"] = "residuals"
-                verification["residuals"] = UnredactableContent(
-                    "residuals", residuals
-                ).as_dict()["residuals"]
+                verification["residuals"] = _located_residuals(doc, pages, found, cfg)
                 warnings.append("residuals_not_fixed")
 
     check_invariant(pages, occurrences, cfg)

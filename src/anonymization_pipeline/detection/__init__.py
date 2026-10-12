@@ -41,6 +41,8 @@ class Outcome:
     eponyms_discarded: int = 0
     sources: dict[str, int] = field(default_factory=dict)  # detector -> values found
     warnings: list[str] = field(default_factory=list)
+    # (page, text, category) -> anchored spans in the text the entity was found in
+    spans: dict[tuple[int, str, str], list[Span]] = field(default_factory=dict)
 
     def add(self, other: "Outcome") -> None:
         seen = {(e.text, e.category) for e in self.entities}
@@ -48,6 +50,9 @@ class Outcome:
             if (entity.text, entity.category) not in seen:
                 seen.add((entity.text, entity.category))
                 self.entities.append(entity)
+        for key, spans in other.spans.items():
+            known = self.spans.setdefault(key, [])
+            known += [s for s in spans if s not in known]
         self.hallucinations_discarded += other.hallucinations_discarded
         self.inactive_categories += other.inactive_categories
         self.eponyms_discarded += other.eponyms_discarded
@@ -71,7 +76,7 @@ def _anchor(
     active = set(cfg.active())
     anchoring = cfg.phases.detection.anchoring
     outcome = Outcome()
-    forms: dict[tuple[str, str], None] = {}
+    forms: dict[tuple[str, str], list[Span]] = {}
     filtered = cfg.phases.detection.detectors.eponyms
     for proposal in proposals:
         category = proposal.category
@@ -95,10 +100,13 @@ def _anchor(
                 outcome.eponyms_discarded += 1
                 continue
         for s, e in spans:
-            forms.setdefault((text[s:e], category))
+            found = forms.setdefault((text[s:e], category), [])
+            if (s, e) not in found:
+                found.append((s, e))
     outcome.entities = [
         Entity(text=t, category=c, page=page.index, source=source) for t, c in forms
     ]
+    outcome.spans = {(page.index, t, c): spans for (t, c), spans in forms.items()}
     return outcome
 
 

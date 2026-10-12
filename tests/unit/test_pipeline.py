@@ -208,9 +208,39 @@ def test_verification_blocks_by_default_and_can_report() -> None:
         "RSSMRA80A01H501U" in result.markdown
         and "residuals_not_fixed" in result.report["warnings"]
     )
+    start = result.markdown.index("RSSMRA80A01H501U")
     assert result.report["verification"]["residuals"] == [
-        {"category": "CODICE_FISCALE", "page": 1}
+        {"category": "CODICE_FISCALE", "page": 1, "start": start, "end": start + 16}
     ]
+
+
+def test_residual_offsets_point_into_the_whole_markdown(
+    log_stream: io.StringIO,
+) -> None:
+    """Offsets of a residual on page 2 count the page separator; the report never has the value."""
+    buffer = io.BytesIO()
+    Image.new("RGB", (500, 300), "white").save(
+        buffer,
+        "TIFF",
+        save_all=True,
+        append_images=[Image.new("RGB", (510, 300), "white")],
+    )
+    markdown = {
+        500: "# Pagina uno\nPaziente: Mario Rossi",
+        510: "Firma: Anna Bianchi",
+    }
+    model = IdealModel(VALUES, markdown=markdown, missed=("Anna Bianchi",))
+    cfg = pipeline_config({"phases": VLM_ONLY}, default_verification="report")
+
+    result, _ = _run(model, cfg, name="scan.tif", data=buffer.getvalue())
+
+    residuals = result.report["verification"]["residuals"]
+    assert [(r["category"], r["page"]) for r in residuals] == [("MEDICO", 2)]
+    assert (
+        result.markdown[residuals[0]["start"] : residuals[0]["end"]] == "Anna Bianchi"
+    )
+    assert "Anna Bianchi" not in json.dumps(result.report, ensure_ascii=False)
+    assert "Anna Bianchi" not in log_stream.getvalue()
 
 
 def test_fail_closed_when_verification_does_not_answer() -> None:

@@ -83,10 +83,15 @@ class Occurrence:
 
 @dataclass(frozen=True)
 class Residual:
-    """Data left in clear text according to the verification (without the value)."""
+    """Data left in clear text according to the verification (without the value).
+
+    ``start``/``end`` are offsets in the returned Markdown, where the value is still in clear text.
+    """
 
     category: str
     page: int
+    start: int | None = None
+    end: int | None = None
 
 
 @dataclass

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ripristinaDettaglio, ripristinaPdf } from "../api/client";
 import type { RestoreDetail } from "../api/tipi";
 import VistaTesto from "../componenti/VistaTesto";
+import { scaricaBlob } from "../lib/scarica";
 import { useSessione } from "../stato/sessione";
 
 export default function Ripristino() {
@@ -27,18 +28,10 @@ export default function Ripristino() {
     }
   };
   const scaricaPdf = (blob: Blob) => {
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = md!.name.replace(/\.anon\.(pdf|docling\.json)$/i, "").replace(/\.(pdf|json)$/i, "") + ".ripristinato.pdf";
-    a.click();
-    URL.revokeObjectURL(a.href);
+    scaricaBlob(blob, md!.name.replace(/\.anon\.(pdf|docling\.json)$/i, "").replace(/\.(pdf|json)$/i, "") + ".ripristinato.pdf");
   };
   const scarica = () => {
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([esito!.text], { type: "text/markdown" }));
-    a.download = (md?.name ?? "documento.anon.md").replace(/\.anon\.md$/, "") + ".ripristinato.md";
-    a.click();
-    URL.revokeObjectURL(a.href);
+    scaricaBlob(new Blob([esito!.text], { type: "text/markdown" }), (md?.name ?? "documento.anon.md").replace(/\.anon\.md$/, "") + ".ripristinato.md");
   };
 
   return (

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { BarreImpilate, BarrePerGruppo } from "../componenti/Grafici";
 import { nomeEsito, nomeFase, nomeModalita } from "../lib/nomi";
+import { scaricaBlob } from "../lib/scarica";
 import * as storico from "../lib/storico";
 
 const FASI = ["extraction", "detection", "redaction", "verification"]; // chiavi di times_s
@@ -11,11 +12,10 @@ const SERIE_FASI = FASI.map(nomeFase);
 const MAX_GRUPPI = 5; // oltre: "altri" (niente colori generati o riciclati)
 
 function scaricaCsv(testo: string) {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob(["﻿" + testo], { type: "text/csv;charset=utf-8" }));
-  a.download = `storico-anonimizzatore-${new Date().toISOString().slice(0, 10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  scaricaBlob(
+    new Blob(["﻿" + testo], { type: "text/csv;charset=utf-8" }),
+    `storico-anonimizzatore-${new Date().toISOString().slice(0, 10)}.csv`,
+  );
 }
 
 const configurazione = (e: storico.Esecuzione) => `${e.modello}${e.estrazione ? " · " + e.estrazione : ""}`;

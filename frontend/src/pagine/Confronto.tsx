@@ -10,14 +10,11 @@ import { colore, type Intervallo } from "../lib/evidenzia";
 import { etichettaModelli, nomeFonte } from "../lib/nomi";
 import { dividiPagine, paginaDi } from "../lib/pagine";
 import { esportaRevisione, type TipoVoce, type VoceRevisione } from "../lib/revisione";
+import { scaricaBlob } from "../lib/scarica";
 import { useSessione } from "../stato/sessione";
 
 function scarica(nome: string, contenuto: string, tipo = "application/json") {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([contenuto], { type: tipo }));
-  a.download = nome;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  scaricaBlob(new Blob([contenuto], { type: tipo }), nome);
 }
 
 export default function Confronto() {

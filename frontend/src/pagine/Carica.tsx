@@ -4,6 +4,7 @@ import * as api from "../api/client";
 import type { Categories, Models, Options, Phase, Status } from "../api/tipi";
 import OpzioniRichiesta from "../componenti/OpzioniRichiesta";
 import { FASI_VLM, nomeFase, nomeModalita, nomeMotivoRifiuto } from "../lib/nomi";
+import { scaricaBlob } from "../lib/scarica";
 import { RILEVATORI, senzaRilevatori } from "../lib/rilevatori";
 import { useSessione, type Documento } from "../stato/sessione";
 
@@ -60,20 +61,7 @@ function Durata({ d }: { d: Documento }) {
 }
 
 function scaricaPdf(d: Documento) {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(api.base64InBlob(d.risultato!.layout_pdf_b64!));
-  a.download = `${d.nome.replace(/\.[^.]+$/, "")}.anon.pdf`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-async function scaricaZip(d: Documento) {
-  const blob = await api.risultatoZip(d.id);
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `${d.nome.replace(/\.[^.]+$/, "")}.anonimizzato.zip`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  scaricaBlob(api.base64InBlob(d.risultato!.layout_pdf_b64!), `${d.nome.replace(/\.[^.]+$/, "")}.anon.pdf`);
 }
 
 export default function Carica() {
@@ -86,6 +74,15 @@ export default function Carica() {
   const [stato, setStato] = useState<Status | null>(null);
   const [errore, setErrore] = useState<string | null>(null);
   const [invio, setInvio] = useState(false);
+
+  const scaricaZip = async (d: Documento) => {
+    setErrore(null);
+    try {
+      scaricaBlob(await api.risultatoZip(d.id), `${d.nome.replace(/\.[^.]+$/, "")}.anonimizzato.zip`);
+    } catch (e) {
+      setErrore(`ZIP di ${d.nome} non scaricabile: ${(e as Error).message}`);
+    }
+  };
   const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => { api.categorie().then(setCat).catch(() => setCat(null)); }, []);

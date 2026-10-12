@@ -26,11 +26,8 @@ models:
   - name: gemma4:26b-a4b-it-qat
     context: 8192                 # image + page transcription
     vision: true
-  - name: qwen3.8:27b
-    context: 8192
-    vision: false
 
 phases:
   extraction: glm-ocr
-  detection: qwen3.8:27b
+  detection: gemma4:26b-a4b-it-qat
   verification: gemma4:26b-a4b-it-qat

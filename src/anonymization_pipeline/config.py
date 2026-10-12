@@ -64,6 +64,8 @@ class Settings(BaseSettings):
     # Optional YAML file with the VLM catalog and the model of each phase
     # (see resources/models.yaml, the default when empty).
     models_file: str = ""
+    # Optional YAML file with the docling options to change (see resources/docling.yaml).
+    docling_file: str = ""
     # Credential: key or passphrase of the pseudonym map. When empty, requests
     # in pseudonym mode must send their own key.
     vault_key: str = ""

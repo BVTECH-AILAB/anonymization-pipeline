@@ -130,11 +130,19 @@ metriche contengono solo conteggi, categorie, pagine e tempi.
   `model_detection`, `model_redaction`, `model_verification`; elenco in
   `GET /models`). Con `OLLAMA_MAX_LOADED_MODELS=1` modelli diversi fra le
   fasi vengono scambiati in VRAM a ogni cambio di fase.
+- docling (pagine native dei PDF): un file YAML separato,
+  `src/anonymization_pipeline/resources/docling.yaml`, con parser PDF,
+  modello di layout, modello e modalità delle tabelle, cell matching, thread
+  e timeout. `ANONPIP_DOCLING_FILE` indica un file con le sole chiavi da
+  cambiare (in compose, in `./config`). `just models` scarica i modelli di
+  layout e tabelle scelti nel file, quindi il file deve essere lo stesso
+  anche per il download.
 - Pipeline (passate del rilevamento, rilevatori accesi, soglie, timeout):
   `src/anonymization_pipeline/resources/default.yaml`, con i prompt in
   `resources/prompts/<fase>.yaml`. Si cambia con un file YAML parziale
   indicato da `ANONPIP_PIPELINE_CONFIG_FILE`; le chiavi possedute dalle
-  variabili `ANONPIP_*` e dal file dei modelli non sono ammesse nel file
+  variabili `ANONPIP_*`, dal file dei modelli e dal file docling non sono
+  ammesse nel file
   (l'elenco è nell'intestazione di `default.yaml`).
   Ogni chiave sconosciuta è un errore e il servizio non parte.
 - Categorie e gruppi: `resources/categories.yaml`, l'unico elenco. Sono

@@ -209,6 +209,83 @@ def test_missing_user_file_is_an_error() -> None:
         load_pipeline_config(make_settings(pipeline_config_file="/nonexistent.yaml"))
 
 
+def _docling_file(tmp_path: Path, content: str) -> str:
+    path = tmp_path / "docling.yaml"
+    path.write_text(content)
+    return str(path)
+
+
+def test_packaged_docling_file_reads_the_pdf_with_pypdfium2() -> None:
+    # docling-parse merges label/value blocks into one table cell (lab reports)
+    d = pipeline_config().phases.extraction.native_pdf.docling
+
+    assert d.pdf.parser == "pypdfium2"
+    assert d.tables.enabled and d.tables.cell_matching
+    assert (d.tables.model, d.tables.mode, d.layout.model) == (
+        "tableformer",
+        "accurate",
+        "heron",
+    )
+
+
+def test_docling_file_changes_only_the_keys_it_sets(tmp_path: Path) -> None:
+    path = _docling_file(
+        tmp_path, "tables: {cell_matching: false}\nlayout: {model: egret_large}\n"
+    )
+
+    d = pipeline_config(docling_file=path).phases.extraction.native_pdf.docling
+
+    assert d.tables.cell_matching is False
+    assert d.layout.model == "egret_large"
+    assert d.tables.mode == "accurate" and d.pdf.parser == "pypdfium2"
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        "tables: {matching: false}\n",
+        "tables: {mode: slow}\n",
+        "layout: {model: heron_v9}\n",
+        "pdf: {parser: pdfminer}\n",
+        "threads: 0\n",
+    ],
+)
+def test_invalid_docling_file_is_rejected(tmp_path: Path, content: str) -> None:
+    with pytest.raises(ValueError, match="docling"):
+        pipeline_config(docling_file=_docling_file(tmp_path, content))
+
+
+def test_missing_docling_file_is_an_error() -> None:
+    with pytest.raises(ValueError, match="not readable"):
+        pipeline_config(docling_file="/nonexistent.yaml")
+
+
+def test_docling_file_is_read_once(tmp_path: Path) -> None:
+    path = _docling_file(tmp_path, "threads: 2\n")
+    pipeline_config(docling_file=path)
+    Path(path).unlink()  # e.g. a ConfigMap changed at runtime
+
+    assert (
+        pipeline_config(docling_file=path).phases.extraction.native_pdf.docling.threads
+        == 2
+    )
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        "phases: {extraction: {native_pdf: {docling: {threads: 2}}}}\n",
+        "phases: {extraction: {native_pdf: {tables: false}}}\n",
+    ],
+)
+def test_user_file_cannot_set_docling_options(tmp_path: Path, content: str) -> None:
+    path = tmp_path / "mine.yaml"
+    path.write_text(content)
+
+    with pytest.raises(ValueError, match="docling file"):
+        load_pipeline_config(make_settings(pipeline_config_file=str(path)))
+
+
 def test_request_overrides_win_over_settings(tmp_path: Path) -> None:
     path = tmp_path / "mine.yaml"
     path.write_text("phases: {verification: {timeout_s: 120}}\n")

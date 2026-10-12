@@ -6,13 +6,15 @@
 #       of the registry (categories.yaml) switched on
 #    2. the user file in ANONPIP_PIPELINE_CONFIG_FILE (only the keys to change)
 #    3. the models file (ANONPIP_MODELS_FILE, default models.yaml)
-#    4. the ANONPIP_* settings (config.py)
-#    5. per-request overrides (API and web UI: model of each phase, mode, verification,
+#    4. the docling options: docling.yaml, then the keys of ANONPIP_DOCLING_FILE
+#    5. the ANONPIP_* settings (config.py)
+#    6. per-request overrides (API and web UI: model of each phase, mode, verification,
 #       extraction, detectors, categories)
 #  Unknown keys are an error: a typo is never silently ignored.
 #
-#  Keys set only by layers 3 and 4 (never written here, rejected in the user file):
+#  Keys set only by layers 3, 4 and 5 (never written here, rejected in the user file):
 #    models file      models, phases.<phase>.model
+#    docling file     phases.extraction.native_pdf.docling
 #    ANONPIP_*        backend.kind, url, api_key, concurrency, pull_missing;
 #                     phases.redaction.mode, phases.verification.mode,
 #                     phases.extraction.native_pdf.engine, native_pdf.models_dir
@@ -66,13 +68,11 @@ phases:
     # Native PDF pages (readable and visible text layer) are extracted with docling (a few seconds on
     # CPU, exact text, structured tables); the others (scans, pages with many images or hidden text)
     # with the VLM. Without docling or its models every page goes to the VLM, with a warning.
-    native_pdf:                 # engine, models_dir: from the settings
+    native_pdf:                 # engine, models_dir: from the settings; docling: docling.yaml
       min_chars: 50             # characters of the text layer (spaces excluded) for a native page
       max_unreadable: 0.02      # max fraction of undecodable characters (fonts without a Unicode map)
       max_image_fraction: 0.5   # images over this fraction of the page: scan or content to read
       min_contrast: 12          # text whose box has no contrast in the rendered page is hidden
-      tables: true              # table structure (TableFormer)
-      threads: 4
     # Non-text elements: how they are reported in the Markdown (they end up in the extraction prompt).
     # The text inside stamps and labels must be transcribed: it often holds names and register numbers.
     # The placeholders between [] are the ones that appear in the Markdown.

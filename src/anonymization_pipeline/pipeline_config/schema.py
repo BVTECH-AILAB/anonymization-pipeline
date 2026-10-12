@@ -83,6 +83,55 @@ class _Phase(_Section):
     max_tokens: int = Field(ge=16)
 
 
+class _Frozen(_Section):
+    """Hashable section: the docling converter is cached per set of options."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+
+LayoutModel = Literal[
+    "heron", "heron_101", "egret_medium", "egret_large", "egret_xlarge"
+]
+TableModel = Literal["tableformer", "tableformer_v2"]
+
+
+class DoclingPdf(_Frozen):
+    parser: Literal["pypdfium2", "docling_parse"]
+    enforce_same_font: (
+        bool  # docling_parse only: split text cells where the font changes
+    )
+
+
+class DoclingLayout(_Frozen):
+    model: LayoutModel
+    create_orphan_clusters: bool
+    keep_empty_clusters: bool
+    skip_cell_assignment: bool
+    batch_size: int = Field(ge=1)
+
+
+class DoclingTables(_Frozen):
+    enabled: bool
+    model: TableModel
+    mode: Literal["accurate", "fast"]  # tableformer only
+    cell_matching: bool
+    batch_size: int = Field(ge=1)
+
+
+class Docling(_Frozen):
+    """docling options: from the docling file (``resources/docling.yaml``), never from the
+    pipeline file."""
+
+    pdf: DoclingPdf
+    layout: DoclingLayout
+    tables: DoclingTables
+    force_backend_text: bool
+    reading_order_separators: bool
+    furniture: bool  # page headers and footers in the Markdown
+    timeout_s: float | None = Field(gt=0)
+    threads: int = Field(ge=1)
+
+
 class NativePdf(_Section):
     """PDF pages with a native text layer: extracted with docling instead of the VLM."""
 
@@ -95,9 +144,8 @@ class NativePdf(_Section):
     min_contrast: int = Field(
         ge=0, le=255
     )  # below: text not visible in the rendered page
-    tables: bool  # table structure (TableFormer model)
     models_dir: str = Field(min_length=1)
-    threads: int | None = Field(default=None, ge=1)
+    docling: Docling
 
 
 class Extraction(_Phase):

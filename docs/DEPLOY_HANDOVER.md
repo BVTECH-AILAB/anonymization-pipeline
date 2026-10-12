@@ -23,6 +23,7 @@ fa il provisioning.
 | Risorse backend VLM | 1 GPU NVIDIA (`nvidia.com/gpu: 1`) con VRAM sufficiente per il modello più grande del file dei modelli (più la cache del contesto), 16Gi di RAM |
 | Volumi | PVC modelli dell'API ~2Gi (NER ~450 MB in `/models/hf`, docling ~700 MB in `/models/docling`), montata in sola lettura; PVC modelli di Ollama: somma dei modelli del catalogo più margine |
 | File dei modelli | facoltativo: ConfigMap con `models.yaml` montata nell'API e nel Job di download, indicata da `ANONPIP_MODELS_FILE` (vedi `docs/k8s-example/service.yaml`); senza, vale quello nell'immagine |
+| File docling | facoltativo: ConfigMap con le sole opzioni docling da cambiare, montata nell'API e nel Job di download (scarica i modelli di layout e tabelle scelti lì), indicata da `ANONPIP_DOCLING_FILE`; senza, vale `docling.yaml` nell'immagine |
 | Migrazioni all'avvio | nessuna |
 
 ### Deroghe al template (da approvare)
@@ -90,6 +91,7 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_DOCLING_MODELS_DIR` | `/models/docling` | | | no |
 | `ANONPIP_PIPELINE_CONFIG_FILE` | vuoto | facoltativo (file montato da ConfigMap) | idem | no |
 | `ANONPIP_MODELS_FILE` | vuoto (file dei modelli nell'immagine) | facoltativo (file montato da ConfigMap, lo stesso per API e Job di download) | idem | no |
+| `ANONPIP_DOCLING_FILE` | vuoto (`docling.yaml` nell'immagine) | facoltativo (file montato da ConfigMap, lo stesso per API e Job di download) | idem | no |
 | `ANONPIP_VAULT_KEY` | nessuno (credenziale) | facoltativa: senza, ogni richiesta in modalità pseudonimo porta la sua chiave | idem | **sì** |
 | `ANONPIP_MAX_UPLOAD_MB` | `50` | | | no |
 | `ANONPIP_MAX_CONCURRENT_JOBS` | `1` | | | no |

@@ -1,5 +1,5 @@
-"""Layered loading: default.yaml (+ prompts) -> user file -> models file -> settings -> request
-overrides."""
+"""Layered loading: default.yaml (+ prompts, docling.yaml) -> user file -> models file ->
+docling file -> settings -> request overrides."""
 
 import copy
 import functools
@@ -35,6 +35,14 @@ DETECTOR_KEYS = {
 }
 # keys owned by the models file (ANONPIP_MODELS_FILE)
 MODELS_KEYS = ["models", *(f"phases.{phase}.model" for phase in PHASES)]
+# where the docling file (resources/docling.yaml, ANONPIP_DOCLING_FILE) goes
+DOCLING_KEY = "phases.extraction.native_pdf.docling"
+# keys owned by the docling file: tables and threads were pipeline keys before it existed
+DOCLING_KEYS = [
+    DOCLING_KEY,
+    "phases.extraction.native_pdf.tables",
+    "phases.extraction.native_pdf.threads",
+]
 
 
 def merge(base: dict, above: dict) -> dict:
@@ -99,6 +107,7 @@ def _base() -> dict:
         **(cfg.get("categories") or {}),
     }
     cfg["prompts"] = {phase: read_yaml(f"prompts/{phase}.yaml") for phase in PHASES}
+    _set(cfg, DOCLING_KEY, read_yaml("docling.yaml"))
     return cfg
 
 
@@ -125,6 +134,23 @@ def _user_file(path: str) -> dict:
             f"{path}: keys owned by the models file: {', '.join(owned)} "
             "(set them in ANONPIP_MODELS_FILE instead)"
         )
+    if owned := [key for key in DOCLING_KEYS if _has(layer, key)]:
+        raise ValueError(
+            f"{path}: keys owned by the docling file: {', '.join(owned)} "
+            "(set them in ANONPIP_DOCLING_FILE instead)"
+        )
+    return layer
+
+
+@functools.cache
+def _docling_file(path: str) -> dict:
+    """The docling file as a configuration layer, read once per path."""
+    try:
+        text = Path(path).read_text(encoding="utf-8")
+    except OSError as exc:
+        raise ValueError(f"docling file not readable: {path}") from exc
+    layer: dict = {}
+    _set(layer, DOCLING_KEY, parse_yaml(text, path))
     return layer
 
 
@@ -151,6 +177,7 @@ def load_pipeline_config(
         if settings.pipeline_config_file
         else {},
         models_layer(settings.models_file),
+        _docling_file(settings.docling_file) if settings.docling_file else {},
         settings_layer(settings),
         overrides or {},
     ]

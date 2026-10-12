@@ -1,0 +1,41 @@
+# =============================================================================
+#  docling options for the native PDF pages (pipeline_config/schema.py, class Docling)
+#
+#  ANONPIP_DOCLING_FILE names a YAML file with only the keys to change; this file stays the
+#  base. The same file must reach the model download (`just models`, the download Job): it
+#  downloads the layout and table models chosen here. Unknown keys are an error.
+#
+#  Fixed in the code, not configurable: no OCR (scanned pages go to the VLM), CPU only (torch
+#  CPU build), no enrichment models (code, formulas, picture description), no remote services.
+# =============================================================================
+
+pdf:
+  # pypdfium2: label/value blocks without borders stay text, tables keep every cell.
+  # docling_parse (docling's default): on lab reports it merged the patient block and the sample
+  # label into one table, with every label in one cell and every value in another.
+  parser: pypdfium2           # pypdfium2 | docling_parse
+  enforce_same_font: true     # docling_parse only: split text cells where the font changes
+
+layout:
+  # heron (docling's default) | heron_101 | egret_medium | egret_large | egret_xlarge
+  # (egret: more accurate on complex pages, slower on CPU)
+  model: heron
+  create_orphan_clusters: true  # text outside every detected region becomes its own block
+  keep_empty_clusters: false
+  skip_cell_assignment: false
+  batch_size: 4
+
+tables:
+  enabled: true               # table structure; false: tables come out as text, without columns
+  model: tableformer          # tableformer | tableformer_v2 (needs transformers in the image)
+  mode: accurate              # accurate | fast (tableformer only)
+  # true: the cells keep the PDF text cells. false: the text is cut from the boxes predicted
+  # by the model; on lab reports it emptied the result column and duplicated the text.
+  cell_matching: true
+  batch_size: 4
+
+force_backend_text: false     # text from the PDF backend instead of the layout clusters
+reading_order_separators: true  # visible rules of the page guide the reading order
+furniture: true               # page headers and footers in the Markdown (they hold names too)
+timeout_s: null               # seconds per document, null = none; on timeout the missing pages go to the VLM
+threads: 4                    # CPU threads of the layout and table models

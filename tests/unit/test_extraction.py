@@ -3,6 +3,7 @@ import ctypes
 import io
 import os
 from pathlib import Path
+from typing import get_args
 
 import pypdfium2 as pdfium
 import pypdfium2.raw as pdfium_c
@@ -13,6 +14,11 @@ from anonymization_pipeline.domain import Document, Page
 from anonymization_pipeline.extraction import extract, extract_page, native_pdf
 from anonymization_pipeline.ingest import load
 from anonymization_pipeline.pipeline_config import PipelineConfig, request_overrides
+from anonymization_pipeline.pipeline_config.schema import (
+    LayoutModel,
+    NativePdf,
+    TableModel,
+)
 from anonymization_pipeline.vlm import VLMResponse
 from tests.pipeline import FIXTURES, FakeVLM, IdealModel, pipeline_config, width
 
@@ -188,6 +194,72 @@ def test_missing_models(tmp_path: Path) -> None:
 
     with pytest.raises(native_pdf.DoclingUnavailable):
         native_pdf.convert(b"%PDF", [0], c)
+
+
+def test_every_layout_model_has_a_docling_preset() -> None:
+    assert set(native_pdf.LAYOUT_MODELS) == set(get_args(LayoutModel))
+    assert set(native_pdf.TABLE_MODELS) == set(get_args(TableModel))
+
+
+def _docling_options(tmp_path: Path, content: str) -> NativePdf:
+    path = tmp_path / "docling.yaml"
+    path.write_text(content)
+    return pipeline_config(
+        docling_models_dir=str(tmp_path / "models"), docling_file=str(path)
+    ).phases.extraction.native_pdf
+
+
+@pytest.mark.parametrize(
+    ("content", "folders"),
+    [
+        (
+            "{}",
+            [
+                "docling-project--docling-layout-heron",
+                "docling-project--docling-models",
+            ],
+        ),
+        (
+            "layout: {model: egret_large}\ntables: {model: tableformer_v2}\n",
+            [
+                "docling-project--docling-layout-egret-large",
+                "docling-project--TableFormerV2",
+            ],
+        ),
+        ("tables: {enabled: false}\n", ["docling-project--docling-layout-heron"]),
+    ],
+)
+def test_required_models_follow_the_docling_file(
+    tmp_path: Path, content: str, folders: list[str]
+) -> None:
+    c = _docling_options(tmp_path, content)
+
+    assert native_pdf.required_models(c) == folders
+    for folder in folders:
+        assert not native_pdf.models_present(c)
+        (tmp_path / "models" / folder).mkdir(parents=True)
+    assert native_pdf.models_present(c)
+
+
+@pytest.mark.docling
+def test_docling_file_reaches_docling(tmp_path: Path) -> None:
+    if not native_pdf.DOCLING_INSTALLED:
+        pytest.skip("docling is missing")
+    c = _docling_options(
+        tmp_path,
+        "layout: {model: egret_medium, batch_size: 2}\n"
+        "tables: {mode: fast, cell_matching: false}\n"
+        "timeout_s: 60\nthreads: 2\n",
+    )
+
+    options = native_pdf.pipeline_options(c.docling, c.models_dir)
+
+    assert options.do_ocr is False
+    assert options.table_structure_options.do_cell_matching is False
+    assert options.table_structure_options.mode.value == "fast"
+    assert options.layout_options.model_spec.repo_id.endswith("layout-egret-medium")
+    assert (options.layout_batch_size, options.document_timeout) == (2, 60)
+    assert options.accelerator_options.num_threads == 2
 
 
 @pytest.mark.docling

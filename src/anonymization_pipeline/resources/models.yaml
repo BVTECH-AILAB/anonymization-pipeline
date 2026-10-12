@@ -17,18 +17,21 @@
 # =============================================================================
 
 models:
-  - name: granite4.2:8b
-    context: 8192                 # with the q4_0 KV cache it fits the 8 GB GPU entirely
-    vision: false                 # text only (ollama show: no vision)
+  #- name: granite4.2:8b
+  #  context: 8192                 # with the q4_0 KV cache it fits the 8 GB GPU entirely
+  #  vision: false                 # text only (ollama show: no vision)
   - name: glm-ocr
     context: 8192                 # image + page transcription; ~3 GB, entirely on the GPU
     vision: true
   - name: gemma4:26b-a4b-it-qat
     context: 8192                 # image + page transcription
     vision: true
+  - name: qwen3.8:27b
+    context: 8192
+    vision: false
 
 phases:
   extraction: glm-ocr
-  detection: granite4.2:8b
-  redaction: granite4.2:8b
+  detection: qwen3.8:27b
+  redaction: qwen3.8:27b
   verification: gemma4:26b-a4b-it-qat

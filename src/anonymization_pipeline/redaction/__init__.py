@@ -8,9 +8,12 @@ exact restore and the non-sensitive text stays identical.
 from collections import Counter
 
 from anonymization_pipeline.detectors import eponyms
-from anonymization_pipeline.domain import Entity, Group, Occurrence
+from anonymization_pipeline.domain import Entity, Group, Occurrence, Residual
 from anonymization_pipeline.pipeline_config import PipelineConfig, registry
-from anonymization_pipeline.text import find
+from anonymization_pipeline.text import find, replacement_spans
+
+# a chosen replacement: start, end, index of the group
+Span = tuple[int, int, int]
 
 
 def group_entities(entities: list[Entity]) -> list[Group]:
@@ -35,6 +38,60 @@ def group_entities(entities: list[Entity]) -> list[Group]:
     return out
 
 
+def select_spans(
+    texts: list[str], groups: list[Group], cfg: PipelineConfig
+) -> list[list[Span]]:
+    """Where every form of every group is in each text; on overlaps the longest span wins."""
+    anchoring = cfg.phases.detection.anchoring.model_copy(
+        update={"fuzzy": 0}
+    )  # forms are exact substrings
+    filtered = cfg.phases.detection.detectors.eponyms
+    forms: dict[str, int] = {}
+    for gi, group in enumerate(groups):
+        for entity in group.values:
+            forms.setdefault(entity.text, gi)
+    out: list[list[Span]] = []
+    for text in texts:
+        candidates = [
+            (s, e, gi)
+            for form, gi in forms.items()
+            for s, e in find(text, form, anchoring)
+            if not (filtered and eponyms.is_excluded(text, s, e, groups[gi].category))
+        ]
+        chosen: list[Span] = []
+        for s, e, gi in sorted(candidates, key=lambda x: (-(x[1] - x[0]), x[0])):
+            if all(e <= s2 or s >= e2 for s2, e2, _ in chosen):
+                chosen.append((s, e, gi))
+        out.append(sorted(chosen))
+    return out
+
+
+def _apply(
+    text: str, spans: list[Span], replacements: dict[int, str], groups: list[Group]
+) -> tuple[str, list[Occurrence]]:
+    parts: list[str] = []
+    found: list[Occurrence] = []
+    cursor = length = 0
+    for s, e, gi in spans:
+        parts.append(text[cursor:s])
+        length += s - cursor
+        replacement = replacements[gi]
+        found.append(
+            Occurrence(
+                start=length,
+                end=length + len(replacement),
+                replacement=replacement,
+                original=text[s:e],
+                category=groups[gi].category,
+            )
+        )
+        parts.append(replacement)
+        length += len(replacement)
+        cursor = e
+    parts.append(text[cursor:])
+    return "".join(parts), found
+
+
 def redact(
     texts: list[str], groups: list[Group], cfg: PipelineConfig
 ) -> tuple[list[str], list[list[Occurrence]]]:
@@ -44,27 +101,7 @@ def redact(
     in the document.
     """
     c = cfg.phases.redaction
-    anchoring = cfg.phases.detection.anchoring.model_copy(
-        update={"fuzzy": 0}
-    )  # forms are exact substrings
-    filtered = cfg.phases.detection.detectors.eponyms
-    forms: dict[str, int] = {}
-    for gi, group in enumerate(groups):
-        for entity in group.values:
-            forms.setdefault(entity.text, gi)
-    per_page: list[list[tuple[int, int, int]]] = []
-    for text in texts:
-        candidates = [
-            (s, e, gi)
-            for form, gi in forms.items()
-            for s, e in find(text, form, anchoring)
-            if not (filtered and eponyms.is_excluded(text, s, e, groups[gi].category))
-        ]
-        chosen: list[tuple[int, int, int]] = []
-        for s, e, gi in sorted(candidates, key=lambda x: (-(x[1] - x[0]), x[0])):
-            if all(e <= s2 or s >= e2 for s2, e2, _ in chosen):
-                chosen.append((s, e, gi))
-        per_page.append(sorted(chosen))
+    per_page = select_spans(texts, groups, cfg)
     replacements: dict[int, str] = {}
     counters: Counter[str] = Counter()
     for spans in per_page:
@@ -82,26 +119,48 @@ def redact(
     pages: list[str] = []
     occurrences: list[list[Occurrence]] = []
     for text, spans in zip(texts, per_page, strict=True):
-        parts: list[str] = []
-        found: list[Occurrence] = []
-        cursor = length = 0
-        for s, e, gi in spans:
-            parts.append(text[cursor:s])
-            length += s - cursor
-            replacement = replacements[gi]
-            found.append(
-                Occurrence(
-                    start=length,
-                    end=length + len(replacement),
-                    replacement=replacement,
-                    original=text[s:e],
-                    category=groups[gi].category,
-                )
-            )
-            parts.append(replacement)
-            length += len(replacement)
-            cursor = e
-        parts.append(text[cursor:])
-        pages.append("".join(parts))
+        page, found = _apply(text, spans, replacements, groups)
+        pages.append(page)
         occurrences.append(found)
     return pages, occurrences
+
+
+def retag(
+    texts: list[str], groups: list[Group], cfg: PipelineConfig
+) -> tuple[list[str], list[list[Occurrence]]]:
+    """Replace the forms in other texts with the tags ``redact`` already gave the groups.
+
+    Groups without a tag (never found in the document) are left alone.
+    """
+    replacements = {gi: g.tag for gi, g in enumerate(groups) if g.tag}
+    out: list[str] = []
+    occurrences: list[list[Occurrence]] = []
+    for text, spans in zip(texts, select_spans(texts, groups, cfg), strict=True):
+        kept = [span for span in spans if span[2] in replacements]
+        page, found = _apply(text, kept, replacements, groups)
+        out.append(page)
+        occurrences.append(found)
+    return out, occurrences
+
+
+def leftovers(
+    texts: list[str], values: set[tuple[str, str]], cfg: PipelineConfig
+) -> list[Residual]:
+    """``(value, category)`` pairs still in clear text in ``texts`` (``page`` = index + 1).
+
+    The occurrences redaction leaves on purpose ("globuli rossi") are not leftovers.
+    """
+    anchoring = cfg.phases.detection.anchoring.model_copy(update={"fuzzy": 0})
+    filtered = cfg.phases.detection.detectors.eponyms
+    out: list[Residual] = []
+    for i, text in enumerate(texts):
+        exclude = replacement_spans(text, cfg)
+        out += [
+            Residual(c, i + 1)
+            for v, c in values
+            if any(
+                not (filtered and eponyms.is_excluded(text, s, e, c))
+                for s, e in find(text, v, anchoring, exclude)
+            )
+        ]
+    return out

@@ -23,6 +23,7 @@ SETTINGS_KEYS = {
     "phases.redaction.mode": "default_mode",
     "phases.verification.mode": "default_verification",
     "phases.extraction.native_pdf.engine": "default_extraction",
+    "output.layout_pdf": "default_layout_output",
     "phases.extraction.native_pdf.models_dir": "docling_models_dir",
 }
 # detectors and filters a request may switch on or off -> configuration key
@@ -196,6 +197,7 @@ def request_overrides(
     extraction: str | None = None,
     transcript: bool | None = None,
     detectors: tuple[str, ...] | None = None,
+    layout: bool | None = None,
 ) -> dict:
     """Overrides of a single request (API and web UI): only these keys.
 
@@ -209,6 +211,7 @@ def request_overrides(
         transcript: Also produce the transcript IN CLEAR TEXT (debugging).
         detectors: The complete set of active detectors and filters (``DETECTOR_KEYS``): the
             ones not listed are switched off. None: the configured ones.
+        layout: Also the PDF with the layout of the original and its structure.
 
     Raises:
         ValueError: On an unknown phase, detector, group or category.
@@ -216,6 +219,8 @@ def request_overrides(
     out: dict = {}
     if transcript is not None:
         _set(out, "output.save_transcript", transcript)
+    if layout is not None:
+        _set(out, "output.layout_pdf", layout)
     if extraction:
         _set(out, "phases.extraction.native_pdf.engine", extraction)
     if mode:

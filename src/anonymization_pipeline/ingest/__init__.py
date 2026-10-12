@@ -28,7 +28,7 @@ TEXT_EXT = {".txt", ".text", ".md", ".csv", ".log", ".json", ".xml", ".html", ".
 IMAGE_EXT = {".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp", ".webp"}
 
 # PDFium is not thread-safe: documents are loaded in worker threads
-_PDFIUM_LOCK = threading.Lock()
+PDFIUM_LOCK = threading.Lock()
 
 
 class DocumentError(ValueError):
@@ -155,7 +155,7 @@ def load_pdf(data: bytes, cfg: PipelineConfig) -> Document:
     c = cfg.images
     native = cfg.phases.extraction.native_pdf
     doc = Document(kind="pdf", source=data if native.engine == "docling" else None)
-    with _PDFIUM_LOCK:
+    with PDFIUM_LOCK:
         try:
             pdf = pdfium.PdfDocument(data)
         except pdfium.PdfiumError as exc:

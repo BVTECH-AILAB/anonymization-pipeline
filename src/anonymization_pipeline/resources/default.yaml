@@ -153,3 +153,8 @@ output:
   # <stem>.metriche.json: times per phase, sub-phase and page, VLM latencies and tokens, CPU and memory
   # (no value of the document)
   save_metrics: true
+  # <stem>.anon.pdf: the censored document with the layout of the original (positions, text and
+  # tables of docling; pages without docling as flowing text), with the censored structure
+  # attached (<stem>.anon.docling.json). In pseudonym mode the map can rebuild the original PDF.
+  # Default from ANONPIP_DEFAULT_LAYOUT_OUTPUT; a request can choose (field layout).
+  layout_pdf: false

@@ -57,6 +57,7 @@ export function nuovoLavoro(file: File, o: Options, chiave: string | null): Prom
   if (o.enable.length) f.append("enable", o.enable.join(","));
   if (o.disable.length) f.append("disable", o.disable.join(","));
   if (o.transcript) f.append("transcript", "true");
+  if (o.layout) f.append("layout", "true");
   if (o.detectors) f.append("detectors", o.detectors.join(","));
   if (chiave && o.mode === "pseudonym") f.append("key", chiave);
   return json<Job>(chiama("/jobs", { method: "POST", body: f }));
@@ -81,6 +82,15 @@ function moduloRipristino(markdown: string, mappa: Blob, chiave: string): FormDa
 
 export const ripristinaDettaglio = (markdown: string, mappa: Blob, chiave: string) =>
   json<RestoreDetail>(chiama("/restore/detail", { method: "POST", body: moduloRipristino(markdown, mappa, chiave) }));
+
+/** PDF originale ricostruito dal PDF censurato con layout (o dalla sua struttura .anon.docling.json). */
+export async function ripristinaPdf(documento: File, mappa: Blob, chiave: string): Promise<Blob> {
+  const f = new FormData();
+  f.append("document", documento, documento.name);
+  f.append("map", mappa, "documento.mappa.enc");
+  f.append("key", chiave);
+  return (await chiama("/restore/pdf", { method: "POST", body: f })).blob();
+}
 
 export function base64InBlob(b64: string): Blob {
   const bin = atob(b64);

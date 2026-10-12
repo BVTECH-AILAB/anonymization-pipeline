@@ -11,6 +11,10 @@ from urllib.parse import quote
 from anonymization_pipeline.domain import Result
 
 
+def _b64(data: bytes | None) -> str | None:
+    return base64.b64encode(data).decode() if data else None
+
+
 def result_payload(result: Result) -> dict[str, Any]:
     """JSON body of a result. The transcript and the clear-text occurrences only when requested."""
     payload: dict[str, Any] = {
@@ -19,9 +23,9 @@ def result_payload(result: Result) -> dict[str, Any]:
         "report": result.report,
         "metrics": result.metrics,
         "tags": result.tags,
-        "encrypted_map_b64": base64.b64encode(result.encrypted_map).decode()
-        if result.encrypted_map
-        else None,
+        "encrypted_map_b64": _b64(result.encrypted_map),
+        "layout_pdf_b64": _b64(result.layout_pdf),
+        "structure_b64": _b64(result.structure),
     }
     if result.transcript is not None:  # CLEAR TEXT: only when asked for
         payload.update(transcript=result.transcript, occurrences=result.occurrences)
@@ -29,7 +33,8 @@ def result_payload(result: Result) -> dict[str, Any]:
 
 
 def zip_result(result: Result) -> bytes:
-    """ZIP with the redacted Markdown, the report and, when present, map, metrics and transcript."""
+    """ZIP with the redacted Markdown, the report and, when present, map, metrics, transcript,
+    layout PDF and structure."""
     buffer = io.BytesIO()
     names = result.output_names()
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
@@ -46,6 +51,10 @@ def zip_result(result: Result) -> bytes:
             )
         if result.transcript is not None:
             archive.writestr(names["transcript"], result.transcript)
+        if result.layout_pdf is not None:
+            archive.writestr(names["layout_pdf"], result.layout_pdf)
+        if result.structure is not None:
+            archive.writestr(names["structure"], result.structure)
     return buffer.getvalue()
 
 

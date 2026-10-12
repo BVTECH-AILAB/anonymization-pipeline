@@ -52,6 +52,7 @@ async def extract_page(page: Page, client: VLMClient, cfg: PipelineConfig) -> li
 async def _docling(
     doc: Document, cfg: PipelineConfig
 ) -> tuple[dict[int, str], list[str]]:
+    """Markdown of the native pages (``doc.docling`` keeps the conversion) and the warnings."""
     native = [p.index for p in doc.pages if p.native]
     settings = cfg.phases.extraction.native_pdf
     if not native or doc.source is None or settings.engine != "docling":
@@ -60,7 +61,7 @@ async def _docling(
         with metrics.measure(
             "extraction.docling"
         ):  # the whole document in one conversion
-            markdown = await asyncio.to_thread(
+            markdown, doc.docling = await asyncio.to_thread(
                 native_pdf.convert, doc.source, native, settings
             )
     except native_pdf.DoclingUnavailable as exc:

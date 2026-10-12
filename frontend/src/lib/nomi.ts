@@ -45,6 +45,7 @@ const AVVISI: Record<string, string> = {
   docling_unavailable: "docling non disponibile",
   verification_skipped: "verifica non eseguita",
   residuals_not_fixed: "residui non corretti",
+  layout_unavailable: "PDF con layout non prodotto",
 };
 
 const nome = (mappa: Record<string, string>, v: string) => (Object.hasOwn(mappa, v) ? mappa[v] : v);

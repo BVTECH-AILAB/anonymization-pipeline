@@ -8,6 +8,14 @@ from typing import Any
 
 import httpx
 import yaml
+from docling_core.types.doc import (
+    BoundingBox,
+    CoordOrigin,
+    DocItemLabel,
+    DoclingDocument,
+    ProvenanceItem,
+    Size,
+)
 from PIL import Image
 
 from anonymization_pipeline.pipeline_config import (
@@ -51,6 +59,42 @@ def models_file(
         )
     )
     return str(path)
+
+
+def fake_convert(
+    text: Callable[[int], str],
+) -> Callable[..., tuple[dict[int, str], DoclingDocument]]:
+    """Stand-in for ``native_pdf.convert``: page i -> ``text(i)``, with a docling document holding
+    one text item per non-empty line, stacked from the top of an A4 page."""
+
+    def convert(
+        data: bytes, pages: list[int], c: object
+    ) -> tuple[dict[int, str], DoclingDocument]:
+        doc = DoclingDocument(name="fake")
+        for i in pages:
+            doc.add_page(i + 1, Size(width=595, height=842))
+            top = 800.0
+            for line in text(i).split("\n"):
+                if line.strip():
+                    doc.add_text(
+                        DocItemLabel.TEXT,
+                        line,
+                        prov=ProvenanceItem(
+                            page_no=i + 1,
+                            bbox=BoundingBox(
+                                l=50,
+                                t=top,
+                                r=545,
+                                b=top - 14,
+                                coord_origin=CoordOrigin.BOTTOMLEFT,
+                            ),
+                            charspan=(0, len(line)),
+                        ),
+                    )
+                    top -= 20
+        return {i: text(i) for i in pages}, doc
+
+    return convert
 
 
 def _no_network(request: httpx.Request) -> httpx.Response:

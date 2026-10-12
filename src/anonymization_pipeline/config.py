@@ -58,6 +58,9 @@ class Settings(BaseSettings):
     default_mode: RedactionMode = "pseudonym"
     default_verification: VerificationMode = "block"
     default_extraction: ExtractionEngine = "docling"
+    # Also a PDF with the layout of the original (censored) and its structure, for every request
+    # that does not choose.
+    default_layout_output: bool = False
     docling_models_dir: str = "/models/docling"
     # Optional YAML file with pipeline overrides (see resources/default.yaml).
     pipeline_config_file: str = ""

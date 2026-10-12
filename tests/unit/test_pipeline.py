@@ -1,6 +1,7 @@
 import asyncio
 import io
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -14,14 +15,24 @@ from anonymization_pipeline.pipeline import (
     anonymize,
     check_invariant,
     restore,
+    restore_pdf,
 )
 from anonymization_pipeline.pipeline_config import PipelineConfig
-from anonymization_pipeline.redaction.vault import generate_key
+from anonymization_pipeline.redaction import structure
+from anonymization_pipeline.redaction.structure import (
+    ATTACHMENT,
+    StructureError,
+    StructureLeak,
+)
+from anonymization_pipeline.redaction.vault import VaultError, generate_key
+from anonymization_pipeline.rendering import attachment, text_of
 from anonymization_pipeline.verification import UnredactableContent
 from anonymization_pipeline.vlm import VLMError
 from tests.pipeline import (
+    FIXTURES,
     FakeVLM,
     IdealModel,
+    fake_convert,
     models_file,
     pipeline_config,
     png,
@@ -301,9 +312,7 @@ def test_without_transcript_no_clear_text_occurrence() -> None:
 
 def test_native_pdf_extraction_in_the_report(monkeypatch: pytest.MonkeyPatch) -> None:
     markdown = "# Referto\n\nPaziente: Mario Rossi"
-    monkeypatch.setattr(
-        native_pdf, "convert", lambda data, pages, c: {i: markdown for i in pages}
-    )
+    monkeypatch.setattr(native_pdf, "convert", fake_convert(lambda i: markdown))
     data = pdf_with_text([(line, "") for line in LINES])
 
     result, _ = _run(
@@ -409,3 +418,122 @@ def test_common_word_left_in_lowercase_does_not_break_the_invariant() -> None:
 
     assert "globuli rossi" in result.markdown
     assert "ROSSI" not in result.markdown and "Rossi M." not in result.markdown
+
+
+# --- layout PDF ---------------------------------------------------------------------------------
+
+LAYOUT = {"output": {"layout_pdf": True}}
+
+
+def _clear_text(pdf: bytes) -> str:
+    return " ".join(" ".join(text_of(pdf)).split())
+
+
+def test_layout_pdf_is_off_by_default() -> None:
+    result, _ = _run(IdealModel(VALUES))
+
+    assert result.layout_pdf is None and result.structure is None
+    assert result.report["layout"] == "off"
+    assert result.encrypted_map is not None
+    with pytest.raises(StructureError, match="non contiene"):
+        restore_pdf(b'{"name": "x"}', result.encrypted_map, KEY)
+
+
+def test_layout_pdf_of_a_text_document_and_its_restore() -> None:
+    result, _ = _run(IdealModel(VALUES), pipeline_config(LAYOUT))
+
+    assert result.report["layout"] == "pdf"
+    assert result.layout_pdf is not None and result.structure is not None
+    censored = _clear_text(result.layout_pdf)
+    assert "[PERSONA_1]" in censored and "[CODICE_FISCALE_1]" in censored
+    for value in VALUES:
+        assert value not in censored
+        assert value not in result.structure.decode()
+    assert attachment(result.layout_pdf, ATTACHMENT) == result.structure
+    assert result.encrypted_map is not None
+
+    for document in (result.layout_pdf, result.structure):
+        original = _clear_text(restore_pdf(document, result.encrypted_map, KEY))
+        assert "Paziente: Mario Rossi" in original and "RSSMRA80A01H501U" in original
+    with pytest.raises(VaultError):
+        restore_pdf(result.layout_pdf, result.encrypted_map, generate_key())
+
+
+def test_layout_pdf_of_native_pages_keeps_the_docling_positions(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    markdown = "Paziente: Mario Rossi\nDiagnosi: diabete mellito tipo 2"
+    monkeypatch.setattr(native_pdf, "convert", fake_convert(lambda i: markdown))
+    data = pdf_with_text([(line, "") for line in LINES])
+
+    result, _ = _run(IdealModel(VALUES), pipeline_config(LAYOUT), "a.pdf", data)
+
+    assert result.structure is not None and result.layout_pdf is not None
+    structure = json.loads(result.structure)
+    assert [t["text"] for t in structure["texts"]] == [
+        "Paziente: [PERSONA_1]",
+        "Diagnosi: [DIAGNOSI_1]",
+    ]
+    assert structure["texts"][0]["prov"][0]["bbox"]["t"] == 800
+    assert result.encrypted_map is not None
+    original = _clear_text(restore_pdf(result.layout_pdf, result.encrypted_map, KEY))
+    assert "Paziente: Mario Rossi" in original
+
+
+def test_layout_pdf_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+    def leak(*args: object) -> None:
+        raise StructureLeak("test")
+
+    monkeypatch.setattr(structure, "check", leak)
+
+    result, _ = _run(IdealModel(VALUES), pipeline_config(LAYOUT))
+
+    assert result.layout_pdf is None and result.structure is None
+    assert result.report["layout"] == "unavailable"
+    assert "layout_unavailable" in result.report["warnings"]
+    assert result.markdown  # the Markdown is still returned
+
+
+def test_layout_pdf_in_redaction_mode_has_no_map() -> None:
+    result, _ = _run(
+        IdealModel(VALUES),
+        pipeline_config(LAYOUT, default_mode="redaction"),
+        key=None,
+    )
+
+    assert result.layout_pdf is not None and result.encrypted_map is None
+    assert "█████" in _clear_text(result.layout_pdf)
+
+
+@pytest.mark.docling
+def test_layout_pdf_with_real_docling() -> None:
+    """Image with the 'docling' extra and the models in ANONPIP_DOCLING_MODELS_DIR (or the default)."""
+    folder = os.environ.get("ANONPIP_DOCLING_MODELS_DIR", "/models/docling")
+    cfg = pipeline_config(LAYOUT, docling_models_dir=folder)
+    c = cfg.phases.extraction.native_pdf
+    if not native_pdf.DOCLING_INSTALLED or not native_pdf.models_present(c):
+        pytest.skip("docling or its models are missing")
+    values = {
+        "ESPOSITO FRANCESCA": "PERSONA",
+        "SPSFNC72M67G273V": "CODICE_FISCALE",
+        "Salvatore Lo Bue": "FAMILIARE",
+    }
+    data = (FIXTURES / "referto_pdf_nativo.pdf").read_bytes()
+
+    result, _ = _run(IdealModel(values), cfg, "referto.pdf", data)
+
+    assert result.report["layout"] == "pdf", result.report["warnings"]
+    assert result.report["extraction"]["docling"] == [1]
+    assert result.layout_pdf is not None and result.structure is not None
+    structure = json.loads(result.structure)
+    assert structure["texts"] and all(
+        t["prov"][0]["page_no"] == 1 for t in structure["texts"]
+    )
+    censored = _clear_text(result.layout_pdf)
+    assert "VISITA CARDIOLOGICA" in censored
+    for value in values:
+        assert value not in censored and value not in result.structure.decode()
+    assert result.encrypted_map is not None
+    original = _clear_text(restore_pdf(result.layout_pdf, result.encrypted_map, KEY))
+    for value in values:
+        assert value in original

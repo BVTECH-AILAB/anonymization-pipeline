@@ -11,6 +11,7 @@ from anonymization_pipeline.api.anonymization import (
     Extraction,
     Key,
     KeyHeader,
+    Layout,
     Mode,
     Model,
     Verification,
@@ -67,13 +68,22 @@ async def create_job(
     transcript: Annotated[
         bool | None, Form(description="also the transcript IN CLEAR TEXT (debugging)")
     ] = None,
+    layout: Layout = None,
     key: Key = None,
     x_anon_key: KeyHeader = None,
 ) -> dict[str, Any]:
     models = phase_models(model_extraction, model_detection, model_verification)
     data = await read_upload(file, service.settings)
     cfg = await service.request_config(
-        mode, verification, extraction, models, enable, disable, transcript, detectors
+        mode,
+        verification,
+        extraction,
+        models,
+        enable,
+        disable,
+        transcript,
+        detectors,
+        layout,
     )
     secret = service.key(key, x_anon_key)
     if cfg.phases.redaction.mode == "pseudonym" and not secret:

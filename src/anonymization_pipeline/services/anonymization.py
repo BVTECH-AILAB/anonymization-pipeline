@@ -33,6 +33,7 @@ from anonymization_pipeline.pipeline import (
     anonymize,
     restore,
     restore_detail,
+    restore_pdf,
 )
 from anonymization_pipeline.pipeline_config import (
     PHASES,
@@ -42,6 +43,7 @@ from anonymization_pipeline.pipeline_config import (
     registry,
     request_overrides,
 )
+from anonymization_pipeline.redaction.structure import StructureError
 from anonymization_pipeline.redaction.vault import VaultError, sha256
 from anonymization_pipeline.services.jobs import Job
 from anonymization_pipeline.verification import UnredactableContent
@@ -89,6 +91,7 @@ class AnonymizationService:
         disable: str | None = None,
         transcript: bool | None = None,
         detectors: str | None = None,
+        layout: bool | None = None,
     ) -> PipelineConfig:
         """Configuration of one request.
 
@@ -120,6 +123,7 @@ class AnonymizationService:
                 extraction,
                 transcript,
                 _split(detectors) or None,
+                layout,
             )
             cfg = load_pipeline_config(self.settings, overrides)
         except ValueError as exc:
@@ -268,6 +272,22 @@ class AnonymizationService:
         """
         try:
             return restore_detail(markdown, encrypted_map, key, self.config)
+        except VaultError as exc:
+            raise RestoreError(str(exc)) from exc
+
+    async def restore_pdf(
+        self, document: bytes, encrypted_map: bytes, key: str
+    ) -> bytes:
+        """Original PDF from the censored layout PDF (or its structure JSON) and the map.
+
+        Raises:
+            RestoreError: Wrong key, invalid or tampered map.
+            BadRequestError: No structure, or a structure that does not match the map.
+        """
+        try:
+            return await asyncio.to_thread(restore_pdf, document, encrypted_map, key)
+        except StructureError as exc:
+            raise BadRequestError(str(exc)) from exc
         except VaultError as exc:
             raise RestoreError(str(exc)) from exc
 

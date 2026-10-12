@@ -219,6 +219,7 @@ class Output(_Section):
     page_separator: str
     save_transcript: bool
     save_metrics: bool
+    layout_pdf: bool
 
 
 class PipelineConfig(_Section):

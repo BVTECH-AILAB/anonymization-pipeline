@@ -1,3 +1,4 @@
+import base64
 import io
 import json
 import zipfile
@@ -18,7 +19,7 @@ from anonymization_pipeline.redaction.vault import generate_key
 from anonymization_pipeline.vlm import VLMError
 from anonymization_pipeline.vlm.images import encode_image
 from tests.conftest import FAKE_CF, TEST_MODEL, make_settings
-from tests.pipeline import FIXTURES, models_file, pipeline_config, width
+from tests.pipeline import FIXTURES, fake_convert, models_file, pipeline_config, width
 from tests.unit.conftest import TEXT, VALUES, FakeBackend
 
 KEY = generate_key()
@@ -213,6 +214,49 @@ def test_restore_with_detail(client: TestClient) -> None:
     )
 
 
+def test_layout_pdf_and_restore_pdf(
+    client: TestClient, log_stream: io.StringIO
+) -> None:
+    response = client.post(
+        "/anonymize", files=_upload(), data={"key": KEY, "layout": "true"}
+    )
+
+    assert response.status_code == 200, response.text
+    archive = zipfile.ZipFile(io.BytesIO(response.content))
+    assert {"nota.anon.pdf", "nota.anon.docling.json"} <= set(archive.namelist())
+    pdf, encrypted = archive.read("nota.anon.pdf"), archive.read("nota.mappa.enc")
+    files = {"document": ("nota.anon.pdf", pdf), "map": ("m", encrypted)}
+
+    restored = client.post("/restore/pdf", files=files, data={"key": KEY})
+
+    assert restored.status_code == 200, restored.text
+    assert restored.headers["content-type"] == "application/pdf"
+    assert "documento.ripristinato.pdf" in restored.headers["content-disposition"]
+    assert restored.content.startswith(b"%PDF")
+    wrong = client.post("/restore/pdf", files=files, data={"key": generate_key()})
+    assert wrong.status_code == 403
+    assert client.post("/restore/pdf", files=files).status_code == 400  # no key
+    plain = {"document": ("a.pdf", b"%PDF-1.4 broken"), "map": ("m", encrypted)}
+    response = client.post("/restore/pdf", files=plain, data={"key": KEY})
+    assert response.status_code == 400 and "PDF" in response.json()["detail"]
+    logs = log_stream.getvalue()
+    for value in [*VALUES, KEY]:
+        assert value not in logs
+
+
+def test_layout_pdf_in_the_json_result(client: TestClient) -> None:
+    body = client.post(
+        "/anonymize?format=json", files=_upload(), data={"key": KEY, "layout": "true"}
+    ).json()
+
+    assert body["report"]["layout"] == "pdf"
+    assert body["file_names"]["layout_pdf"] == "nota.anon.pdf"
+    assert base64.b64decode(body["layout_pdf_b64"]).startswith(b"%PDF")
+    structure = base64.b64decode(body["structure_b64"]).decode()
+    for value in VALUES:
+        assert value not in structure
+
+
 def test_restore_rejects_non_utf8_markdown(client: TestClient) -> None:
     files = {"markdown": ("a", b"\xff\xfe\x00"), "map": ("m", b"{}")}
 
@@ -367,7 +411,7 @@ def test_extraction_chosen_per_request(
     monkeypatch.setattr(
         native_pdf,
         "convert",
-        lambda data, pages, c: {i: "Paziente: Mario Rossi" for i in pages},
+        fake_convert(lambda i: "Paziente: Mario Rossi"),
     )
     pdf = (FIXTURES / "referto_pdf_nativo.pdf").read_bytes()
     cfg = pipeline_config()

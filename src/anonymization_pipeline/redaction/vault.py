@@ -106,7 +106,11 @@ def decrypt_map(blob: bytes, secret: str) -> dict[str, Any]:
 
 
 def map_content(
-    name: str, doc_sha256: str, markdown: str, occurrences: list[dict[str, Any]]
+    name: str,
+    doc_sha256: str,
+    markdown: str,
+    occurrences: list[dict[str, Any]],
+    structure: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Plain content of the map (it holds the original values: it is only stored encrypted).
 
@@ -115,8 +119,11 @@ def map_content(
         doc_sha256: Fingerprint of the original document.
         markdown: Redacted Markdown.
         occurrences: ``{start, end, replacement, original}`` with offsets in ``markdown``.
+        structure: With the layout output, what rebuilds the original structure
+            (``structure.map_section``); maps without it restore the Markdown only.
     """
     return {
+        **(structure or {}),
         "versione": VERSION,
         "documento": name,
         "sha256": doc_sha256,

@@ -17,6 +17,8 @@ import threading
 from pathlib import Path
 from typing import Any
 
+from docling_core.types.doc import ContentLayer, DoclingDocument
+
 from anonymization_pipeline.pipeline_config.schema import Docling, NativePdf
 
 try:
@@ -37,7 +39,6 @@ try:
     from docling.document_converter import DocumentConverter, PdfFormatOption
     from docling.models.utils.hf_model_download import download_hf_model
     from docling.utils.model_downloader import download_models
-    from docling_core.types.doc.document import ContentLayer
 
     DOCLING_INSTALLED = True
 except ImportError:  # image without the 'docling' extra
@@ -168,8 +169,10 @@ def _converter(d: Docling, models_dir: str) -> Any:
     )
 
 
-def convert(data: bytes, pages: list[int], c: NativePdf) -> dict[int, str]:
-    """Markdown of ``pages`` (zero-based) of the PDF.
+def convert(
+    data: bytes, pages: list[int], c: NativePdf
+) -> tuple[dict[int, str], DoclingDocument]:
+    """Markdown of ``pages`` (zero-based) of the PDF, and the docling document it comes from.
 
     Headers and footers included unless the docling file excludes them, text that docling
     classifies as invisible or background excluded; images become ``[IMMAGINE]``.
@@ -201,7 +204,7 @@ def convert(data: bytes, pages: list[int], c: NativePdf) -> dict[int, str]:
     if c.docling.furniture:
         layers.add(ContentLayer.FURNITURE)
     # no escaping: "&", "<", "_" stay as in the document (values must be found in the text)
-    return {
+    markdown = {
         i: result.document.export_to_markdown(
             page_no=i + 1,
             included_content_layers=layers,
@@ -211,3 +214,4 @@ def convert(data: bytes, pages: list[int], c: NativePdf) -> dict[int, str]:
         ).strip()
         for i in pages
     }
+    return markdown, result.document

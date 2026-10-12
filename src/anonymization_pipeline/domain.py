@@ -3,6 +3,7 @@
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
+from docling_core.types.doc import DoclingDocument
 from PIL import Image
 
 DocumentKind = Literal["pdf", "image", "text"]
@@ -33,11 +34,13 @@ class Page:
 
 @dataclass
 class Document:
-    """A loaded document. ``source`` keeps the original PDF bytes for docling."""
+    """A loaded document. ``source`` keeps the original PDF bytes for docling, ``docling`` the
+    conversion of its native pages (IN CLEAR TEXT: only the layout structure is built from it)."""
 
     kind: DocumentKind
     pages: list[Page] = field(default_factory=list)
     source: bytes | None = field(default=None, repr=False)
+    docling: DoclingDocument | None = field(default=None, repr=False)
 
     @property
     def visual(self) -> bool:
@@ -99,6 +102,8 @@ class Result:
         metrics: Times and performance, without values.
         tags: Positions of the replacements in the redacted Markdown, without values.
         occurrences: With the transcript: positions in the clear text too, and the values.
+        layout_pdf: Censored PDF with the layout of the original, the structure attached.
+        structure: Censored layout structure (DoclingDocument JSON).
     """
 
     name: str
@@ -109,6 +114,8 @@ class Result:
     metrics: dict[str, Any] | None = None
     tags: list[dict[str, Any]] = field(default_factory=list)
     occurrences: list[dict[str, Any]] | None = None
+    layout_pdf: bytes | None = field(default=None, repr=False)
+    structure: bytes | None = field(default=None, repr=False)
 
     def output_names(self, stem: str | None = None) -> dict[str, str]:
         """File names of the outputs (unchanged from the original tool, for compatibility)."""
@@ -120,4 +127,8 @@ class Result:
             names["metrics"] = f"{stem}.metriche.json"
         if self.transcript is not None:
             names["transcript"] = f"{stem}.trascrizione.md"
+        if self.layout_pdf is not None:
+            names["layout_pdf"] = f"{stem}.anon.pdf"
+        if self.structure is not None:
+            names["structure"] = f"{stem}.anon.docling.json"
         return names

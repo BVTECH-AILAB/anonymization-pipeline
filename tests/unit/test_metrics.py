@@ -14,7 +14,7 @@ from anonymization_pipeline.pipeline import anonymize
 from anonymization_pipeline.pipeline_config import PipelineConfig
 from anonymization_pipeline.pipeline_config.schema import ModelSpec
 from anonymization_pipeline.vlm import VLMClient, VLMResponse
-from tests.pipeline import FakeVLM, IdealModel, pipeline_config
+from tests.pipeline import FakeVLM, IdealModel, fake_convert, pipeline_config
 from tests.unit.test_extraction import LINES, pdf_with_text
 
 VALUES = {
@@ -135,7 +135,7 @@ def test_hybrid_extraction(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         native_pdf,
         "convert",
-        lambda data, pages, c: {i: "Paziente: Mario Rossi" for i in pages},
+        fake_convert(lambda i: "Paziente: Mario Rossi"),
     )
 
     result = _run(name="r.pdf", data=pdf_with_text([(line, "") for line in LINES]))

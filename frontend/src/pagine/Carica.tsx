@@ -9,7 +9,7 @@ import { useSessione, type Documento } from "../stato/sessione";
 const FASI: Phase[] = ["ingest", "extraction", "detection", "redaction", "verification"];
 const ESTENSIONI = ".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.webp,.txt,.md,.csv,.json,.xml,.html,.eml";
 
-const PREDEFINITE: Options = { models: {}, mode: "pseudonym", verification: "", extraction: "", enable: [], disable: [], transcript: false, detectors: null };
+const PREDEFINITE: Options = { models: {}, mode: "pseudonym", verification: "", extraction: "", enable: [], disable: [], transcript: false, layout: false, detectors: null };
 
 
 /** "rilevamento <modello>" per le fasi con un modello scelto. */
@@ -56,6 +56,14 @@ function Durata({ d }: { d: Documento }) {
   if (!l.started) return <>–</>;
   const s = (l.finished ?? Date.now() / 1000) - l.started;
   return <>{s.toFixed(0)} s</>;
+}
+
+function scaricaPdf(d: Documento) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(api.base64InBlob(d.risultato!.layout_pdf_b64!));
+  a.download = `${d.nome.replace(/\.[^.]+$/, "")}.anon.pdf`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 async function scaricaZip(d: Documento) {
@@ -236,6 +244,10 @@ export default function Carica() {
             </details>
           )}
           <label className="inline" style={{ marginTop: 12 }}>
+            <input type="checkbox" checked={o.layout} onChange={(e) => setO({ ...o, layout: e.target.checked })} />
+            Produci anche il PDF censurato con il layout dell'originale
+          </label>
+          <label className="inline" style={{ marginTop: 12 }}>
             <input type="checkbox" checked={o.transcript} onChange={(e) => setO({ ...o, transcript: e.target.checked })} />
             Restituisci anche la trascrizione in chiaro (debug)
           </label>
@@ -260,7 +272,7 @@ export default function Carica() {
             {s.documenti.map((d) => (
               <tr key={d.id}>
                 <td>{d.nome}{d.errore && <div className="nota errore">{d.errore}</div>}</td>
-                <td>{nomeModalita(d.opzioni.mode)}{d.opzioni.transcript ? " + trascrizione" : ""}{modelliScelti(d.opzioni).length > 0 && <div className="nota">{modelliScelti(d.opzioni).join(" · ")}</div>}
+                <td>{nomeModalita(d.opzioni.mode)}{d.opzioni.transcript ? " + trascrizione" : ""}{d.opzioni.layout ? " + PDF" : ""}{modelliScelti(d.opzioni).length > 0 && <div className="nota">{modelliScelti(d.opzioni).join(" · ")}</div>}
                   {d.opzioni.detectors && <div className="nota">rilevatori: {d.opzioni.detectors.map((r) => RILEVATORI.find((x) => x.r === r)?.nome ?? r).join(", ")}</div>}</td>
                 <td><Avanzamento d={d} /></td>
                 <td className="num"><Durata d={d} /></td>
@@ -269,6 +281,7 @@ export default function Carica() {
                     {d.risultato && <Link to={`/confronto/${d.id}`}>Confronto</Link>}
                     {d.risultato && <Link to={`/dashboard/${d.id}`}>Dashboard</Link>}
                     {d.risultato && <button className="secondario piccolo" onClick={() => scaricaZip(d)}>ZIP</button>}
+                    {d.risultato?.layout_pdf_b64 && <button className="secondario piccolo" onClick={() => scaricaPdf(d)}>PDF</button>}
                     <button className="secondario piccolo" onClick={() => s.rimuovi(d.id)}>Rimuovi</button>
                   </div>
                 </td>

@@ -94,6 +94,7 @@ scaricare i modelli. Nel cluster le stesse regole sono NetworkPolicy
 | `GET /healthz`, `GET /readyz`, `GET /version` | Probe; `/readyz` controlla il backend VLM e il modello (503 se mancano) e riporta lo stato di NER e docling |
 | `POST /anonymize` | Anonimizza un documento: ZIP (default) o `?format=json` |
 | `POST /restore`, `POST /restore/detail` | Ripristina i valori da Markdown + mappa (`/detail`: con le posizioni dei tag) |
+| `POST /restore/pdf` | Ricostruisce il PDF originale da PDF censurato con layout (o la sua struttura `.anon.docling.json`) + mappa |
 | `POST /jobs`, `GET /jobs`, `GET /jobs/{id}`, `GET /jobs/{id}/result`, `DELETE /jobs/{id}` | Elaborazione asincrona (usata dall'interfaccia web) |
 | `GET /models`, `GET /categories`, `GET /configuration` | Modelli nel backend, categorie, configurazione effettiva (senza segreti) |
 
@@ -102,9 +103,11 @@ Campi multipart di `/anonymize` e `/jobs`: `file`, `mode`
 `extraction` (`docling`, `vlm`), `model_extraction`, `model_detection`,
 `model_verification` (uno di `GET /models`), `detectors`,
 `enable`/`disable` (categorie o gruppi separati da virgola), `key` (oppure
-header `X-Anon-Key`; senza, vale `ANONPIP_VAULT_KEY`), `transcript` (solo
-`/jobs` e solo con `ANONPIP_ALLOW_TRANSCRIPT=true`: trascrizione in chiaro
-per il confronto nell'interfaccia).
+header `X-Anon-Key`; senza, vale `ANONPIP_VAULT_KEY`), `layout` (anche il
+PDF censurato con il layout dell'originale; senza, vale
+`ANONPIP_DEFAULT_LAYOUT_OUTPUT`), `transcript` (solo `/jobs` e solo con
+`ANONPIP_ALLOW_TRANSCRIPT=true`: trascrizione in chiaro per il confronto
+nell'interfaccia).
 
 ```bash
 curl -F file=@tests/fixtures/ricetta.txt -F mode=tag "localhost:8000/anonymize?format=json"
@@ -113,6 +116,19 @@ curl -F file=@tests/fixtures/ricetta.txt -F mode=tag "localhost:8000/anonymize?f
 Output (anche nello ZIP): `<nome>.anon.md`, `<nome>.report.json`,
 `<nome>.metriche.json`, in modalità pseudonimo `<nome>.mappa.enc`. Report e
 metriche contengono solo conteggi, categorie, pagine e tempi.
+
+Con `layout` anche `<nome>.anon.pdf` e `<nome>.anon.docling.json`. Il PDF
+censurato ricalca l'originale a partire dagli oggetti docling (posizioni,
+testo, tabelle; le immagini diventano un riquadro `[IMMAGINE]`, le pagine
+estratte dal VLM sono testo a flusso) e ha allegata la struttura docling
+censurata (il JSON: tag al posto dei valori, senza immagini, metadati e
+nome del file). In modalità pseudonimo la mappa contiene anche dove stanno i
+valori nella struttura: `POST /restore/pdf` con PDF censurato, mappa e
+chiave restituisce il PDF originale ricostruito (stessi testi e posizioni,
+font approssimato, senza immagini). Se la struttura o il PDF potessero
+contenere testo che il Markdown censurato non contiene, i due file non
+vengono prodotti (avviso `layout_unavailable`, report `layout:
+unavailable`): il Markdown resta l'output di riferimento.
 
 ## Configurazione
 
@@ -183,8 +199,9 @@ src/anonymization_pipeline/
   services/           anonymization (slot, errori, stato), jobs (coda in memoria), results
   pipeline.py         orchestrazione delle fasi
   pipeline_config/    schema, caricamento a strati, registro delle categorie
-  resources/          default.yaml, models.yaml, categories.yaml, prompts/, detectors/
+  resources/          default.yaml, models.yaml, categories.yaml, prompts/, detectors/, fonts/
   ingest/ extraction/ detection/ detectors/ redaction/ verification/ vlm/
+  rendering.py        PDF con il layout dalla struttura docling (reportlab)
   domain.py text.py metrics.py model_store.py
   logging_setup.py privacy.py middleware.py errors.py
 frontend/             interfaccia web React + Vite, servita da nginx

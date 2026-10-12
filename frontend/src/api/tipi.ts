@@ -94,6 +94,7 @@ export interface Report {
     outcome: string;
     residuals: Residual[];
   };
+  layout?: "off" | "pdf" | "unavailable"; // PDF con il layout dell'originale
   vlm: Record<string, VlmStats>;
   times_s: Record<string, number>;
   warnings: string[];
@@ -136,12 +137,14 @@ export interface Metrics {
 }
 
 export interface Result {
-  file_names: Record<string, string>; // markdown, report, map, metrics, transcript
+  file_names: Record<string, string>; // markdown, report, map, metrics, transcript, layout_pdf, structure
   markdown: string;
   report: Report;
   metrics: Metrics | null;
   tags: Tag[];
   encrypted_map_b64: string | null;
+  layout_pdf_b64?: string | null; // PDF censurato con il layout dell'originale (struttura allegata)
+  structure_b64?: string | null; // struttura docling censurata (JSON)
   transcript?: string;
   occurrences?: Occurrence[];
 }
@@ -193,5 +196,6 @@ export interface Options {
   enable: string[];
   disable: string[];
   transcript: boolean;
+  layout: boolean; // anche il PDF con il layout dell'originale
   detectors: Rilevatore[] | null; // insieme completo degli attivi; null = predefiniti del servizio
 }

@@ -20,7 +20,14 @@ from anonymization_pipeline.pipeline_config.schema import (
     TableModel,
 )
 from anonymization_pipeline.vlm import VLMResponse
-from tests.pipeline import FIXTURES, FakeVLM, IdealModel, pipeline_config, width
+from tests.pipeline import (
+    FIXTURES,
+    FakeVLM,
+    IdealModel,
+    fake_convert,
+    pipeline_config,
+    width,
+)
 
 LINES = [
     "Referto cardiologico del paziente Mario Rossi",
@@ -146,7 +153,7 @@ def test_hybrid_extraction(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         native_pdf,
         "convert",
-        lambda data, pages, c: {i: f"# Pagina {i + 1} da docling" for i in pages},
+        fake_convert(lambda i: f"# Pagina {i + 1} da docling"),
     )
     doc, cfg = _doc(), pipeline_config()
     client = FakeVLM(cfg, IdealModel({}, markdown={410: "Pagina 2 dal VLM"}))
@@ -272,7 +279,7 @@ def test_real_docling() -> None:
 
     markdown = native_pdf.convert(
         (FIXTURES / "referto_pdf_nativo.pdf").read_bytes(), [0], c
-    )[0]
+    )[0][0]
 
     assert (
         "## VISITA CARDIOLOGICA" in markdown

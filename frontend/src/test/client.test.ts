@@ -34,7 +34,7 @@ describe("client API", () => {
   it("accoda un lavoro con le opzioni, senza header di autenticazione", async () => {
     const f = finto(202, { id: "x", status: "queued" });
     const file = new File(["ciao"], "nota.txt");
-    await api.nuovoLavoro(file, { models: { detection: "vlm-piccolo:1", verification: "" }, mode: "pseudonym", verification: "", extraction: "vlm", enable: [], disable: ["sanitari", "date"], transcript: true, detectors: ["rules", "ner"] }, "K");
+    await api.nuovoLavoro(file, { models: { detection: "vlm-piccolo:1", verification: "" }, mode: "pseudonym", verification: "", extraction: "vlm", enable: [], disable: ["sanitari", "date"], transcript: true, layout: true, detectors: ["rules", "ner"] }, "K");
     const [url, init] = chiamata(f);
     expect(url).toBe("/api/jobs");
     expect(init?.method).toBe("POST");
@@ -48,18 +48,19 @@ describe("client API", () => {
     expect(body.get("detectors")).toBe("rules,ner");
     expect(body.has("enable")).toBe(false);
     expect(body.get("transcript")).toBe("true");
+    expect(body.get("layout")).toBe("true");
     expect(body.get("key")).toBe("K");
     expect(body.has("verification")).toBe(false);
   });
 
   it("la chiave parte solo in modalità pseudonimo", async () => {
     const f = finto(202, { id: "x", status: "queued" });
-    await api.nuovoLavoro(new File(["ciao"], "nota.txt"), { models: {}, mode: "tag", verification: "block", extraction: "", enable: ["date"], disable: [], transcript: false, detectors: null }, "K");
+    await api.nuovoLavoro(new File(["ciao"], "nota.txt"), { models: {}, mode: "tag", verification: "block", extraction: "", enable: ["date"], disable: [], transcript: false, layout: false, detectors: null }, "K");
     const body = chiamata(f)[1]?.body as FormData;
     expect(body.get("mode")).toBe("tag");
     expect(body.get("verification")).toBe("block");
     expect(body.get("enable")).toBe("date");
-    for (const campo of ["key", "model_detection", "extraction", "transcript", "disable", "detectors"]) expect(body.has(campo)).toBe(false);
+    for (const campo of ["key", "model_detection", "extraction", "transcript", "layout", "disable", "detectors"]) expect(body.has(campo)).toBe(false);
   });
 
   it("percorsi di lavori, risultato, catalogo e ripristino", async () => {
@@ -70,9 +71,12 @@ describe("client API", () => {
     await api.categorie();
     await api.modelli();
     await api.ripristinaDettaglio("# testo", new Blob(["mappa"]), "K");
+    await api.ripristinaPdf(new File(["%PDF"], "a.anon.pdf"), new Blob(["mappa"]), "K");
     expect(f.mock.calls.map((c) => c[0])).toEqual([
       "/api/jobs/a%2Fb", "/api/jobs/x/result", "/api/jobs/x/result?format=zip", "/api/categories", "/api/models", "/api/restore/detail",
+      "/api/restore/pdf",
     ]);
+    expect([...(chiamata(f, 6)[1]?.body as FormData).keys()]).toEqual(["document", "map", "key"]);
     const body = chiamata(f, 5)[1]?.body as FormData;
     expect([...body.keys()]).toEqual(["markdown", "map", "key"]);
     expect(body.get("key")).toBe("K");

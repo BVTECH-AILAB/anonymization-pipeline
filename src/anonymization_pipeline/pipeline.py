@@ -15,13 +15,19 @@ from typing import Any
 
 from anonymization_pipeline import __version__, metrics
 from anonymization_pipeline.detection import detect
-from anonymization_pipeline.detectors import eponyms
-from anonymization_pipeline.domain import Document, Occurrence, Residual, Result
+from anonymization_pipeline.domain import Document, Group, Occurrence, Residual, Result
 from anonymization_pipeline.extraction import extract
 from anonymization_pipeline.ingest import load
 from anonymization_pipeline.pipeline_config import PHASES, PipelineConfig
-from anonymization_pipeline.redaction import group_entities, redact, vault
-from anonymization_pipeline.text import find, replacement_spans, tag_category
+from anonymization_pipeline.redaction import (
+    group_entities,
+    leftovers,
+    redact,
+    structure,
+    vault,
+)
+from anonymization_pipeline.rendering import attach, attachment, render_pdf, text_of
+from anonymization_pipeline.text import tag_category
 from anonymization_pipeline.verification import UnredactableContent, verify
 from anonymization_pipeline.vlm import VLMClient, VLMError, encode_image
 
@@ -69,22 +75,42 @@ def check_invariant(
     Raises:
         UnredactableContent: A replaced value is still in clear text.
     """
-    anchoring = cfg.phases.detection.anchoring.model_copy(update={"fuzzy": 0})
-    filtered = cfg.phases.detection.detectors.eponyms
     values = {(o.original, o.category) for found in occurrences for o in found}
-    for i, text in enumerate(pages):
-        exclude = replacement_spans(text, cfg)
-        left = [
-            Residual(c, i + 1)
-            for v, c in values
-            if any(
-                # the occurrences redaction leaves on purpose ("globuli rossi") are not residuals
-                not (filtered and eponyms.is_excluded(text, s, e, c))
-                for s, e in find(text, v, anchoring, exclude)
+    if left := leftovers(pages, values, cfg):
+        raise UnredactableContent("invariant", left)
+
+
+def _layout(
+    doc: Document,
+    groups: list[Group],
+    markdown: str,
+    occurrences: list[Occurrence],
+    cfg: PipelineConfig,
+) -> tuple[bytes, bytes, dict[str, Any]] | None:
+    """Censored layout PDF (structure attached), structure JSON and the map section; None (fail
+    closed) when the structure or the PDF could hold what the censored Markdown does not."""
+    with metrics.measure("layout.structure"):
+        clear = structure.build_structure(doc, cfg)
+        censored = structure.censor(clear, groups, cfg)
+    try:
+        structure.check(censored, markdown, occurrences, cfg)
+        with metrics.measure("layout.pdf"):
+            data = structure.canonical(censored.document)
+            pdf = render_pdf(
+                censored.document,
+                censored.marks,
+                highlight=cfg.phases.redaction.mode != "redaction",
             )
-        ]
-        if left:
-            raise UnredactableContent("invariant", left)
+            pdf = attach(pdf, structure.ATTACHMENT, data)
+        values = {
+            (o.original, o.category) for o in [*occurrences, *censored.occurrences]
+        }
+        if leftovers(text_of(pdf), values, cfg):
+            raise structure.StructureLeak("replaced value in the PDF text")
+    except structure.StructureLeak as exc:
+        logger.warning("Layout PDF not produced: %s", exc)
+        return None
+    return pdf, data, structure.map_section(clear, censored)
 
 
 def _occurrence_dicts(occurrences: list[Occurrence]) -> list[dict[str, Any]]:
@@ -202,10 +228,21 @@ async def anonymize(
 
     check_invariant(pages, occurrences, cfg)
     markdown, joined = _join_pages(doc, pages, occurrences, cfg)
+    layout = None
+    if cfg.output.layout_pdf:
+        layout = await asyncio.to_thread(_layout, doc, groups, markdown, joined, cfg)
+        if layout is None:
+            warnings.append("layout_unavailable")
     doc_sha = vault.sha256(data)
     encrypted_map = None
     if phases.redaction.mode == "pseudonym" and key:
-        content = vault.map_content(name, doc_sha, markdown, _occurrence_dicts(joined))
+        content = vault.map_content(
+            name,
+            doc_sha,
+            markdown,
+            _occurrence_dicts(joined),
+            layout[2] if layout else None,
+        )
         encrypted_map = vault.encrypt_map(content, key, doc_sha)
     times["total"] = round(time.perf_counter() - t0, 2)
     per_group = (
@@ -253,6 +290,9 @@ async def anonymize(
         },
         "redaction": {"groups": len(groups)},
         "verification": verification,
+        "layout": ("pdf" if layout else "unavailable")
+        if cfg.output.layout_pdf
+        else "off",
         "vlm": client.summary(),
         "times_s": times,
         "warnings": warnings,
@@ -292,6 +332,8 @@ async def anonymize(
         metrics=summary,
         tags=tags,
         occurrences=positions,
+        layout_pdf=layout[0] if layout else None,
+        structure=layout[1] if layout else None,
     )
 
 
@@ -319,3 +361,24 @@ def restore_detail(
     for position in positions:
         position["category"] = tag_category(position["replacement"], cfg)
     return {"text": text, "occurrences": positions}
+
+
+def restore_pdf(document: bytes, encrypted_map: bytes, key: str) -> bytes:
+    """Original PDF (layout, text and tables, without images) from the censored layout PDF, or its
+    structure JSON, and the map.
+
+    Raises:
+        VaultError: Wrong key, invalid or tampered map.
+        StructureError: No structure in the PDF or in the map, or they do not match.
+    """
+    content = vault.decrypt_map(encrypted_map, key)
+    data: bytes | None = document
+    if document.startswith(b"%PDF"):
+        try:
+            data = attachment(document, structure.ATTACHMENT)
+        except ValueError as exc:
+            raise structure.StructureError("PDF non leggibile") from exc
+    if data is None:
+        raise structure.StructureError("Il PDF non contiene la struttura del documento")
+    original = structure.restore(structure.load(data), content)
+    return render_pdf(original, highlight=False)

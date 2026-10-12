@@ -88,6 +88,7 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_DEFAULT_MODE` | `pseudonym` | | | no |
 | `ANONPIP_DEFAULT_VERIFICATION` | `block` | | | no |
 | `ANONPIP_DEFAULT_EXTRACTION` | `docling` | | | no |
+| `ANONPIP_DEFAULT_LAYOUT_OUTPUT` | `false` | | | no |
 | `ANONPIP_DOCLING_MODELS_DIR` | `/models/docling` | | | no |
 | `ANONPIP_PIPELINE_CONFIG_FILE` | vuoto | facoltativo (file montato da ConfigMap) | idem | no |
 | `ANONPIP_MODELS_FILE` | vuoto (file dei modelli nell'immagine) | facoltativo (file montato da ConfigMap, lo stesso per API e Job di download) | idem | no |

@@ -42,6 +42,13 @@ Detectors = Annotated[
         "eponyms (the others are off; empty = the configured ones)",
     ),
 ]
+Layout = Annotated[
+    bool | None,
+    Form(
+        description="also the PDF with the layout of the original and its structure "
+        "(empty = the configured default)"
+    ),
+]
 Key = Annotated[
     str | None,
     Form(max_length=200, description="key or passphrase of the map (or X-Anon-Key)"),
@@ -82,6 +89,7 @@ async def anonymize(
     enable: Categories = None,
     disable: Categories = None,
     detectors: Detectors = None,
+    layout: Layout = None,
     key: Key = None,
     x_anon_key: KeyHeader = None,
     output: Annotated[Literal["zip", "json"], Query(alias="format")] = "zip",
@@ -89,7 +97,14 @@ async def anonymize(
     models = phase_models(model_extraction, model_detection, model_verification)
     data = await read_upload(file, service.settings)
     cfg = await service.request_config(
-        mode, verification, extraction, models, enable, disable, detectors=detectors
+        mode,
+        verification,
+        extraction,
+        models,
+        enable,
+        disable,
+        detectors=detectors,
+        layout=layout,
     )
     result = await service.anonymize_now(
         file.filename or "documento", data, cfg, service.key(key, x_anon_key)
@@ -120,6 +135,39 @@ async def restore(
         raise BadRequestError("Chiave mancante.")
     text = await read_markdown(markdown, service.settings)
     return service.restore(text, await read_upload(map_file, service.settings), secret)
+
+
+@router.post(
+    "/restore/pdf",
+    summary="Rebuild the original PDF from the censored layout PDF and the map",
+    response_class=Response,
+    responses={200: {"content": {"application/pdf": {}}}},
+)
+async def restore_pdf(
+    service: AnonymizationServiceDep,
+    document: Annotated[
+        UploadFile, File(description=".anon.pdf file (or its .anon.docling.json)")
+    ],
+    map_file: Annotated[UploadFile, File(alias="map", description=".mappa.enc file")],
+    key: Key = None,
+    x_anon_key: KeyHeader = None,
+) -> Response:
+    """The PDF holds layout, text and tables of the original; images are not rebuilt."""
+    secret = service.key(key, x_anon_key)
+    if not secret:
+        raise BadRequestError("Chiave mancante.")
+    pdf = await service.restore_pdf(
+        await read_upload(document, service.settings),
+        await read_upload(map_file, service.settings),
+        secret,
+    )
+    return Response(
+        pdf,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": content_disposition("documento.ripristinato.pdf")
+        },
+    )
 
 
 @router.post(

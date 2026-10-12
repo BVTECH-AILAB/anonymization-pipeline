@@ -1,6 +1,6 @@
-// Ripristino dei valori originali: Markdown pseudonimizzato + mappa cifrata + chiave.
+// Ripristino dei valori originali: Markdown pseudonimizzato (o PDF con layout) + mappa cifrata + chiave.
 import { useState } from "react";
-import { ripristinaDettaglio } from "../api/client";
+import { ripristinaDettaglio, ripristinaPdf } from "../api/client";
 import type { RestoreDetail } from "../api/tipi";
 import VistaTesto from "../componenti/VistaTesto";
 import { useSessione } from "../stato/sessione";
@@ -15,13 +15,23 @@ export default function Ripristino() {
   const [resa, setResa] = useState(false);
 
   const k = chiave || s.chiave;
+  // PDF con layout o sua struttura: si ricostruisce il PDF originale e lo si scarica, senza mostrarlo
+  const layout = !!md && /\.(pdf|json)$/i.test(md.name);
   const esegui = async () => {
     setErrore(null); setEsito(null);
     try {
-      setEsito(await ripristinaDettaglio(await md!.text(), mappa!, k));
+      if (layout) scaricaPdf(await ripristinaPdf(md!, mappa!, k));
+      else setEsito(await ripristinaDettaglio(await md!.text(), mappa!, k));
     } catch (e) {
       setErrore((e as Error).message);
     }
+  };
+  const scaricaPdf = (blob: Blob) => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = md!.name.replace(/\.anon\.(pdf|docling\.json)$/i, "").replace(/\.(pdf|json)$/i, "") + ".ripristinato.pdf";
+    a.click();
+    URL.revokeObjectURL(a.href);
   };
   const scarica = () => {
     const a = document.createElement("a");
@@ -35,16 +45,25 @@ export default function Ripristino() {
     <section>
       <h1>Ripristino</h1>
       <div className="scheda griglia-opzioni">
-        <label>Markdown censurato (.anon.md)<input type="file" accept=".md" onChange={(e) => setMd(e.target.files?.[0] ?? null)} /></label>
+        <label>
+          Documento censurato (.anon.md, oppure .anon.pdf o .anon.docling.json per il PDF originale)
+          <input type="file" accept=".md,.pdf,.json" onChange={(e) => setMd(e.target.files?.[0] ?? null)} />
+        </label>
         <label>Mappa cifrata (.mappa.enc)<input type="file" accept=".enc" onChange={(e) => setMappa(e.target.files?.[0] ?? null)} /></label>
         <label>
           Chiave {s.chiave && !chiave ? <span className="nota">(quella della sessione)</span> : null}
           <input type="password" value={chiave} onChange={(e) => setChiave(e.target.value.trim())} autoComplete="off" placeholder={s.chiave ? "••••" : ""} />
         </label>
         <div className="riga" style={{ alignSelf: "end" }}>
-          <button disabled={!md || !mappa || !k} onClick={esegui}>Ripristina</button>
+          <button disabled={!md || !mappa || !k} onClick={esegui}>{layout ? "Ricostruisci il PDF" : "Ripristina"}</button>
         </div>
       </div>
+      {layout && (
+        <p className="nota">
+          Il PDF ricostruito riproduce posizioni, testo e tabelle dell'originale; immagini, loghi e firme non vengono
+          ricostruiti. Contiene i dati IN CHIARO: viene solo scaricato, non resta nella pagina.
+        </p>
+      )}
       {errore && <p className="errore">{errore}</p>}
       {esito && (
         <>

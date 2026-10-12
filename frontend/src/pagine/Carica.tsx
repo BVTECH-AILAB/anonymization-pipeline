@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import * as api from "../api/client";
 import type { Categories, Models, Options, Phase, Status } from "../api/tipi";
+import OpzioniRichiesta from "../componenti/OpzioniRichiesta";
 import { FASI_VLM, nomeFase, nomeModalita, nomeMotivoRifiuto } from "../lib/nomi";
-import { alterna as alternaRilevatore, predefiniti, RILEVATORI, senzaRilevatori } from "../lib/rilevatori";
+import { RILEVATORI, senzaRilevatori } from "../lib/rilevatori";
 import { useSessione, type Documento } from "../stato/sessione";
 
 const FASI: Phase[] = ["ingest", "extraction", "detection", "redaction", "verification"];
@@ -90,10 +91,9 @@ export default function Carica() {
   useEffect(() => { api.categorie().then(setCat).catch(() => setCat(null)); }, []);
   const leggiModelli = () => api.modelli().then(setMod).catch(() => setMod(null));
   useEffect(() => { leggiModelli(); }, []);
-  useEffect(() => { api.salute().then(setStato).catch(() => setStato(null)); }, []);
+  const leggiStato = () => api.salute().then(setStato).catch(() => setStato(null));
+  useEffect(() => { leggiStato(); }, []);
 
-  const base = predefiniti(stato);
-  const attivi = o.detectors ?? base ?? []; // base null: le checkbox non sono mostrate
   const senza_rilevatori = senzaRilevatori(o.detectors);
 
   const manca_chiave = o.mode === "pseudonym" && !s.chiave;
@@ -109,9 +109,6 @@ export default function Carica() {
       setInvio(false);
     }
   };
-  const alterna = (campo: "enable" | "disable", v: string) =>
-    setO((x) => ({ ...x, [campo]: x[campo].includes(v) ? x[campo].filter((y) => y !== v) : [...x[campo], v] }));
-
   return (
     <section>
       <h1>Carica documenti</h1>
@@ -157,107 +154,8 @@ export default function Carica() {
           {errore && <p className="errore">{errore}</p>}
         </div>
 
-        <div className="scheda">
-          <h2 style={{ marginTop: 0 }}>Opzioni della richiesta</h2>
-          <div className="griglia-opzioni">
-            <label>
-              Modalità
-              <select value={o.mode} onChange={(e) => setO({ ...o, mode: e.target.value as Options["mode"] })}>
-                <option value="pseudonym">pseudonimo (tag + mappa cifrata)</option>
-                <option value="tag">tag</option>
-                <option value="redaction">redazione</option>
-              </select>
-            </label>
-            <label>
-              Verifica
-              <select value={o.verification} onChange={(e) => setO({ ...o, verification: e.target.value as Options["verification"] })}>
-                <option value="">predefinita</option>
-                <option value="report">segnala</option>
-                <option value="block">blocca</option>
-                <option value="off">off</option>
-              </select>
-            </label>
-            <label>
-              Estrazione dei PDF nativi
-              <select value={o.extraction} onChange={(e) => setO({ ...o, extraction: e.target.value as Options["extraction"] })}>
-                <option value="">predefinita</option>
-                <option value="docling">docling</option>
-                <option value="vlm">VLM</option>
-              </select>
-            </label>
-          </div>
-          <h3>Modelli VLM per fase</h3>
-          <div className="griglia-opzioni">
-            {FASI_VLM.map((f) => (
-              <label key={f}>
-                {nomeFase(f)}
-                <select value={o.models[f] ?? ""} onChange={(e) => setO({ ...o, models: { ...o.models, [f]: e.target.value } })}
-                        onFocus={leggiModelli}>
-                  <option value="">predefinito{mod ? ` (${mod.defaults[f]})` : ""}</option>
-                  {mod?.models.filter((m) => m.name !== mod.defaults[f]).map((m) => (
-                    // l'estrazione legge le pagine scansionate: solo modelli con visione
-                    <option key={m.name} value={m.name} disabled={m.present !== true || (f === "extraction" && !m.vision)}>
-                      {m.name}{m.vision ? "" : " (solo testo)"}{m.present === false ? " (assente nel backend)" : ""}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
-          </div>
-          {mod?.error && <p className="nota errore">elenco dei modelli non disponibile: {mod.error}</p>}
-          <h3>Rilevatori {o.detectors === null && <span className="tenue">(predefiniti del servizio)</span>}</h3>
-          {base && (
-          <div className="griglia-opzioni">
-            {RILEVATORI.map(({ r, nome, nota }) => (
-              <label key={r} className="inline" title={nota}>
-                <input type="checkbox" checked={attivi.includes(r)}
-                       onChange={() => setO((x) => ({ ...x, detectors: alternaRilevatore(x.detectors, base, r) }))} /> {nome}
-                {r === "ner" && stato?.detectors.ner.present === false && (
-                  <span className="nota errore" title={stato.detectors.ner.error ?? undefined}> (non disponibile)</span>
-                )}
-              </label>
-            ))}
-          </div>
-          )}
-          {!stato && (
-            <p className="nota">
-              Stato del servizio non disponibile: i rilevatori restano quelli predefiniti.{" "}
-              <button className="secondario piccolo" onClick={() => api.salute().then(setStato).catch(() => setStato(null))}>riprova</button>
-            </p>
-          )}
-          {cat && (
-            <details style={{ marginTop: 10 }}>
-              <summary>Gruppi di categorie ({o.disable.length + o.enable.length} modifiche)</summary>
-              <div className="griglia-opzioni" style={{ marginTop: 8 }}>
-                {Object.entries(cat.groups).map(([g, cs]) => {
-                  const attivo = cs.some((c) => cat.active.includes(c));
-                  const campo = attivo ? "disable" : "enable";
-                  const scelto = o[campo].includes(g);
-                  return (
-                    <label key={g} className="inline" title={cs.join(", ")}>
-                      <input type="checkbox" checked={attivo !== scelto} onChange={() => alterna(campo, g)} /> {g}
-                      <span className="tenue"> ({cs.length})</span>
-                    </label>
-                  );
-                })}
-              </div>
-            </details>
-          )}
-          <label className="inline" style={{ marginTop: 12 }}>
-            <input type="checkbox" checked={o.layout} onChange={(e) => setO({ ...o, layout: e.target.checked })} />
-            Produci anche il PDF censurato con il layout dell'originale
-          </label>
-          <label className="inline" style={{ marginTop: 12 }}>
-            <input type="checkbox" checked={o.transcript} onChange={(e) => setO({ ...o, transcript: e.target.checked })} />
-            Restituisci anche la trascrizione in chiaro (debug)
-          </label>
-          {o.transcript && (
-            <p className="avviso-rosso">
-              Il testo IN CHIARO del documento viaggia nella risposta e resta in memoria sul server fino alla scadenza del
-              lavoro. Usalo solo per prove; con la modalità pseudonimo il confronto funziona anche senza, con la chiave.
-            </p>
-          )}
-        </div>
+        <OpzioniRichiesta o={o} setO={setO} predefinite={PREDEFINITE} cat={cat} mod={mod} stato={stato}
+                          leggiModelli={leggiModelli} riprovaStato={leggiStato} />
       </div>
 
       <h2>Lavori di questa sessione</h2>
@@ -273,7 +171,10 @@ export default function Carica() {
               <tr key={d.id}>
                 <td>{d.nome}{d.errore && <div className="nota errore">{d.errore}</div>}</td>
                 <td>{nomeModalita(d.opzioni.mode)}{d.opzioni.transcript ? " + trascrizione" : ""}{d.opzioni.layout ? " + PDF" : ""}{modelliScelti(d.opzioni).length > 0 && <div className="nota">{modelliScelti(d.opzioni).join(" · ")}</div>}
-                  {d.opzioni.detectors && <div className="nota">rilevatori: {d.opzioni.detectors.map((r) => RILEVATORI.find((x) => x.r === r)?.nome ?? r).join(", ")}</div>}</td>
+                  {d.opzioni.detectors && <div className="nota">rilevatori: {d.opzioni.detectors.map((r) => RILEVATORI.find((x) => x.r === r)?.nome ?? r).join(", ")}</div>}
+                  {(d.opzioni.enable.length > 0 || d.opzioni.disable.length > 0) && (
+                    <div className="nota">categorie: {[...d.opzioni.enable.map((x) => `+${x}`), ...d.opzioni.disable.map((x) => `-${x}`)].join(" ")}</div>
+                  )}</td>
                 <td><Avanzamento d={d} /></td>
                 <td className="num"><Durata d={d} /></td>
                 <td>

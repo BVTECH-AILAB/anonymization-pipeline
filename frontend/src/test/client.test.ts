@@ -34,7 +34,7 @@ describe("client API", () => {
   it("accoda un lavoro con le opzioni, senza header di autenticazione", async () => {
     const f = finto(202, { id: "x", status: "queued" });
     const file = new File(["ciao"], "nota.txt");
-    await api.nuovoLavoro(file, { models: { detection: "vlm-piccolo:1", verification: "" }, mode: "pseudonym", verification: "", extraction: "vlm", enable: [], disable: ["sanitari", "date"], transcript: true, layout: true, detectors: ["rules", "ner"] }, "K");
+    await api.nuovoLavoro(file, { models: { detection: "vlm-piccolo:1", verification: "" }, mode: "pseudonym", verification: "", extraction: "vlm", enable: [], disable: ["sanitari", "DATA_NASCITA"], transcript: true, layout: true, detectors: ["rules", "ner"] }, "K");
     const [url, init] = chiamata(f);
     expect(url).toBe("/api/jobs");
     expect(init?.method).toBe("POST");
@@ -44,7 +44,7 @@ describe("client API", () => {
     expect(body.get("extraction")).toBe("vlm");
     expect(body.get("model_detection")).toBe("vlm-piccolo:1");
     for (const campo of ["model", "model_extraction", "model_verification"]) expect(body.has(campo)).toBe(false);
-    expect(body.get("disable")).toBe("sanitari,date");
+    expect(body.get("disable")).toBe("sanitari,DATA_NASCITA"); // gruppi e categorie singole
     expect(body.get("detectors")).toBe("rules,ner");
     expect(body.has("enable")).toBe(false);
     expect(body.get("transcript")).toBe("true");

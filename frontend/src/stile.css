@@ -124,6 +124,29 @@ label.inline { flex-direction: row; align-items: center; font-weight: 400; }
 .griglia-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 14px; align-items: start; }
 .griglia-opzioni { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
 
+.sezione { border: 1px solid var(--bordo); border-radius: 6px; margin-top: 10px; }
+.sezione > summary {
+  display: flex; gap: 10px; align-items: baseline; padding: 8px 10px; cursor: pointer; list-style: none;
+  background: var(--superficie-2); border-radius: 6px;
+}
+.sezione > summary::-webkit-details-marker { display: none; }
+.sezione > summary::before { content: "\25B8"; color: var(--tenue); }
+.sezione[open] > summary::before { content: "\25BE"; }
+.sezione[open] > summary { border-bottom: 1px solid var(--bordo); border-radius: 6px 6px 0 0; }
+.sezione-titolo { font-weight: 600; }
+.sezione-riassunto { margin-left: auto; font-size: 12.5px; text-align: right; }
+.sezione-corpo { padding: 10px; display: flex; flex-direction: column; gap: 10px; }
+.sezione-corpo h3 { margin: 4px 0 0; }
+.gruppi { display: flex; flex-direction: column; gap: 2px; }
+.gruppo > summary { display: flex; gap: 6px; align-items: center; padding: 3px 0; cursor: pointer; list-style: none; }
+.gruppo > summary::-webkit-details-marker { display: none; }
+.gruppo > summary::before { content: "\25B8"; color: var(--tenue); width: 10px; }
+.gruppo[open] > summary::before { content: "\25BE"; }
+.griglia-categorie {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px 12px;
+  padding: 4px 0 8px 24px; font-size: 12.5px;
+}
+
 .zona-rilascio {
   border: 2px dashed var(--asse); border-radius: 10px; padding: 28px; text-align: center; color: var(--testo-2);
   background: var(--superficie); cursor: pointer;
@@ -168,6 +191,7 @@ mark {
 }
 mark.scelto { background: color-mix(in srgb, var(--c, #888) 55%, transparent); outline: 2px solid var(--c, #888); }
 .sfuggito { background: color-mix(in srgb, var(--ko) 25%, transparent); border-bottom: 2px dashed var(--ko); }
+.residuo { background: color-mix(in srgb, var(--ko) 15%, transparent); outline: 2px dashed var(--ko); outline-offset: 1px; }
 
 .dettaglio-tag { margin-top: 8px; }
 .legenda { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--testo-2); }

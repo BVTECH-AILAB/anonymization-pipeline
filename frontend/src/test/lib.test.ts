@@ -6,8 +6,9 @@ import { marca, rehypeMarcatori, segmenti, type Intervallo } from "../lib/eviden
 import { etichettaModelli, nomeEsito, nomeFase, nomeFonte, nomeModalita, nomeMotivoRifiuto, nomeMotivoVlm, nomeVerifica, testoAvviso } from "../lib/nomi";
 import { esportaRevisione } from "../lib/revisione";
 import { alterna, predefiniti, senzaRilevatori } from "../lib/rilevatori";
+import { alternaCategoria, alternaGruppo, espandi, modifiche, scelte, statoGruppo } from "../lib/categorie";
 import * as storico from "../lib/storico";
-import type { Report, Status } from "../api/tipi";
+import type { Categories, Report, Status } from "../api/tipi";
 
 const MD = "# Uno\nPaziente: [PERSONA_1]\n\n<!-- pagina 2 -->\n\nFirma: [MEDICO_1] e [PERSONA_1]";
 
@@ -158,5 +159,45 @@ describe("rilevatori", () => {
     expect(senzaRilevatori(null)).toBe(false);
     expect(senzaRilevatori(["eponyms"])).toBe(true);
     expect(senzaRilevatori(["ner", "eponyms"])).toBe(false);
+  });
+});
+
+describe("categorie", () => {
+  const cat: Categories = {
+    groups: { anagrafica: ["NOME", "COGNOME"], date: ["DATA", "DATA_NASCITA"], sanitari: ["DIAGNOSI"] },
+    active: ["NOME", "COGNOME", "DATA", "DATA_NASCITA"], // sanitari spenti di base
+    descriptions: { NOME: "nome", COGNOME: "cognome", DATA: "data", DATA_NASCITA: "nascita", DIAGNOSI: "diagnosi" },
+  };
+  const senza = { enable: [], disable: [] };
+
+  it("espande gruppi e categorie singole", () => {
+    expect([...espandi(cat, ["date", "diagnosi", "ignota"])].sort()).toEqual(["DATA", "DATA_NASCITA", "DIAGNOSI"]);
+  });
+
+  it("le scelte partono dalle attive e applicano le modifiche", () => {
+    expect([...scelte(cat, senza)].sort()).toEqual(["COGNOME", "DATA", "DATA_NASCITA", "NOME"]);
+    expect([...scelte(cat, { enable: ["sanitari"], disable: ["DATA"] })].sort()).toEqual(["COGNOME", "DATA_NASCITA", "DIAGNOSI", "NOME"]);
+  });
+
+  it("una categoria spenta in un gruppo attivo finisce da sola in disable", () => {
+    const m = alternaCategoria(cat, senza, "NOME");
+    expect(m).toEqual({ enable: [], disable: ["NOME"] });
+    expect(statoGruppo(cat, scelte(cat, m), "anagrafica")).toBe("alcune");
+    expect(alternaCategoria(cat, m, "NOME")).toEqual(senza); // di nuovo i predefiniti
+  });
+
+  it("un gruppo intero si riduce al nome del gruppo", () => {
+    expect(alternaGruppo(cat, senza, "date")).toEqual({ enable: [], disable: ["date"] });
+    expect(alternaGruppo(cat, senza, "sanitari")).toEqual({ enable: ["sanitari"], disable: [] });
+    const parziale = alternaCategoria(cat, senza, "NOME");
+    expect(alternaGruppo(cat, parziale, "anagrafica")).toEqual(senza); // "alcune" -> tutte
+    expect(statoGruppo(cat, scelte(cat, senza), "sanitari")).toBe("nessuna");
+    expect(statoGruppo(cat, scelte(cat, senza), "date")).toBe("tutte");
+  });
+
+  it("enable e disable restano disgiunti", () => {
+    const m = modifiche(cat, new Set(["NOME", "DIAGNOSI"]));
+    expect(m).toEqual({ enable: ["sanitari"], disable: ["COGNOME", "date"] });
+    expect(m.enable.some((x) => m.disable.includes(x))).toBe(false);
   });
 });

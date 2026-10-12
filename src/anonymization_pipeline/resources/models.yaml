@@ -31,4 +31,4 @@ phases:
   extraction: glm-ocr
   detection: granite4.2:8b
   redaction: granite4.2:8b
-  verification: granite4.2:8b
+  verification: gemma4:26b-a4b-it-qat

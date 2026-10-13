@@ -167,12 +167,23 @@ async def test_unreachable_service(tmp_path: Path) -> None:
     assert "just up" in response.json()["detail"]
 
 
-@pytest.mark.parametrize("state", ["in_corso", None])
-async def test_interrupted_runs_are_listed(tmp_path: Path, state: str | None) -> None:
+@pytest.mark.parametrize(
+    ("state", "report", "listed"),
+    [
+        ("in_corso", False, "interrotta"),
+        (None, True, "completata"),  # run of a version without stato.json
+        (None, False, "sconosciuto"),
+    ],
+)
+async def test_state_of_listed_runs(
+    tmp_path: Path, state: str | None, report: bool, listed: str
+) -> None:
     run_dir = tmp_path / "out" / "20260101-101010"
     run_dir.mkdir(parents=True)
     if state:
         (run_dir / "stato.json").write_text(f'{{"stato": "{state}"}}')
+    if report:
+        (run_dir / "report.md").write_text("# report")
     async with await _client(_app(tmp_path, FakeService())) as client:
         runs = (await client.get("/runs")).json()
-    assert runs[0]["stato"] == ("interrotta" if state else "sconosciuto")
+    assert runs[0]["stato"] == listed

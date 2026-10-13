@@ -29,6 +29,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from anonval.engine import (
     CANCELLED,
+    COMPLETED,
     RUNNING,
     Dataset,
     ServiceDown,
@@ -190,6 +191,8 @@ def _state(request: Request, run_dir: Path) -> str:
     state = read_state(run_dir)
     if state == RUNNING:
         return INTERRUPTED  # left running by a process that stopped
+    if state is None and (run_dir / "report.md").exists():
+        return COMPLETED  # run of a version without stato.json
     return state or UNKNOWN
 
 

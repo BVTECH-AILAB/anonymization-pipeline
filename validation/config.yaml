@@ -1,0 +1,87 @@
+# =============================================================================
+#  Configurazione della validazione (validation/README.md)
+#
+#  Ogni profilo e' un insieme di parametri di POST /jobs: tutto quello che si puo' scegliere
+#  prima di avviare un'anonimizzazione. Ogni profilo viene eseguito su tutto il dataset filtrato
+#  e il report li confronta. `comune` vale per tutti i profili; un profilo lo sovrascrive campo
+#  per campo. Un campo assente (o null) lascia il default del server (variabili ANONPIP_*).
+#
+#  Parametri di un profilo (tutti opzionali):
+#    mode                pseudonym | tag | redaction  (pseudonym richiede la chiave, vedi chiave_env)
+#    verification        off | report | block         (report: i residui finiscono nel report)
+#    extraction          docling | vlm                (pagine native del PDF)
+#    model_extraction    nome da GET /models
+#    model_detection     nome da GET /models
+#    model_verification  nome da GET /models
+#    enable              gruppi o categorie da attivare   (GET /categories)
+#    disable             gruppi o categorie da disattivare (disable vince su enable)
+#    detectors           insieme completo dei rilevatori attivi: vlm, rules, labels, ner, eponyms
+#                        (almeno uno tra vlm, rules, labels, ner; gli altri vengono spenti)
+#    layout              true | false                 (anche il PDF con il layout originale)
+#
+#  `transcript=true` viene sempre inviato dallo script: serve per le metriche. Il server deve
+#  avere ANONPIP_ALLOW_TRANSCRIPT=true (mai in prod).
+# =============================================================================
+
+server:
+  base_url: http://localhost:8000
+  poll_interval_s: 2
+  timeout_documento_s: 1800     # oltre: il job viene cancellato e il documento conta come errore
+  concorrenza: 1                # job inviati insieme; il server ne elabora ANONPIP_MAX_CONCURRENT_JOBS
+  chiave_env: ANONVAL_KEY       # variabile d'ambiente con la chiave per mode=pseudonym (mai qui)
+
+dataset:
+  percorso: dataset             # relativo a questo file
+  tipi: []                      # vuoto = tutti; es. [referto_laboratorio, test_genetico]
+  difficolta: []                # vuoto = tutte; facile | media | complessa
+  documenti: []                 # id specifici; es. [referto_radiologico_complessa_02]
+
+# Esito PASS/FAIL di ogni profilo nel report. Valori provvisori: le soglie di accettazione
+# sono ancora un punto aperto (docs/PUNTI_APERTI.md, PA-15).
+soglie:
+  recall_min: 0.95              # valori rilevati / valori attesi
+  tasso_fuga_max: 0.0           # valori rimasti in chiaro / valori attesi
+  precision_min: 0.80           # occorrenze censurate corrette / occorrenze censurate
+  f1_min: 0.85
+
+comune:
+  mode: tag
+  verification: report
+  extraction: docling
+  layout: false
+
+profili:
+  - nome: completo
+    descrizione: Tutti i rilevatori e tutte le categorie (default del server)
+
+  - nome: regole
+    descrizione: Solo rilevatori testuali deterministici, senza VLM in rilevazione
+    detectors: [rules, labels, eponyms]
+
+  - nome: identificativi
+    descrizione: Solo dati identificativi, categorie sanitarie e particolari disattivate
+    disable: [sanitari, particolari]
+
+  # Esempi da attivare secondo necessita':
+  #
+  # - nome: modello-alternativo
+  #   descrizione: Rilevazione e verifica con un altro modello del catalogo
+  #   model_detection: glm-ocr
+  #   model_verification: glm-ocr
+  #
+  # - nome: estrazione-vlm
+  #   descrizione: Anche le pagine native lette dal VLM invece che da docling
+  #   extraction: vlm
+  #
+  # - nome: con-ner
+  #   descrizione: Rilevatore NER attivo (richiede l'extra ner sul server)
+  #   detectors: [vlm, rules, labels, ner, eponyms]
+  #
+  # - nome: pseudonimo
+  #   descrizione: Modalita' pseudonimo (esporta ANONVAL_KEY prima di lanciare)
+  #   mode: pseudonym
+  #
+  # - nome: solo-anagrafica
+  #   descrizione: Solo anagrafica e contatti
+  #   disable: [sanitari, particolari, organizzazioni, date]
+  #   enable: [anagrafica, contatti]

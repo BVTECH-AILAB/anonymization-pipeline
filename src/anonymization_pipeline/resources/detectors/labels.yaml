@@ -178,6 +178,9 @@ labels:
     - category: DATA_NASCITA
       kind: date
       regex: ['data\s+di\s+nascita', 'nat[oaie](?:\s*/\s*[aeo]+)?\s+il', 'date\s+of\s+birth', 'data\s+nascita']
+    - category: DATA_DECESSO
+      kind: date
+      regex: ['data\s+(?:del\s+)?decesso', 'data\s+di\s+morte', 'decedut[oa]\s+il']
     - category: SESSO
       regex: ['sesso', 'sex']
       need_sep: true
@@ -271,10 +274,6 @@ labels:
       kind: date
       regex: ['data\s+(?:di\s+)?scadenza', 'scadenza', 'valid[oa]\s+fino\s+al', 'date\s+of\s+expiry',
               'expiry(?:\s+date)?']
-    - category: ALTEZZA_COLORE_OCCHI
-      regex: ['statura', 'colore\s+(?:degli\s+)?occhi', 'eye\s+colou?r', 'height']
-      max_len: 20
-      pattern: '\s*(?:\d[\d.,]*\s*(?:cm|m)?|[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)?)'
 
   contatti:
     - category: TELEFONO
@@ -346,9 +345,6 @@ labels:
     - category: DATA_PRESCRIZIONE
       kind: date
       regex: ['data\s+(?:di\s+|della\s+)?prescrizione', 'data\s+(?:della\s+)?ricetta', 'prescritt[oa]\s+il']
-    - category: DATA_DECESSO
-      kind: date
-      regex: ['data\s+(?:del\s+)?decesso', 'data\s+di\s+morte', 'decedut[oa]\s+il']
 
   organizzazioni:
     - category: DATORE_LAVORO

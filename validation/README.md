@@ -129,11 +129,12 @@ Un file per documento, con una voce per ogni coppia (valore, categoria):
 ### Avvio
 
 ```bash
-just validation                                   # tutti i profili, tutto il dataset
+just validation --profilo default                 # tutto il dataset
 just validation --profilo default --tipo referto_laboratorio --difficolta facile
-just validation --documento referto_radiologico_complessa_02 --url http://localhost:8000
-just validation --riprendi validation/results/20261013-101500   # completa una run interrotta
-validation/validate.sh --help                      # stesso comando, senza just
+just validation --profilo default --documento referto_radiologico_complessa_02 --url http://localhost:8000
+just validation --profilo default --riprendi validation/results/20261013-101500   # completa una run interrotta
+validation/validate.sh --profilo default           # stesso comando, senza just
+validation/validate.sh --help                      # tutte le opzioni
 ```
 
 Opzioni (tutte ripetibili tranne le ultime quattro): `--profilo`, `--tipo`, `--difficolta`,

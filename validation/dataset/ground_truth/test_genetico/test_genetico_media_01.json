@@ -8,7 +8,7 @@
       "value": "Azienda Ospedaliera Valdarno Nuovo",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "Laboratorio di Genetica Molecolare Cardiovascolare",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -38,7 +38,7 @@
       "value": "Ilaria Guarducci",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -128,7 +128,7 @@
       "value": "14/03/1979",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -217,7 +217,7 @@
       "value": "Niccolò Pratesi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -233,7 +233,7 @@
       "value": "12.02.25",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -247,7 +247,7 @@
       "value": "3 aprile 2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -289,7 +289,7 @@
       "value": "u.o. Cardiologia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -472,7 +472,7 @@
       "value": "Serena Mazzei",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -486,7 +486,7 @@
       "value": "Riccardo Bacci",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -500,7 +500,7 @@
       "value": "07/06/1982",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -514,7 +514,7 @@
       "value": "Tommaso Bacci",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -528,7 +528,7 @@
       "value": "21/09/2009",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -542,7 +542,7 @@
       "value": "Mirella Cecconi",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -556,7 +556,7 @@
       "value": "30/11/1954",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -598,7 +598,7 @@
       "value": "Ambulatorio di Genetica Clinica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -612,7 +612,7 @@
       "value": "03/04/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -626,7 +626,7 @@
       "value": "Fabrizio Nesi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "signature",
@@ -641,7 +641,7 @@
       "value": "AO VALDARNO NUOVO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"

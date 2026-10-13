@@ -8,7 +8,7 @@
       "value": "Laboratorio Analisi Cliniche Faro Ionico S.r.l.",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "Salvatore Pappalardo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -112,7 +112,7 @@
       "value": "BENALI",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "COGNOME",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -128,7 +128,7 @@
       "value": "KHADIJA",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "NOME",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -160,7 +160,7 @@
       "value": "02/10/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -191,7 +191,7 @@
       "value": "14/07/1996",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -205,7 +205,7 @@
       "value": "Marocco",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -247,7 +247,7 @@
       "value": "Carmela Distefano",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -261,7 +261,7 @@
       "value": "Consultorio Familiare Ognina",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -289,7 +289,7 @@
       "value": "6 ottobre 2026",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -642,7 +642,7 @@
       "value": "Youssef Amrani",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -670,7 +670,7 @@
       "value": "Samira Haddad",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -684,7 +684,7 @@
       "value": "06/10/2026",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -698,7 +698,7 @@
       "value": "FARO IONICO S.R.L.",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -713,7 +713,7 @@
       "value": "S. Pappalardo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"

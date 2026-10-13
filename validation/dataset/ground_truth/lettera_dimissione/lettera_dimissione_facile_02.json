@@ -8,7 +8,7 @@
       "value": "Presidio Ospedaliero di Monteverde",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -23,7 +23,7 @@
       "value": "Unità Operativa di Chirurgia Generale",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -94,7 +94,7 @@
       "value": "Lorenzon",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "COGNOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -108,7 +108,7 @@
       "value": "Davide",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "NOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -136,7 +136,7 @@
       "value": "02/07/1979",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -178,7 +178,7 @@
       "value": "18/09/2024",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -192,7 +192,7 @@
       "value": "20/09/2024",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -360,7 +360,7 @@
       "value": "20/09/2024",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -374,7 +374,7 @@
       "value": "Martina Zanatta",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "signature"

@@ -8,7 +8,7 @@
       "value": "08/07/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "fax_line",
@@ -42,7 +42,7 @@
       "value": "S.CLELIA",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "fax_line"
@@ -74,7 +74,7 @@
       "value": "CDC LE RONDINI",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "fax_line"
@@ -108,7 +108,7 @@
       "value": "Istituto di Ricovero Santa Clelia",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 3,
       "locations": [
         "letterhead",
@@ -126,7 +126,7 @@
       "value": "SOD Istopatologia e Diagnostica Molecolare",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -140,7 +140,7 @@
       "value": "Tommaso Nardini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -236,7 +236,7 @@
       "value": "09.10.1961",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "running_header"
@@ -251,7 +251,7 @@
       "value": "C. Bagnoli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "running_header"
@@ -266,7 +266,7 @@
       "value": "CdC Le Rondini",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "running_header"
@@ -314,7 +314,7 @@
       "value": "Cristina Bagnoli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "address",
@@ -329,7 +329,7 @@
       "value": "Ginecologia Oncologica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "address"
@@ -343,7 +343,7 @@
       "value": "Casa di Cura Le Rondini",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "address"
@@ -385,7 +385,7 @@
       "value": "9 ottobre 1961",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -399,7 +399,7 @@
       "value": "Firenze",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -514,7 +514,7 @@
       "value": "23-06-2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -626,7 +626,7 @@
       "value": "Viola Dell'Orto",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -656,7 +656,7 @@
       "value": "Franco Martinelli",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "CONTATTO_EMERGENZA",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -698,7 +698,7 @@
       "value": "Andrea Pratesi",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -712,7 +712,7 @@
       "value": "Nardini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -783,7 +783,7 @@
       "value": "Irene Cappelli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -937,7 +937,7 @@
       "value": "Viola",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "note"
@@ -983,7 +983,7 @@
       "value": "Sole Martinelli",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "note",
@@ -1013,7 +1013,7 @@
       "value": "Bagnoli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "footnotes",
@@ -1058,7 +1058,7 @@
       "value": "8 luglio 2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1072,7 +1072,7 @@
       "value": "T. NARDINI",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1101,7 +1101,7 @@
       "value": "Lucia Becattini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1115,7 +1115,7 @@
       "value": "SOD Genetica Medica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "title",
@@ -1130,7 +1130,7 @@
       "value": "Paolo Innocenti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "address"
@@ -1158,7 +1158,7 @@
       "value": "09/10/1961",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -1257,7 +1257,7 @@
       "value": "Giuseppe Dell'Orto",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1285,7 +1285,7 @@
       "value": "Anna Rosa Bellini",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1329,7 +1329,7 @@
       "value": "F. Martinelli",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "CONTATTO_EMERGENZA",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1343,7 +1343,7 @@
       "value": "GENETICA MEDICA",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1385,7 +1385,7 @@
       "value": "M. Ciampolini",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"

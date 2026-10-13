@@ -26,7 +26,7 @@
       "value": "STUDIO ASS. PORTA NUOVA",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "fax_line"
@@ -78,7 +78,7 @@
       "value": "Studio Medico Associato Porta Nuova",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 3,
       "locations": [
         "letterhead",
@@ -97,7 +97,7 @@
       "value": "Silvia Ferrero Bertolini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -113,7 +113,7 @@
       "value": "Hamid Rahimi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 4,
       "locations": [
         "letterhead",
@@ -221,7 +221,7 @@
       "value": "08/09/1983",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 3,
       "locations": [
         "running_header",
@@ -314,7 +314,7 @@
       "value": "Marco Quarta",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 4,
       "locations": [
         "footer",
@@ -333,7 +333,7 @@
       "value": "Cosimo De Pascalis",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "address",
@@ -396,7 +396,7 @@
       "value": "Presidio Ospedaliero Sant'Oronzo dei Messapi",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 3,
       "locations": [
         "address",
@@ -412,7 +412,7 @@
       "value": "Agnese Dell'Acqua",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "address"
@@ -459,7 +459,7 @@
       "value": "Milano",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -537,7 +537,7 @@
       "value": "15/11/2024",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -686,7 +686,7 @@
       "value": "Paolo Greco Elia",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -742,7 +742,7 @@
       "value": "Rosa Miglietta",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -784,7 +784,7 @@
       "value": "Ettore Bray",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -826,7 +826,7 @@
       "value": "Laboratorio di Genetica Medica Salento Gen",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "table",
@@ -842,7 +842,7 @@
       "value": "Ludovico Starace",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -870,7 +870,7 @@
       "value": "Tran Thi Hoa",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -884,7 +884,7 @@
       "value": "03/04/2016",
       "category": "DATA_DECESSO",
       "group": "anagrafica",
-      "family": "DATA_DECESSO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -927,7 +927,7 @@
       "value": "Tran Thi Lan",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -941,7 +941,7 @@
       "value": "Nguyen Van Duc",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "table",
@@ -971,7 +971,7 @@
       "value": "Mai Nguyen",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "table",
@@ -1008,7 +1008,7 @@
       "value": "Bianca Quarta",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1106,7 +1106,7 @@
       "value": "Farmacia Comunale Lecce 3",
       "category": "DATORE_LAVORO",
       "group": "organizzazioni",
-      "family": "DATORE_LAVORO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1246,7 +1246,7 @@
       "value": "Centro Cardiologico Rudiae",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1274,7 +1274,7 @@
       "value": "Dell'Acqua",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1374,7 +1374,7 @@
       "value": "Rahimi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1391,7 +1391,7 @@
       "value": "Bianca",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1420,7 +1420,7 @@
       "value": "Centro PMA Ospedale Vito Fazzi Nuovo",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "table"
@@ -1434,7 +1434,7 @@
       "value": "Grazia Lupo Andriani",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1476,7 +1476,7 @@
       "value": "Day Hospital Oncologico",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "table"
@@ -1560,7 +1560,7 @@
       "value": "Luce Gariglio",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1574,7 +1574,7 @@
       "value": "15.11.24",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1634,7 +1634,7 @@
       "value": "18 novembre 2024",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "signature"
@@ -1648,7 +1648,7 @@
       "value": "S. FERRERO BERTOLINI",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1676,7 +1676,7 @@
       "value": "HAMID RAHIMI",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1706,7 +1706,7 @@
       "value": "Salento Gen",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1736,7 +1736,7 @@
       "value": "Pham Thi Thu",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1764,7 +1764,7 @@
       "value": "Comune di Lecce",
       "category": "ENTE_RILASCIO",
       "group": "documenti",
-      "family": "ENTE_RILASCIO",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1778,7 +1778,7 @@
       "value": "14/06/2021",
       "category": "DATA_RILASCIO",
       "group": "documenti",
-      "family": "DATA_RILASCIO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1792,7 +1792,7 @@
       "value": "Ferrero Bertolini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1807,7 +1807,7 @@
       "value": "H. Rahimi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1849,7 +1849,7 @@
       "value": "Carla Bossolasco",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1948,7 +1948,7 @@
       "value": "18/11/24",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"

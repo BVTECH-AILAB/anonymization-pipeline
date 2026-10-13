@@ -8,7 +8,7 @@
       "value": "ASST Orobica Occidentale",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -25,7 +25,7 @@
       "value": "Presidio Ospedaliero Santa Grata",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -39,7 +39,7 @@
       "value": "U.O.C. Gastroenterologia ed Endoscopia Digestiva",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -53,7 +53,7 @@
       "value": "Centro MICI",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 4,
       "locations": [
         "letterhead",
@@ -71,7 +71,7 @@
       "value": "Alberto Sala",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -191,7 +191,7 @@
       "value": "02/12/1995",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -272,7 +272,7 @@
       "value": "M. Locatelli",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footer"
@@ -288,7 +288,7 @@
       "value": "CENTRO MICI",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "title",
@@ -305,7 +305,7 @@
       "value": "DELL'ORTO",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "COGNOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -321,7 +321,7 @@
       "value": "BIANCA",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "NOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -337,7 +337,7 @@
       "value": "Bergamo",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -410,7 +410,7 @@
       "value": "Roberto Carminati",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -438,7 +438,7 @@
       "value": "09/07/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -541,7 +541,7 @@
       "value": "Ivana Rota",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph"
@@ -1049,7 +1049,7 @@
       "value": "Marta Locatelli",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "table"
@@ -1106,7 +1106,7 @@
       "value": "Matteo Pesenti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1120,7 +1120,7 @@
       "value": "Davide De Santis",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1148,7 +1148,7 @@
       "value": "Chiara Lo Presti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph"
@@ -1303,7 +1303,7 @@
       "value": "Giulia Mazzoleni",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1387,7 +1387,7 @@
       "value": "Samuel Okafor",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "paragraph",
@@ -1403,7 +1403,7 @@
       "value": "Okafor",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1418,7 +1418,7 @@
       "value": "09/07/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1433,7 +1433,7 @@
       "value": "Elisa Nguyen",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "signature",
@@ -1450,7 +1450,7 @@
       "value": "D. De Santis",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1464,7 +1464,7 @@
       "value": "C. Lo Presti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1478,7 +1478,7 @@
       "value": "02.12.1995",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1494,7 +1494,7 @@
       "value": "Lagos (Nigeria)",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1508,7 +1508,7 @@
       "value": "17/05/1990",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1536,7 +1536,7 @@
       "value": "ASST OROBICA OCCIDENTALE",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1552,7 +1552,7 @@
       "value": "E. Nguyen",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1623,7 +1623,7 @@
       "value": "Carminati",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footnotes"

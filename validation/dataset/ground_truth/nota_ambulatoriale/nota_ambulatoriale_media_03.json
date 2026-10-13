@@ -8,7 +8,7 @@
       "value": "Ospedale San Benigno al Mare",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "S.S.D. Fisiopatologia Respiratoria",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -38,7 +38,7 @@
       "value": "Federica Parodi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -191,7 +191,7 @@
       "value": "Durazzo (Albania)",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -205,7 +205,7 @@
       "value": "02/08/1975",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -219,7 +219,7 @@
       "value": "albanese",
       "category": "CITTADINANZA",
       "group": "anagrafica",
-      "family": "CITTADINANZA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -276,7 +276,7 @@
       "value": "16-01-2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -319,7 +319,7 @@
       "value": "Paolo Ghiglione",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -375,7 +375,7 @@
       "value": "Edilizia Ponente Ligure S.r.l.",
       "category": "DATORE_LAVORO",
       "group": "organizzazioni",
-      "family": "DATORE_LAVORO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -445,7 +445,7 @@
       "value": "Elira Kola",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -767,7 +767,7 @@
       "value": "Elena Bruzzone",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -865,7 +865,7 @@
       "value": "Ghiglione",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -880,7 +880,7 @@
       "value": "16.01.2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -895,7 +895,7 @@
       "value": "Stefano Repetto",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "signature",

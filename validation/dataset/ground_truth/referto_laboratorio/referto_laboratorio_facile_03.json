@@ -8,7 +8,7 @@
       "value": "Ospedale Civile San Leucio Abate",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -22,7 +22,7 @@
       "value": "U.O.C. Patologia Clinica - Settore Ematologia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -36,7 +36,7 @@
       "value": "Nicola Lattanzio",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -136,7 +136,7 @@
       "value": "18/05/1959",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -192,7 +192,7 @@
       "value": "06/10/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -206,7 +206,7 @@
       "value": "07/10/2026",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "fields",

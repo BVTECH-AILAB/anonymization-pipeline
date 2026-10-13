@@ -8,7 +8,7 @@
       "value": "Fondazione IRCCS Istituto Pediatrico Ambrosiano",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -25,7 +25,7 @@
       "value": "Laboratorio di Genomica Clinica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -39,7 +39,7 @@
       "value": "S.C. Genetica Medica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -54,7 +54,7 @@
       "value": "Giulio Ferrario Sala",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -256,7 +256,7 @@
       "value": "Ludovica Brambilla Nava",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "address"
@@ -299,7 +299,7 @@
       "value": "Edoardo Galbiati",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "address",
@@ -314,7 +314,7 @@
       "value": "U.O. Neurologia Pediatrica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "address"
@@ -328,7 +328,7 @@
       "value": "De Santis",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "COGNOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -344,7 +344,7 @@
       "value": "Sole",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "NOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -360,7 +360,7 @@
       "value": "11/05/2019",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -374,7 +374,7 @@
       "value": "Milano",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -503,7 +503,7 @@
       "value": "14/01/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "table"
@@ -517,7 +517,7 @@
       "value": "Rosa Dell'Orto",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "table",
@@ -563,7 +563,7 @@
       "value": "Matteo De Santis",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "table",
@@ -607,7 +607,7 @@
       "value": "16.01.25",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -621,7 +621,7 @@
       "value": "Luca Pirovano",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -635,7 +635,7 @@
       "value": "Day Hospital Pediatrico",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -679,7 +679,7 @@
       "value": "28/03/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 3,
       "locations": [
         "fields",
@@ -825,7 +825,7 @@
       "value": "R. Dell'Orto",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -867,7 +867,7 @@
       "value": "Paolo De Santis",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -897,7 +897,7 @@
       "value": "Marta Cattaneo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1012,7 +1012,7 @@
       "value": "Leone De Santis",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1027,7 +1027,7 @@
       "value": "Bianca Colombo",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1055,7 +1055,7 @@
       "value": "Valentina Nguyen",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1069,7 +1069,7 @@
       "value": "V. Nguyen",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "note"
@@ -1111,7 +1111,7 @@
       "value": "Chiara Invernizzi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1125,7 +1125,7 @@
       "value": "Kevin Okafor",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "signature",
@@ -1155,7 +1155,7 @@
       "value": "IRCCS IST. PEDIATRICO AMBROSIANO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1169,7 +1169,7 @@
       "value": "G. Ferrario Sala",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1197,7 +1197,7 @@
       "value": "P. De Santis",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1239,7 +1239,7 @@
       "value": "Giorgia Fumagalli",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1281,7 +1281,7 @@
       "value": "M. Cattaneo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1295,7 +1295,7 @@
       "value": "C. Invernizzi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1309,7 +1309,7 @@
       "value": "L. Brambilla Nava",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"

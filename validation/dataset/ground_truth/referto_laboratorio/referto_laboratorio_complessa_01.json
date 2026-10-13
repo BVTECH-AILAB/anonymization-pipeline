@@ -8,7 +8,7 @@
       "value": "Azienda Ospedaliero-Universitaria Policlinico San Callisto",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -22,7 +22,7 @@
       "value": "UOC Microbiologia e Virologia - Laboratorio di Retrovirologia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -36,7 +36,7 @@
       "value": "Antonella Ciriello",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -201,7 +201,7 @@
       "value": "AOU Policlinico San Callisto",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "footer"
@@ -265,7 +265,7 @@
       "value": "Ambulatorio Malattie Infettive - Day Service HIV",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "footer",
@@ -282,7 +282,7 @@
       "value": "DE ANGELIS",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "COGNOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -298,7 +298,7 @@
       "value": "RICCARDO",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "NOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -314,7 +314,7 @@
       "value": "19/06/1982",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -427,7 +427,7 @@
       "value": "Alessio Marchionni",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -441,7 +441,7 @@
       "value": "28/09/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -455,7 +455,7 @@
       "value": "Gianluca Proietti",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -469,7 +469,7 @@
       "value": "05/10/2026",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "fields",
@@ -599,7 +599,7 @@
       "value": "SerD Roma Est",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -613,7 +613,7 @@
       "value": "Ilaria Fabbri",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -659,7 +659,7 @@
       "value": "Kwame Mensah",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -773,7 +773,7 @@
       "value": "12.03.26",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -985,7 +985,7 @@
       "value": "12/03/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1055,7 +1055,7 @@
       "value": "18.09.25",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1111,7 +1111,7 @@
       "value": "3 marzo 2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1196,7 +1196,7 @@
       "value": "14-10-2024",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1252,7 +1252,7 @@
       "value": "A. Marchionni",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1408,7 +1408,7 @@
       "value": "5 ottobre 2026",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1422,7 +1422,7 @@
       "value": "Marchionni",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1438,7 +1438,7 @@
       "value": "V. Orsini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1452,7 +1452,7 @@
       "value": "K. Mensah",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1480,7 +1480,7 @@
       "value": "Sara Cimini",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1494,7 +1494,7 @@
       "value": "Marco Tozzi",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1508,7 +1508,7 @@
       "value": "Paolo Nicastro",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1522,7 +1522,7 @@
       "value": "Valentina Orsini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "signature",
@@ -1537,7 +1537,7 @@
       "value": "POLICLINICO SAN CALLISTO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1609,7 +1609,7 @@
       "value": "Mensah",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footnotes"

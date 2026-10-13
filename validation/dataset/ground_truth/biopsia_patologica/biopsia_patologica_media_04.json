@@ -8,7 +8,7 @@
       "value": "Ospedale Pediatrico Girasole",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "UOSD Anatomia Patologica Pediatrica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -144,7 +144,7 @@
       "value": "02/12/2016",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -189,7 +189,7 @@
       "value": "Carmela Sorrentino",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -219,7 +219,7 @@
       "value": "10/06/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -233,7 +233,7 @@
       "value": "Gastroenterologia ed Endoscopia Pediatrica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "fields"
@@ -247,7 +247,7 @@
       "value": "18 giugno 2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -261,7 +261,7 @@
       "value": "Raffaella Esposito",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -415,7 +415,7 @@
       "value": "Sorrentino",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -628,7 +628,7 @@
       "value": "R. Esposito",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "note"
@@ -656,7 +656,7 @@
       "value": "Lorenzo Iannone",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "note"
@@ -740,7 +740,7 @@
       "value": "18/06/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -754,7 +754,7 @@
       "value": "Ciro Amitrano",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "signature",
@@ -769,7 +769,7 @@
       "value": "Paola Cennamo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "signature"

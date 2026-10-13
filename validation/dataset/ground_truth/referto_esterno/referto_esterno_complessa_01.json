@@ -42,7 +42,7 @@
       "value": "VILLA AURORA DEL LAGO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "fax_line"
@@ -58,7 +58,7 @@
       "value": "CSM PORTA MAGGIORE",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "fax_line",
@@ -75,7 +75,7 @@
       "value": "Casa di Cura Villa Aurora del Lago",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -90,7 +90,7 @@
       "value": "Unità di Psichiatria e Alcologia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -104,7 +104,7 @@
       "value": "Serena Valli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -241,7 +241,7 @@
       "value": "Villa Aurora del Lago",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "footer"
@@ -289,7 +289,7 @@
       "value": "G. Dell'Orto",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footer"
@@ -305,7 +305,7 @@
       "value": "CSM Porta Maggiore",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 3,
       "locations": [
         "footer",
@@ -342,7 +342,7 @@
       "value": "Tiziano Grandi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "address"
@@ -356,7 +356,7 @@
       "value": "Anna Ruggeri Lanza",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "address"
@@ -398,7 +398,7 @@
       "value": "De Santis",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "COGNOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -414,7 +414,7 @@
       "value": "Rosa",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "NOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -430,7 +430,7 @@
       "value": "Pescara",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -445,7 +445,7 @@
       "value": "23/06/1976",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -501,7 +501,7 @@
       "value": "02/09/2024",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -515,7 +515,7 @@
       "value": "11/10/2024",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -530,7 +530,7 @@
       "value": "Presidio Ospedaliero San Ruffillo",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "fields",
@@ -603,7 +603,7 @@
       "value": "18 agosto 2024",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -702,7 +702,7 @@
       "value": "Graziella Marinucci",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -730,7 +730,7 @@
       "value": "Paolo De Santis",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -758,7 +758,7 @@
       "value": "Giorgio Dell'Orto",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "paragraph",
@@ -803,7 +803,7 @@
       "value": "Karim El Amrani",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "table",
@@ -863,7 +863,7 @@
       "value": "Ilaria Mancuso",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -905,7 +905,7 @@
       "value": "K. El Amrani",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -965,7 +965,7 @@
       "value": "S. Valli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1119,7 +1119,7 @@
       "value": "Nicola Ferretti",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1163,7 +1163,7 @@
       "value": "Gaia Russo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1177,7 +1177,7 @@
       "value": "Bianca De Santis",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph"
@@ -1219,7 +1219,7 @@
       "value": "Dell'Orto",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1333,7 +1333,7 @@
       "value": "Ruggeri Lanza",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1348,7 +1348,7 @@
       "value": "22 ottobre 2024",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1362,7 +1362,7 @@
       "value": "Ser.D. San Donato",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1376,7 +1376,7 @@
       "value": "Ettore Bassi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1432,7 +1432,7 @@
       "value": "11/10/2024",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1447,7 +1447,7 @@
       "value": "CASA DI CURA VILLA AURORA DEL LAGO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1462,7 +1462,7 @@
       "value": "K. EL AMRANI",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1506,7 +1506,7 @@
       "value": "SERENA VALLI",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1549,7 +1549,7 @@
       "value": "L. Gherardi",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"

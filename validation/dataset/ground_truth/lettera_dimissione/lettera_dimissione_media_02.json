@@ -8,7 +8,7 @@
       "value": "Ospedale Sant'Ambrogio di Roccalta",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "S.C. Neurologia - Stroke Unit",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -38,7 +38,7 @@
       "value": "Giorgio Locatelli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -150,7 +150,7 @@
       "value": "Enrico Bonfanti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "address"
@@ -179,7 +179,7 @@
       "value": "09/09/1966",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -235,7 +235,7 @@
       "value": "17/03/2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -249,7 +249,7 @@
       "value": "25/03/2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -292,7 +292,7 @@
       "value": "17 marzo",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -334,7 +334,7 @@
       "value": "Laura Cattaneo",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -544,7 +544,7 @@
       "value": "Silvia Mapelli",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -558,7 +558,7 @@
       "value": "17/03/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -586,7 +586,7 @@
       "value": "19/03/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -628,7 +628,7 @@
       "value": "20/03/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -782,7 +782,7 @@
       "value": "Cattaneo",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -797,7 +797,7 @@
       "value": "25-03-2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -812,7 +812,7 @@
       "value": "Chiara Pesenti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "signature",
@@ -827,7 +827,7 @@
       "value": "NEUROLOGIA - STROKE UNIT",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"

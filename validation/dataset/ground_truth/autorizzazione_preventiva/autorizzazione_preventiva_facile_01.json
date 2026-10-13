@@ -8,7 +8,7 @@
       "value": "Azienda Sanitaria Locale Murgia Adriatica",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -22,7 +22,7 @@
       "value": "Ufficio Assistenza Protesica e Integrativa",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -108,7 +108,7 @@
       "value": "17/02/1949",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -318,7 +318,7 @@
       "value": "Vito Antonio Carbonara",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "fields",
@@ -347,7 +347,7 @@
       "value": "09/09/2025",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA_PRESCRIZIONE",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "fields",

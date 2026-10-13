@@ -8,7 +8,7 @@
       "value": "Istituto Pediatrico Sant'Agnese",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "S.C. Laboratorio Centrale di Analisi",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -38,7 +38,7 @@
       "value": "Giorgio Parodi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 4,
       "locations": [
         "letterhead",
@@ -156,7 +156,7 @@
       "value": "05.11.19",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "running_header"
@@ -244,7 +244,7 @@
       "value": "05/11/2019",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -288,7 +288,7 @@
       "value": "Elisa Traverso",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -316,7 +316,7 @@
       "value": "Fabio Canepa",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -330,7 +330,7 @@
       "value": "Ambulatorio di Gastroenterologia Pediatrica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -344,7 +344,7 @@
       "value": "7 ottobre 2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -358,7 +358,7 @@
       "value": "09-10-2026",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -429,7 +429,7 @@
       "value": "Chiara Bruzzone",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -597,7 +597,7 @@
       "value": "09/10/2026",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 3,
       "locations": [
         "signature",
@@ -613,7 +613,7 @@
       "value": "Silvia Repetto",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -725,7 +725,7 @@
       "value": "Traverso",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "note"
@@ -754,7 +754,7 @@
       "value": "Canepa",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "note"
@@ -769,7 +769,7 @@
       "value": "Davide Oliveri",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -783,7 +783,7 @@
       "value": "IST. PEDIATRICO SANT'AGNESE",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"

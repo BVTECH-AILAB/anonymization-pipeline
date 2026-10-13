@@ -8,7 +8,7 @@
       "value": "Azienda USL Val di Bisenzio",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -26,7 +26,7 @@
       "value": "Ospedale San Lucchese del Bisenzio",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -40,7 +40,7 @@
       "value": "U.O.C. Laboratorio Analisi e Microbiologia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -54,7 +54,7 @@
       "value": "Centro per la Diagnosi delle Emoglobinopatie",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -68,7 +68,7 @@
       "value": "Niccolò Magherini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -196,7 +196,7 @@
       "value": "09/08/1994",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -315,7 +315,7 @@
       "value": "R. Bautista",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "footer",
@@ -351,7 +351,7 @@
       "value": "DELA CRUZ",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "COGNOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -368,7 +368,7 @@
       "value": "MARICEL",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "NOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -385,7 +385,7 @@
       "value": "Quezon City (Filippine)",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -428,7 +428,7 @@
       "value": "filippina",
       "category": "CITTADINANZA",
       "group": "anagrafica",
-      "family": "CITTADINANZA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -512,7 +512,7 @@
       "value": "Lapo Guarducci",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -528,7 +528,7 @@
       "value": "Consultorio Familiare Prato Est",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -544,7 +544,7 @@
       "value": "Alessandro Biagini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -586,7 +586,7 @@
       "value": "29/09/2026",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA_PRESCRIZIONE",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -600,7 +600,7 @@
       "value": "06/10/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -614,7 +614,7 @@
       "value": "Elisa Cecchi",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -660,7 +660,7 @@
       "value": "12/10/2026",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 3,
       "locations": [
         "fields",
@@ -849,7 +849,7 @@
       "value": "Irene Becagli",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1257,7 +1257,7 @@
       "value": "Marco Ciampolini",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1299,7 +1299,7 @@
       "value": "Serena Fantappiè",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "note",
@@ -1315,7 +1315,7 @@
       "value": "Benedetta Nesti",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "note"
@@ -1739,7 +1739,7 @@
       "value": "L. Guarducci",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1753,7 +1753,7 @@
       "value": "Rodel Bautista",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1767,7 +1767,7 @@
       "value": "Cebu (Filippine)",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1781,7 +1781,7 @@
       "value": "14/02/1990",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2061,7 +2061,7 @@
       "value": "Ilaria Baldanzi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "table",
@@ -2133,7 +2133,7 @@
       "value": "SOD Genetica Medica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -2148,7 +2148,7 @@
       "value": "Bernardo Lastrucci",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2176,7 +2176,7 @@
       "value": "Angel Bautista",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2190,7 +2190,7 @@
       "value": "21/05/2021",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2204,7 +2204,7 @@
       "value": "B. Nesti",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -2218,7 +2218,7 @@
       "value": "Consultorio Prato Est",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "table"
@@ -2232,7 +2232,7 @@
       "value": "S. Fantappiè",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "table"
@@ -2260,7 +2260,7 @@
       "value": "Ambulatorio di Epatologia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "table"
@@ -2274,7 +2274,7 @@
       "value": "Ludovica Pecchioli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -2288,7 +2288,7 @@
       "value": "Duccio Bencini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "table",
@@ -2318,7 +2318,7 @@
       "value": "B. Lastrucci",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -2332,7 +2332,7 @@
       "value": "I. Baldanzi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -2346,7 +2346,7 @@
       "value": "U.O. Ostetricia - Punto Nascita",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "table"
@@ -2374,7 +2374,7 @@
       "value": "Bautista",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2422,7 +2422,7 @@
       "value": "AUSL VAL DI BISENZIO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -2439,7 +2439,7 @@
       "value": "LABORATORIO ANALISI",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -2482,7 +2482,7 @@
       "value": "I. Becagli",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -2524,7 +2524,7 @@
       "value": "A. Biagini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footnotes"

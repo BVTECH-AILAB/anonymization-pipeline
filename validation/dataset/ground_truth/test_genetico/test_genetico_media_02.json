@@ -8,7 +8,7 @@
       "value": "Ospedale San Benigno",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "S.C. Laboratorio di Genetica Umana",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -38,7 +38,7 @@
       "value": "Marco Cevasco",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -173,7 +173,7 @@
       "value": "30/08/1946",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -244,7 +244,7 @@
       "value": "Elisa Ferrando",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -258,7 +258,7 @@
       "value": "Ambulatorio Amiloidosi Cardiaca",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "fields"
@@ -272,7 +272,7 @@
       "value": "08-01-2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -286,7 +286,7 @@
       "value": "Paola Parodi",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "CONTATTO_EMERGENZA",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "fields",
@@ -502,7 +502,7 @@
       "value": "Andrea Parodi",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -517,7 +517,7 @@
       "value": "Rina Parodi",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -588,7 +588,7 @@
       "value": "21 gennaio 2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -602,7 +602,7 @@
       "value": "P. Parodi",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "CONTATTO_EMERGENZA",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -630,7 +630,7 @@
       "value": "21/01/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -644,7 +644,7 @@
       "value": "Laura Repetto",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "signature",
@@ -659,7 +659,7 @@
       "value": "OSPEDALE SAN BENIGNO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"

@@ -8,7 +8,7 @@
       "value": "Ospedale Oncologico Fra' Ludovico Arcieri",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "UOC Anatomia Patologica - Patologia Mammaria",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -99,7 +99,7 @@
       "value": "19.08.1973",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "running_header"
@@ -145,7 +145,7 @@
       "value": "19/08/1973",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -160,7 +160,7 @@
       "value": "Bari",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -203,7 +203,7 @@
       "value": "5 maggio 2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -231,7 +231,7 @@
       "value": "13/05/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "fields",
@@ -247,7 +247,7 @@
       "value": "Radiologia Senologica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "fields",
@@ -333,7 +333,7 @@
       "value": "Rosaria Vitucci",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -361,7 +361,7 @@
       "value": "Vito Capozzi",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "CONTATTO_EMERGENZA",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -389,7 +389,7 @@
       "value": "Teresa Amoruso",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "paragraph",
@@ -659,7 +659,7 @@
       "value": "Onofrio Lamanna",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -702,7 +702,7 @@
       "value": "V. Capozzi",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "CONTATTO_EMERGENZA",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -716,7 +716,7 @@
       "value": "Nicola Dibenedetto",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -730,7 +730,7 @@
       "value": "N. Dibenedetto",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -758,7 +758,7 @@
       "value": "Grazia Lacalamita",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "signature"

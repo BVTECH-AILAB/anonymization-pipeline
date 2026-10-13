@@ -8,7 +8,7 @@
       "value": "ASL Costa dei Trabocchi",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -25,7 +25,7 @@
       "value": "P.O. Santa Gemma dei Vestini",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -39,7 +39,7 @@
       "value": "UOC Anatomia Patologica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -54,7 +54,7 @@
       "value": "Ennio Ciccarelli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -246,7 +246,7 @@
       "value": "02/07/1944",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "footer",
@@ -263,7 +263,7 @@
       "value": "A. De Santis",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footer"
@@ -279,7 +279,7 @@
       "value": "DE SANTIS",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "COGNOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -295,7 +295,7 @@
       "value": "ROSA",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "NOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -311,7 +311,7 @@
       "value": "Pescara",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -372,7 +372,7 @@
       "value": "RSA Villa delle Mimose",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -458,7 +458,7 @@
       "value": "16 settembre 2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -486,7 +486,7 @@
       "value": "03/10/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -501,7 +501,7 @@
       "value": "UOC Chirurgia Generale e Oncologica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "fields"
@@ -515,7 +515,7 @@
       "value": "Gianmarco D'Alessandro",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "fields",
@@ -531,7 +531,7 @@
       "value": "Alberto De Santis",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 5,
       "locations": [
         "paragraph",
@@ -777,7 +777,7 @@
       "value": "De Santis Alberto",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -791,7 +791,7 @@
       "value": "Celeste Marinucci",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -805,7 +805,7 @@
       "value": "Oksana Kovalenko",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "CONTATTO_EMERGENZA",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -833,7 +833,7 @@
       "value": "G. D'Alessandro",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -847,7 +847,7 @@
       "value": "Lorenzo Pace",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph"
@@ -862,7 +862,7 @@
       "value": "Ilaria Rapino",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -876,7 +876,7 @@
       "value": "Marta Di Febo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "paragraph",
@@ -1078,7 +1078,7 @@
       "value": "Federica Del Re",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1134,7 +1134,7 @@
       "value": "D'Alessandro",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1164,7 +1164,7 @@
       "value": "Di Febo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1194,7 +1194,7 @@
       "value": "Simone Dell'Elce",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "table"
@@ -1209,7 +1209,7 @@
       "value": "Day Hospital Oncologico",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "table"
@@ -1238,7 +1238,7 @@
       "value": "Nicola Di Pietrantonio",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1294,7 +1294,7 @@
       "value": "C. Marinucci",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1308,7 +1308,7 @@
       "value": "3 ottobre 2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1322,7 +1322,7 @@
       "value": "MARTA DI FEBO",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1368,7 +1368,7 @@
       "value": "17/02/1979",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1410,7 +1410,7 @@
       "value": "Mariangela Di Biase",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1452,7 +1452,7 @@
       "value": "Giulia Sole Ranieri",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1480,7 +1480,7 @@
       "value": "24/09/2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1494,7 +1494,7 @@
       "value": "De Santis",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "TUTORE_DELEGATO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1510,7 +1510,7 @@
       "value": "Celeste",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1525,7 +1525,7 @@
       "value": "Sara Mancinelli",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"

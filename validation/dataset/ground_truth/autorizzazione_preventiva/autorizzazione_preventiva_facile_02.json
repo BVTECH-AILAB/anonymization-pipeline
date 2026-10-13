@@ -8,7 +8,7 @@
       "value": "Azienda USL Terre del Delta",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -22,7 +22,7 @@
       "value": "Servizio Farmaceutico Territoriale",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -79,7 +79,7 @@
       "value": "Guidetti",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "COGNOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -93,7 +93,7 @@
       "value": "Martina",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "NOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -107,7 +107,7 @@
       "value": "03/07/1996",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -121,7 +121,7 @@
       "value": "Ferrara",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -289,7 +289,7 @@
       "value": "Federica Bonaccorsi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "fields",
@@ -318,7 +318,7 @@
       "value": "Servizio di Diabetologia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "fields"
@@ -332,7 +332,7 @@
       "value": "14/01/2026",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA_PRESCRIZIONE",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "fields",

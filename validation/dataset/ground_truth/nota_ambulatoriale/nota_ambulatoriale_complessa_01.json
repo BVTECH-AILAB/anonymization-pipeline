@@ -8,7 +8,7 @@
       "value": "ASST Navigli Ovest",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -25,7 +25,7 @@
       "value": "Ospedale Maggiore della Darsena",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -39,7 +39,7 @@
       "value": "S.C. Malattie Infettive - Ambulatorio HIV/IST",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -53,7 +53,7 @@
       "value": "Pietro Sangalli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -209,7 +209,7 @@
       "value": "18/06/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -274,7 +274,7 @@
       "value": "D. Brambilla",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footer"
@@ -306,7 +306,7 @@
       "value": "NDIAYE",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "COGNOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -322,7 +322,7 @@
       "value": "Moussa",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "NOME",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -338,7 +338,7 @@
       "value": "Thiès (Senegal)",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -352,7 +352,7 @@
       "value": "15/01/1987",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -368,7 +368,7 @@
       "value": "senegalese",
       "category": "CITTADINANZA",
       "group": "anagrafica",
-      "family": "CITTADINANZA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -438,7 +438,7 @@
       "value": "30/09/2026",
       "category": "DATA_SCADENZA",
       "group": "documenti",
-      "family": "DATA_SCADENZA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -494,7 +494,7 @@
       "value": "Enrico Villa",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "fields",
@@ -554,7 +554,7 @@
       "value": "Logistica Lambro S.p.A.",
       "category": "DATORE_LAVORO",
       "group": "organizzazioni",
-      "family": "DATORE_LAVORO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -682,7 +682,7 @@
       "value": "Stella Ferraresi",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -696,7 +696,7 @@
       "value": "Ferraresi",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -725,7 +725,7 @@
       "value": "Awa Diop",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1187,7 +1187,7 @@
       "value": "Chiara Colombo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1315,7 +1315,7 @@
       "value": "18/06/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "signature"
@@ -1331,7 +1331,7 @@
       "value": "Laura Dell'Acqua",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "signature"
@@ -1346,7 +1346,7 @@
       "value": "S.C. MALATTIE INFETTIVE",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1362,7 +1362,7 @@
       "value": "L. Dell'Acqua",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1405,7 +1405,7 @@
       "value": "Davide Brambilla",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1522,7 +1522,7 @@
       "value": "S. Ferraresi",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "note"

@@ -8,7 +8,7 @@
       "value": "Azienda Ospedaliera Santa Caterina del Reno",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -25,7 +25,7 @@
       "value": "U.O.C. Malattie Infettive e Tropicali",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -40,7 +40,7 @@
       "value": "Ambulatorio HIV",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 3,
       "locations": [
         "letterhead",
@@ -56,7 +56,7 @@
       "value": "Marisa Calzolari",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -201,7 +201,7 @@
       "value": "14/07/1979",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "running_header"
@@ -299,7 +299,7 @@
       "value": "Pierluigi Venturi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "address"
@@ -359,7 +359,7 @@
       "value": "Salerno",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -373,7 +373,7 @@
       "value": "14 luglio 1979",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -458,7 +458,7 @@
       "value": "Studio Lanterna Comunicazione S.r.l.",
       "category": "DATORE_LAVORO",
       "group": "organizzazioni",
-      "family": "DATORE_LAVORO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -528,7 +528,7 @@
       "value": "02/09/2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -543,7 +543,7 @@
       "value": "Pronto Soccorso Generale",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "fields"
@@ -557,7 +557,7 @@
       "value": "22-09-2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -571,7 +571,7 @@
       "value": "Lorenzo Mazzacurati",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "fields",
@@ -589,7 +589,7 @@
       "value": "Monica Grandi",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "fields",
@@ -605,7 +605,7 @@
       "value": "Samuele Viola",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "CONTATTO_EMERGENZA",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "checkboxes",
@@ -650,7 +650,7 @@
       "value": "Carmela Iannone",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -678,7 +678,7 @@
       "value": "Stella D'Ambrosio",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "FAMILIARE",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -739,7 +739,7 @@
       "value": "2 settembre 2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -754,7 +754,7 @@
       "value": "22.09.25",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA_RICOVERO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1337,7 +1337,7 @@
       "value": "Irene Fabbri",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1691,7 +1691,7 @@
       "value": "Chiara Nguyen",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1817,7 +1817,7 @@
       "value": "Ruggero Tassinari",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1845,7 +1845,7 @@
       "value": "Andrea Melandri",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1874,7 +1874,7 @@
       "value": "Beatrice Lolli",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1890,7 +1890,7 @@
       "value": "Viola",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "CONTATTO_EMERGENZA",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1920,7 +1920,7 @@
       "value": "Agnese Tura",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1934,7 +1934,7 @@
       "value": "Nicola Pancaldi",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2131,7 +2131,7 @@
       "value": "24/09/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 2,
       "locations": [
         "table"
@@ -2173,7 +2173,7 @@
       "value": "Day Hospital Malattie Infettive",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "table"
@@ -2201,7 +2201,7 @@
       "value": "07/10/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -2215,7 +2215,7 @@
       "value": "Ambulatorio di Oncologia Medica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "table"
@@ -2229,7 +2229,7 @@
       "value": "21/10/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "table"
@@ -2287,7 +2287,7 @@
       "value": "22 settembre 2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA_REFERTO",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -2301,7 +2301,7 @@
       "value": "AZ. OSP. SANTA CATERINA DEL RENO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -2315,7 +2315,7 @@
       "value": "U.O.C. MALATTIE INFETTIVE",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -2330,7 +2330,7 @@
       "value": "L. Mazzacurati",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -2358,7 +2358,7 @@
       "value": "AZIENDA OSP. S. CATERINA DEL RENO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -2372,7 +2372,7 @@
       "value": "M. Calzolari",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -2414,7 +2414,7 @@
       "value": "S. Viola",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "CONTATTO_EMERGENZA",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "footnotes"

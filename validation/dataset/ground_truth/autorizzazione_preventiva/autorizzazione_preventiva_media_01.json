@@ -8,7 +8,7 @@
       "value": "Azienda Sanitaria Locale Val d'Agri e Basento",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "Carmela Vaccaro",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -180,7 +180,7 @@
       "value": "Potenza",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO_NASCITA",
+      "family": "LUOGO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -195,7 +195,7 @@
       "value": "11/09/1994",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA_NASCITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -265,7 +265,7 @@
       "value": "Teresa Summa",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "CONTATTO_EMERGENZA",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -335,7 +335,7 @@
       "value": "A.O.R. Santa Lucilla",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "STRUTTURA_SANITARIA",
+      "family": "ORGANIZZAZIONE",
       "mentions": 2,
       "locations": [
         "fields",
@@ -351,7 +351,7 @@
       "value": "U.O.C. Gastroenterologia ed Endoscopia Digestiva",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "REPARTO",
+      "family": "ORGANIZZAZIONE",
       "mentions": 1,
       "locations": [
         "fields"
@@ -365,7 +365,7 @@
       "value": "Annalisa Grippo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "fields",
@@ -382,7 +382,7 @@
       "value": "03/11/2025",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA_PRESCRIZIONE",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -481,7 +481,7 @@
       "value": "28.10.25",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA_VISITA",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -580,7 +580,7 @@
       "value": "Michele Santangelo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 3,
       "locations": [
         "table",
@@ -666,7 +666,7 @@
       "value": "3 novembre 2025",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA_PRESCRIZIONE",
+      "family": "DATA",
       "mentions": 1,
       "locations": [
         "signature"
@@ -680,7 +680,7 @@
       "value": "A. Grippo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "MEDICO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -695,7 +695,7 @@
       "value": "Rocco Laurino",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "OPERATORE_SANITARIO",
+      "family": "PERSONA",
       "mentions": 1,
       "locations": [
         "paragraph"

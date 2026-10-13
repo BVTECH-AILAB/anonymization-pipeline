@@ -547,7 +547,7 @@ class _Blocks:
                     spaceBefore=6,
                 )
             )
-        left = [self.p(b.place_date)] if b.place_date else [""]
+        left: Any = [self.p(b.place_date)] if b.place_date else ""
         table = Table([[left, right]], colWidths=[width * 0.45, width * 0.55])
         table.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "BOTTOM")]))
         return [Spacer(1, 4 * mm), table, Spacer(1, 3 * mm)]

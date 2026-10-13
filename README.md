@@ -186,6 +186,8 @@ unavailable`): il Markdown resta l'output di riferimento.
 | `just test-vlm` | Test di integrazione con il VLM reale (nel container `app`) |
 | `just audit` | Vulnerabilità nelle dipendenze |
 | `just docs-pdf` | Rigenera il PDF di documentazione tecnica (`docs/architettura-anonymization-pipeline.pdf`) |
+| `just validation-dataset` | Rigenera PDF e ground truth del dataset sintetico di validazione dalle spec |
+| `just validation` | Validazione sul dataset sintetico: profili di `validation/config.yaml`, report Markdown con le metriche |
 
 Gli extra opzionali `ner` (torch CPU + transformers) e `docling` sono
 nell'immagine Docker; in locale `uv sync --all-extras` li installa, e
@@ -209,7 +211,12 @@ src/anonymization_pipeline/
 frontend/             interfaccia web React + Vite, servita da nginx
 tests/unit            senza rete (VLM finto); tests/integration con il VLM reale
 tests/fixtures        documenti sintetici
+validation/           dataset sintetico di validazione, prompt di generazione, harness e report
 ```
+
+La validazione della qualità (recall, fughe, precision per categoria, tipo
+e difficoltà, confronto tra configurazioni) è descritta in
+[validation/README.md](validation/README.md).
 
 ## Privacy
 

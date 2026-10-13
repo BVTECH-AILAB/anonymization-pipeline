@@ -84,10 +84,10 @@ negativa, la riga si elimina e si ricalcolano le date.
 
 | ID | WBS | Attività | gg | Predecessori | Stato | % | Punti aperti | Riferimento |
 |---:|---|---|---:|---|---|---:|---|---|
-| 20 | 3.1 | Schema di annotazione (span e categoria da categories.yaml) e linee guida per gli annotatori | 2 | 1.1 | Da fare | 0 | PA-14 | `resources/categories.yaml` |
-| 21 | 3.2 | Documenti sintetici per tipologia: referti, ricette, lettere di dimissione, documenti d'identità, testo libero | 5 | 3.1 | In corso | 30 |  | `tests/fixtures/ (4 documenti)` |
+| 20 | 3.1 | Schema di annotazione (span e categoria da categories.yaml) e linee guida per gli annotatori | 2 | 1.1 | In corso | 70 | PA-14 | `validation/PROMPT.md` (marcatori `[[CATEGORIA:valore]]`) |
+| 21 | 3.2 | Documenti sintetici per tipologia: referti, ricette, lettere di dimissione, documenti d'identità, testo libero | 5 | 3.1 | In corso | 70 |  | `tests/fixtures/ (4 documenti); validation/dataset/ (96 PDF nativi, 8 tipologie x 3 difficoltà)` |
 | 22 | 3.3 | Varianti di degrado: scansioni storte, bassa risoluzione, timbri, firme, tabelle, manoscritto | 3 | 3.2 | Da fare | 0 | PA-16 |  |
-| 23 | 3.4 | Annotazione della ground truth (riuso dell'export .revisione.json del frontend) | 5 | 3.2, 3.3 | Da fare | 0 |  | `frontend/src/lib/revisione.ts` |
+| 23 | 3.4 | Annotazione della ground truth (riuso dell'export .revisione.json del frontend) | 5 | 3.2, 3.3 | In corso | 50 |  | `validation/dataset/ground_truth/ (generata dai marcatori); frontend/src/lib/revisione.ts` |
 | 24 | 3.5 | Split dev/test, versioning del dataset, verifica dell'assenza di dati reali | 1 | 3.4 | Da fare | 0 |  |  |
 | 25 | 3.6 | **M3 Dataset pronto** | 0 | 3.5 | Da fare | 0 |  |  |
 
@@ -123,9 +123,9 @@ negativa, la riga si elimina e si ricalcolano le date.
 | ID | WBS | Attività | gg | Predecessori | Stato | % | Punti aperti | Riferimento |
 |---:|---|---|---:|---|---|---:|---|---|
 | 50 | 5.1 | Metriche prestazionali: latenza p50/p95, secondi per pagina, token, CPU e memoria | 2 | 2.1 | Completato | 100 |  | `metrics.py; 99e0df7` |
-| 51 | 5.2 | Metriche di qualità: recall per categoria, precision, F1, tasso di residui, allucinazioni, over-redaction | 2 | 1.10 | Da fare | 0 | PA-15 |  |
+| 51 | 5.2 | Metriche di qualità: recall per categoria, precision, F1, tasso di residui, allucinazioni, over-redaction | 2 | 1.10 | In corso | 80 | PA-15 | `validation/anonval/scoring.py` |
 | 52 | 5.3 | Soglie di accettazione per categoria | 1 | 5.2 | Da fare | 0 | PA-14, PA-15 |  |
-| 53 | 5.4 | Harness di valutazione automatica sul dataset annotato | 4 | 5.2, 3.1 | Da fare | 0 |  |  |
+| 53 | 5.4 | Harness di valutazione automatica sul dataset annotato | 4 | 5.2, 3.1 | In corso | 70 |  | `validation/ (just validation)` |
 | 54 | 5.5 | Dashboard di confronto tra configurazioni | 2 | 5.1 | Completato | 100 |  | `frontend/src/pagine/Dashboard.tsx, Storico.tsx` |
 
 ### 6. Compliance e linee guida AgID

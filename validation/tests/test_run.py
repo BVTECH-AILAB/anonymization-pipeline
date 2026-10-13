@@ -7,7 +7,9 @@ from pathlib import Path
 import httpx
 import pytest
 
+from anonval.engine import read_state
 from anonval.run import main_async, parse_args
+from anonval.settings import load_config
 
 GOLD = {
     "id": "referto_esterno_facile_01",
@@ -157,6 +159,9 @@ async def test_run_writes_report_and_fails_on_leak(tmp_path: Path) -> None:
         base["recall"] == 0.5 and base["tasso_fuga"] == 0.5 and base["precision"] == 1.0
     )
     assert (run_dir / "raw" / "regole" / "referto_esterno_facile_01.json").exists()
+    assert read_state(run_dir) == "completata"
+    snapshot = load_config(run_dir / "config.yaml")
+    assert [p.nome for p in snapshot.profili] == ["base", "regole"]
     assert re.search(r'name="detectors"\s+rules', service.forms[1])
 
     # resuming reuses the saved results: no new job

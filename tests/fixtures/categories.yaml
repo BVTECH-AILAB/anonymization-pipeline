@@ -114,9 +114,12 @@ groups:
     DATO_BIOMETRICO:       "biometric data used to identify a person"
 
 # partial: categories that hold only a part of an entity. The tag of a group takes the most
-# informative category: specific (MEDICO) > generic (PERSONA) > partial (COGNOME).
+# informative category: specific (MEDICO) > generic (PERSONA) > partial (COGNOME). It only
+# changes the label of a tag, never what is redacted.
 partial: [NOME, COGNOME]
 
+# generic: the families of the categories (see the header). Required by the fallback of inactive
+# categories, the eponym filter, the NER filters and the tags: do not comment it out.
 generic:
   PERSONA: [NOME, COGNOME, PATERNITA_MATERNITA, MEDICO, OPERATORE_SANITARIO, FAMILIARE, CONTATTO_EMERGENZA,
             TUTORE_DELEGATO]

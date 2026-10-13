@@ -8,10 +8,19 @@
 #  This file is the only list of the categories: every one is on by default, default.yaml
 #  lists only the ones switched off.
 #
-#  generic: generic category -> the specific ones it contains. Used for two things:
-#   - if the model returns a specific category that is off and the generic one is on, the value
-#     is redacted with the generic one (e.g. OPERATORE_SANITARIO off, PERSONA on -> PERSONA);
-#   - only values of the same family share a tag, never a name with an address.
+#  generic: generic category -> the specific ones it contains (its family). Used for:
+#   - fallback: if a detector returns a specific category that is off and the generic one is
+#     on, the value is redacted with the generic one (e.g. MEDICO off, PERSONA on -> PERSONA);
+#     without it the value is discarded and stays in clear text;
+#   - eponym filter (detectors/eponyms.py): it applies to the PERSONA family only, so
+#     "Parkinson" proposed as COGNOME or MEDICO is recognised as a disease, not a person;
+#   - NER filters (detectors/ner): the checks on person names apply to the PERSONA family;
+#   - tags: the same value in the same family gets one tag ("Rossi" as COGNOME and as PERSONA
+#     -> one [PERSONA_n]); different families never share a tag, never a name with an address.
+#  partial: categories that hold only a part of an entity; used only to pick the tag of a group.
+#
+#  To change which categories are redacted, edit `categories` in default.yaml: generic and
+#  partial do not switch categories on or off, and removing them breaks the uses above.
 # =============================================================================
 
 groups:
@@ -122,9 +131,12 @@ groups:
     DATO_BIOMETRICO:       "biometric data used to identify a person"
 
 # partial: categories that hold only a part of an entity. The tag of a group takes the most
-# informative category: specific (MEDICO) > generic (PERSONA) > partial (COGNOME).
+# informative category: specific (MEDICO) > generic (PERSONA) > partial (COGNOME). It only
+# changes the label of a tag, never what is redacted.
 partial: [NOME, COGNOME]
 
+# generic: the families of the categories (see the header). Required by the fallback of inactive
+# categories, the eponym filter, the NER filters and the tags: do not comment it out.
 generic:
   PERSONA: [NOME, COGNOME, PATERNITA_MATERNITA, MEDICO, OPERATORE_SANITARIO, FAMILIARE, CONTATTO_EMERGENZA,
             TUTORE_DELEGATO]

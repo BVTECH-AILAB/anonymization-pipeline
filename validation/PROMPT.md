@@ -324,8 +324,9 @@ What changes with difficulty:
   - personal data in the footer and in the running header;
   - many people (patient, relatives, several physicians and nurses, guardian);
   - partial and variant forms of names ("sig.ra B.", "G. Bianchi", "la paziente Bianchi");
-  - compound and foreign surnames (De Santis, Dell'Orto, Nguyen, El Amrani), first names that are
-    also common words (Rosa, Bianca, Sole);
+  - compound and foreign surnames, first names that are also common words. The names in this
+    prompt (De Santis, Dell'Orto, Nguyen, El Amrani, Rosa, Bianca, Sole) only illustrate the kind:
+    invent different ones for every document;
   - several `negatives` (eponyms, surname-like words);
   - special categories where clinically plausible (`MALATTIE_INFETTIVE`, `SALUTE_MENTALE`,
     `DIPENDENZE`, `DATO_GENETICO`, `RELIGIONE`, for example refusal of transfusions);

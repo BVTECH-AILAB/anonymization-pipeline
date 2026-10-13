@@ -15,7 +15,7 @@ from pydantic_settings import BaseSettings, PydanticBaseSettingsSource
 from anonymization_pipeline.config import Settings
 from anonymization_pipeline.logging_setup import setup_logging
 
-FAKE_CF = "RSSMRA85M01H501U"
+FAKE_CF = "RSSMRA85M01H501Q"
 # models file of the tests and its only model (any name: the code knows no model)
 MODELS_FILE = str(Path(__file__).parent / "fixtures" / "models.yaml")
 TEST_MODEL = "vlm:test"

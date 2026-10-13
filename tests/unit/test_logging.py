@@ -43,4 +43,4 @@ def test_uvicorn_logs_go_through_redaction(log_stream: io.StringIO) -> None:
     logging.getLogger("uvicorn.error").warning("boom for %s", FAKE_CF)
 
     assert FAKE_CF not in log_stream.getvalue()
-    assert "R***U" in log_stream.getvalue()
+    assert "R***Q" in log_stream.getvalue()

@@ -50,10 +50,10 @@ profili:
   - nome: default
     descrizione: Configurazione di default del servizio
 
-  - nome: default-noner
-    descrizione: Configurazione di default senza il rilevatore NER
-    mode: tag
-    detectors: [vlm, rules, labels, eponyms]
+  # Da attivare per confrontare: default senza il rilevatore NER
+  # - nome: default-noner
+  #   descrizione: Configurazione di default senza il rilevatore NER
+  #   detectors: [vlm, rules, labels, eponyms]
 
 # =============================================================================
 #  Parametri di un profilo (tutti opzionali; anche in `comune`)

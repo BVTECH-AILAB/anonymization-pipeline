@@ -49,18 +49,22 @@ comune:
   verification: report
   extraction: docling
   layout: false
+  # Stesse categorie disattivate di default nel servizio (resources/default.yaml, `categories`):
+  # inviate esplicitamente, cosi' la run non dipende dalla configurazione del server.
+  disable: [date, persone_correlate, sanitari, ETA, STATO_CIVILE, PROFESSIONE, SESSO, STATO]
 
 profili:
   - nome: completo
-    descrizione: Tutti i rilevatori e tutte le categorie (default del server)
+    descrizione: Tutti i rilevatori, categorie di default
 
   - nome: regole
     descrizione: Solo rilevatori testuali deterministici, senza VLM in rilevazione
     detectors: [rules, labels, eponyms]
 
   - nome: identificativi
-    descrizione: Solo dati identificativi, categorie sanitarie e particolari disattivate
-    disable: [sanitari, particolari]
+    descrizione: Categorie di default senza le categorie particolari
+    # un profilo sostituisce `disable` di `comune`: si ripetono quelle di default
+    disable: [date, persone_correlate, sanitari, particolari, ETA, STATO_CIVILE, PROFESSIONE, SESSO, STATO]
 
   # Esempi da attivare secondo necessita':
   #

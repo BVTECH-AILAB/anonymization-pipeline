@@ -214,3 +214,9 @@ mark.scelto { background: color-mix(in srgb, var(--c, #888) 55%, transparent); o
   .confronto, .confronto.due { grid-template-columns: 1fr; height: auto; }
   .pannello-corpo { max-height: 70vh; }
 }
+
+/* Validazione */
+.barra-avanzamento { flex: 1; height: 8px; background: var(--superficie-2); border-radius: 4px; overflow: hidden; margin: 6px 0; }
+.barra-avanzamento > div { height: 100%; background: var(--accento); transition: width .3s; }
+.profilo-validazione { border-left: 3px solid var(--accento); padding-left: 8px; margin-bottom: 14px; }
+.etichetta-profilo { display: inline-block; margin-right: 10px; white-space: nowrap; }

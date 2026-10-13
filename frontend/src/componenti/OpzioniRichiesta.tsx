@@ -15,6 +15,8 @@ interface Props {
   stato: Status | null;
   leggiModelli: () => void;
   riprovaStato: () => void;
+  titolo?: string;
+  senzaTrascrizione?: boolean; // validazione: la trascrizione la chiede sempre, non si sceglie
 }
 
 function Sezione({ titolo, riassunto, aperta = false, children }: { titolo: string; riassunto: string; aperta?: boolean; children: React.ReactNode }) {
@@ -71,7 +73,7 @@ function Categorie({ o, setO, cat }: { o: Options; setO: Props["setO"]; cat: Cat
   );
 }
 
-export default function OpzioniRichiesta({ o, setO, predefinite, cat, mod, stato, leggiModelli, riprovaStato }: Props) {
+export default function OpzioniRichiesta({ o, setO, predefinite, cat, mod, stato, leggiModelli, riprovaStato, titolo = "Opzioni della richiesta", senzaTrascrizione = false }: Props) {
   const base = predefiniti(stato);
   const attivi = o.detectors ?? base ?? [];
   const modelli = FASI_VLM.filter((f) => o.models[f]).length;
@@ -82,12 +84,12 @@ export default function OpzioniRichiesta({ o, setO, predefinite, cat, mod, stato
   return (
     <div className="scheda">
       <div className="riga" style={{ justifyContent: "space-between" }}>
-        <h2 style={{ margin: 0 }}>Opzioni della richiesta</h2>
+        <h2 style={{ margin: 0 }}>{titolo}</h2>
         <button className="secondario piccolo" onClick={() => setO(predefinite)}>ripristina predefinite</button>
       </div>
 
       <Sezione titolo="Output" aperta
-               riassunto={[nomeModalita(o.mode), o.layout && "PDF con layout", o.transcript && "trascrizione in chiaro"].filter(Boolean).join(" · ")}>
+               riassunto={[nomeModalita(o.mode), o.layout && "PDF con layout", !senzaTrascrizione && o.transcript && "trascrizione in chiaro"].filter(Boolean).join(" · ")}>
         <div className="griglia-opzioni">
           <label>
             Modalità
@@ -102,11 +104,13 @@ export default function OpzioniRichiesta({ o, setO, predefinite, cat, mod, stato
           <input type="checkbox" checked={o.layout} onChange={(e) => setO({ ...o, layout: e.target.checked })} />
           Produci anche il PDF censurato con il layout dell'originale
         </label>
-        <label className="inline">
-          <input type="checkbox" checked={o.transcript} onChange={(e) => setO({ ...o, transcript: e.target.checked })} />
-          Restituisci anche la trascrizione in chiaro (debug)
-        </label>
-        {o.transcript && (
+        {!senzaTrascrizione && (
+          <label className="inline">
+            <input type="checkbox" checked={o.transcript} onChange={(e) => setO({ ...o, transcript: e.target.checked })} />
+            Restituisci anche la trascrizione in chiaro (debug)
+          </label>
+        )}
+        {o.transcript && !senzaTrascrizione && (
           <p className="avviso-rosso">
             Il testo IN CHIARO del documento viaggia nella risposta e resta in memoria sul server fino alla scadenza del
             lavoro. Usalo solo per prove; con la modalità pseudonimo il confronto funziona anche senza, con la chiave.

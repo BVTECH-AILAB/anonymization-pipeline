@@ -27,6 +27,7 @@ from anonymization_pipeline.pipeline_config.categories import registry
 
 DATASET = Path(__file__).resolve().parents[1] / "dataset"
 PER_DIFFICULTY = 4
+MASK = "#"
 # rubric of the generation prompt: pages and distinct identifying values (health and special
 # categories excluded) per difficulty
 PAGES = {"facile": (1, 1), "media": (2, 3), "complessa": (3, 5)}
@@ -52,9 +53,17 @@ def page_texts(pdf: bytes) -> list[str]:
 
 
 def ground_truth(
-    spec: Spec, mentions: list[Mention], texts: list[str]
+    spec: Spec, mentions: list[Mention], texts: list[str], masked: str = ""
 ) -> dict[str, Any]:
     """Ground truth of a document: one entry per (value, category).
+
+    Args:
+        spec: The spec.
+        mentions: Its markers, in document order.
+        texts: Text layer of every page of the PDF.
+        masked: Text of the PDF drawn with the marked values masked. ``unmarked`` counts the
+            copies of a value left there: the same string used as plain text ("rosa" the colour,
+            "Rosa" the name), which the scoring tolerates in the redacted output.
 
     Raises:
         ValueError: A value is missing from the text layer of the PDF.
@@ -82,6 +91,7 @@ def ground_truth(
         entry["pages"] = [
             i + 1 for i, text in enumerate(texts) if find(text, entry["value"])
         ]
+        entry["unmarked"] = len(find(masked, entry["value"])) if masked else 0
         if not entry["pages"]:
             missing.append(f"{entry['category']}:{entry['value']}")
     if missing:
@@ -134,7 +144,8 @@ def build_one(path: Path, dataset: Path) -> dict[str, Any]:
         raise ValueError(f"file name {path.name} differs from id {spec.id}")
     resolved, mentions = resolve(spec)
     pdf = render_pdf(resolved)
-    gold = ground_truth(spec, mentions, page_texts(pdf))
+    masked = "\n".join(page_texts(render_pdf(resolve(spec, mask=MASK)[0])))
+    gold = ground_truth(spec, mentions, page_texts(pdf), masked)
     rubric = rubric_problems(spec.difficulty, gold)
     if rubric:
         raise ValueError("; ".join(rubric))

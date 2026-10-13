@@ -305,8 +305,9 @@ def _cp1252(char: str) -> bool:
 
 
 class _Resolver:
-    def __init__(self, spec: Spec) -> None:
+    def __init__(self, spec: Spec, mask: str | None) -> None:
         self.spec = spec
+        self.mask = mask
         self.categories = set(registry().descriptions)
         self.labels: dict[tuple[str, str], str] = {}
         self.mentions: list[Mention] = []
@@ -348,7 +349,7 @@ class _Resolver:
                 value = self.computed(category, value[1:])
             value = sanitize(value)
             self.mentions.append(Mention(value, category, location))
-            return value
+            return self.mask if self.mask is not None else value
 
         out = MARKER.sub(replace, text)
         if "[[" in out or "]]" in out:
@@ -380,14 +381,19 @@ _TOP_LOCATIONS = {
 }
 
 
-def resolve(spec: Spec) -> tuple[Spec, list[Mention]]:
+def resolve(spec: Spec, mask: str | None = None) -> tuple[Spec, list[Mention]]:
     """Spec with plain text in place of the markers, and the mentions in document order.
+
+    Args:
+        spec: The spec with its markers.
+        mask: Text drawn in place of every marked value (None: the value itself). The masked
+            document shows the text that is not ground truth.
 
     Raises:
         ValueError: Unknown category or person, computed value not allowed, malformed marker,
             character the PDF fonts cannot draw.
     """
-    resolver = _Resolver(spec)
+    resolver = _Resolver(spec, mask)
     data = spec.model_dump(mode="json")
     out: dict[str, Any] = {}
     for key, value in data.items():

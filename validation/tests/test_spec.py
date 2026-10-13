@@ -140,3 +140,12 @@ def test_sanitize_maps_symbols_and_rejects_others() -> None:
     assert sanitize("PSA ≤ 4 ng/mL") == "PSA <= 4 ng/mL"
     with pytest.raises(ValueError):
         sanitize("emoji \U0001f600")
+
+
+def test_mask_replaces_marked_values_only() -> None:
+    spec, mentions = resolve(Spec.model_validate(_spec()), mask="#")
+    box = spec.blocks[0]
+    assert box.type == "patient_box"
+    assert box.fields == [("Paziente", "#"), ("C.F.", "#")]
+    assert spec.footer == ["Sede legale: #"]
+    assert len(mentions) == len(resolve(Spec.model_validate(_spec()))[1])

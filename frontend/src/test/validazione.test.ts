@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import * as v from "../api/validazione";
 import type { ConfigValidazione, DocumentoDataset } from "../api/validazione";
-import { aProfilo, daInviare, daParametri, nuovoNome, problemi, profiliUI, selezionati, stimaMinuti, type ProfiloUI } from "../lib/validazione";
+import { aProfilo, daInviare, daParametri, nuovoNome, problemi, profiliUI, selezionati, type ProfiloUI } from "../lib/validazione";
 
 afterEach(() => { vi.restoreAllMocks(); });
 
@@ -76,12 +76,11 @@ describe("validazione: profili", () => {
 });
 
 describe("validazione: dataset", () => {
-  it("filtra come il backend e stima la durata", () => {
+  it("filtra come il backend", () => {
     expect(selezionati(DOCS, { tipi: [], difficolta: [], documenti: [] })).toHaveLength(3);
     expect(selezionati(DOCS, { tipi: ["referto_laboratorio"], difficolta: ["media"], documenti: [] }).map((d) => d.id))
       .toEqual(["referto_laboratorio_media_01"]);
     expect(selezionati(DOCS, { tipi: [], difficolta: [], documenti: ["test_genetico_complessa_01"] })).toHaveLength(1);
-    expect(stimaMinuti(DOCS, 2)).toBe(Math.round((7 * 2 * 65) / 60));
   });
 });
 

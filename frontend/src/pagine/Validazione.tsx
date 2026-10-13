@@ -19,7 +19,6 @@ import {
   problemi,
   profiliUI,
   selezionati,
-  stimaMinuti,
   TIPI,
   type Filtri,
   type ProfiloUI,
@@ -192,8 +191,7 @@ function NuovaValidazione({ iniziale, preset }: { iniziale: ConfigIniziale; pres
           </div>
         </details>
         <p className="nota">
-          {docs.length} documenti, {pagine} pagine, {profili.length} {profili.length === 1 ? "profilo" : "profili"}: durata stimata circa{" "}
-          {stimaMinuti(docs, profili.length)} minuti (VLM su GPU).
+          {docs.length} documenti, {pagine} pagine, {profili.length} {profili.length === 1 ? "profilo" : "profili"}.
         </p>
 
         <h3>Soglie</h3>

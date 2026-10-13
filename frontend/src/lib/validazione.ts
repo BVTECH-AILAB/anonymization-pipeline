@@ -1,5 +1,5 @@
 // Validazione dalla UI: conversione tra i profili di validation/config.yaml e le opzioni del modulo di
-// caricamento (Options, riusate da OpzioniRichiesta), filtri del dataset, stima della durata.
+// caricamento (Options, riusate da OpzioniRichiesta), filtri del dataset.
 import type { Mode, Options, VlmPhase } from "../api/tipi";
 import type { ConfigValidazione, DocumentoDataset, Parametri, Profilo, Soglie } from "../api/validazione";
 import { FASI_VLM } from "./nomi";
@@ -15,8 +15,6 @@ export const TIPI: Record<string, string> = {
   referto_esterno: "Referti esterni",
 };
 export const DIFFICOLTA = ["facile", "media", "complessa"] as const;
-/** Secondi per pagina misurati con il profilo di default (VLM su GPU): solo per la stima in UI. */
-export const SECONDI_PER_PAGINA = 65;
 export const NOME_PROFILO = /^[a-z0-9][a-z0-9_-]{0,40}$/;
 
 /** Un profilo nel modulo: nome, descrizione e le opzioni del modulo di caricamento. */
@@ -110,12 +108,6 @@ export function selezionati(docs: DocumentoDataset[], f: Filtri): DocumentoDatas
       (!f.difficolta.length || f.difficolta.includes(d.difficulty)) &&
       (!f.documenti.length || f.documenti.includes(d.id)),
   );
-}
-
-/** Durata stimata in minuti: pagine x profili x secondi per pagina. */
-export function stimaMinuti(docs: DocumentoDataset[], profili: number): number {
-  const pagine = docs.reduce((n, d) => n + d.pages, 0);
-  return Math.round((pagine * profili * SECONDI_PER_PAGINA) / 60);
 }
 
 /** Problemi che impediscono l'avvio, in italiano (il backend li ricontrolla comunque). */

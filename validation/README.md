@@ -160,7 +160,7 @@ fa le stesse cose del comando: configura, avvia, segue e consulta le run.
 
 - **Configurazione.** All'apertura il modulo carica `config.yaml` come default. Per la run che
   lanci si modificano:
-  - filtri del dataset (tipologie, difficoltà, documenti specifici), con una stima della durata;
+  - filtri del dataset (tipologie, difficoltà, documenti specifici);
   - soglie, documenti in parallelo e timeout;
   - i profili (aggiungi, duplica, rimuovi), con lo stesso modulo della pagina Carica: modalità,
     verifica, estrazione, modelli per fase, rilevatori, categorie e gruppi.

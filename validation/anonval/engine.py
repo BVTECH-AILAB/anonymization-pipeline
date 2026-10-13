@@ -47,6 +47,10 @@ class StartError(Exception):
     """The run cannot start: configuration, dataset or server not usable."""
 
 
+class ServiceDown(StartError):
+    """The anonymization service does not answer."""
+
+
 class Observer(Protocol):
     """Progress of a run: the terminal display or the state read by the web API."""
 
@@ -125,7 +129,7 @@ async def preflight(
             "configuration": await client.get("/configuration"),
         }
     except httpx.HTTPError as exc:
-        raise StartError(
+        raise ServiceDown(
             f"Servizio non raggiungibile su {url} ({type(exc).__name__}): avvialo con `just up` "
             "e imposta ANONPIP_ALLOW_TRANSCRIPT=true."
         ) from exc

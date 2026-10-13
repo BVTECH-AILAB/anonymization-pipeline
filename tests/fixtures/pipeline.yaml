@@ -1,0 +1,20 @@
+# Pipeline overrides of the tests only (ANONPIP_PIPELINE_CONFIG_FILE of make_settings).
+#
+# The packaged defaults (resources/default.yaml, `categories`) switch some categories off; the
+# tests exercise every detector on every category, so they run with all categories active,
+# independently of the production defaults. Never used by the service.
+categories:
+  groups:
+    anagrafica: true
+    residenza: true
+    identificativi: true
+    documenti: true
+    contatti: true
+    finanziari: true
+    veicoli: true
+    identificativi_sanitari: true
+    persone_correlate: true
+    date: true
+    organizzazioni: true
+    sanitari: true
+    particolari: true

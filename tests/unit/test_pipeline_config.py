@@ -108,8 +108,15 @@ def test_missing_models_file_is_an_error() -> None:
         pipeline_config(models_file="/nonexistent.yaml")
 
 
-def test_every_registry_category_is_on_by_default() -> None:
-    assert base()["categories"] == dict.fromkeys(registry().descriptions, True)
+def test_every_registry_category_has_a_default() -> None:
+    defaults = base()["categories"]
+    assert list(defaults) == list(registry().descriptions)
+    assert all(isinstance(on, bool) for on in defaults.values())
+
+
+def test_tests_run_with_every_category_active() -> None:
+    # tests/fixtures/pipeline.yaml, whatever the packaged defaults switch off
+    assert set(pipeline_config().active()) == set(registry().descriptions)
 
 
 def test_settings_own_backend_and_modes() -> None:

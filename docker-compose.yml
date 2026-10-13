@@ -88,15 +88,36 @@ services:
       - docling_models:/models/docling:ro
     command: uvicorn anonymization_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src
 
-  # web UI: static files + /api proxy to app:8000
+  # validation API (local only, never deployed): the "Validazione" section of the web UI.
+  # Same dev image as app; it calls app:8000 like `just validation` and writes validation/results.
+  validation:
+    build:
+      context: .
+      target: dev
+    depends_on:
+      - app
+    networks: [edge]
+    environment:
+      PYTHONPATH: /app/validation
+      ANONVAL_API_URL: http://app:8000
+      ANONVAL_KEY: ${ANONVAL_KEY:-}               # optional: key for profiles in pseudonym mode
+    volumes:
+      - ./src:/app/src
+      - ./validation:/app/validation
+    command: uvicorn anonval.api:app --factory --host 0.0.0.0 --port 8001
+
+  # web UI: static files + /api proxy to app:8000 (+ /validazione-api to validation:8001, local only)
   frontend:
     build:
       context: frontend
     depends_on:
       - app
+      - validation
     networks: [edge]
     ports:
       - "127.0.0.1:${WEB_PORT:-8080}:80"
+    volumes:
+      - ./frontend/nginx.validation.conf:/etc/nginx/extra/validation.conf:ro
 
   # --- profile "models": the only services with internet access (just models) ---
 

@@ -20,6 +20,10 @@ server {
         proxy_request_buffering on;         # the API requires Content-Length
     }
 
+    # optional locations mounted by docker compose (nginx.validation.conf, local only): in the
+    # cluster the folder is empty and nothing changes
+    include /etc/nginx/extra/*.conf;
+
     # no add_header inside the locations: nginx would no longer inherit the security headers above
     location /assets/ {
         expires 30d;                        # file names carry the content hash

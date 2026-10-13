@@ -89,6 +89,10 @@ validation-dataset *args:
 validation *args:
     bash validation/validate.sh {{args}}
 
+# Validation API on the host, for the "Validazione" section of `npm run dev` (port 8001)
+validation-api:
+    PYTHONPATH=validation uv run uvicorn anonval.api:app --factory --reload --reload-dir validation --port 8001
+
 # --- Docs ---
 
 # Technical documentation PDF (docs/architettura-anonymization-pipeline.pdf, BV TECH style)

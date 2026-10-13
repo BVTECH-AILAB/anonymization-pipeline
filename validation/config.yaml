@@ -54,19 +54,23 @@ comune:
   disable: [date, persone_correlate, sanitari, ETA, STATO_CIVILE, PROFESSIONE, SESSO, STATO]
 
 profili:
-  - nome: completo
-    descrizione: Tutti i rilevatori, categorie di default
+  # Configurazione di default del servizio: modelli, rilevatori ed estrazione del server,
+  # categorie disattivate come in default.yaml (da `comune`). Differisce dal default solo dove
+  # serve a misurare: mode tag invece di pseudonym (nessuna chiave) e verification report invece
+  # di block (un documento con residui viene misurato invece che respinto).
+  - nome: default
+    descrizione: Configurazione di default del servizio
 
-  - nome: regole
-    descrizione: Solo rilevatori testuali deterministici, senza VLM in rilevazione
-    detectors: [rules, labels, eponyms]
-
-  - nome: identificativi
-    descrizione: Categorie di default senza le categorie particolari
-    # un profilo sostituisce `disable` di `comune`: si ripetono quelle di default
-    disable: [date, persone_correlate, sanitari, particolari, ETA, STATO_CIVILE, PROFESSIONE, SESSO, STATO]
-
-  # Esempi da attivare secondo necessita':
+  # Esempi da attivare secondo necessita' (un profilo che imposta `disable` sostituisce quello
+  # di `comune`: ripetere le categorie di default):
+  #
+  # - nome: regole
+  #   descrizione: Solo rilevatori testuali deterministici, senza VLM in rilevazione
+  #   detectors: [rules, labels, eponyms]
+  #
+  # - nome: identificativi
+  #   descrizione: Categorie di default senza le categorie particolari
+  #   disable: [date, persone_correlate, sanitari, particolari, ETA, STATO_CIVILE, PROFESSIONE, SESSO, STATO]
   #
   # - nome: modello-alternativo
   #   descrizione: Rilevazione e verifica con un altro modello del catalogo

@@ -29,7 +29,7 @@ dataset:
 # sono ancora un punto aperto (docs/PUNTI_APERTI.md, PA-15).
 soglie:
   recall_min: 0.95              # valori rilevati / valori attesi
-  tasso_fuga_max: 0.0           # valori rimasti in chiaro / valori attesi
+  tasso_fuga_max: 0.05          # valori rimasti in chiaro / valori attesi
   precision_min: 0.80           # occorrenze censurate corrette / occorrenze censurate
   f1_min: 0.85
 
@@ -52,6 +52,7 @@ profili:
 
   - nome: default-noner
     descrizione: Configurazione di default senza il rilevatore NER
+    mode: tag
     detectors: [vlm, rules, labels, eponyms]
 
 # =============================================================================

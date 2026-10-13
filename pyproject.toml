@@ -40,6 +40,7 @@ dev = [
     "pytest>=8.3",
     "pytest-asyncio>=0.25",
     "pytest-cov>=6.0",
+    "rich>=13",
     "ruff>=0.15",
     "ty>=0.0.1a0",
 ]
@@ -68,7 +69,7 @@ packages = ["src/anonymization_pipeline"]
 
 [tool.ruff]
 target-version = "py312"
-src = ["src", "tests"]
+src = ["src", "tests", "validation"]
 
 [tool.ruff.lint]
 # Same base as ai-platform / llm-gateway, plus:
@@ -80,13 +81,18 @@ ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "S105", "S106", "ARG"]
+"validation/tests/**" = ["S101", "S105", "S106", "ARG"]
+# synthetic dataset: seeded, reproducible values, nothing cryptographic
+"validation/anonval/**" = ["S311"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "logging.basicConfig".msg = "Use anonymization_pipeline.logging_setup.setup_logging: it installs the PII redaction filter."
 "os.getenv".msg = "Read configuration through Settings in config.py, so every variable has a typed default."
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "validation/tests"]
+# the validation harness (validation/anonval) is a tool outside the package
+pythonpath = ["validation"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 addopts = "-m 'not integration and not ner and not docling' --strict-markers"
@@ -104,6 +110,9 @@ branch = true
 fail_under = 80
 show_missing = true
 skip_covered = true
+
+[tool.ty.environment]
+extra-paths = ["validation"]
 
 [tool.ty.analysis]
 # Optional extras (ner, docling): not installed by `uv sync`, so lint and CI do not need them.

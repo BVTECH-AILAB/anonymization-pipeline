@@ -6,18 +6,7 @@
 #  e il report li confronta. `comune` vale per tutti i profili; un profilo lo sovrascrive campo
 #  per campo. Un campo assente (o null) lascia il default del server (variabili ANONPIP_*).
 #
-#  Parametri di un profilo (tutti opzionali):
-#    mode                pseudonym | tag | redaction  (pseudonym richiede la chiave, vedi chiave_env)
-#    verification        off | report | block         (report: i residui finiscono nel report)
-#    extraction          docling | vlm                (pagine native del PDF)
-#    model_extraction    nome da GET /models
-#    model_detection     nome da GET /models
-#    model_verification  nome da GET /models
-#    enable              gruppi o categorie da attivare   (GET /categories)
-#    disable             gruppi o categorie da disattivare (disable vince su enable)
-#    detectors           insieme completo dei rilevatori attivi: vlm, rules, labels, ner, eponyms
-#                        (almeno uno tra vlm, rules, labels, ner; gli altri vengono spenti)
-#    layout              true | false                 (anche il PDF con il layout originale)
+#  I parametri di un profilo e i valori ammessi sono elencati in fondo al file.
 #
 #  `transcript=true` viene sempre inviato dallo script: serve per le metriche. Il server deve
 #  avere ANONPIP_ALLOW_TRANSCRIPT=true (mai in prod).
@@ -61,35 +50,90 @@ profili:
   - nome: default
     descrizione: Configurazione di default del servizio
 
-  # Esempi da attivare secondo necessita' (un profilo che imposta `disable` sostituisce quello
-  # di `comune`: ripetere le categorie di default):
-  #
-  # - nome: regole
-  #   descrizione: Solo rilevatori testuali deterministici, senza VLM in rilevazione
-  #   detectors: [rules, labels, eponyms]
-  #
-  # - nome: identificativi
-  #   descrizione: Categorie di default senza le categorie particolari
-  #   disable: [date, persone_correlate, sanitari, particolari, ETA, STATO_CIVILE, PROFESSIONE, SESSO, STATO]
-  #
-  # - nome: modello-alternativo
-  #   descrizione: Rilevazione e verifica con un altro modello del catalogo
-  #   model_detection: glm-ocr
-  #   model_verification: glm-ocr
-  #
-  # - nome: estrazione-vlm
-  #   descrizione: Anche le pagine native lette dal VLM invece che da docling
-  #   extraction: vlm
-  #
-  # - nome: con-ner
-  #   descrizione: Rilevatore NER attivo (richiede l'extra ner sul server)
-  #   detectors: [vlm, rules, labels, ner, eponyms]
-  #
-  # - nome: pseudonimo
-  #   descrizione: Modalita' pseudonimo (esporta ANONVAL_KEY prima di lanciare)
-  #   mode: pseudonym
-  #
-  # - nome: solo-anagrafica
-  #   descrizione: Solo anagrafica e contatti
-  #   disable: [sanitari, particolari, organizzazioni, date]
-  #   enable: [anagrafica, contatti]
+  - nome: default-noner
+    descrizione: Configurazione di default senza il rilevatore NER
+    detectors: [vlm, rules, labels, eponyms]
+
+# =============================================================================
+#  Parametri di un profilo (tutti opzionali; anche in `comune`)
+#
+#  Un campo assente o null lascia il default del server. Un campo del profilo sostituisce quello
+#  di `comune` (non si somma): un profilo che imposta `disable` deve ripetere le categorie di
+#  default se vuole tenerle spente.
+#
+#  nome          obbligatorio: minuscole, cifre, - e _ (max 41 caratteri), unico
+#  descrizione   testo libero, riportato nel report
+#
+#  mode          pseudonym   valori sostituiti da pseudonimi reversibili (serve la chiave in
+#                            ANONVAL_KEY, vedi server.chiave_env)
+#                tag         valori sostituiti da [CATEGORIA_n]
+#                redaction   valori sostituiti dal simbolo di redazione
+#                default del server: pseudonym (ANONPIP_DEFAULT_MODE)
+#
+#  verification off         nessuna verifica
+#                report      i residui trovati dal verificatore finiscono nel report
+#                block       un documento con residui viene respinto (niente metriche)
+#                default del server: block (ANONPIP_DEFAULT_VERIFICATION)
+#
+#  extraction    docling     le pagine native del PDF lette da docling
+#                vlm         anche le pagine native lette dal VLM
+#                default del server: docling (ANONPIP_DEFAULT_EXTRACTION)
+#
+#  model_extraction, model_detection, model_verification
+#                un nome del catalogo dei modelli (GET /models; ANONPIP_MODELS_FILE). Catalogo
+#                del pacchetto (resources/models.yaml):
+#                  glm-ocr                default di extraction
+#                  gemma4:26b-a4b-it-qat  default di detection e verification
+#                Il modello deve essere presente nel backend: lo script lo controlla all'avvio.
+#
+#  detectors     insieme COMPLETO dei rilevatori attivi: quelli non elencati vengono spenti.
+#                Almeno uno tra vlm, rules, labels, ner.
+#                  vlm      rilevazione con il VLM
+#                  rules    regex e checksum (CF, IBAN, P.IVA, carte, telefoni...)
+#                  labels   valore dopo un'etichetta ("Codice paziente: ...")
+#                  ner      modello NER su CPU (richiede l'extra ner sul server)
+#                  eponyms  filtro degli eponimi ("morbo di Parkinson" non e' una persona)
+#                default del server: tutti e cinque
+#
+#  enable        gruppi o categorie da attivare
+#  disable       gruppi o categorie da disattivare (disable vince su enable)
+#                Si possono mescolare gruppi (minuscolo) e categorie (MAIUSCOLO). Default del
+#                server: tutte attive tranne date, persone_correlate, sanitari, ETA,
+#                STATO_CIVILE, PROFESSIONE, SESSO, STATO (resources/default.yaml).
+#                Gruppi e categorie (resources/categories.yaml, GET /categories):
+#                  anagrafica         NOME, COGNOME, PERSONA, PATERNITA_MATERNITA, SESSO,
+#                                     DATA_NASCITA, DATA_DECESSO, LUOGO_NASCITA, CITTADINANZA,
+#                                     STATO_CIVILE, PROFESSIONE, TITOLO_STUDIO, ETA
+#                  residenza          INDIRIZZO, CAP, LUOGO, STATO
+#                  identificativi     CODICE_FISCALE, PARTITA_IVA, TESSERA_SANITARIA,
+#                                     CODICE_STP_ENI, CODICE_ESENZIONE, NUMERO_POLIZZA,
+#                                     NUMERO_PROTOCOLLO
+#                  documenti          NUMERO_CARTA_IDENTITA, NUMERO_PASSAPORTO, NUMERO_PATENTE,
+#                                     NUMERO_PERMESSO_SOGGIORNO, ENTE_RILASCIO, DATA_RILASCIO,
+#                                     DATA_SCADENZA, MRZ
+#                  contatti           EMAIL, PEC, TELEFONO, FAX, USERNAME_SOCIAL, INDIRIZZO_IP,
+#                                     ID_DISPOSITIVO, URL_PERSONALE
+#                  finanziari         IBAN, CARTA_CREDITO, NUMERO_CONTO
+#                  veicoli            TARGA, TELAIO
+#                  identificativi_sanitari
+#                                     ID_PAZIENTE, NUMERO_CARTELLA, NUMERO_ACCETTAZIONE,
+#                                     NUMERO_REFERTO, NUMERO_RICETTA, NUMERO_PRENOTAZIONE,
+#                                     ACCESSION_NUMBER, CODICE_CAMPIONE
+#                  persone_correlate  MEDICO, OPERATORE_SANITARIO, NUMERO_ALBO, FAMILIARE,
+#                                     CONTATTO_EMERGENZA, TUTORE_DELEGATO
+#                  date               DATA, DATA_VISITA, DATA_REFERTO, DATA_RICOVERO,
+#                                     DATA_PRESCRIZIONE
+#                  organizzazioni     ORGANIZZAZIONE, STRUTTURA_SANITARIA, REPARTO,
+#                                     DATORE_LAVORO, SCUOLA
+#                  sanitari           DIAGNOSI, PATOLOGIA, TERAPIA, FARMACO, ESAME_VALORE,
+#                                     INTERVENTO, ALLERGIA, GRUPPO_SANGUIGNO, INVALIDITA,
+#                                     GRAVIDANZA, SALUTE_MENTALE, DIPENDENZE, MALATTIE_INFETTIVE,
+#                                     DATO_GENETICO, MISURE_ANTROPOMETRICHE, DECESSO_CAUSA
+#                  particolari        RELIGIONE, ORIENTAMENTO_SESSUALE, OPINIONE_POLITICA,
+#                                     SINDACATO, ETNIA, DATI_GIUDIZIARI, DATO_BIOMETRICO
+#                Una categoria specifica spenta ricade sulla sua generica se attiva (es. MEDICO
+#                spento, PERSONA attiva -> censurato come PERSONA).
+#
+#  layout        true | false  anche il PDF con il layout dell'originale (non usato dalle
+#                metriche, rallenta). Default del server: false (ANONPIP_DEFAULT_LAYOUT_OUTPUT)
+# =============================================================================

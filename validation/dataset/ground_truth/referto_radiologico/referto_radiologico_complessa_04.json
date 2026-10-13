@@ -8,7 +8,7 @@
       "value": "Azienda Ospedaliera Logudoro e Turritano",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -25,7 +25,7 @@
       "value": "Ospedale Santissima Annunziata del Monte",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -39,7 +39,7 @@
       "value": "SC Radiologia d'Urgenza e Interventistica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -53,7 +53,7 @@
       "value": "Antonio Giuseppe Pintus",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -175,7 +175,7 @@
       "value": "MURA",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "COGNOME",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -192,7 +192,7 @@
       "value": "SERENA",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "NOME",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -209,7 +209,7 @@
       "value": "30/07/1999",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -342,7 +342,7 @@
       "value": "Sassari",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -491,7 +491,7 @@
       "value": "27/09/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -506,7 +506,7 @@
       "value": "Maria Grazia Atzeni",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -621,7 +621,7 @@
       "value": "Paolo Lai",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -761,7 +761,7 @@
       "value": "Atzeni",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "note"
@@ -776,7 +776,7 @@
       "value": "Matteo Solinas",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "note"
@@ -846,7 +846,7 @@
       "value": "Ignazio Floris",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -860,7 +860,7 @@
       "value": "Fabrizio Usai",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -874,7 +874,7 @@
       "value": "Roberta Sanna",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -888,7 +888,7 @@
       "value": "Giovanni Melis",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -944,7 +944,7 @@
       "value": "Poliambulatorio Nurra Diagnostica",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1284,7 +1284,7 @@
       "value": "F. Usai",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1328,7 +1328,7 @@
       "value": "M. G. Atzeni",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1342,7 +1342,7 @@
       "value": "Lai",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1357,7 +1357,7 @@
       "value": "Nicola Porcu",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 3,
       "locations": [
         "paragraph",
@@ -1374,7 +1374,7 @@
       "value": "27/09/2026",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1389,7 +1389,7 @@
       "value": "Efisio Cossu",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "signature"
@@ -1418,7 +1418,7 @@
       "value": "28/09/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -1433,7 +1433,7 @@
       "value": "Irene Fadda",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -1447,7 +1447,7 @@
       "value": "Gavino Tola",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -1461,7 +1461,7 @@
       "value": "G. Melis",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -1559,7 +1559,7 @@
       "value": "28.09.2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1574,7 +1574,7 @@
       "value": "Davide Piredda",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1588,7 +1588,7 @@
       "value": "SC Anestesia e Rianimazione - Terapia Intensiva Generale",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1770,7 +1770,7 @@
       "value": "E. Cossu",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1812,7 +1812,7 @@
       "value": "Giovanna Pinna",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1842,7 +1842,7 @@
       "value": "M. Solinas",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1884,7 +1884,7 @@
       "value": "Hotel Baia di Porto Conte S.r.l.",
       "category": "DATORE_LAVORO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "DATORE_LAVORO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1898,7 +1898,7 @@
       "value": "28/09/2026",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1913,7 +1913,7 @@
       "value": "Bianca Deiana",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1927,7 +1927,7 @@
       "value": "A.O. LOGUDORO E TURRITANO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1941,7 +1941,7 @@
       "value": "BIANCA DEIANA",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1969,7 +1969,7 @@
       "value": "NICOLA PORCU",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -2013,7 +2013,7 @@
       "value": "SC Chirurgia d'Urgenza e del Trauma",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -2027,7 +2027,7 @@
       "value": "Lucia Manca",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -2041,7 +2041,7 @@
       "value": "Andrea Mura",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 1,
       "locations": [
         "footnotes"

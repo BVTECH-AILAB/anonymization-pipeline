@@ -8,7 +8,7 @@
       "value": "Azienda Socio-Sanitaria Locale Monte Arci",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -22,7 +22,7 @@
       "value": "Presidio Ospedaliero San Martino del Tirso",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -36,7 +36,7 @@
       "value": "Servizio Psichiatrico di Diagnosi e Cura (SPDC)",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -50,7 +50,7 @@
       "value": "Efisio Mura",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 3,
       "locations": [
         "letterhead",
@@ -191,7 +191,7 @@
       "value": "ASSL Monte Arci",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "footer"
@@ -223,7 +223,7 @@
       "value": "Antonio Melis",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 3,
       "locations": [
         "footer",
@@ -241,7 +241,7 @@
       "value": "Rita Serra",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "footer",
@@ -258,7 +258,7 @@
       "value": "Giovanna Pinna",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 3,
       "locations": [
         "footer",
@@ -276,7 +276,7 @@
       "value": "Centro di Salute Mentale di Oristano",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "address"
@@ -290,7 +290,7 @@
       "value": "Cagliari",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -304,7 +304,7 @@
       "value": "30/05/1990",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -375,7 +375,7 @@
       "value": "Hotel Marina Blu S.r.l.",
       "category": "DATORE_LAVORO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "DATORE_LAVORO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -403,7 +403,7 @@
       "value": "02/06/2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -450,7 +450,7 @@
       "value": "20.06.2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -479,7 +479,7 @@
       "value": "Michela Piras",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 3,
       "locations": [
         "fields",
@@ -524,7 +524,7 @@
       "value": "2 giugno 2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -538,7 +538,7 @@
       "value": "Maria Antonietta Sanna",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -622,7 +622,7 @@
       "value": "Paolo Cossu",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -739,7 +739,7 @@
       "value": "G. Pinna",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -767,7 +767,7 @@
       "value": "Luca De Santis",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -837,7 +837,7 @@
       "value": "M. Piras",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 3,
       "locations": [
         "table"
@@ -908,7 +908,7 @@
       "value": "Federico Loi",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -980,7 +980,7 @@
       "value": "Gavino Porcu",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1162,7 +1162,7 @@
       "value": "Rosa Floris",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1193,7 +1193,7 @@
       "value": "Luca",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1222,7 +1222,7 @@
       "value": "Franca Deiana",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1237,7 +1237,7 @@
       "value": "Giorgio De Santis",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1378,7 +1378,7 @@
       "value": "CSM di Oristano",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1392,7 +1392,7 @@
       "value": "24/06/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1420,7 +1420,7 @@
       "value": "SerD Oristano",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1434,7 +1434,7 @@
       "value": "Claudia Atzori",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1448,7 +1448,7 @@
       "value": "26/06/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1476,7 +1476,7 @@
       "value": "Ambulatorio di Epatologia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1490,7 +1490,7 @@
       "value": "15/07/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1532,7 +1532,7 @@
       "value": "Pinna",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1562,7 +1562,7 @@
       "value": "20/06/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1577,7 +1577,7 @@
       "value": "S.P.D.C. ORISTANO",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1605,7 +1605,7 @@
       "value": "ASSL MONTE ARCI",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1621,7 +1621,7 @@
       "value": "E. Mura",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1649,7 +1649,7 @@
       "value": "M. A. Sanna",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1677,7 +1677,7 @@
       "value": "L. De Santis",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "footnotes"

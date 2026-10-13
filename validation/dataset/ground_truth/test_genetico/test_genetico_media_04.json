@@ -8,7 +8,7 @@
       "value": "ASST Colli Bresciani",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "Presidio Ospedaliero di Rovato Nord",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -38,7 +38,7 @@
       "value": "S.S. Diagnostica Emoglobinopatie e Genetica Prenatale",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -52,7 +52,7 @@
       "value": "Pierluigi Gnutti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -187,7 +187,7 @@
       "value": "25/01/1996",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -201,7 +201,7 @@
       "value": "Durazzo (Albania)",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -215,7 +215,7 @@
       "value": "albanese",
       "category": "CITTADINANZA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "CITTADINANZA",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -259,7 +259,7 @@
       "value": "Federica Bonomi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -273,7 +273,7 @@
       "value": "Consultorio Familiare di Chiari",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -287,7 +287,7 @@
       "value": "13 febbraio 2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -315,7 +315,7 @@
       "value": "20/02/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 2,
       "locations": [
         "fields",
@@ -528,7 +528,7 @@
       "value": "Ardit Kola",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -542,7 +542,7 @@
       "value": "09.04.93",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -585,7 +585,7 @@
       "value": "Blerina Dervishi",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -613,7 +613,7 @@
       "value": "Mirela Hoxha",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -627,7 +627,7 @@
       "value": "Cristina Zanardelli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -641,7 +641,7 @@
       "value": "ASST COLLI BRESCIANI",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -656,7 +656,7 @@
       "value": "C. Zanardelli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"

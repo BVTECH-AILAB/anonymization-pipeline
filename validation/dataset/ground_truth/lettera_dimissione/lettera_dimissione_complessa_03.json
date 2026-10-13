@@ -8,7 +8,7 @@
       "value": "Azienda Ospedaliera Santa Giulia delle Mura",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -26,7 +26,7 @@
       "value": "S.C. Anestesia e Rianimazione 2 - Neurorianimazione",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -40,7 +40,7 @@
       "value": "Corrado Bertoletti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -200,7 +200,7 @@
       "value": "23/11/1974",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -306,7 +306,7 @@
       "value": "S.C. Neurochirurgia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 2,
       "locations": [
         "address",
@@ -321,7 +321,7 @@
       "value": "Giacomo Taglietti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "address"
@@ -350,7 +350,7 @@
       "value": "NEURORIANIMAZIONE",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 2,
       "locations": [
         "title",
@@ -368,7 +368,7 @@
       "value": "El Amrani",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "COGNOME",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -385,7 +385,7 @@
       "value": "Youssef",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "NOME",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -402,7 +402,7 @@
       "value": "Casablanca (Marocco)",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -416,7 +416,7 @@
       "value": "marocchina",
       "category": "CITTADINANZA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "CITTADINANZA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -542,7 +542,7 @@
       "value": "03/03/2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -558,7 +558,7 @@
       "value": "Pronto Soccorso",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -572,7 +572,7 @@
       "value": "Neuroradiologia Interventistica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 2,
       "locations": [
         "fields",
@@ -588,7 +588,7 @@
       "value": "27/03/2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -604,7 +604,7 @@
       "value": "Elena Zanardelli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 4,
       "locations": [
         "fields",
@@ -623,7 +623,7 @@
       "value": "Fatima Zahra Benali",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -651,7 +651,7 @@
       "value": "Karim El Amrani",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -693,7 +693,7 @@
       "value": "Rachid El Amrani",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -766,7 +766,7 @@
       "value": "3 marzo 2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -794,7 +794,7 @@
       "value": "Fonderia Valgobbia S.p.A.",
       "category": "DATORE_LAVORO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "DATORE_LAVORO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -951,7 +951,7 @@
       "value": "Ettore Bonometti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1039,7 +1039,7 @@
       "value": "Karim",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1183,7 +1183,7 @@
       "value": "Nadia Khoury",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1211,7 +1211,7 @@
       "value": "Alessandro Mor",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1473,7 +1473,7 @@
       "value": "E. Zanardelli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1488,7 +1488,7 @@
       "value": "Filippo Gatta",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1531,7 +1531,7 @@
       "value": "Ilaria Ghidini",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1716,7 +1716,7 @@
       "value": "Giulia Pelizzari",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1889,7 +1889,7 @@
       "value": "Serena Pedrali",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "table"
@@ -1903,7 +1903,7 @@
       "value": "Davide Lancini",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "table",
@@ -2527,7 +2527,7 @@
       "value": "16/09/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2541,7 +2541,7 @@
       "value": "Chiara Bonomelli",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2555,7 +2555,7 @@
       "value": "Unità di Riabilitazione Neurologica Intensiva",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2611,7 +2611,7 @@
       "value": "S. Pedrali",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -2625,7 +2625,7 @@
       "value": "D. Lancini",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -2655,7 +2655,7 @@
       "value": "Benali",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2671,7 +2671,7 @@
       "value": "K. El Amrani",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2699,7 +2699,7 @@
       "value": "Zanardelli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -2716,7 +2716,7 @@
       "value": "27.03.2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -2732,7 +2732,7 @@
       "value": "A.O. SANTA GIULIA DELLE MURA",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -2760,7 +2760,7 @@
       "value": "C. Bertoletti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -2788,7 +2788,7 @@
       "value": "F. Z. Benali",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -2802,7 +2802,7 @@
       "value": "G. Taglietti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "footnotes"

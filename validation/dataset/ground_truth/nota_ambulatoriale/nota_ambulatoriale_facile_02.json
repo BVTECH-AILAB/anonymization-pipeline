@@ -8,7 +8,7 @@
       "value": "Azienda USL Litorale Malatestiano",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -22,7 +22,7 @@
       "value": "Poliambulatorio Distrettuale Borgo Marina",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -36,7 +36,7 @@
       "value": "Ambulatorio di Dermatologia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -121,7 +121,7 @@
       "value": "14/05/1990",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -177,7 +177,7 @@
       "value": "05/09/2024",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -275,7 +275,7 @@
       "value": "05/09/2024",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -289,7 +289,7 @@
       "value": "Lorenzo Casadei",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "signature"

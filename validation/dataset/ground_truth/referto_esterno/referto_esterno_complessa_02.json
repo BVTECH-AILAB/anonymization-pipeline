@@ -8,7 +8,7 @@
       "value": "Azienda Sanitaria Locale Jonica Sud",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -22,7 +22,7 @@
       "value": "Ospedale Civile Madonna delle Gravine",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -37,7 +37,7 @@
       "value": "U.O.C. Malattie Infettive e Tropicali",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -51,7 +51,7 @@
       "value": "Mariangela Lo Russo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -205,7 +205,7 @@
       "value": "ASL Jonica Sud",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "footer"
@@ -253,7 +253,7 @@
       "value": "N. Adeyemi",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "footer"
@@ -286,7 +286,7 @@
       "value": "Ambulatorio STP",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 3,
       "locations": [
         "address",
@@ -304,7 +304,7 @@
       "value": "Centro Salute Globale Ghirlandina",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "address",
@@ -366,7 +366,7 @@
       "value": "Stefano Guidetti Serra",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "address"
@@ -408,7 +408,7 @@
       "value": "Enugu (Nigeria)",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -422,7 +422,7 @@
       "value": "14/02/1994",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -436,7 +436,7 @@
       "value": "nigeriana",
       "category": "CITTADINANZA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "CITTADINANZA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -494,7 +494,7 @@
       "value": "02/05/2024",
       "category": "DATA_RILASCIO",
       "group": "documenti",
-      "family": "DATA",
+      "family": "DATA_RILASCIO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -508,7 +508,7 @@
       "value": "01/11/2024",
       "category": "DATA_SCADENZA",
       "group": "documenti",
-      "family": "DATA",
+      "family": "DATA_SCADENZA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -593,7 +593,7 @@
       "value": "Vito Semeraro",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -664,7 +664,7 @@
       "value": "Ngozi Adeyemi",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -680,7 +680,7 @@
       "value": "Rosaria Cassano",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1115,7 +1115,7 @@
       "value": "Cosimo Petraroli",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1129,7 +1129,7 @@
       "value": "10 settembre 2024",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1171,7 +1171,7 @@
       "value": "Ikenna Okafor",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1213,7 +1213,7 @@
       "value": "Anna Maria Leone",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1241,7 +1241,7 @@
       "value": "Blessing Eze",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1269,7 +1269,7 @@
       "value": "08/10/2024",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1353,7 +1353,7 @@
       "value": "Federica Nardelli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1410,7 +1410,7 @@
       "value": "12.09.2024",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1425,7 +1425,7 @@
       "value": "U.O.C. MALATTIE INFETTIVE",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1440,7 +1440,7 @@
       "value": "F. NARDELLI",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1468,7 +1468,7 @@
       "value": "OSPEDALE CIVILE MADONNA DELLE GRAVINE",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1483,7 +1483,7 @@
       "value": "M. LO RUSSO",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"

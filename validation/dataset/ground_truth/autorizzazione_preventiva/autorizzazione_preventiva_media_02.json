@@ -8,7 +8,7 @@
       "value": "Azienda ULSS Euganea Orientale",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "U.O.S. Assistenza Protesica e Integrativa",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -128,7 +128,7 @@
       "value": "Zanon",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "COGNOME",
       "mentions": 1,
       "locations": [
         "fields"
@@ -143,7 +143,7 @@
       "value": "Chiara",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "NOME",
       "mentions": 1,
       "locations": [
         "fields"
@@ -158,7 +158,7 @@
       "value": "08/02/1977",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -228,7 +228,7 @@
       "value": "Paolo Bertin",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -271,7 +271,7 @@
       "value": "Alberto Menegazzo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 4,
       "locations": [
         "paragraph",
@@ -321,7 +321,7 @@
       "value": "U.O.C. Riabilitazione Neuromotoria",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -335,7 +335,7 @@
       "value": "18/03/2025",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_PRESCRIZIONE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -377,7 +377,7 @@
       "value": "Centro Sclerosi Multipla",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -391,7 +391,7 @@
       "value": "Francesca Tonello",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -477,7 +477,7 @@
       "value": "5 marzo 2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -492,7 +492,7 @@
       "value": "24/02/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "table"
@@ -506,7 +506,7 @@
       "value": "03.03.25",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "table"
@@ -520,7 +520,7 @@
       "value": "Elisa Carraro",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -534,7 +534,7 @@
       "value": "18 marzo 2025",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_PRESCRIZIONE",
       "mentions": 1,
       "locations": [
         "signature"
@@ -562,7 +562,7 @@
       "value": "Marta Schiavon",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "signature"

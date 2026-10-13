@@ -8,7 +8,7 @@
       "value": "ASL Murgia Adriatica",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "Presidio Territoriale San Nicola Pellegrino",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -38,7 +38,7 @@
       "value": "Servizio di Diabetologia e Malattie Metaboliche",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -52,7 +52,7 @@
       "value": "Rocco Dimauro",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -128,7 +128,7 @@
       "value": "Lattarulo",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "COGNOME",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -144,7 +144,7 @@
       "value": "Vito Antonio",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "NOME",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -160,7 +160,7 @@
       "value": "18/06/1941",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -205,7 +205,7 @@
       "value": "Bari",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -276,7 +276,7 @@
       "value": "Annalisa Pepe",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -290,7 +290,7 @@
       "value": "4 marzo 2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -362,7 +362,7 @@
       "value": "Oksana Kovalenko",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -376,7 +376,7 @@
       "value": "Nicola Lattarulo",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -996,7 +996,7 @@
       "value": "Maria Grazia Lorusso",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1010,7 +1010,7 @@
       "value": "Kovalenko",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1039,7 +1039,7 @@
       "value": "04/03/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1053,7 +1053,7 @@
       "value": "Gabriella Fanizzi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "signature",

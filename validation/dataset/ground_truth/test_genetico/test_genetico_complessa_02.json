@@ -8,7 +8,7 @@
       "value": "A.O. Subalpina Santa Clotilde",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -25,7 +25,7 @@
       "value": "S.C. Genetica Medica - Laboratorio di Oncogenetica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -39,7 +39,7 @@
       "value": "Giovanna Ruffino",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 3,
       "locations": [
         "letterhead",
@@ -164,7 +164,7 @@
       "value": "04/12/1978",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -262,7 +262,7 @@
       "value": "Federica Ghigo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "address"
@@ -276,7 +276,7 @@
       "value": "S.C. Oncologia Medica 2 - Breast Unit",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "address"
@@ -304,7 +304,7 @@
       "value": "Cinzia Audisio",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -448,7 +448,7 @@
       "value": "17-02-2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -477,7 +477,7 @@
       "value": "24 marzo 2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -505,7 +505,7 @@
       "value": "Simona Vottero",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -648,7 +648,7 @@
       "value": "Bianca Ferrero",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "table"
@@ -675,8 +675,8 @@
     {
       "value": "02/11/2009",
       "category": "DATA_DECESSO",
-      "group": "date",
-      "family": "DATA",
+      "group": "anagrafica",
+      "family": "DATA_DECESSO",
       "mentions": 1,
       "locations": [
         "table"
@@ -690,7 +690,7 @@
       "value": "Teresa Ferrero",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 2,
       "locations": [
         "table"
@@ -719,7 +719,7 @@
       "value": "Davide Ferrero",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 2,
       "locations": [
         "table",
@@ -749,7 +749,7 @@
       "value": "Ospedale Civico di Pinerolo Alta",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "table"
@@ -763,7 +763,7 @@
       "value": "Silvia Dellavalle",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 3,
       "locations": [
         "table",
@@ -780,7 +780,7 @@
       "value": "Marco Dellavalle",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 2,
       "locations": [
         "table"
@@ -795,7 +795,7 @@
       "value": "Elena Bertola",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 2,
       "locations": [
         "table"
@@ -810,7 +810,7 @@
       "value": "Ernesto Dellavalle",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -979,7 +979,7 @@
       "value": "Giorgio Bertola",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1021,7 +1021,7 @@
       "value": "Laura Ceirano",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1049,7 +1049,7 @@
       "value": "Elena",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1108,7 +1108,7 @@
       "value": "Genetica Medica ASO Monviso",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1122,7 +1122,7 @@
       "value": "D. Ferrero",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "table"
@@ -1150,7 +1150,7 @@
       "value": "F. Ghigo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "note"
@@ -1179,7 +1179,7 @@
       "value": "24/03/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1193,7 +1193,7 @@
       "value": "Andrea Chiesa Martinengo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1221,7 +1221,7 @@
       "value": "Irene Bosco",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "signature"
@@ -1235,7 +1235,7 @@
       "value": "A.O. SANTA CLOTILDE",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1266,7 +1266,7 @@
       "value": "G. RUFFINO",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1350,7 +1350,7 @@
       "value": "Ruggero Allasia",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"

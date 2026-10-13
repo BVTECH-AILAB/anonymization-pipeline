@@ -8,7 +8,7 @@
       "value": "Ospedale Civile di Pianalta",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -22,7 +22,7 @@
       "value": "U.O.C. Cardiologia con UTIC",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -107,7 +107,7 @@
       "value": "30/01/1958",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -163,7 +163,7 @@
       "value": "21/10/2024",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -177,7 +177,7 @@
       "value": "26/10/2024",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -429,7 +429,7 @@
       "value": "26/10/2024",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -443,7 +443,7 @@
       "value": "Salvatore Pappalardo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "signature"

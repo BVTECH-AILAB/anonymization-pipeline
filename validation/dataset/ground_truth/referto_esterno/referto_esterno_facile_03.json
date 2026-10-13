@@ -8,7 +8,7 @@
       "value": "05/02/2024",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 2,
       "locations": [
         "fax_line",
@@ -38,7 +38,7 @@
       "value": "CENTRO DIAGN. VALLE SAVIO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "fax_line"
@@ -52,7 +52,7 @@
       "value": "Centro Diagnostico Valle del Savio",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -123,7 +123,7 @@
       "value": "Amato",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "COGNOME",
       "mentions": 1,
       "locations": [
         "fields"
@@ -137,7 +137,7 @@
       "value": "Giuseppe",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "NOME",
       "mentions": 1,
       "locations": [
         "fields"
@@ -151,7 +151,7 @@
       "value": "03/11/1978",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -305,7 +305,7 @@
       "value": "05/02/2024",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -319,7 +319,7 @@
       "value": "Stefano Morigi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "signature"

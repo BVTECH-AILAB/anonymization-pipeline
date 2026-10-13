@@ -8,7 +8,7 @@
       "value": "ASL Val Polcevera e Levante",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -22,7 +22,7 @@
       "value": "Ufficio Ausili e Protesi",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -107,7 +107,7 @@
       "value": "30/05/1946",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -359,7 +359,7 @@
       "value": "Enrico Cavanna",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "fields",
@@ -388,7 +388,7 @@
       "value": "Ospedale Sant'Erasmo di Nervi",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -402,7 +402,7 @@
       "value": "22/10/2025",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_PRESCRIZIONE",
       "mentions": 2,
       "locations": [
         "fields",

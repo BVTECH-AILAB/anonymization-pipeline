@@ -8,7 +8,7 @@
       "value": "Ospedale Pediatrico Partenope",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "U.O.S.D. Genetica Medica e Citogenetica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -38,7 +38,7 @@
       "value": "Teresa Amitrano",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -140,7 +140,7 @@
       "value": "19/07/2022",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -170,7 +170,7 @@
       "value": "Iannaccone",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "COGNOME",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -185,7 +185,7 @@
       "value": "Ciro",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "NOME",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -214,7 +214,7 @@
       "value": "Carmela Russo",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 3,
       "locations": [
         "patient_box",
@@ -231,7 +231,7 @@
       "value": "Salvatore Iannaccone",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 3,
       "locations": [
         "patient_box",
@@ -262,7 +262,7 @@
       "value": "U.O.C. Neuropsichiatria Infantile",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -276,7 +276,7 @@
       "value": "Annarita Coppola",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "fields",
@@ -292,7 +292,7 @@
       "value": "24/09/2024",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -306,7 +306,7 @@
       "value": "2 ottobre 2024",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -503,7 +503,7 @@
       "value": "Sofia Iannaccone",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -546,7 +546,7 @@
       "value": "Maria Grazia Cuomo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -560,7 +560,7 @@
       "value": "02/10/2024",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -574,7 +574,7 @@
       "value": "Vincenzo Sorrentino",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -588,7 +588,7 @@
       "value": "OSP. PEDIATRICO PARTENOPE",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -602,7 +602,7 @@
       "value": "T. Amitrano",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"

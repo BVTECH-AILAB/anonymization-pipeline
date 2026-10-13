@@ -8,7 +8,7 @@
       "value": "Ospedale Pediatrico Il Girasole",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -24,7 +24,7 @@
       "value": "SC Radiologia Pediatrica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -38,7 +38,7 @@
       "value": "Elisabetta Ghiglione",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -140,7 +140,7 @@
       "value": "17/04/2020",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -259,7 +259,7 @@
       "value": "Silvia Parodi",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -289,7 +289,7 @@
       "value": "12 febbraio 2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "fields"
@@ -317,7 +317,7 @@
       "value": "Beatrice Canepa",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -331,7 +331,7 @@
       "value": "Ambulatorio di Nefrologia Pediatrica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -373,7 +373,7 @@
       "value": "u.o. di Pediatria d'Urgenza",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -429,7 +429,7 @@
       "value": "Centro Medico Pediatrico Arcobaleno",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -555,7 +555,7 @@
       "value": "Parodi",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -570,7 +570,7 @@
       "value": "Marta Oliveri",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -668,7 +668,7 @@
       "value": "Canepa",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -683,7 +683,7 @@
       "value": "Pietro Bozzo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -697,7 +697,7 @@
       "value": "13/02/2026",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -711,7 +711,7 @@
       "value": "Emanuele Rebora",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -725,7 +725,7 @@
       "value": "OSPEDALE PEDIATRICO IL GIRASOLE",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -740,7 +740,7 @@
       "value": "E. Rebora",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"

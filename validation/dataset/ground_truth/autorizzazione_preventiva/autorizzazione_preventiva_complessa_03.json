@@ -8,7 +8,7 @@
       "value": "Azienda Sanitaria Provinciale Ionio-Etnea",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -25,7 +25,7 @@
       "value": "Agata Scuderi Musumeci",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -256,7 +256,7 @@
       "value": "Giovanna Pappalardo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "fields",
@@ -272,7 +272,7 @@
       "value": "Lo Presti",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "COGNOME",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -288,7 +288,7 @@
       "value": "Carmela",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "NOME",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -304,7 +304,7 @@
       "value": "Catania",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -321,7 +321,7 @@
       "value": "27/02/1959",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -486,7 +486,7 @@
       "value": "Giuseppe Cavallaro",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "fields",
@@ -502,7 +502,7 @@
       "value": "Salvatore Grasso",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "table"
@@ -530,7 +530,7 @@
       "value": "Viola Grasso",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "table"
@@ -586,7 +586,7 @@
       "value": "Nunzio Lo Presti",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 2,
       "locations": [
         "table",
@@ -616,7 +616,7 @@
       "value": "Concetta Barbagallo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "table",
@@ -759,7 +759,7 @@
       "value": "U.O.C. Cardiochirurgia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 2,
       "locations": [
         "fields",
@@ -776,7 +776,7 @@
       "value": "Ospedale Santa Venera del Simeto",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 3,
       "locations": [
         "fields",
@@ -794,7 +794,7 @@
       "value": "Corrado Licciardello",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 3,
       "locations": [
         "fields",
@@ -828,7 +828,7 @@
       "value": "05/09/2026",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_PRESCRIZIONE",
       "mentions": 1,
       "locations": [
         "fields"
@@ -870,7 +870,7 @@
       "value": "12/10/2026",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -968,7 +968,7 @@
       "value": "22/07/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1057,7 +1057,7 @@
       "value": "02/09/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1324,7 +1324,7 @@
       "value": "C. Barbagallo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "note"
@@ -1352,7 +1352,7 @@
       "value": "Ambulatorio di Patient Blood Management",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1366,7 +1366,7 @@
       "value": "Ilaria Sapienza",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "table",
@@ -1381,7 +1381,7 @@
       "value": "Sala operatoria Cardiochirurgia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1395,7 +1395,7 @@
       "value": "C. Licciardello",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "table",
@@ -1410,7 +1410,7 @@
       "value": "I. Sapienza",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "table",
@@ -1425,7 +1425,7 @@
       "value": "Terapia Intensiva Cardiochirurgica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1439,7 +1439,7 @@
       "value": "Rosario Mangano",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1469,7 +1469,7 @@
       "value": "Grasso",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1484,7 +1484,7 @@
       "value": "5 settembre 2026",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_PRESCRIZIONE",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1526,7 +1526,7 @@
       "value": "Licciardello",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1556,7 +1556,7 @@
       "value": "Comune di Aci Castello",
       "category": "ENTE_RILASCIO",
       "group": "documenti",
-      "family": "LUOGO",
+      "family": "ENTE_RILASCIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1570,7 +1570,7 @@
       "value": "N. Lo Presti",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1628,7 +1628,7 @@
       "value": "Alfio Zappalà",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1642,7 +1642,7 @@
       "value": "Maria Grazia D'Urso",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1656,7 +1656,7 @@
       "value": "Sebastiano Nicotra",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1670,7 +1670,7 @@
       "value": "Nicotra",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1684,7 +1684,7 @@
       "value": "ASP IONIO-ETNEA",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1698,7 +1698,7 @@
       "value": "A. Scuderi Musumeci",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1741,7 +1741,7 @@
       "value": "G. Pappalardo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "address"
@@ -1769,7 +1769,7 @@
       "value": "Pappalardo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "footnotes"

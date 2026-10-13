@@ -8,7 +8,7 @@
       "value": "Azienda Sanitaria Territoriale Riviera del Conero",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -25,7 +25,7 @@
       "value": "Centro di Salute Mentale Ancona Sud",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -39,7 +39,7 @@
       "value": "Maria Teresa Bianco",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -130,7 +130,7 @@
       "value": "CSM Ancona Sud",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "running_header"
@@ -179,7 +179,7 @@
       "value": "04/07/1979",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -228,7 +228,7 @@
       "value": "M. Rossetti",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 1,
       "locations": [
         "footer"
@@ -276,7 +276,7 @@
       "value": "Ancona",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -377,7 +377,7 @@
       "value": "24/09/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 2,
       "locations": [
         "fields",
@@ -421,7 +421,7 @@
       "value": "Samuele Pieroni",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 3,
       "locations": [
         "fields",
@@ -438,7 +438,7 @@
       "value": "Paolo Fermani",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "fields",
@@ -454,7 +454,7 @@
       "value": "Sole Marchetti",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 3,
       "locations": [
         "paragraph",
@@ -558,7 +558,7 @@
       "value": "Matteo Rossetti",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 3,
       "locations": [
         "paragraph",
@@ -589,7 +589,7 @@
       "value": "Cooperativa Sociale Il Faro",
       "category": "DATORE_LAVORO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "DATORE_LAVORO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -603,7 +603,7 @@
       "value": "Franco Gabrielli",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -617,7 +617,7 @@
       "value": "Sole",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 2,
       "locations": [
         "paragraph"
@@ -803,7 +803,7 @@
       "value": "Irene Gentili",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -971,7 +971,7 @@
       "value": "Rossetti",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1085,7 +1085,7 @@
       "value": "S. Pieroni",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1099,7 +1099,7 @@
       "value": "Gianluca Moretti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1142,7 +1142,7 @@
       "value": "Gentili",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1171,7 +1171,7 @@
       "value": "Lucia Cardinali",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1241,7 +1241,7 @@
       "value": "SerD Ancona",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1311,7 +1311,7 @@
       "value": "24 settembre 2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1325,7 +1325,7 @@
       "value": "Giacomo Santarelli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "signature",
@@ -1340,7 +1340,7 @@
       "value": "CSM ANCONA SUD",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1446,7 +1446,7 @@
       "value": "G. Santarelli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1460,7 +1460,7 @@
       "value": "24/09/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1475,7 +1475,7 @@
       "value": "S. Marchetti",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1489,7 +1489,7 @@
       "value": "F. Gabrielli",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "footnotes"

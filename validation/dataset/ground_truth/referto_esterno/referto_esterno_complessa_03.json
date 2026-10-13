@@ -43,7 +43,7 @@
       "value": "CDC S.GERMANO AL COLLE",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "fax_line"
@@ -76,7 +76,7 @@
       "value": "Casa di Cura San Germano al Colle",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -90,7 +90,7 @@
       "value": "U.O. Ortopedia e Traumatologia",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -104,7 +104,7 @@
       "value": "Matteo Zordan",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 4,
       "locations": [
         "letterhead",
@@ -214,7 +214,7 @@
       "value": "19/01/1944",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -265,7 +265,7 @@
       "value": "San Germano al Colle",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "footer"
@@ -297,7 +297,7 @@
       "value": "Alberto Dal Bosco",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 4,
       "locations": [
         "footer",
@@ -332,7 +332,7 @@
       "value": "Lorenzo Cazzola",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "address"
@@ -362,7 +362,7 @@
       "value": "Centro di Riabilitazione Monte Summano",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "address"
@@ -376,7 +376,7 @@
       "value": "Chiara Busato",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "address"
@@ -404,7 +404,7 @@
       "value": "Vicenza",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -492,7 +492,7 @@
       "value": "24/02/2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -506,7 +506,7 @@
       "value": "07/03/2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -536,7 +536,7 @@
       "value": "Oksana Kovalenko",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 2,
       "locations": [
         "fields",
@@ -608,7 +608,7 @@
       "value": "Sole Marchetto",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "note",
@@ -652,7 +652,7 @@
       "value": "Kovalenko",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -767,7 +767,7 @@
       "value": "Oksana",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -824,7 +824,7 @@
       "value": "Ilaria Sartori De Marchi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -838,7 +838,7 @@
       "value": "Pierluigi D'Ambrosio",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -852,7 +852,7 @@
       "value": "Davide Peruzzo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -894,7 +894,7 @@
       "value": "Thomas Oberhofer",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1123,7 +1123,7 @@
       "value": "Nadia Bortoli",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1137,7 +1137,7 @@
       "value": "O. Kovalenko",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1181,7 +1181,7 @@
       "value": "Viola Tessari",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1381,7 +1381,7 @@
       "value": "07/03/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1397,7 +1397,7 @@
       "value": "CASA DI CURA SAN GERMANO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1412,7 +1412,7 @@
       "value": "M. ZORDAN",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1440,7 +1440,7 @@
       "value": "CENTRO RIAB. MONTE SUMMANO",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1454,7 +1454,7 @@
       "value": "R. Pellizzari",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1554,7 +1554,7 @@
       "value": "A. Dal Bosco",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1570,7 +1570,7 @@
       "value": "P. D'Ambrosio",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "footnotes"

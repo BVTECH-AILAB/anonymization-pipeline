@@ -8,7 +8,7 @@
       "value": "Azienda USL Riviera Malatestiana",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 4,
       "locations": [
         "letterhead",
@@ -27,7 +27,7 @@
       "value": "Gianmarco Fabbri Montanari",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -261,7 +261,7 @@
       "value": "El Amrani",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "COGNOME",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -277,7 +277,7 @@
       "value": "Youssef",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "NOME",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -293,7 +293,7 @@
       "value": "Casablanca (Marocco)",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -307,7 +307,7 @@
       "value": "14/03/1985",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -321,7 +321,7 @@
       "value": "marocchina",
       "category": "CITTADINANZA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "CITTADINANZA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -405,7 +405,7 @@
       "value": "Samira Ouazzani",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "paragraph"
@@ -420,7 +420,7 @@
       "value": "30/06/2025",
       "category": "DATA_SCADENZA",
       "group": "documenti",
-      "family": "DATA",
+      "family": "DATA_SCADENZA",
       "mentions": 1,
       "locations": [
         "table"
@@ -448,7 +448,7 @@
       "value": "Questura di Rimini",
       "category": "ENTE_RILASCIO",
       "group": "documenti",
-      "family": "LUOGO",
+      "family": "ENTE_RILASCIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -462,7 +462,7 @@
       "value": "16/07/2026",
       "category": "DATA_SCADENZA",
       "group": "documenti",
-      "family": "DATA",
+      "family": "DATA_SCADENZA",
       "mentions": 1,
       "locations": [
         "table"
@@ -490,7 +490,7 @@
       "value": "Royaume du Maroc",
       "category": "ENTE_RILASCIO",
       "group": "documenti",
-      "family": "LUOGO",
+      "family": "ENTE_RILASCIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -504,7 +504,7 @@
       "value": "03/02/2029",
       "category": "DATA_SCADENZA",
       "group": "documenti",
-      "family": "DATA",
+      "family": "DATA_SCADENZA",
       "mentions": 1,
       "locations": [
         "table"
@@ -518,7 +518,7 @@
       "value": "Luca Semprini",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -532,7 +532,7 @@
       "value": "Fatima Zahra Bennani",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 2,
       "locations": [
         "paragraph"
@@ -577,7 +577,7 @@
       "value": "Bennani",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -676,7 +676,7 @@
       "value": "U.O. Malattie Infettive",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -691,7 +691,7 @@
       "value": "Ospedale degli Infermi di Marecchia",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "fields",
@@ -707,7 +707,7 @@
       "value": "Elisabetta De Carolis",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "fields",
@@ -739,7 +739,7 @@
       "value": "19/09/2025",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_PRESCRIZIONE",
       "mentions": 1,
       "locations": [
         "fields"
@@ -781,7 +781,7 @@
       "value": "Servizio Dipendenze Patologiche (SerD)",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -795,7 +795,7 @@
       "value": "Paolo Righetti Vannucci",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1034,7 +1034,7 @@
       "value": "Rosa Canducci",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1048,7 +1048,7 @@
       "value": "R. Canducci",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "note"
@@ -1090,7 +1090,7 @@
       "value": "Sofia Gennari",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "table"
@@ -1119,7 +1119,7 @@
       "value": "19 settembre 2025",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_PRESCRIZIONE",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1133,7 +1133,7 @@
       "value": "E. De Carolis",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1161,7 +1161,7 @@
       "value": "P. Righetti Vannucci",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1218,7 +1218,7 @@
       "value": "Matteo Ricci Oddi",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1232,7 +1232,7 @@
       "value": "Anna Maria Della Rovere",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1246,7 +1246,7 @@
       "value": "Stefano Pazzaglini",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1260,7 +1260,7 @@
       "value": "G. Fabbri Montanari",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1316,7 +1316,7 @@
       "value": "De Carolis",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "footnotes"

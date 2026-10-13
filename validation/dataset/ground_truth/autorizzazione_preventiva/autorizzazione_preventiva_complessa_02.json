@@ -8,7 +8,7 @@
       "value": "ASL Adriatica Pescara-Vestina",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 3,
       "locations": [
         "letterhead",
@@ -26,7 +26,7 @@
       "value": "Raffaele Di Febo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -274,7 +274,7 @@
       "value": "Dell'Orto",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "COGNOME",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -290,7 +290,7 @@
       "value": "Sole",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "NOME",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -307,7 +307,7 @@
       "value": "18/03/2026",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -321,7 +321,7 @@
       "value": "Pescara",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -397,7 +397,7 @@
       "value": "Bianca Mariani",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 3,
       "locations": [
         "table",
@@ -414,7 +414,7 @@
       "value": "05/11/1992",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "table"
@@ -470,7 +470,7 @@
       "value": "Matteo Dell'Orto",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 2,
       "locations": [
         "table",
@@ -486,7 +486,7 @@
       "value": "21/06/1989",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 1,
       "locations": [
         "table"
@@ -570,7 +570,7 @@
       "value": "Policlinico Universitario Colle dell'Ateneo",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 3,
       "locations": [
         "table",
@@ -646,7 +646,7 @@
       "value": "U.O.S.D. Neurologia Pediatrica e Malattie Neuromuscolari",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 2,
       "locations": [
         "fields",
@@ -662,7 +662,7 @@
       "value": "Ospedale Civile San Cetteo",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 3,
       "locations": [
         "fields",
@@ -679,7 +679,7 @@
       "value": "Ludovica Di Nardo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 3,
       "locations": [
         "fields",
@@ -713,7 +713,7 @@
       "value": "30/07/2026",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_PRESCRIZIONE",
       "mentions": 1,
       "locations": [
         "fields"
@@ -841,7 +841,7 @@
       "value": "Federico Ianni D'Alessandro",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -885,7 +885,7 @@
       "value": "15/04/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "table"
@@ -927,7 +927,7 @@
       "value": "Marco Rapino",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 3,
       "locations": [
         "table"
@@ -942,7 +942,7 @@
       "value": "10/06/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "table"
@@ -984,7 +984,7 @@
       "value": "22/07/2026",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 1,
       "locations": [
         "table"
@@ -1026,7 +1026,7 @@
       "value": "M. Rapino",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1054,7 +1054,7 @@
       "value": "Chiara Zappacosta",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1068,7 +1068,7 @@
       "value": "30 luglio 2026",
       "category": "DATA_PRESCRIZIONE",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_PRESCRIZIONE",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1082,7 +1082,7 @@
       "value": "L. Di Nardo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "stamp",
@@ -1111,7 +1111,7 @@
       "value": "F. Ianni D'Alessandro",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1139,7 +1139,7 @@
       "value": "Ottavia Sbardella",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "table"
@@ -1153,7 +1153,7 @@
       "value": "Neuropsichiatria Infantile",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1167,7 +1167,7 @@
       "value": "ambulatorio neuromuscolare",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1181,7 +1181,7 @@
       "value": "C. Zappacosta",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1195,7 +1195,7 @@
       "value": "Giada Pompilio",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "table",
@@ -1238,7 +1238,7 @@
       "value": "Mariani",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1255,7 +1255,7 @@
       "value": "Dell'Orto",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1272,7 +1272,7 @@
       "value": "Aurora Dell'Orto",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "note"
@@ -1315,7 +1315,7 @@
       "value": "Ilenia Ciccone",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "table",
@@ -1331,7 +1331,7 @@
       "value": "Nicola De Laurentiis",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1345,7 +1345,7 @@
       "value": "Tommaso Cilli",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "table",
@@ -1361,7 +1361,7 @@
       "value": "M. Dell'Orto",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1375,7 +1375,7 @@
       "value": "R. Di Febo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1403,7 +1403,7 @@
       "value": "O. Sbardella",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "address"
@@ -1445,7 +1445,7 @@
       "value": "Zappacosta",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1461,7 +1461,7 @@
       "value": "B. Mariani",
       "category": "TUTORE_DELEGATO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "TUTORE_DELEGATO",
       "mentions": 1,
       "locations": [
         "footnotes"

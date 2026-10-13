@@ -8,7 +8,7 @@
       "value": "Ospedale Maggiore della Collina",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -25,7 +25,7 @@
       "value": "Azienda Sanitaria Zona Collinare Torinese",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -39,7 +39,7 @@
       "value": "S.C. Anatomia Patologica - Patologia Epatica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -53,7 +53,7 @@
       "value": "Marta Bertolotto",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 3,
       "locations": [
         "letterhead",
@@ -196,7 +196,7 @@
       "value": "L. Gribaudo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "running_header"
@@ -257,7 +257,7 @@
       "value": "15/01/1988",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -273,7 +273,7 @@
       "value": "Casablanca (Marocco)",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -287,7 +287,7 @@
       "value": "marocchina",
       "category": "CITTADINANZA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "CITTADINANZA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -375,7 +375,7 @@
       "value": "22/04/2025",
       "category": "DATA_VISITA",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_VISITA",
       "mentions": 2,
       "locations": [
         "fields",
@@ -407,7 +407,7 @@
       "value": "30/04/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 3,
       "locations": [
         "fields",
@@ -424,7 +424,7 @@
       "value": "Fabrizio Ollino",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 3,
       "locations": [
         "fields",
@@ -442,7 +442,7 @@
       "value": "Radiologia Interventistica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -457,7 +457,7 @@
       "value": "Laura Gribaudo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -471,7 +471,7 @@
       "value": "SC Malattie Infettive - Ambulatorio Epatologico",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -485,7 +485,7 @@
       "value": "Mauro Cravero",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -499,7 +499,7 @@
       "value": "SerD Torino Est",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -513,7 +513,7 @@
       "value": "Samira Bennani",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 4,
       "locations": [
         "fields",
@@ -750,7 +750,7 @@
       "value": "Karim El Amrani",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -906,7 +906,7 @@
       "value": "Erika Bussone",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -1148,7 +1148,7 @@
       "value": "Gribaudo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1178,7 +1178,7 @@
       "value": "Cravero",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1277,7 +1277,7 @@
       "value": "Pier Carlo Ghiglione",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "note",
@@ -1306,7 +1306,7 @@
       "value": "S. Bennani",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1334,7 +1334,7 @@
       "value": "Ambulatorio Epatologico",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1349,7 +1349,7 @@
       "value": "Davide Rostagno",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1378,7 +1378,7 @@
       "value": "Gianni Bosio",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1392,7 +1392,7 @@
       "value": "OSP. MAGGIORE DELLA COLLINA",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1406,7 +1406,7 @@
       "value": "P.C. GHIGLIONE",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1464,7 +1464,7 @@
       "value": "14/10/2025",
       "category": "DATA_SCADENZA",
       "group": "documenti",
-      "family": "DATA",
+      "family": "DATA_SCADENZA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1507,7 +1507,7 @@
       "value": "Casablanca",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1522,7 +1522,7 @@
       "value": "Royaume du Maroc - Direction Générale de la Sûreté Nationale",
       "category": "ENTE_RILASCIO",
       "group": "documenti",
-      "family": "LUOGO",
+      "family": "ENTE_RILASCIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1536,7 +1536,7 @@
       "value": "F. Ollino",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1578,7 +1578,7 @@
       "value": "F. OLLINO",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"

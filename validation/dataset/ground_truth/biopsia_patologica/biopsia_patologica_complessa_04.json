@@ -8,7 +8,7 @@
       "value": "A.O. Monte Lauro",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -25,7 +25,7 @@
       "value": "Presidio Ospedaliero Gaetano Fichera",
       "category": "STRUTTURA_SANITARIA",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "STRUTTURA_SANITARIA",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -39,7 +39,7 @@
       "value": "UOC Anatomia Patologica e Patologia Molecolare",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "letterhead"
@@ -53,7 +53,7 @@
       "value": "Giovanna D'Urso",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "letterhead",
@@ -160,7 +160,7 @@
       "value": "22/04/1961",
       "category": "DATA_NASCITA",
       "group": "anagrafica",
-      "family": "DATA",
+      "family": "DATA_NASCITA",
       "mentions": 2,
       "locations": [
         "running_header",
@@ -259,7 +259,7 @@
       "value": "NGUYEN",
       "category": "COGNOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "COGNOME",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -275,7 +275,7 @@
       "value": "THANH",
       "category": "NOME",
       "group": "anagrafica",
-      "family": "PERSONA",
+      "family": "NOME",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -291,7 +291,7 @@
       "value": "Lione (Francia)",
       "category": "LUOGO_NASCITA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "LUOGO_NASCITA",
       "mentions": 1,
       "locations": [
         "patient_box"
@@ -305,7 +305,7 @@
       "value": "francese",
       "category": "CITTADINANZA",
       "group": "anagrafica",
-      "family": "LUOGO",
+      "family": "CITTADINANZA",
       "mentions": 2,
       "locations": [
         "patient_box",
@@ -376,7 +376,7 @@
       "value": "10/02/2025",
       "category": "DATA_RICOVERO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_RICOVERO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -405,7 +405,7 @@
       "value": "24/02/2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -419,7 +419,7 @@
       "value": "Salvatore Privitera",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 2,
       "locations": [
         "fields",
@@ -435,7 +435,7 @@
       "value": "Agata Russo Spampinato",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "fields"
@@ -519,7 +519,7 @@
       "value": "Cantieri Navali Ionici S.p.A.",
       "category": "DATORE_LAVORO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "DATORE_LAVORO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -631,7 +631,7 @@
       "value": "Speranza Lo Iacono",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 2,
       "locations": [
         "paragraph",
@@ -663,7 +663,7 @@
       "value": "Luca Nguyen",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -693,7 +693,7 @@
       "value": "Privitera",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -708,7 +708,7 @@
       "value": "Orazio Licciardello",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -722,7 +722,7 @@
       "value": "inf. Rosario Finocchiaro",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "table"
@@ -736,7 +736,7 @@
       "value": "Chiara Mangano",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -750,7 +750,7 @@
       "value": "Rosa Pappalardo",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1033,7 +1033,7 @@
       "value": "Emanuele Pappalardo",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "paragraph"
@@ -1117,7 +1117,7 @@
       "value": "Cantieri Navali Ionici",
       "category": "DATORE_LAVORO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "DATORE_LAVORO",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1132,7 +1132,7 @@
       "value": "D'Urso",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1175,7 +1175,7 @@
       "value": "Lo Iacono",
       "category": "CONTATTO_EMERGENZA",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "CONTATTO_EMERGENZA",
       "mentions": 1,
       "locations": [
         "footnotes"
@@ -1205,7 +1205,7 @@
       "value": "24 febbraio 2025",
       "category": "DATA_REFERTO",
       "group": "date",
-      "family": "DATA",
+      "family": "DATA_REFERTO",
       "mentions": 1,
       "locations": [
         "signature"
@@ -1219,7 +1219,7 @@
       "value": "O. LICCIARDELLO",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "stamp"
@@ -1262,7 +1262,7 @@
       "value": "Bao Tran Moretti",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1276,7 +1276,7 @@
       "value": "UOC Oncologia Medica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1304,7 +1304,7 @@
       "value": "UOC Chirurgia Toracica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1318,7 +1318,7 @@
       "value": "A. Russo Spampinato",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1333,7 +1333,7 @@
       "value": "Ambulatorio di Pneumologia Interventistica",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1347,7 +1347,7 @@
       "value": "Carmelo Sciacca",
       "category": "MEDICO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "MEDICO",
       "mentions": 1,
       "locations": [
         "table"
@@ -1433,7 +1433,7 @@
       "value": "Luca",
       "category": "FAMILIARE",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "FAMILIARE",
       "mentions": 1,
       "locations": [
         "checkboxes"
@@ -1476,7 +1476,7 @@
       "value": "Centro Antifumo",
       "category": "REPARTO",
       "group": "organizzazioni",
-      "family": "ORGANIZZAZIONE",
+      "family": "REPARTO",
       "mentions": 1,
       "locations": [
         "note"
@@ -1490,7 +1490,7 @@
       "value": "dott.ssa Valeria Ingrassia",
       "category": "OPERATORE_SANITARIO",
       "group": "persone_correlate",
-      "family": "PERSONA",
+      "family": "OPERATORE_SANITARIO",
       "mentions": 1,
       "locations": [
         "note"

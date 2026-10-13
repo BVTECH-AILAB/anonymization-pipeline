@@ -153,6 +153,38 @@ Durante la run il terminale mostra:
 - 1: almeno un profilo fallisce;
 - 2: la run non è partita (configurazione, dataset o servizio).
 
+### Dalla UI
+
+La sezione **Validazione** dell'interfaccia web (`http://localhost:8080/validazione` con `just up`)
+fa le stesse cose del comando: configura, avvia, segue e consulta le run.
+
+- **Configurazione.** All'apertura il modulo carica `config.yaml` come default. Per la run che
+  lanci si modificano:
+  - filtri del dataset (tipologie, difficoltà, documenti specifici), con una stima della durata;
+  - soglie, documenti in parallelo e timeout;
+  - i profili (aggiungi, duplica, rimuovi), con lo stesso modulo della pagina Carica: modalità,
+    verifica, estrazione, modelli per fase, rilevatori, categorie e gruppi.
+
+  `config.yaml` non viene mai modificato.
+- **Run.** Avanzamento dal vivo: documenti in corso con fase e coda, documenti completati con
+  recall, fughe e falsi positivi. Si può annullare (resta un report parziale) e riprendere.
+- **Risultati.**
+  - esito PASS/FAIL e metriche principali per profilo;
+  - tasso di fuga per categoria;
+  - il report completo;
+  - download di `report.md` e `metriche.json`.
+- **Run precedenti.** Ogni run salva in `results/<run>/config.yaml` la configurazione usata, senza
+  chiave. "Riusa configurazione" la ricarica nel modulo. Le run lanciate da terminale compaiono
+  nello stesso elenco.
+
+La sezione si appoggia all'API di validazione (`anonval/api.py`, FastAPI su porta 8001):
+- con `just up` è il servizio compose `validation`, raggiungibile dalla UI su `/validazione-api`;
+- con `npm run dev` va avviata sull'host con `just validation-api`.
+
+Esiste solo nello stack locale: nel cluster non c'è, e la voce di menu non compare. Esegue una
+validazione alla volta, perché la GPU del servizio è il collo di bottiglia. Per la modalità
+pseudonimo usa `ANONVAL_KEY`, oppure la chiave inserita nel modulo, che non viene mai salvata.
+
 ### Configurazione (`config.yaml`)
 
 - `server`: URL, intervallo di polling, timeout per documento, job inviati insieme, nome della

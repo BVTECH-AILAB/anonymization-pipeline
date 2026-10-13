@@ -56,6 +56,22 @@ src/
 | `DELETE /jobs/{id}` | Rimuovi e Svuota sessione |
 | `POST /restore/detail` | Testo in chiaro con le posizioni dei tag. Campi: `markdown`, `map` (file) e `key` |
 
+La sezione **Validazione** usa un'altra API, quella di validazione (`validation/anonval/api.py`), su
+`/validazione-api`. Esiste solo nello stack locale: in compose la inoltra nginx al servizio
+`validation` (`nginx.validation.conf`, montato in `/etc/nginx/extra/`), con `npm run dev` Vite la
+inoltra a `localhost:8001` (`just validation-api`). La voce di menu compare solo se
+`/validazione-api/health` risponde con JSON. Nel cluster nginx restituirebbe `index.html`.
+
+| Endpoint (validazione) | Uso |
+|---|---|
+| `GET /health` | Mostra la voce di menu |
+| `GET /config` | Default del modulo (`config.yaml`), documenti del dataset, `key_available` |
+| `POST /runs` | Avvia una run: `{config, key}` (202, 409 se un'altra è in corso, 422 configurazione non valida, 503 servizio non raggiungibile) |
+| `GET /runs` | Run precedenti con stato ed esito per profilo |
+| `GET /runs/{id}` | Stato, avanzamento dal vivo, esito per profilo |
+| `GET /runs/{id}/report`, `/metrics`, `/config` | Report Markdown, metriche JSON, configurazione usata |
+| `POST /runs/{id}/cancel`, `/resume` | Annulla, riprende una run interrotta o annullata |
+
 Gli errori hanno il corpo `{code, detail, ...}`: l'interfaccia mostra `detail`, il messaggio in italiano.
 Stati, fasi, modalità, esiti e avvisi arrivano in inglese e sono mostrati in italiano (`lib/nomi.ts`).
 

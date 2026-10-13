@@ -188,6 +188,7 @@ unavailable`): il Markdown resta l'output di riferimento.
 | `just docs-pdf` | Rigenera il PDF di documentazione tecnica (`docs/architettura-anonymization-pipeline.pdf`) |
 | `just validation-dataset` | Rigenera PDF e ground truth del dataset sintetico di validazione dalle spec |
 | `just validation` | Validazione sul dataset sintetico: profili di `validation/config.yaml`, report Markdown con le metriche |
+| `just validation-api` | API di validazione sull'host (porta 8001) per la sezione Validazione della UI con `npm run dev`; con `just up` è il servizio `validation` |
 
 Gli extra opzionali `ner` (torch CPU + transformers) e `docling` sono
 nell'immagine Docker; in locale `uv sync --all-extras` li installa, e

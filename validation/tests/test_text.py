@@ -28,3 +28,10 @@ def test_short_values_do_not_use_compact_view() -> None:
 
 def test_markdown_escapes_are_dropped() -> None:
     assert normal("AA\\_071223").text == "aa_071223"
+
+
+def test_both_plain_and_spaced_forms_are_found() -> None:
+    text = "C.F. BNCGLI78D52 e nel modulo B N C G L I 7 8 D 5 2"
+    spans = find(text, "BNCGLI78D52")
+    assert len(spans) == 2
+    assert text[spans[1][0]] == "B" and text[spans[1][1] - 1] == "2"

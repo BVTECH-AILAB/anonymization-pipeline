@@ -197,3 +197,24 @@ def test_summary_and_verdict() -> None:
     checks = verdict(overall, Thresholds(recall_min=0.5, tasso_fuga_max=0.0))
     assert checks["tasso_fuga_max"] is False
     assert checks["recall_min"] is True
+
+
+def test_negative_inside_a_matching_gold_value_is_not_a_violation() -> None:
+    gold = _gold()
+    gold["entities"].append(
+        {
+            "value": "Paolo Neri",
+            "category": "FAMILIARE",
+            "group": "persone_correlate",
+            "family": "PERSONA",
+            "mentions": 1,
+            "locations": ["paragraph"],
+            "pages": [1],
+        }
+    )
+    gold["negatives"] = [
+        {"value": "Neri", "forbidden_categories": ["PERSONA"]},
+        {"value": "Pao", "forbidden_categories": ["PERSONA"]},
+    ]
+    score = score_document(gold, _result([("Paolo Neri", "MEDICO")]), ALL)
+    assert score.negatives_violated == []

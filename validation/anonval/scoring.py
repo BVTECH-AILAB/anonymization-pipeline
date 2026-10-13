@@ -21,7 +21,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from anonval.settings import Thresholds
-from anonval.text import alnum_count, find, normal
+from anonval.text import alnum_count, find
 from anonymization_pipeline.pipeline_config.categories import registry
 
 DETECTED = 0.5
@@ -179,11 +179,7 @@ def score_document(
         score.values.append(outcome)
 
     negatives = [
-        (
-            normal(n["value"]).text,
-            n["value"],
-            {reg.family(c) for c in n["forbidden_categories"]},
-        )
+        (n["value"], {reg.family(c) for c in n["forbidden_categories"]})
         for n in gold.get("negatives", [])
     ]
     for o, o_span in zip(occurrences, spans, strict=True):
@@ -199,9 +195,13 @@ def score_document(
                 reg.family(v.category) == reg.family(o["category"]) for v in expected
             ):
                 score.tp_category += 1
-        original = normal(o["original"]).text
-        for needle, value, families in negatives:
-            if needle in original and reg.family(o["category"]) in families:
+        # a negative inside a redacted value of the same family (the surname Neri of a
+        # relative) is a correct redaction, not a violation
+        family = reg.family(o["category"])
+        if any(reg.family(v.category) == family for v in hit):
+            continue
+        for value, families in negatives:
+            if family in families and find(o["original"], value):
                 score.negatives_violated.append((value, o["category"]))
 
     report = result.get("report") or {}

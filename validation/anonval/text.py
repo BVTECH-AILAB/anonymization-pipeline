@@ -74,10 +74,11 @@ def _pattern(needle: str) -> re.Pattern[str]:
 
 
 def find(haystack: str, needle: str) -> list[tuple[int, int]]:
-    """Original offsets of every occurrence of ``needle`` in ``haystack``.
+    """Original offsets of every occurrence of ``needle`` in ``haystack``, in text order.
 
-    Whole words in the normal view first; values of at least ``COMPACT_MIN`` letters and digits
-    are then searched in the compact view too (spaced characters, values split by a line break).
+    Whole words in the normal view; values of at least ``COMPACT_MIN`` letters and digits also
+    in the compact view (spaced characters, values split by a line break or by table cells),
+    where they do not overlap a match of the normal view.
     """
     target = normal(needle).text
     if not target:
@@ -86,15 +87,14 @@ def find(haystack: str, needle: str) -> list[tuple[int, int]]:
     spans = [
         view.span(m.start(), m.end()) for m in _pattern(target).finditer(view.text)
     ]
-    if spans:
-        return spans
     small = compact(needle).text
-    if len(small) < COMPACT_MIN:
-        return []
-    view = compact(haystack)
-    return [
-        view.span(m.start(), m.end()) for m in re.finditer(re.escape(small), view.text)
-    ]
+    if len(small) >= COMPACT_MIN:
+        view = compact(haystack)
+        for m in re.finditer(re.escape(small), view.text):
+            start, end = view.span(m.start(), m.end())
+            if not any(start < e and s < end for s, e in spans):
+                spans.append((start, end))
+    return sorted(spans)
 
 
 def alnum_count(text: str) -> int:

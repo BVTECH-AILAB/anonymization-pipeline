@@ -1,0 +1,751 @@
+{
+  "id": "lettera_dimissione_media_04",
+  "type": "lettera_dimissione",
+  "difficulty": "media",
+  "pages": 2,
+  "entities": [
+    {
+      "value": "Ospedale San Leonardo di Poggiorosso",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "S.O.C. Ortopedia e Traumatologia",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Lapo Guidotti",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "signature"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Ciliegiole 97",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "51100",
+      "category": "CAP",
+      "group": "residenza",
+      "family": "CAP",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Pistoia",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "signature"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "0573 351722",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Hoxha Arben",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "2024-PT-0081452",
+      "category": "NUMERO_ACCETTAZIONE",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_ACCETTAZIONE",
+      "mentions": 3,
+      "locations": [
+        "running_header",
+        "fields",
+        "barcode"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "03/12/1983",
+      "category": "DATA_NASCITA",
+      "group": "anagrafica",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Albania",
+      "category": "LUOGO_NASCITA",
+      "group": "anagrafica",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "albanese",
+      "category": "CITTADINANZA",
+      "group": "anagrafica",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "HXHRBN83T03Z100A",
+      "category": "CODICE_FISCALE",
+      "group": "identificativi",
+      "family": "CODICE_FISCALE",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Pistoiese 455",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Prato",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ilir Hoxha",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "+39 328 774 5160",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "08/07/2024",
+      "category": "DATA_RICOVERO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "19/07/2024",
+      "category": "DATA_RICOVERO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Arben Hoxha",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "muratore",
+      "category": "PROFESSIONE",
+      "group": "anagrafica",
+      "family": "PROFESSIONE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Edilnova Costruzioni S.r.l.",
+      "category": "DATORE_LAVORO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 2,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "8 luglio 2024",
+      "category": "DATA_RICOVERO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "caduta accidentale da impalcatura",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "INAIL-24-PT-338120",
+      "category": "NUMERO_PROTOCOLLO",
+      "group": "identificativi",
+      "family": "NUMERO_PROTOCOLLO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Allergia ai FANS",
+      "category": "ALLERGIA",
+      "group": "sanitari",
+      "family": "ALLERGIA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Hoxha",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Frattura pluriframmentaria del pilone tibiale destro",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "frattura associata del perone distale",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Contusione del polso sinistro",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "08/07/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Riduzione e stabilizzazione con fissatore esterno a ponte",
+      "category": "INTERVENTO",
+      "group": "sanitari",
+      "family": "INTERVENTO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Niccolò Bartolini",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 4,
+      "locations": [
+        "table",
+        "signature",
+        "stamp"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "15/07/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Rimozione del fissatore esterno, riduzione cruenta e osteosintesi con placca anatomica mediale e placca peroneale",
+      "category": "INTERVENTO",
+      "group": "sanitari",
+      "family": "INTERVENTO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "16/07/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "enoxaparina 4000 UI",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "cefazolina 2 g",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Giulia Mencarelli",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "12,8",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Frattura del pilone tibiale destro trattata con osteosintesi",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "frattura del perone distale destro",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Enoxaparina 4000 UI",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Paracetamolo 1000 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Tramadolo 50 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Colecalciferolo 10.000 UI",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "28/08/2024",
+      "category": "DATA_VISITA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "CUP-PT-24-556017",
+      "category": "NUMERO_PRENOTAZIONE",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_PRENOTAZIONE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "19-07-2024",
+      "category": "DATA_REFERTO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "signature"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ORTOPEDIA E TRAUMATOLOGIA",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "2593",
+      "category": "NUMERO_ALBO",
+      "group": "persone_correlate",
+      "family": "NUMERO_ALBO",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Rüedi-Allgöwer",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ],
+  "sha256": "2b54c9049f30e2116e463aa53b41eaf86288b7bfb9d974287bceb7be3f7d3086"
+}

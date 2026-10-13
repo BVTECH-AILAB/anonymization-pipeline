@@ -1,0 +1,652 @@
+{
+  "id": "referto_radiologico_complessa_03",
+  "type": "referto_radiologico",
+  "difficulty": "complessa",
+  "style": {
+    "font": "dejavu",
+    "color": "#6A4A12",
+    "font_size": 7.8,
+    "margins_mm": 12
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Salvatore",
+      "last_name": "Lo Presti",
+      "sex": "M",
+      "birth_date": "1951-02-03",
+      "birth_place": "Catania"
+    }
+  },
+  "letterhead": {
+    "logo": "PG",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Universitaria Policlinico Gelsomini]]",
+      "Dipartimento di Diagnostica per Immagini",
+      "[[REPARTO:UOC Radiodiagnostica - Settore RM Body]]",
+      "Direttore: Prof. [[MEDICO:Corrado Pappalardo]]",
+      "Referente RM in pazienti portatori di dispositivi: Dott. [[MEDICO:Alfio Torrisi]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Vincenzo Giuffrida 211]]",
+      "[[CAP:95124]] [[LUOGO:Catania]]",
+      "Prenotazioni RM: [[TELEFONO:095 3782140]]",
+      "Fax [[FAX:095 3782199]]",
+      "[[EMAIL:rm.body@policlinicogelsomini.example.it]]"
+    ]
+  },
+  "running_header": "RM prostata multiparametrica - [[PERSONA:LO PRESTI SALVATORE]] - C.F. [[CODICE_FISCALE:@paz]] - Acc. [[ACCESSION_NUMBER:RM-2026-0071548]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:A.O.U. Policlinico Gelsomini]] - [[INDIRIZZO:Viale Vincenzo Giuffrida 211]], [[CAP:95124]] [[LUOGO:Catania]] - P.IVA [[PARTITA_IVA:@aou]] - PEC [[PEC:radiodiagnostica@pec.policlinicogelsomini.example.it]]",
+    "Referto n. [[NUMERO_REFERTO:RD/26/0093317]] - Assistito [[PERSONA:S. Lo Presti]] - MPI [[ID_PAZIENTE:00431987]]",
+    "Il referto contiene dati personali relativi alla salute: chi lo riceve per errore è tenuto a distruggerlo e a darne avviso al mittente (Reg. UE 2016/679)."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "REFERTO DI RISONANZA MAGNETICA",
+      "subtitle": "RM multiparametrica della prostata (T2, DWI, DCE) in paziente portatore di pacemaker MR-conditional"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "title": "DATI ANAGRAFICI",
+          "columns": 1,
+          "fields": [
+            [
+              "Cognome",
+              "[[COGNOME:LO PRESTI]]"
+            ],
+            [
+              "Nome",
+              "[[NOME:SALVATORE]]"
+            ],
+            [
+              "Nato a",
+              "[[LUOGO_NASCITA:Catania]] il [[DATA_NASCITA:03/02/1951]] ([[ETA:75]] anni)"
+            ],
+            [
+              "Domicilio",
+              "[[INDIRIZZO:Via Cristoforo Colombo 17]], [[CAP:95030]] [[LUOGO:Gravina di Catania]]"
+            ],
+            [
+              "Telefono",
+              "[[TELEFONO:095 418327]] / [[TELEFONO:347 2260918]]"
+            ],
+            [
+              "Esenzione",
+              "[[CODICE_ESENZIONE:C03]] - [[INVALIDITA:invalido civile 75%]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "N. accesso",
+              "[[ACCESSION_NUMBER:RM-2026-0071548]]"
+            ],
+            [
+              "Prenotazione CUP",
+              "[[NUMERO_PRENOTAZIONE:CT260918-04417]]"
+            ],
+            [
+              "Impegnativa NRE",
+              "[[NUMERO_RICETTA:1900A1385204976]]"
+            ],
+            [
+              "Data prescrizione",
+              "[[DATA_PRESCRIZIONE:18.09.2026]]"
+            ],
+            [
+              "Data esame",
+              "[[DATA_VISITA:8 ottobre 2026]], ore 15:10"
+            ],
+            [
+              "Data referto",
+              "[[DATA_REFERTO:09/10/2026]]"
+            ],
+            [
+              "Prescrittore",
+              "Dott. [[MEDICO:Filippo Messina]], [[REPARTO:UOC Urologia]]"
+            ]
+          ]
+        },
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "value": "[[ACCESSION_NUMBER:RM-2026-0071548]]",
+          "label": "Accession",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "char_boxes",
+      "label": "Tessera TEAM",
+      "value": "[[TESSERA_SANITARIA:@ts]]"
+    },
+    {
+      "type": "section",
+      "text": "QUESITO CLINICO"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[DIAGNOSI:Incremento progressivo del PSA]] ([[ESAME_VALORE:9,8]] ng/mL il [[DATA:10/09/2026]]; [[ESAME_VALORE:6,1]] ng/mL a marzo 2024) in paziente con precedente [[INTERVENTO:biopsia prostatica transrettale sistematica]] del [[DATA:05.06.24]] (12 prelievi), con riscontro di [[DIAGNOSI:adenocarcinoma acinare Gleason 3+3]] in un solo prelievo, in sorveglianza attiva. Esplorazione rettale: [[DIAGNOSI:nodulo duro al lobo sinistro]]. Si richiede RM multiparametrica per ristadiazione e guida a biopsia mirata con tecnica di fusione."
+    },
+    {
+      "type": "paragraph",
+      "text": "**Anamnesi rilevante:** [[PATOLOGIA:blocco atrioventricolare di III grado]] trattato con [[INTERVENTO:impianto di pacemaker bicamerale]] il [[DATA:14/05/2023]] presso l'[[STRUTTURA_SANITARIA:Ospedale San Marziano di Acireale]]; [[PATOLOGIA:fibrillazione atriale parossistica]] in terapia con [[FARMACO:apixaban 5 mg x 2]]; [[MALATTIE_INFETTIVE:epatite C cronica]] eradicata nel 2019 con antivirali ad azione diretta; [[SALUTE_MENTALE:disturbo depressivo maggiore ricorrente]] in trattamento con [[FARMACO:sertralina 100 mg]], seguito dal [[REPARTO:Centro di Salute Mentale di Gravina]]. [[DIAGNOSI:Ipoacusia bilaterale]] con protesi acustiche (rimosse prima dell'ingresso in sala). [[MISURE_ANTROPOMETRICHE:Peso 84 kg, altezza 172 cm]]."
+    },
+    {
+      "type": "note",
+      "text": "ALLERGIE: [[ALLERGIA:lattice]] (sala allestita in modalità latex-safe) e [[ALLERGIA:reazione lieve a gadobutrolo]] (prurito ed eritema al tronco, RM del [[DATA:21 marzo 2024]]). Utilizzato mezzo di contrasto macrociclico a diversa molecola dopo premedicazione con [[FARMACO:metilprednisolone 32 mg]] per os a 12 e 2 ore e [[FARMACO:clorfenamina 10 mg]] ev, somministrata dall'inf. [[OPERATORE_SANITARIO:Venera Grasso]]."
+    },
+    {
+      "type": "section",
+      "text": "SICUREZZA RM - DISPOSITIVO CARDIACO IMPIANTATO"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "table",
+          "header": [
+            "Dato del dispositivo",
+            "Valore"
+          ],
+          "widths": [
+            1.2,
+            1.5
+          ],
+          "font_size": 7.2,
+          "rows": [
+            [
+              "Generatore",
+              "Pacemaker bicamerale Cadenza DR MRI"
+            ],
+            [
+              "N. di serie generatore",
+              "[[ID_DISPOSITIVO:CDR-M 704512S]]"
+            ],
+            [
+              "Elettrocatetere atriale (n. serie)",
+              "[[ID_DISPOSITIVO:VSL-52A 3318820]]"
+            ],
+            [
+              "Elettrocatetere ventricolare (n. serie)",
+              "[[ID_DISPOSITIVO:VSL-58V 3320417]]"
+            ],
+            [
+              "Tesserino portatore",
+              "[[ID_DISPOSITIVO:VS-IT-0098731]]"
+            ],
+            [
+              "Condizionalità",
+              "sistema completo MR-conditional 1,5 T, full body"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "table",
+          "header": [
+            "Parametro",
+            "Pre-RM",
+            "Post-RM"
+          ],
+          "widths": [
+            1.6,
+            1,
+            1
+          ],
+          "font_size": 7.2,
+          "rows": [
+            [
+              "Modalità programmata",
+              "DDD 60 bpm",
+              "DDD 60 bpm"
+            ],
+            [
+              "Modalità in RM",
+              "DOO asincrona",
+              "-"
+            ],
+            [
+              "Soglia V (V a 0,4 ms)",
+              "[[ESAME_VALORE:0,75]]",
+              "[[ESAME_VALORE:0,80]]"
+            ],
+            [
+              "Impedenza V (Ohm)",
+              "[[ESAME_VALORE:610]]",
+              "[[ESAME_VALORE:598]]"
+            ],
+            [
+              "Onda R (mV)",
+              "[[ESAME_VALORE:11,2]]",
+              "[[ESAME_VALORE:10,9]]"
+            ],
+            [
+              "Batteria (anni stimati)",
+              "[[ESAME_VALORE:8,5]]",
+              "[[ESAME_VALORE:8,4]]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Riprogrammazione in modalità sicura RM e riattivazione eseguite dal cardiologo Dott. [[MEDICO:Giuseppe Scuderi]] ([[REPARTO:UOC Cardiologia con UTIC - Ambulatorio Pacemaker]]) con il supporto dello specialista di prodotto sig. [[OPERATORE_SANITARIO:Marco Nicotra]] ([[ORGANIZZAZIONE:Vitalsync Italia S.r.l.]]). Monitoraggio continuo ECG e SpO2 per tutta la durata dell'esame; defibrillatore e carrello di emergenza in zona controllata. SAR limitato a 2 W/kg (modalità Normal Operating)."
+    },
+    {
+      "type": "checkboxes",
+      "label": "Checklist di sicurezza RM (compilata dal TSRM [[OPERATORE_SANITARIO:Concetta Caruso]])",
+      "columns": 3,
+      "items": [
+        [
+          "Questionario di sicurezza firmato",
+          true
+        ],
+        [
+          "Dispositivo verificato su elenco produttore",
+          true
+        ],
+        [
+          "Elettrocateteri abbandonati assenti",
+          true
+        ],
+        [
+          "Cardiologo presente in sala comandi",
+          true
+        ],
+        [
+          "Protesi acustiche rimosse",
+          true
+        ],
+        [
+          "Sedazione necessaria",
+          false
+        ],
+        [
+          "eGFR < 30 mL/min",
+          false
+        ],
+        [
+          "Clips vascolari / schegge metalliche",
+          false
+        ],
+        [
+          "Consenso informato acquisito",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "TECNICA DI ESAME"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Sequenza",
+        "Piano",
+        "Spessore",
+        "Note"
+      ],
+      "widths": [
+        2.2,
+        1.5,
+        0.9,
+        3.4
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "T2 TSE ad alta risoluzione",
+          "assiale, sagittale, coronale",
+          "3 mm",
+          "bobina phased-array pelvica, senza bobina endorettale"
+        ],
+        [
+          "DWI (b 0-50-800-1400)",
+          "assiale",
+          "3 mm",
+          "mappa ADC calcolata; b 1400 acquisito direttamente"
+        ],
+        [
+          "T1 3D GRE dinamica (DCE)",
+          "assiale",
+          "3 mm",
+          "risoluzione temporale 7 s; [[FARMACO:acido gadoterico 0,1 mmol/kg]] ([[ESAME_VALORE:17]] mL) a 2,5 mL/s"
+        ],
+        [
+          "T1 TSE",
+          "assiale ampio FOV",
+          "5 mm",
+          "studio linfonodale e scheletrico del bacino"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Esame eseguito su apparecchiatura da 1,5 T (vincolo del dispositivo impiantato), previa somministrazione di [[FARMACO:butilscopolamina 20 mg]] im per ridurre gli artefatti da peristalsi. Acquisizione a cura dei TSRM [[OPERATORE_SANITARIO:Concetta Caruso]] e [[OPERATORE_SANITARIO:Orazio Maugeri]]. Qualità di esame adeguata (PI-QUAL 4); lieve artefatto da suscettibilità magnetica della regione pettorale sinistra, ininfluente sulla valutazione pelvica."
+    },
+    {
+      "type": "paragraph",
+      "text": "**Confronto** con RM prostata del [[DATA:21/03/2024]] (acc. [[ACCESSION_NUMBER:RM-2024-0118220]]), eseguita presso questa UOC su apparecchiatura da 3 T, refertata dal Dott. [[MEDICO:A. Torrisi]] (lesione PI-RADS 3 al lobo sinistro)."
+    },
+    {
+      "type": "section",
+      "text": "DESCRIZIONE"
+    },
+    {
+      "type": "paragraph",
+      "text": "Prostata di dimensioni aumentate: diametri [[ESAME_VALORE:52 x 41 x 45]] mm, volume stimato (ellissoide) [[ESAME_VALORE:47,6]] mL; densità del PSA [[ESAME_VALORE:0,21]] ng/mL². [[DIAGNOSI:Iperplasia della zona di transizione]] con noduli di aspetto adenomatoso, prevalentemente stromali, con capsula chirurgica continua."
+    },
+    {
+      "type": "paragraph",
+      "text": "Nella **zona periferica posterolaterale sinistra**, a livello medio-ghiandolare e basale, si apprezza [[DIAGNOSI:lesione focale ipointensa in T2 a margini sfumati]] di [[ESAME_VALORE:16 x 12]] mm (precedente [[ESAME_VALORE:9 x 7]] mm), con [[DIAGNOSI:marcata restrizione della diffusione]] (ADC medio [[ESAME_VALORE:640]] µm²/s) e [[DIAGNOSI:impregnazione precoce e focale]] nello studio dinamico. La lesione ha contatto capsulare per circa [[ESAME_VALORE:11,5]] mm con lieve bulging del profilo, senza evidente infiltrazione del grasso periprostatico; angolo retto-prostatico conservato; fascia di Denonvilliers integra. Fasci neurovascolari simmetrici. Plesso venoso di Santorini nella norma."
+    },
+    {
+      "type": "paragraph",
+      "text": "Vescicole seminali simmetriche, di normale segnale. Non adenopatie iliache o otturatorie di dimensioni significative (linfonodo otturatorio sinistro di [[ESAME_VALORE:6,4]] mm in asse corto, morfologia ovalare con ilo adiposo conservato). Non alterazioni di segnale focali del bacino osseo e dei corpi vertebrali lombari inferiori inclusi nel campo di vista. [[DIAGNOSI:Diverticoli del sigma]] non complicati."
+    },
+    {
+      "type": "table",
+      "caption": "Mappa delle lesioni secondo PI-RADS v2.1 (settori a 41 regioni; doppia lettura Dott.ssa [[MEDICO:S. Spampinato]] / Dott. [[MEDICO:A. Torrisi]])",
+      "header": [
+        "Lesione",
+        "Settore",
+        "Dimensioni",
+        "T2W",
+        "DWI",
+        "DCE",
+        "PI-RADS",
+        "Variazione vs 2024"
+      ],
+      "widths": [
+        0.9,
+        1.6,
+        1.2,
+        0.7,
+        0.7,
+        0.8,
+        0.9,
+        2.2
+      ],
+      "font_size": 7,
+      "rows": [
+        [
+          "1 (indice)",
+          "PZpl sx\nmedio-base",
+          "[[ESAME_VALORE:16 x 12]] mm",
+          "4",
+          "5",
+          "+",
+          "**[[ESAME_VALORE:PI-RADS 5]]**",
+          "aumento dimensionale, upgrade\nda PI-RADS 3"
+        ],
+        [
+          "2",
+          "TZa dx apice",
+          "[[ESAME_VALORE:8,3]] mm",
+          "3",
+          "2",
+          "-",
+          "[[ESAME_VALORE:PI-RADS 2]]",
+          "invariata, aspetto di nodulo\nadenomatoso atipico"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "CONCLUSIONI"
+    },
+    {
+      "type": "paragraph",
+      "text": "**[[DIAGNOSI:Lesione della zona periferica posterolaterale sinistra PI-RADS 5]], in significativo aumento rispetto all'esame del 2024, altamente sospetta per [[DIAGNOSI:carcinoma prostatico clinicamente significativo]], con contatto capsulare esteso ma senza segni certi di estensione extraprostatica (EPE grado 1). Non adenopatie né lesioni ossee sospette nel campo di vista.** Si consiglia biopsia mirata con tecnica di fusione RM/ecografia sulla lesione 1, associata a campionamento sistematico; immagini e contorni della lesione esportati sul sistema di fusione dell'[[REPARTO:Ambulatorio di Urologia Diagnostica]]."
+    },
+    {
+      "type": "paragraph",
+      "text": "Funzionamento del pacemaker regolare al termine dell'esame, con parametri sovrapponibili ai valori basali; dispositivo riprogrammato in DDD alle ore 16:02. Il paziente è stato riaffidato al figlio, sig. [[CONTATTO_EMERGENZA:Sebastiano Lo Presti]], che lo ha accompagnato. Il sig. [[PERSONA:Lo Presti]] riprenderà [[FARMACO:apixaban]] la sera stessa, secondo le indicazioni già fornite dal Dott. [[MEDICO:Messina]] in vista della biopsia."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Catania]], [[DATA_REFERTO:09/10/2026]]",
+      "role": "Il Medico Radiologo",
+      "name": "Dott.ssa [[MEDICO:Stella Spampinato]]",
+      "extra": [
+        "Seconda lettura: Dott. [[MEDICO:Alfio Torrisi]]"
+      ],
+      "digital": true,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:POLICLINICO GELSOMINI]]",
+        "RADIODIAGNOSTICA",
+        "Dott.ssa [[MEDICO:STELLA SPAMPINATO]]",
+        "OMCeO CT n. [[NUMERO_ALBO:14872]]"
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "ALLEGATO 1 - SCHEDA DI MONITORAGGIO CARDIOLOGICO IN CORSO DI RM"
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "Paziente",
+          "[[PERSONA:Salvatore Lo Presti]]"
+        ],
+        [
+          "Nato il",
+          "[[DATA_NASCITA:03.02.1951]]"
+        ],
+        [
+          "Cartella amb.",
+          "[[NUMERO_CARTELLA:CARD-PM-2023-1187]]"
+        ],
+        [
+          "Cardiologo",
+          "Dott. [[MEDICO:G. Scuderi]]"
+        ],
+        [
+          "Specialista ditta",
+          "[[OPERATORE_SANITARIO:M. Nicotra]]"
+        ],
+        [
+          "Infermiere",
+          "[[OPERATORE_SANITARIO:V. Grasso]]"
+        ]
+      ]
+    },
+    {
+      "type": "table",
+      "header": [
+        "Ora",
+        "Fase",
+        "FC (bpm)",
+        "PA (mmHg)",
+        "SpO2",
+        "Ritmo / note"
+      ],
+      "widths": [
+        0.7,
+        2.1,
+        0.9,
+        1.1,
+        0.7,
+        3
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "14:52",
+          "Ingresso, riprogrammazione DOO",
+          "[[ESAME_VALORE:80]]",
+          "[[MISURE_ANTROPOMETRICHE:146/82]]",
+          "[[ESAME_VALORE:97%]]",
+          "ritmo stimolato, cattura efficace"
+        ],
+        [
+          "15:10",
+          "Inizio acquisizione",
+          "[[ESAME_VALORE:80]]",
+          "[[MISURE_ANTROPOMETRICHE:141/80]]",
+          "[[ESAME_VALORE:98%]]",
+          "nessuna aritmia"
+        ],
+        [
+          "15:31",
+          "Somministrazione mdc",
+          "[[ESAME_VALORE:80]]",
+          "[[MISURE_ANTROPOMETRICHE:138/79]]",
+          "[[ESAME_VALORE:98%]]",
+          "nessuna reazione; riferito lieve calore"
+        ],
+        [
+          "15:48",
+          "Fine acquisizione",
+          "[[ESAME_VALORE:80]]",
+          "[[MISURE_ANTROPOMETRICHE:135/78]]",
+          "[[ESAME_VALORE:98%]]",
+          "-"
+        ],
+        [
+          "16:02",
+          "Riprogrammazione DDD",
+          "[[ESAME_VALORE:64]]",
+          "[[MISURE_ANTROPOMETRICHE:132/76]]",
+          "[[ESAME_VALORE:97%]]",
+          "ritmo sinusale con stimolazione\nventricolare sincrona"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Osservazione post-contrasto di 30 minuti senza eventi avversi. Il paziente è stato informato, in presenza del figlio [[CONTATTO_EMERGENZA:S. Lo Presti]], di presentarsi in Pronto Soccorso in caso di sincope, cardiopalmo o reazione cutanea tardiva. La moglie, sig.ra [[FAMILIARE:Agata Fichera]], è stata indicata come ulteriore recapito al numero [[TELEFONO:095 418327]]."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Catania]], [[DATA_VISITA:08/10/2026]]",
+      "role": "Il Cardiologo",
+      "name": "Dott. [[MEDICO:Giuseppe Scuderi]]",
+      "extra": [
+        "Controllo pacemaker programmato tra 3 mesi presso l'Ambulatorio Pacemaker"
+      ],
+      "digital": false,
+      "stamp": [
+        "A.O.U. [[STRUTTURA_SANITARIA:POLICLINICO GELSOMINI]]",
+        "UOC CARDIOLOGIA CON UTIC",
+        "Dott. [[MEDICO:Giuseppe Scuderi]]",
+        "Ord. Medici CT n. [[NUMERO_ALBO:11906]]"
+      ]
+    },
+    {
+      "type": "section",
+      "text": "ALLEGATO 2 - CONSENSO INFORMATO ALL'ESAME RM IN PORTATORE DI DISPOSITIVO"
+    },
+    {
+      "type": "paragraph",
+      "text": "Io sottoscritto [[PERSONA:Salvatore Lo Presti]], nato a [[LUOGO_NASCITA:Catania]] il [[DATA_NASCITA:3 febbraio 1951]], dichiaro di essere stato informato dal Dott. [[MEDICO:Alfio Torrisi]] sui rischi specifici dell'esame RM in presenza di pacemaker, sulla necessità della riprogrammazione del dispositivo e sull'uso del mezzo di contrasto in presenza di pregressa reazione, e di acconsentire all'esecuzione dell'esame. Data l'ipoacusia, il colloquio è stato condotto anche in forma scritta, alla presenza del figlio [[CONTATTO_EMERGENZA:Sebastiano Lo Presti]] (tel. [[TELEFONO:349 7703512]])."
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "stamp",
+          "lines": [
+            "ACCETTAZIONE RM",
+            "[[DATA:08 OTT 2026]]",
+            "TSRM [[OPERATORE_SANITARIO:O. MAUGERI]]"
+          ],
+          "angle": 8,
+          "align": "center"
+        }
+      ],
+      "right": [
+        {
+          "type": "barcode",
+          "kind": "qr",
+          "value": "https://fse.policlinicogelsomini.example.it/referti/[[NUMERO_REFERTO:RD/26/0093317]]",
+          "label": "Referto di [[PERSONA:LO PRESTI S.]] su FSE",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Catania]], [[DATA_VISITA:08/10/2026]]",
+      "role": "Firma del paziente",
+      "name": "[[PERSONA:Salvatore Lo Presti]]",
+      "extra": [
+        "Presente: [[CONTATTO_EMERGENZA:Sebastiano Lo Presti]] (figlio)"
+      ],
+      "digital": false
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "PI-RADS v2.1 (2019): punteggio dominante DWI per la zona periferica, T2W per la zona di transizione. Gleason secondo ISUP 2014 (Gleason 3+3 = Grade Group 1).",
+        "Condizioni d'uso RM del sistema Cadenza DR MRI secondo il manuale tecnico del produttore (rev. 2022): 1,5 T, gradiente spaziale massimo 30 T/m.",
+        "Medico di medicina generale: Dott.ssa [[MEDICO:Carmela Leonardi]], [[INDIRIZZO:Via Etnea 642]], [[LUOGO:Gravina di Catania]] - copia inviata via FSE il [[DATA:09.10.2026]]."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Gleason",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Denonvilliers",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Santorini",
+      "forbidden_categories": [
+        "PERSONA",
+        "LUOGO"
+      ]
+    },
+    {
+      "value": "Cadenza",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "ORGANIZZAZIONE"
+      ]
+    },
+    {
+      "value": "ISUP",
+      "forbidden_categories": [
+        "ORGANIZZAZIONE"
+      ]
+    }
+  ]
+}

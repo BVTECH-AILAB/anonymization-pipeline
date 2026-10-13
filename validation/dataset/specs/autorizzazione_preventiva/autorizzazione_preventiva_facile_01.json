@@ -1,0 +1,236 @@
+{
+  "id": "autorizzazione_preventiva_facile_01",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "facile",
+  "style": {
+    "font": "helvetica",
+    "color": "#2E7D32",
+    "font_size": 9,
+    "margins_mm": 18
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Nicola",
+      "last_name": "Lorusso",
+      "sex": "M",
+      "birth_date": "1949-02-17",
+      "birth_place": "Bari"
+    }
+  },
+  "letterhead": {
+    "logo": "ASLM",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Sanitaria Locale Murgia Adriatica]]",
+      "Dipartimento Cure Primarie",
+      "[[REPARTO:Ufficio Assistenza Protesica e Integrativa]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Lungomare Starita 61]]",
+      "[[CAP:70132]] [[LUOGO:Bari]]",
+      "Tel. [[TELEFONO:080 5843317]]"
+    ]
+  },
+  "footer": [
+    "Modulo AP/OTLT-03 rev. 2 - Da consegnare all'Ufficio Protesi del Distretto di residenza unitamente all'emogasanalisi in originale",
+    "I dati sono trattati ai sensi del Reg. UE 2016/679 esclusivamente per le finalità connesse alla presente richiesta"
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "AUTORIZZAZIONE OSSIGENOTERAPIA DOMICILIARE",
+      "subtitle": "Richiesta di ossigenoterapia a lungo termine (OTLT) - DPCM 12 gennaio 2017"
+    },
+    {
+      "type": "section",
+      "text": "1. DATI DELL'ASSISTITO"
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome e nome",
+          "[[PERSONA:Nicola Lorusso]]"
+        ],
+        [
+          "Nato il",
+          "[[DATA_NASCITA:17/02/1949]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Giuseppe Capruzzi 214]]"
+        ],
+        [
+          "Comune",
+          "[[LUOGO:Modugno]]"
+        ],
+        [
+          "Esenzione",
+          "[[CODICE_ESENZIONE:024]]"
+        ],
+        [
+          "Distretto",
+          "n. 4 - [[LUOGO:Bari]] Ovest"
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "char_boxes",
+      "label": "Tessera sanitaria",
+      "value": "[[TESSERA_SANITARIA:@ts]]"
+    },
+    {
+      "type": "checkboxes",
+      "label": "Tipo di richiesta",
+      "columns": 3,
+      "items": [
+        [
+          "Prima richiesta",
+          true
+        ],
+        [
+          "Rinnovo",
+          false
+        ],
+        [
+          "Variazione prescrizione",
+          false
+        ],
+        [
+          "Urgente",
+          false
+        ],
+        [
+          "Ordinaria",
+          true
+        ],
+        [
+          "Temporanea (max 3 mesi)",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "2. PRESCRIZIONE"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Voce",
+        "Prescrizione"
+      ],
+      "widths": [
+        3,
+        6
+      ],
+      "rows": [
+        [
+          "Sistema di erogazione",
+          "[[TERAPIA:ossigeno liquido con unità base e unità portatile]]"
+        ],
+        [
+          "Flusso a riposo",
+          "[[TERAPIA:2 L/min]]"
+        ],
+        [
+          "Flusso sotto sforzo e notturno",
+          "[[TERAPIA:3 L/min]]"
+        ],
+        [
+          "Durata giornaliera",
+          "[[TERAPIA:almeno 18 ore/die]]"
+        ],
+        [
+          "Interfaccia",
+          "occhialini nasali"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "3. MOTIVAZIONE CLINICA"
+    },
+    {
+      "type": "paragraph",
+      "text": "Diagnosi: [[PATOLOGIA:broncopneumopatia cronica ostruttiva di grado severo (GOLD 3)]] con [[DIAGNOSI:insufficienza respiratoria cronica ipossiemica]]. Emogasanalisi arteriosa in aria ambiente, in condizioni di stabilità clinica: PaO2 [[ESAME_VALORE:52]] mmHg, PaCO2 [[ESAME_VALORE:46]] mmHg, SpO2 [[ESAME_VALORE:86]]%. Ripetuta a distanza di tre settimane con valori sovrapponibili. Paziente ex fumatore, non più esposto a fumo attivo."
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Medico prescrittore",
+          "Dott. [[MEDICO:Vito Antonio Carbonara]]"
+        ],
+        [
+          "Iscr. Albo",
+          "n. [[NUMERO_ALBO:BA 09184]]"
+        ],
+        [
+          "Specialità",
+          "Malattie dell'apparato respiratorio"
+        ],
+        [
+          "Data",
+          "[[DATA_PRESCRIZIONE:09/09/2025]]"
+        ]
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Bari]], [[DATA_PRESCRIZIONE:09/09/2025]]",
+      "role": "Il medico prescrittore",
+      "name": "Dott. [[MEDICO:Vito Antonio Carbonara]]",
+      "digital": false
+    },
+    {
+      "type": "section",
+      "text": "4. PARERE DELLA COMMISSIONE"
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "N. protocollo ASL",
+          "[[NUMERO_PROTOCOLLO:AP-2025/004417]]"
+        ],
+        [
+          "Ricevuta il",
+          "____/____/________"
+        ]
+      ]
+    },
+    {
+      "type": "checkboxes",
+      "columns": 3,
+      "items": [
+        [
+          "Autorizzata",
+          false
+        ],
+        [
+          "Non autorizzata",
+          false
+        ],
+        [
+          "Autorizzata con prescrizioni",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Note ______________________________________   Il Responsabile dell'Ufficio Protesi ____________________",
+      "align": "left"
+    }
+  ],
+  "negatives": []
+}

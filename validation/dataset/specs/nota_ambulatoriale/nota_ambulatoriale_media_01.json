@@ -1,0 +1,79 @@
+{
+  "id": "nota_ambulatoriale_media_01",
+  "type": "nota_ambulatoriale",
+  "difficulty": "media",
+  "style": {"font": "helvetica", "color": "#00796B", "font_size": 9, "margins_mm": 16},
+  "persons": {
+    "paz": {"first_name": "Vito Antonio", "last_name": "Lattarulo", "sex": "M", "birth_date": "1941-06-18", "birth_place": "Bari"}
+  },
+  "letterhead": {
+    "logo": "ASLM",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASL Murgia Adriatica]]",
+      "[[STRUTTURA_SANITARIA:Presidio Territoriale San Nicola Pellegrino]]",
+      "[[REPARTO:Servizio di Diabetologia e Malattie Metaboliche]]",
+      "Responsabile: Dott. [[MEDICO:Rocco Dimauro]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Giulio Petroni 129]]",
+      "[[CAP:70124]] [[LUOGO:Bari]]",
+      "Tel. [[TELEFONO:080 5843317]]"
+    ]
+  },
+  "running_header": "Pz. [[COGNOME:Lattarulo]] [[NOME:Vito Antonio]] - nato il [[DATA_NASCITA:18/06/1941]] - Cartella diabetologica n. [[NUMERO_CARTELLA:DIA-2009-01377]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASL Murgia Adriatica]] - Sede legale in [[LUOGO:Bari]] - P.IVA [[PARTITA_IVA:@asl]]",
+    "Documento contenente dati relativi alla salute: trattare ai sensi del Reg. UE 2016/679"
+  ],
+  "blocks": [
+    {"type": "title", "text": "VISITA DIABETOLOGICA DI CONTROLLO", "subtitle": "Follow-up diabete mellito tipo 2 e screening del piede diabetico"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome", "[[COGNOME:Lattarulo]]"],
+      ["Nome", "[[NOME:Vito Antonio]]"],
+      ["Nato a", "[[LUOGO_NASCITA:Bari]] il [[DATA_NASCITA:18/06/1941]]"],
+      ["C.F.", "[[CODICE_FISCALE:@paz]]"],
+      ["Residenza", "[[INDIRIZZO:Via Fanelli 214/B]], [[LUOGO:Bari]]"],
+      ["Esenzione", "[[CODICE_ESENZIONE:013.250]]"],
+      ["Recapito", "[[TELEFONO:+39 340 778 2165]] (figlio)"],
+      ["MMG", "Dott.ssa [[MEDICO:Annalisa Pepe]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Data visita", "[[DATA_VISITA:4 marzo 2025]]"],
+      ["Pren. CUP", "[[NUMERO_PRENOTAZIONE:BA250304-1187]]"],
+      ["NRE", "[[NUMERO_RICETTA:160A51199027744]]"],
+      ["Prestazione", "89.01 - Visita di controllo"],
+      ["Priorità", "P - programmata"],
+      ["Regime", "SSN, esente"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Prenotazione", "value": "[[NUMERO_PRENOTAZIONE:BA250304-1187]]", "align": "right"},
+    {"type": "paragraph", "text": "Il sig. [[PERSONA:Lattarulo]], di [[ETA:83]] aa., giunge a controllo accompagnato dalla badante, sig.ra [[CONTATTO_EMERGENZA:Oksana Kovalenko]], che ne cura la gestione quotidiana della terapia insulinica, e dal figlio [[FAMILIARE:Nicola Lattarulo]]. Ultimo controllo presso il ns. ambulatorio il [[DATA:12.09.24]]."},
+    {"type": "section", "text": "Anamnesi"},
+    {"type": "paragraph", "text": "[[PATOLOGIA:Diabete mellito tipo 2]] noto dal 2003, in insulinoterapia basale dal 2019. [[PATOLOGIA:Cardiopatia ischemica cronica]], sottoposto a [[INTERVENTO:PTCA con stent su IVA]] nel 2015. [[PATOLOGIA:Malattia renale cronica stadio 3b]]. [[PATOLOGIA:Ipertensione arteriosa]]. Non retinopatia all'ultimo fundus (2024). Riferisce due episodi di [[DIAGNOSI:ipoglicemia notturna]] nell'ultimo mese, riconosciuti e corretti dalla badante con zucchero per os. Vive con la badante; il figlio riferisce [[DIAGNOSI:lieve deterioramento della memoria recente]]."},
+    {"type": "section", "text": "Terapia domiciliare in atto"},
+    {"type": "table", "header": ["Farmaco", "Posologia", "Note"], "widths": [3.2, 2.6, 3.2], "rows": [
+      ["[[FARMACO:Metformina 500 mg]]", "1 cp a pranzo e a cena", "dose ridotta per eGFR"],
+      ["[[FARMACO:Insulina glargine 100 UI/mL]]", "14 UI alle ore 22", "somministrata dalla badante"],
+      ["[[FARMACO:Acido acetilsalicilico 100 mg]]", "1 cp a pranzo", "-"],
+      ["[[FARMACO:Bisoprololo 2,5 mg]]", "1 cp al mattino", "-"],
+      ["[[FARMACO:Atorvastatina 40 mg]]", "1 cp la sera", "-"]
+    ]},
+    {"type": "section", "text": "Esami ematochimici e andamento"},
+    {"type": "table", "header": ["Data prelievo", "HbA1c (mmol/mol)", "Glicemia a digiuno (mg/dL)", "eGFR (mL/min)", "Note"], "widths": [2.2, 2, 2.4, 2, 3.2], "rows": [
+      ["[[DATA:12.09.24]]", "[[ESAME_VALORE:61]]", "[[ESAME_VALORE:148]]", "[[ESAME_VALORE:44]]", "visita precedente"],
+      ["[[DATA:03-12-2024]]", "[[ESAME_VALORE:58]]", "[[ESAME_VALORE:131]]", "[[ESAME_VALORE:41]]", "lab. esterno convenzionato"],
+      ["[[DATA:20/02/2025]]", "[[ESAME_VALORE:56]]", "[[ESAME_VALORE:97]]", "[[ESAME_VALORE:39]]", "microalbuminuria [[ESAME_VALORE:86 mg/g]]"]
+    ]},
+    {"type": "section", "text": "Esame obiettivo"},
+    {"type": "paragraph", "text": "Condizioni generali discrete, deambulazione autonoma con bastone. PA [[MISURE_ANTROPOMETRICHE:138/72 mmHg]], FC [[ESAME_VALORE:62 bpm]] ritmica. Peso [[MISURE_ANTROPOMETRICHE:74,5 kg]], altezza [[MISURE_ANTROPOMETRICHE:168 cm]], BMI [[MISURE_ANTROPOMETRICHE:26,4]]. Glicemia capillare in ambulatorio [[ESAME_VALORE:112 mg/dL]] (ore 10:30)."},
+    {"type": "heading", "text": "Screening del piede diabetico"},
+    {"type": "paragraph", "text": "Cute secca, ipercheratosi plantare alla testa del I metatarso dx, senza lesioni ulcerative. Polsi pedidi e tibiali posteriori iposfigmici bilateralmente. Test al monofilamento 10 g: [[ESAME_VALORE:sensibilità assente in 3 punti su 10 a dx]] e [[ESAME_VALORE:2 punti su 10 a sx]]. Diapason 128 Hz ridotto al malleolo. Indice caviglia-braccio [[ESAME_VALORE:0,82]] dx e [[ESAME_VALORE:0,88]] sx."},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Diabete mellito tipo 2 in insulinoterapia con compenso accettabile]] per età e comorbilità, gravato da [[DIAGNOSI:ipoglicemie notturne]]. [[DIAGNOSI:Neuropatia periferica sensitiva]] e [[DIAGNOSI:arteriopatia obliterante periferica lieve]]: piede a rischio di classe 2. [[DIAGNOSI:Nefropatia diabetica]] con progressiva riduzione del filtrato.\nIn considerazione dell'età del pz. e del rischio di ipoglicemia si accetta un target di HbA1c fino a 64 mmol/mol."},
+    {"type": "section", "text": "Prescrizioni e indicazioni"},
+    {"type": "paragraph", "text": "- Ridurre [[FARMACO:insulina glargine]] a **12 UI** alle ore 22; non somministrare se glicemia serale inferiore a 120 mg/dL.\n- Introdurre [[FARMACO:empagliflozin 10 mg]] 1 cp al mattino (nefroprotezione e protezione cardiovascolare); compilato piano terapeutico AIFA, consegnato al pz.\n- Sospendere la [[FARMACO:metformina]] se eGFR inferiore a 30 mL/min.\n- Visita podologica ed ecocolordoppler arterioso degli arti inferiori.\n- Controllo di creatinina, elettroliti ed esame urine tra 4 settimane."},
+    {"type": "paragraph", "text": "Eseguita sessione educativa con l'infermiera [[OPERATORE_SANITARIO:Maria Grazia Lorusso]] sulla gestione delle ipoglicemie e sulla cura quotidiana del piede, rivolta alla sig.ra [[CONTATTO_EMERGENZA:Kovalenko]] e al figlio, ai quali è stato consegnato il diario glicemico.\n**Prossimo controllo:** [[DATA:09/09/2025]] ore 9:00, già prenotato (ambulatorio 3, primo piano)."},
+    {"type": "signature", "place_date": "[[LUOGO:Bari]], [[DATA_REFERTO:04/03/2025]]", "role": "Il Medico Diabetologo", "name": "Dott.ssa [[MEDICO:Gabriella Fanizzi]]", "extra": ["Visto il Responsabile del Servizio, Dott. [[MEDICO:Rocco Dimauro]]"], "digital": false, "stamp": ["Dott.ssa [[MEDICO:Gabriella Fanizzi]]", "Specialista in Endocrinologia", "e Malattie del Metabolismo"]}
+  ],
+  "negatives": []
+}

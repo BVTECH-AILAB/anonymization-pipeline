@@ -1,0 +1,620 @@
+{
+  "id": "test_genetico_complessa_01",
+  "type": "test_genetico",
+  "difficulty": "complessa",
+  "style": {
+    "font": "helvetica",
+    "color": "#00838F",
+    "font_size": 8,
+    "margins_mm": 13
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Sole",
+      "last_name": "De Santis",
+      "sex": "F",
+      "birth_date": "2019-05-11",
+      "birth_place": "Milano"
+    },
+    "madre": {
+      "first_name": "Rosa",
+      "last_name": "Dell'Orto",
+      "sex": "F",
+      "birth_date": "1987-02-03",
+      "birth_place": "Bergamo"
+    },
+    "padre": {
+      "first_name": "Matteo",
+      "last_name": "De Santis",
+      "sex": "M",
+      "birth_date": "1985-10-27",
+      "birth_place": "Roma"
+    }
+  },
+  "letterhead": {
+    "logo": "IPA",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Fondazione IRCCS Istituto Pediatrico Ambrosiano]]",
+      "Dipartimento di Medicina Genomica e Malattie Rare",
+      "[[REPARTO:Laboratorio di Genomica Clinica]] - [[REPARTO:S.C. Genetica Medica]]",
+      "Direttore: Prof. [[MEDICO:Giulio Ferrario Sala]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Ludovico il Moro 118]]",
+      "[[CAP:20143]] [[LUOGO:Milano]]",
+      "Tel. [[TELEFONO:02 5539 4410]]",
+      "Fax [[FAX:02 5539 4499]]",
+      "[[EMAIL:genomica.clinica@irccs-ipa.example.it]]"
+    ]
+  },
+  "running_header": "Probando: [[PERSONA:DE SANTIS SOLE]] - C.F. [[CODICE_FISCALE:@paz]] - Analisi trio WES n. [[NUMERO_REFERTO:WES-T-2025-0331]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Fondazione IRCCS Istituto Pediatrico Ambrosiano]] - P.IVA [[PARTITA_IVA:@ipa]] - PEC [[PEC:direzione@pec.irccs-ipa.example.it]]",
+    "Referto genetico di [[PERSONA:De Santis Sole]] (minore): comunicazione riservata ai genitori e ai medici curanti indicati in consenso.",
+    "Laboratorio accreditato ISO 15189 e partecipante ai controlli di qualità esterni EMQN e GenQA."
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "align": "right",
+      "lines": [
+        "Alla c.a. della Dott.ssa [[MEDICO:Ludovica Brambilla Nava]]",
+        "Pediatra di libera scelta",
+        "[[INDIRIZZO:Piazza Napoli 7]] - [[CAP:20146]] [[LUOGO:Milano]]",
+        "e p.c. Dott. [[MEDICO:Edoardo Galbiati]], [[REPARTO:U.O. Neurologia Pediatrica]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "REFERTO DI SEQUENZIAMENTO DELL'ESOMA IN TRIO",
+      "subtitle": "Whole Exome Sequencing con analisi mirata a un pannello virtuale di 412 geni per encefalopatie epilettiche e dello sviluppo"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "title": "PROBANDO",
+      "fields": [
+        [
+          "Cognome",
+          "[[COGNOME:De Santis]]"
+        ],
+        [
+          "Nome",
+          "[[NOME:Sole]]"
+        ],
+        [
+          "Nata il",
+          "[[DATA_NASCITA:11/05/2019]] a [[LUOGO_NASCITA:Milano]]"
+        ],
+        [
+          "Sesso",
+          "[[SESSO:F]]"
+        ],
+        [
+          "Codice fiscale",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Tessera sanitaria",
+          "[[TESSERA_SANITARIA:@ts]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Washington 52]], [[CAP:20146]] [[LUOGO:Milano]]"
+        ],
+        [
+          "Cartella n.",
+          "[[NUMERO_CARTELLA:IPA-25-004127]]"
+        ],
+        [
+          "Esenzione",
+          "[[CODICE_ESENZIONE:RF0060]]"
+        ],
+        [
+          "NRE",
+          "[[NUMERO_RICETTA:030A0 2251 8873 41]]"
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "left": [
+        {
+          "type": "heading",
+          "text": "Campioni del trio"
+        },
+        {
+          "type": "table",
+          "font_size": 7,
+          "header": [
+            "Soggetto",
+            "Codice DNA",
+            "Prelievo"
+          ],
+          "widths": [
+            3.6,
+            2.4,
+            1.8
+          ],
+          "rows": [
+            [
+              "Probando\n[[PERSONA:Sole De Santis]]",
+              "[[CODICE_CAMPIONE:D25-03311]]",
+              "[[DATA_VISITA:14/01/2025]]"
+            ],
+            [
+              "Madre\n[[TUTORE_DELEGATO:Rosa Dell'Orto]]\nC.F. [[CODICE_FISCALE:@madre]]",
+              "[[CODICE_CAMPIONE:D25-03312]]",
+              "[[DATA_VISITA:14/01/2025]]"
+            ],
+            [
+              "Padre\n[[TUTORE_DELEGATO:Matteo De Santis]]\nC.F. [[CODICE_FISCALE:@padre]]",
+              "[[CODICE_CAMPIONE:D25-03313]]",
+              "[[DATA_VISITA:16.01.25]]"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "size": 6.5,
+          "text": "Prelievi eseguiti dall'inf. [[OPERATORE_SANITARIO:Luca Pirovano]] presso il [[REPARTO:Day Hospital Pediatrico]]; campione paterno raccolto in seconda data per emolisi."
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Dati della richiesta"
+        },
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Richiedente",
+              "Dott. [[MEDICO:Edoardo Galbiati]]"
+            ],
+            [
+              "Accettazione",
+              "[[NUMERO_ACCETTAZIONE:ACC-25-0018874]]"
+            ],
+            [
+              "Consulenza pre-test",
+              "[[DATA:9 gennaio 2025]]"
+            ],
+            [
+              "Data referto",
+              "[[DATA_REFERTO:28/03/2025]]"
+            ]
+          ]
+        },
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "label": "Trio",
+          "value": "[[NUMERO_REFERTO:WES-T-2025-0331]]",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Quesito clinico e fenotipo (termini HPO)"
+    },
+    {
+      "type": "paragraph",
+      "text": "La piccola [[PERSONA:Sole]], secondogenita di genitori non consanguinei, ha presentato all'età di 6 mesi [[DIAGNOSI:crisi febbrili prolungate emicloniche]] (HP:0002373), seguite da [[DIAGNOSI:crisi miocloniche]] e [[DIAGNOSI:stati di male epilettico]] ricorrenti, scatenati da ipertermia e bagno caldo. Dai 2 anni si osserva [[DIAGNOSI:ritardo del linguaggio]] e [[DIAGNOSI:disturbo della coordinazione]]. EEG con anomalie multifocali. RM encefalo nella norma. In terapia con [[FARMACO:acido valproico 30 mg/kg/die]], [[FARMACO:clobazam 0,5 mg/kg/die]] e [[FARMACO:stiripentolo]]. Il quadro elettroclinico pone il sospetto di sindrome di Dravet; in diagnosi differenziale una forma di tipo Lennox-Gastaut. Anamnesi familiare: madre, sig.ra [[TUTORE_DELEGATO:R. Dell'Orto]], seguita per [[SALUTE_MENTALE:disturbo d'ansia generalizzato]] in terapia con [[FARMACO:sertralina 50 mg]]; zio paterno, sig. [[FAMILIARE:Paolo De Santis]], con [[PATOLOGIA:epilessia generalizzata idiopatica]] ben controllata."
+    },
+    {
+      "type": "section",
+      "text": "Metodica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Arricchimento esomico con kit Twist Exome 2.0 e sequenziamento paired-end 2x150 bp su Illumina NovaSeq 6000. Allineamento su GRCh38 (BWA-MEM), chiamata delle varianti con GATK 4.5 e DeepVariant, chiamata delle CNV con ExomeDepth. Analisi di segregazione nel trio e filtraggio per modelli de novo, autosomico recessivo e X-linked. Copertura media del probando 136x; target coperto almeno 20x: 98,1%. Le varianti riportate sono state confermate con sequenziamento Sanger dal TSLB [[OPERATORE_SANITARIO:Marta Cattaneo]]; in ogni seduta è incluso un controllo bianco (no template)."
+    },
+    {
+      "type": "section",
+      "text": "Risultati"
+    },
+    {
+      "type": "table",
+      "font_size": 7,
+      "header": [
+        "Gene\nTrascritto",
+        "Variante HGVS c.\np.",
+        "Zigosità\nOrigine",
+        "Classe ACMG\n(criteri)",
+        "Malattia OMIM\nEreditarietà"
+      ],
+      "widths": [
+        2.2,
+        3,
+        2.2,
+        2.6,
+        3.6
+      ],
+      "rows": [
+        [
+          "SCN1A\nNM_001165963.4",
+          "[[DATO_GENETICO:c.4573C>T]]\n[[DATO_GENETICO:p.(Arg1525Ter)]]",
+          "[[DATO_GENETICO:Eterozigote]]\nde novo",
+          "Patogenetica\n(PVS1, PS2, PM2)",
+          "Encefalopatia epilettica dello sviluppo 6B (607208)\nAD"
+        ],
+        [
+          "CACNA1A\nNM_001127221.2",
+          "[[DATO_GENETICO:c.5717G>A]]\n[[DATO_GENETICO:p.(Arg1906Gln)]]",
+          "[[DATO_GENETICO:Eterozigote]]\nmaterna",
+          "VUS\n(PM2, BP4)",
+          "Atassia episodica tipo 2 (108500)\nAD"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "size": 7,
+      "text": "Non sono state identificate CNV patogenetiche né varianti rilevanti in omozigosi o in eterozigosi composta. La paternità e la maternità biologica sono state verificate con analisi di 24 marcatori SNP (concordanza 100%)."
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "Interpretazione"
+    },
+    {
+      "type": "paragraph",
+      "text": "La [[DATO_GENETICO:variante nonsenso SCN1A p.(Arg1525Ter) insorta de novo]] determina perdita di funzione del canale del sodio Nav1.1 ed è ripetutamente descritta in pazienti con sindrome di Dravet. In accordo con il fenotipo, il risultato conferma la diagnosi di [[DIAGNOSI:encefalopatia epilettica dello sviluppo SCN1A-correlata (sindrome di Dravet)]]. Si sottolinea l'indicazione a evitare i bloccanti dei canali del sodio (carbamazepina, oxcarbazepina, lamotrigina, fenitoina). La variante CACNA1A, ereditata dalla madre clinicamente non affetta per il fenotipo neurologico, è considerata di significato incerto e non spiega il quadro della bambina."
+    },
+    {
+      "type": "section",
+      "text": "Implicazioni per la famiglia"
+    },
+    {
+      "type": "paragraph",
+      "text": "Trattandosi di variante de novo, il rischio di ricorrenza per i genitori, sig.ra [[TUTORE_DELEGATO:Rosa Dell'Orto]] e sig. [[TUTORE_DELEGATO:Matteo De Santis]], è basso ma non nullo (circa 1-2%) per la possibilità di mosaicismo germinale; in caso di nuova gravidanza è disponibile la diagnosi prenatale. Il fratello maggiore [[FAMILIARE:Leone De Santis]], di 8 anni e in buona salute, non necessita di test. La nonna materna, sig.ra [[FAMILIARE:Bianca Colombo]], ha chiesto informazioni sul proprio rischio: è stata rassicurata nel colloquio del [[DATA:3 aprile 2025]] condotto dalla consulente genetica dott.ssa [[OPERATORE_SANITARIO:Valentina Nguyen]]."
+    },
+    {
+      "type": "table",
+      "font_size": 7,
+      "header": [
+        "Familiare",
+        "Relazione",
+        "Stato",
+        "Indicazione"
+      ],
+      "widths": [
+        3,
+        2.2,
+        3.2,
+        4.4
+      ],
+      "rows": [
+        [
+          "[[TUTORE_DELEGATO:Rosa Dell'Orto]]",
+          "Madre",
+          "Non portatrice di SCN1A; portatrice VUS CACNA1A",
+          "Nessun test aggiuntivo; follow-up clinico se sintomi parossistici"
+        ],
+        [
+          "[[TUTORE_DELEGATO:Matteo De Santis]]",
+          "Padre",
+          "Non portatore",
+          "Nessuna"
+        ],
+        [
+          "[[FAMILIARE:Leone De Santis]]",
+          "Fratello",
+          "Asintomatico",
+          "Nessun test"
+        ],
+        [
+          "[[FAMILIARE:Paolo De Santis]]",
+          "Zio paterno",
+          "Epilessia generalizzata",
+          "Eventuale pannello epilessie in sede separata (vedi nota 2)"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Reperti secondari e consenso"
+    },
+    {
+      "type": "checkboxes",
+      "label": "Scelte espresse dai genitori nel consenso informato del [[DATA:9 gennaio 2025]]",
+      "columns": 2,
+      "items": [
+        [
+          "Comunicazione dei risultati correlati al quesito",
+          true
+        ],
+        [
+          "Comunicazione dei reperti secondari (ACMG SF v3.2)",
+          false
+        ],
+        [
+          "Conservazione del DNA per ulteriori indagini",
+          true
+        ],
+        [
+          "Uso anonimo dei dati a fini di ricerca",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "C.F. del genitore firmatario",
+      "value": "[[CODICE_FISCALE:@madre]]"
+    },
+    {
+      "type": "note",
+      "text": "Limiti: il WES non rileva in modo affidabile espansioni di triplette, varianti in regioni introniche profonde o non codificanti, riarrangiamenti bilanciati e mosaicismi somatici sotto il 15%. La reinterpretazione dei dati può essere richiesta dopo 24 mesi tramite la consulente dott.ssa [[OPERATORE_SANITARIO:V. Nguyen]] (tel. [[TELEFONO:02 5539 4436]])."
+    },
+    {
+      "type": "barcode",
+      "kind": "qr",
+      "label": "Referto su FSE - verifica",
+      "value": "https://referti.irccs-ipa.example.it/wes/[[NUMERO_REFERTO:WES-T-2025-0331]]?pz=[[ID_PAZIENTE:PZ-0098214]]"
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Milano]], [[DATA_REFERTO:28/03/2025]]",
+      "role": "Il Dirigente Biologo - Genetista di laboratorio",
+      "name": "Dott.ssa [[MEDICO:Chiara Invernizzi]]",
+      "extra": [
+        "Analisi bioinformatica: dott. [[OPERATORE_SANITARIO:Kevin Okafor]]"
+      ],
+      "digital": true
+    },
+    {
+      "type": "signature",
+      "place_date": "Consulenza post-test: [[DATA:03.04.2025]]",
+      "role": "Il Medico Genetista",
+      "name": "Prof. [[MEDICO:Giulio Ferrario Sala]]",
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:IRCCS IST. PEDIATRICO AMBROSIANO]]",
+        "S.C. GENETICA MEDICA",
+        "Prof. [[MEDICO:G. Ferrario Sala]]",
+        "OMCeO MI n. [[NUMERO_ALBO:MI 33087]]"
+      ]
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Classificazione secondo ACMG/AMP 2015 con adattamenti ClinGen SVI e regole della Associazione Italiana di Genetica Umana.",
+        "Lo zio paterno [[FAMILIARE:P. De Santis]] è seguito presso altra struttura; il risultato del trio non modifica la sua presa in carico.",
+        "Nomenclatura delle varianti secondo HGVS v21.0; numerazione riferita al trascritto MANE Select."
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "Allegato tecnico - Metriche di qualità del trio"
+    },
+    {
+      "type": "table",
+      "font_size": 7,
+      "header": [
+        "Parametro",
+        "Probando",
+        "Madre",
+        "Padre",
+        "Soglia"
+      ],
+      "widths": [
+        4,
+        2,
+        2,
+        2,
+        2
+      ],
+      "rows": [
+        [
+          "Reads totali (milioni)",
+          "88,4",
+          "79,2",
+          "81,7",
+          ">= 60"
+        ],
+        [
+          "Copertura media sul target",
+          "136x",
+          "121x",
+          "127x",
+          ">= 80x"
+        ],
+        [
+          "Target coperto >= 20x",
+          "98,1%",
+          "97,6%",
+          "97,9%",
+          ">= 95%"
+        ],
+        [
+          "Duplicati PCR",
+          "6,8%",
+          "7,4%",
+          "7,1%",
+          "<= 15%"
+        ],
+        [
+          "Ti/Tv (SNV codificanti)",
+          "2,91",
+          "2,88",
+          "2,90",
+          "2,8 - 3,1"
+        ],
+        [
+          "Contaminazione stimata (VerifyBamID)",
+          "0,4%",
+          "0,6%",
+          "0,3%",
+          "< 2%"
+        ],
+        [
+          "Sesso genetico",
+          "XX",
+          "XX",
+          "XY",
+          "concordante"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Geni del pannello virtuale con copertura incompleta (< 20x su più del 5% delle basi)"
+    },
+    {
+      "type": "table",
+      "font_size": 7,
+      "header": [
+        "Gene",
+        "Trascritto MANE",
+        "Basi < 20x",
+        "Regioni non coperte",
+        "Rilevanza per il quesito"
+      ],
+      "widths": [
+        1.6,
+        2.6,
+        1.6,
+        4,
+        3.2
+      ],
+      "rows": [
+        [
+          "ARX",
+          "NM_139058.3",
+          "11,2%",
+          "Esone 2 (tratti polialanina)",
+          "Bassa (sesso femminile)"
+        ],
+        [
+          "CDKL5",
+          "NM_001323289.2",
+          "6,3%",
+          "Esone 1 non codificante",
+          "Bassa"
+        ],
+        [
+          "PCDH19",
+          "NM_001184880.2",
+          "5,8%",
+          "Esone 1, porzione 5'",
+          "Media: da valutare se negativa la WES"
+        ],
+        [
+          "SCN8A",
+          "NM_014191.4",
+          "5,1%",
+          "Esone 5N alternativo",
+          "Bassa"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Filtraggio applicato: frequenza allelica in gnomAD v4.1 inferiore a 0,01% per il modello dominante e a 1% per il recessivo; esclusione delle varianti presenti in omozigosi nella popolazione generale; priorità con Exomiser sulla base dei termini HPO forniti dal clinico. Varianti analizzate dopo filtraggio: 37 (de novo candidate: 2; recessive: 9; X-linked: 0; altre: 26). La lista completa è archiviata nel sistema informativo di laboratorio e può essere fornita su richiesta motivata del medico curante.",
+      "size": 7.5
+    },
+    {
+      "type": "heading",
+      "text": "Registro delle attività"
+    },
+    {
+      "type": "table",
+      "font_size": 7,
+      "header": [
+        "Data",
+        "Attività",
+        "Operatore"
+      ],
+      "widths": [
+        2,
+        6,
+        4
+      ],
+      "rows": [
+        [
+          "[[DATA:15/01/2025]]",
+          "Estrazione DNA del trio e controllo qualità",
+          "TSLB [[OPERATORE_SANITARIO:Marta Cattaneo]]"
+        ],
+        [
+          "[[DATA:04/02/2025]]",
+          "Preparazione librerie e sequenziamento (run NV-0251)",
+          "TSLB [[OPERATORE_SANITARIO:Giorgia Fumagalli]]"
+        ],
+        [
+          "[[DATA:21/02/2025]]",
+          "Analisi bioinformatica e filtraggio",
+          "Dott. [[OPERATORE_SANITARIO:Kevin Okafor]]"
+        ],
+        [
+          "[[DATA:18/03/2025]]",
+          "Conferma Sanger nel trio",
+          "TSLB [[OPERATORE_SANITARIO:M. Cattaneo]]"
+        ],
+        [
+          "[[DATA_REFERTO:28/03/2025]]",
+          "Revisione e firma del referto",
+          "Dott.ssa [[MEDICO:C. Invernizzi]]"
+        ]
+      ]
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "COPIA CONFORME PER IL PLS",
+        "Dott.ssa [[MEDICO:L. Brambilla Nava]]",
+        "ricevuto il [[DATA:07/04/2025]]"
+      ],
+      "angle": 8,
+      "align": "left"
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Dravet",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Lennox-Gastaut",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Sanger",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "bianco",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "NOME"
+      ]
+    },
+    {
+      "value": "Washington",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1070 @@
+{
+  "id": "nota_ambulatoriale_media_01",
+  "type": "nota_ambulatoriale",
+  "difficulty": "media",
+  "pages": 2,
+  "entities": [
+    {
+      "value": "ASL Murgia Adriatica",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "footer"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Presidio Territoriale San Nicola Pellegrino",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Servizio di Diabetologia e Malattie Metaboliche",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Rocco Dimauro",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "signature"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Giulio Petroni 129",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "70124",
+      "category": "CAP",
+      "group": "residenza",
+      "family": "CAP",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Bari",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 4,
+      "locations": [
+        "letterhead",
+        "footer",
+        "patient_box",
+        "signature"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "080 5843317",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Lattarulo",
+      "category": "COGNOME",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Vito Antonio",
+      "category": "NOME",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "18/06/1941",
+      "category": "DATA_NASCITA",
+      "group": "anagrafica",
+      "family": "DATA",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "DIA-2009-01377",
+      "category": "NUMERO_CARTELLA",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_CARTELLA",
+      "mentions": 1,
+      "locations": [
+        "running_header"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "05463455070",
+      "category": "PARTITA_IVA",
+      "group": "identificativi",
+      "family": "PARTITA_IVA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Bari",
+      "category": "LUOGO_NASCITA",
+      "group": "anagrafica",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "LTTVNT41H18A662O",
+      "category": "CODICE_FISCALE",
+      "group": "identificativi",
+      "family": "CODICE_FISCALE",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Fanelli 214/B",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "013.250",
+      "category": "CODICE_ESENZIONE",
+      "group": "identificativi",
+      "family": "CODICE_ESENZIONE",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "+39 340 778 2165",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Annalisa Pepe",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "4 marzo 2025",
+      "category": "DATA_VISITA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "BA250304-1187",
+      "category": "NUMERO_PRENOTAZIONE",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_PRENOTAZIONE",
+      "mentions": 2,
+      "locations": [
+        "fields",
+        "barcode"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "160A51199027744",
+      "category": "NUMERO_RICETTA",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_RICETTA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Lattarulo",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "83",
+      "category": "ETA",
+      "group": "anagrafica",
+      "family": "ETA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Oksana Kovalenko",
+      "category": "CONTATTO_EMERGENZA",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Nicola Lattarulo",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "12.09.24",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Diabete mellito tipo 2",
+      "category": "PATOLOGIA",
+      "group": "sanitari",
+      "family": "PATOLOGIA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 1
+    },
+    {
+      "value": "Cardiopatia ischemica cronica",
+      "category": "PATOLOGIA",
+      "group": "sanitari",
+      "family": "PATOLOGIA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "PTCA con stent su IVA",
+      "category": "INTERVENTO",
+      "group": "sanitari",
+      "family": "INTERVENTO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Malattia renale cronica stadio 3b",
+      "category": "PATOLOGIA",
+      "group": "sanitari",
+      "family": "PATOLOGIA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ipertensione arteriosa",
+      "category": "PATOLOGIA",
+      "group": "sanitari",
+      "family": "PATOLOGIA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ipoglicemia notturna",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "lieve deterioramento della memoria recente",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Metformina 500 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Insulina glargine 100 UI/mL",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Acido acetilsalicilico 100 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Bisoprololo 2,5 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Atorvastatina 40 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "61",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "148",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "44",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "03-12-2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "58",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "131",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "41",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "20/02/2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "56",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "97",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "39",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "86 mg/g",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "138/72 mmHg",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "62 bpm",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "74,5 kg",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "168 cm",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "26,4",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "112 mg/dL",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "sensibilità assente in 3 punti su 10 a dx",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "2 punti su 10 a sx",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "0,82",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "0,88",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Diabete mellito tipo 2 in insulinoterapia con compenso accettabile",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ipoglicemie notturne",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Neuropatia periferica sensitiva",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "arteriopatia obliterante periferica lieve",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Nefropatia diabetica",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "insulina glargine",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "empagliflozin 10 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "metformina",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Maria Grazia Lorusso",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Kovalenko",
+      "category": "CONTATTO_EMERGENZA",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "09/09/2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "04/03/2025",
+      "category": "DATA_REFERTO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "signature"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Gabriella Fanizzi",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "signature",
+        "stamp"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    }
+  ],
+  "negatives": [],
+  "sha256": "444d53f62018c1ad5c2a24cd61c235fd2004f80553ec7e214a3048f06dd037ca"
+}

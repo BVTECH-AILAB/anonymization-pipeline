@@ -1,0 +1,1689 @@
+{
+  "id": "nota_ambulatoriale_complessa_03",
+  "type": "nota_ambulatoriale",
+  "difficulty": "complessa",
+  "pages": 3,
+  "entities": [
+    {
+      "value": "ASST Orobica Occidentale",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Presidio Ospedaliero Santa Grata",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "U.O.C. Gastroenterologia ed Endoscopia Digestiva",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Centro MICI",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 4,
+      "locations": [
+        "letterhead",
+        "footer",
+        "signature"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Alberto Sala",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Borgo Palazzo 205",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "24125",
+      "category": "CAP",
+      "group": "residenza",
+      "family": "CAP",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Bergamo",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 3,
+      "locations": [
+        "letterhead",
+        "patient_box",
+        "signature"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "035 4021877",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "035 4021890",
+      "category": "FAX",
+      "group": "contatti",
+      "family": "FAX",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "mici@asst-orobica.example.it",
+      "category": "EMAIL",
+      "group": "contatti",
+      "family": "EMAIL",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Dell'Orto Bianca",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "running_header"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "02/12/1995",
+      "category": "DATA_NASCITA",
+      "group": "anagrafica",
+      "family": "DATA",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "009.555",
+      "category": "CODICE_ESENZIONE",
+      "group": "identificativi",
+      "family": "CODICE_ESENZIONE",
+      "mentions": 1,
+      "locations": [
+        "running_header"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "MICI-BG-0417",
+      "category": "NUMERO_CARTELLA",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_CARTELLA",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "fields"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "37528193560",
+      "category": "PARTITA_IVA",
+      "group": "identificativi",
+      "family": "PARTITA_IVA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "protocollo@pec.asst-orobica.example.it",
+      "category": "PEC",
+      "group": "contatti",
+      "family": "PEC",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "M. Locatelli",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "CENTRO MICI",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 2,
+      "locations": [
+        "title",
+        "stamp"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "DELL'ORTO",
+      "category": "COGNOME",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "BIANCA",
+      "category": "NOME",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Bergamo",
+      "category": "LUOGO_NASCITA",
+      "group": "anagrafica",
+      "family": "LUOGO",
+      "mentions": 2,
+      "locations": [
+        "patient_box",
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via San Bernardino 71/C",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "24126",
+      "category": "CAP",
+      "group": "residenza",
+      "family": "CAP",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "+39 348 117 6620",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "educatrice di asilo nido",
+      "category": "PROFESSIONE",
+      "group": "anagrafica",
+      "family": "PROFESSIONE",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Roberto Carminati",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "DLLBNC95T42A794Z",
+      "category": "CODICE_FISCALE",
+      "group": "identificativi",
+      "family": "CODICE_FISCALE",
+      "mentions": 1,
+      "locations": [
+        "char_boxes"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "09/07/2025",
+      "category": "DATA_VISITA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "BG25-MICI-03318",
+      "category": "NUMERO_PRENOTAZIONE",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_PRENOTAZIONE",
+      "mentions": 2,
+      "locations": [
+        "fields",
+        "barcode"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "030A50661204795",
+      "category": "NUMERO_RICETTA",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_RICETTA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "80380010401107373075",
+      "category": "TESSERA_SANITARIA",
+      "group": "identificativi",
+      "family": "TESSERA_SANITARIA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Bianca Dell'Orto",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 3,
+      "locations": [
+        "paragraph",
+        "table"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "29",
+      "category": "ETA",
+      "group": "anagrafica",
+      "family": "ETA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "malattia di Crohn ileocolica",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ivana Rota",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "rettocolite ulcerosa",
+      "category": "PATOLOGIA",
+      "group": "sanitari",
+      "family": "PATOLOGIA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "variante NOD2 c.3019dupC (p.Leu1007fs) in eterozigosi",
+      "category": "DATO_GENETICO",
+      "group": "sanitari",
+      "family": "DATO_GENETICO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Pregressa gravidanza a termine nel 2021",
+      "category": "GRAVIDANZA",
+      "group": "sanitari",
+      "family": "GRAVIDANZA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "mesalazina",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "azatioprina",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "pancreatite acuta da farmaco",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "infliximab",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "adalimumab 40 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "marzo 2023",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Testimone di Geova",
+      "category": "RELIGIONE",
+      "group": "particolari",
+      "family": "RELIGIONE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "14/02/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "footnotes"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "51 kg",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "166 cm",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "18,5",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "105/65 mmHg",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "92 bpm",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "37,1 °C",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "non fistole né ascessi",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "12/03/2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "9 luglio 2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "4 punti",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "11 punti",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "11,9",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "9,4",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "31",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "7",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 2
+    },
+    {
+      "value": "6,8",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "38,5",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "3,9",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "3,2",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "240",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "1.180",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "2,3",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "assenti",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Seriate",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Marta Locatelli",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "24-06-2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "RM25-0088127",
+      "category": "ACCESSION_NUMBER",
+      "group": "identificativi_sanitari",
+      "family": "ACCESSION_NUMBER",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "01.07.25",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Matteo Pesenti",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Davide De Santis",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "resezione ileocecale laparoscopica",
+      "category": "INTERVENTO",
+      "group": "sanitari",
+      "family": "INTERVENTO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Chiara Lo Presti",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ferro carbossimaltosio 1000 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "epoetina alfa 40.000 UI",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "acido tranexamico",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Malattia di Crohn ileocolica in fase di attività moderata",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "stenosi fibro-infiammatoria dell'ileo terminale",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "perdita secondaria di risposta ad adalimumab",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "anemia sideropenica moderata",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "malnutrizione proteico-calorica lieve",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Budesonide 9 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Nutrizione enterale integrativa con formula polimerica",
+      "category": "TERAPIA",
+      "group": "sanitari",
+      "family": "TERAPIA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Giulia Mazzoleni",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "16/07/2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "resezione ileocecale",
+      "category": "INTERVENTO",
+      "group": "sanitari",
+      "family": "INTERVENTO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "10 settembre 2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ustekinumab",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "PT-LOM-25-118402",
+      "category": "NUMERO_RICETTA",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_RICETTA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Samuel Okafor",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 3,
+      "locations": [
+        "paragraph",
+        "table"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Okafor",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "09/07/2025",
+      "category": "DATA_REFERTO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "signature"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Elisa Nguyen",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 3,
+      "locations": [
+        "signature",
+        "paragraph",
+        "table"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "D. De Santis",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "signature"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "C. Lo Presti",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "signature"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "02.12.1995",
+      "category": "DATA_NASCITA",
+      "group": "anagrafica",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Lagos (Nigeria)",
+      "category": "LUOGO_NASCITA",
+      "group": "anagrafica",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "17/05/1990",
+      "category": "DATA_NASCITA",
+      "group": "anagrafica",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "+39 320 448 9031",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ASST OROBICA OCCIDENTALE",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "E. Nguyen",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "6104",
+      "category": "NUMERO_ALBO",
+      "group": "persone_correlate",
+      "family": "NUMERO_ALBO",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "MICI-25-0709-0417",
+      "category": "NUMERO_REFERTO",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_REFERTO",
+      "mentions": 1,
+      "locations": [
+        "barcode"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Dell'Orto B.",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "barcode"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "B. Dell'Orto",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Carminati",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Crohn",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Harvey-Bradshaw",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Montreal",
+      "forbidden_categories": [
+        "LUOGO",
+        "LUOGO_NASCITA",
+        "STATO"
+      ]
+    },
+    {
+      "value": "Blumberg",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Rutgeerts",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "sala endoscopica",
+      "forbidden_categories": [
+        "MEDICO",
+        "COGNOME",
+        "PERSONA"
+      ]
+    }
+  ],
+  "sha256": "31577d767f2de8f9414294f409582a01e7d659950db8c78651a8a5b9dce40f65"
+}

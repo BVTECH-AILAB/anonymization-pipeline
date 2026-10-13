@@ -1,0 +1,80 @@
+{
+  "id": "test_genetico_media_03",
+  "type": "test_genetico",
+  "difficulty": "media",
+  "style": {"font": "helvetica", "color": "#0277BD", "font_size": 9, "margins_mm": 14},
+  "persons": {
+    "paz": {"first_name": "Ciro", "last_name": "Iannaccone", "sex": "M", "birth_date": "2022-07-19", "birth_place": "Napoli"}
+  },
+  "letterhead": {
+    "logo": "OPP",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Pediatrico Partenope]]",
+      "Dipartimento di Pediatria Specialistica",
+      "[[REPARTO:U.O.S.D. Genetica Medica e Citogenetica]]",
+      "Responsabile: Prof.ssa [[MEDICO:Teresa Amitrano]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Salvator Rosa 290]]",
+      "[[CAP:80136]] [[LUOGO:Napoli]]",
+      "Centralino [[TELEFONO:081 7462100]]",
+      "Laboratorio [[TELEFONO:081 7462377]]"
+    ]
+  },
+  "running_header": "Paziente: [[PERSONA:Iannaccone Ciro]] - Nato il [[DATA_NASCITA:19/07/2022]] - Referto n. [[NUMERO_REFERTO:GEN/24/1406]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale Pediatrico Partenope]] - Laboratorio di Genetica Medica certificato EMQN per l'analisi SMN1",
+    "Documento contenente dati genetici relativi a minore: consegna riservata agli esercenti la responsabilità genitoriale."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI GENETICA MOLECOLARE", "subtitle": "Ricerca di delezioni dei geni SMN1 e SMN2 (atrofia muscolare spinale)"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome", "[[COGNOME:Iannaccone]]"],
+      ["Nome", "[[NOME:Ciro]]"],
+      ["Data di nascita", "[[DATA_NASCITA:19/07/2022]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Madre", "[[TUTORE_DELEGATO:Carmela Russo]]"],
+      ["Padre", "[[TUTORE_DELEGATO:Salvatore Iannaccone]]"],
+      ["Cartella clinica", "[[NUMERO_CARTELLA:2024/NP/03318]]"],
+      ["Reparto inviante", "[[REPARTO:U.O.C. Neuropsichiatria Infantile]]"]
+    ]},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "fields", "columns": 1, "fields": [
+        ["Medico richiedente", "Dott.ssa [[MEDICO:Annarita Coppola]]"],
+        ["Prelievo", "[[DATA_VISITA:24/09/2024]]"],
+        ["Materiale", "Sangue in EDTA, 3 mL"],
+        ["Refertazione", "[[DATA_REFERTO:2 ottobre 2024]]"]
+      ]}
+    ], "right": [
+      {"type": "barcode", "kind": "code128", "label": "DNA", "value": "[[CODICE_CAMPIONE:NP24-DNA-8812]]", "align": "center"}
+    ]},
+    {"type": "section", "text": "Indicazione clinica"},
+    {"type": "paragraph", "text": "Bambino di [[ETA:26 mesi]] con [[DIAGNOSI:ipotonia assiale]], [[DIAGNOSI:areflessia osteotendinea]] e mancata acquisizione della deambulazione autonoma; sta seduto senza supporto dall'età di 8 mesi. Fascicolazioni linguali. CK nella norma. All'esame obiettivo il piccolo [[PERSONA:Ciro]] utilizza la manovra di Gowers per rialzarsi da terra con appoggio. Il quadro è suggestivo di [[DIAGNOSI:atrofia muscolare spinale di tipo 2]]; da escludere le forme più gravi tipo Werdnig-Hoffmann per l'età di esordio."},
+    {"type": "section", "text": "Metodo"},
+    {"type": "paragraph", "text": "MLPA (kit SALSA P060-B2) per la determinazione del numero di copie degli esoni 7 e 8 dei geni SMN1 e SMN2; conferma della delezione dell'esone 7 di SMN1 mediante PCR real-time quantitativa. Analisi in duplicato con controlli normali, portatori e affetti."},
+    {"type": "section", "text": "Risultato"},
+    {"type": "table", "header": ["Gene", "Regione", "N. copie rilevato", "Valore atteso", "Interpretazione"], "widths": [1.4, 1.6, 2.2, 2, 4.2], "rows": [
+      ["SMN1", "Esone 7", "[[DATO_GENETICO:0 copie]]", "2", "[[DATO_GENETICO:Delezione omozigote]]"],
+      ["SMN1", "Esone 8", "[[DATO_GENETICO:0 copie]]", "2", "Delezione in omozigosi dell'intero gene"],
+      ["SMN2", "Esone 7", "[[DATO_GENETICO:3 copie]]", "1-3", "Gene modificatore: numero compatibile con fenotipo intermedio"]
+    ]},
+    {"type": "paragraph", "text": "**Conclusione:** il risultato conferma la diagnosi molecolare di [[DATO_GENETICO:atrofia muscolare spinale 5q con delezione omozigote di SMN1 e 3 copie di SMN2]]. Il paziente è candidabile a [[TERAPIA:terapia modificante la malattia]] ([[FARMACO:risdiplam]] o [[FARMACO:nusinersen]]) secondo i criteri AIFA; la valutazione è in corso presso il centro di riferimento neuromuscolare."},
+    {"type": "page_break"},
+    {"type": "section", "text": "Consulenza genetica e familiari"},
+    {"type": "paragraph", "text": "La malattia ha trasmissione autosomica recessiva. Entrambi i genitori, sig.ra [[TUTORE_DELEGATO:Carmela Russo]] e sig. [[TUTORE_DELEGATO:Salvatore Iannaccone]], sono presumibilmente portatori sani; si propone loro la determinazione del numero di copie di SMN1 (inclusa la ricerca della variante c.*3+80T>G associata ai portatori 2+0). La sorella maggiore, [[FAMILIARE:Sofia Iannaccone]] di 6 anni, è clinicamente indenne: il test sarà discusso con i genitori. Per ogni futura gravidanza della coppia il rischio di ricorrenza è del 25% ed è disponibile la diagnosi prenatale su villi coriali."},
+    {"type": "table", "header": ["Familiare", "Ruolo", "Test proposto", "Prelievo programmato"], "widths": [3.2, 2.6, 3.4, 2.8], "rows": [
+      ["[[TUTORE_DELEGATO:Carmela Russo]]", "Madre", "MLPA SMN1/SMN2 + c.*3+80T>G", "[[DATA:15.10.24]]"],
+      ["[[TUTORE_DELEGATO:Salvatore Iannaccone]]", "Padre", "MLPA SMN1/SMN2 + c.*3+80T>G", "[[DATA:15.10.24]]"],
+      ["[[FAMILIARE:Sofia Iannaccone]]", "Sorella", "Da valutare in consulenza", "-"]
+    ]},
+    {"type": "paragraph", "text": "Il referto è stato illustrato ai genitori nel corso del colloquio di consulenza del [[DATA:03/10/2024]], alla presenza della psicologa dell'u.o., dott.ssa [[OPERATORE_SANITARIO:Maria Grazia Cuomo]]. Copia trasmessa alla Dott.ssa [[MEDICO:Annarita Coppola]]."},
+    {"type": "note", "text": "La MLPA non distingue tra configurazione 2+0 e 1+1 nei portatori. Rare varianti puntiformi di SMN1 in eterozigosi composta (circa il 4% dei pazienti) non sono rilevabili con questa metodica."},
+    {"type": "signature", "place_date": "[[LUOGO:Napoli]], [[DATA_REFERTO:02/10/2024]]", "role": "Il Dirigente Biologo", "name": "Dott. [[MEDICO:Vincenzo Sorrentino]]", "digital": true},
+    {"type": "signature", "place_date": "Per la consulenza genetica", "role": "Il Responsabile U.O.S.D.", "name": "Prof.ssa [[MEDICO:Teresa Amitrano]]", "stamp": ["[[STRUTTURA_SANITARIA:OSP. PEDIATRICO PARTENOPE]]", "GENETICA MEDICA", "Prof.ssa [[MEDICO:T. Amitrano]]", "Ord. Medici NA n. [[NUMERO_ALBO:NA 27715]]"]}
+  ],
+  "negatives": [
+    {"value": "Werdnig-Hoffmann", "forbidden_categories": ["PERSONA", "MEDICO"]},
+    {"value": "Gowers", "forbidden_categories": ["PERSONA", "MEDICO"]}
+  ]
+}

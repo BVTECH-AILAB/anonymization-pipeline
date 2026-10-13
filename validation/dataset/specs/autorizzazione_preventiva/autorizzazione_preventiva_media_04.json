@@ -1,0 +1,275 @@
+{
+  "id": "autorizzazione_preventiva_media_04",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "media",
+  "style": {
+    "font": "helvetica",
+    "color": "#4E342E",
+    "font_size": 9,
+    "margins_mm": 15
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Efisio",
+      "last_name": "Pinna",
+      "sex": "M",
+      "birth_date": "1963-04-02",
+      "birth_place": "Cagliari"
+    }
+  },
+  "letterhead": {
+    "logo": "ACM",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASL del Campidano Meridionale]]",
+      "Area Socio-Sanitaria Locale - Direzione Sanitaria",
+      "[[REPARTO:Ufficio Mobilità Sanitaria Interregionale]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Is Mirrionis 92]]",
+      "[[CAP:09121]] [[LUOGO:Cagliari]]"
+    ]
+  },
+  "running_header": "Autorizzazione mobilità extraregionale n. [[NUMERO_PROTOCOLLO:MOB-25/1127]] - Sig. [[PERSONA:Efisio Pinna]]",
+  "footer": [
+    "Le spese di viaggio e soggiorno sono rimborsate solo per le prestazioni autorizzate prima della loro esecuzione (L.R. 26/1991).",
+    "Allegare: relazione clinica, preventivo del centro erogatore, documentazione delle spese in originale."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "AUTORIZZAZIONE PREVENTIVA - CURE FUORI REGIONE",
+      "subtitle": "Prestazioni di alta specialità non erogabili in ambito regionale - protonterapia"
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "Prot. n.",
+          "[[NUMERO_PROTOCOLLO:MOB-25/1127]]"
+        ],
+        [
+          "Trasmessa",
+          "via PEC dal reparto"
+        ],
+        [
+          "Priorità",
+          "B (entro 30 gg)"
+        ]
+      ]
+    },
+    {
+      "type": "barcode",
+      "kind": "code128",
+      "value": "[[NUMERO_PROTOCOLLO:MOB-25/1127]]",
+      "align": "right"
+    },
+    {
+      "type": "section",
+      "text": "1. Dati dell'assistito"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Cognome e nome",
+        "Nato a / il",
+        "Residenza",
+        "Telefono"
+      ],
+      "widths": [
+        2.6,
+        2.6,
+        3.8,
+        2.2
+      ],
+      "zebra": false,
+      "rows": [
+        [
+          "[[PERSONA:Efisio Pinna]]",
+          "[[LUOGO_NASCITA:Cagliari]], [[DATA_NASCITA:02/04/1963]]",
+          "[[INDIRIZZO:Via Garibaldi 211]], [[LUOGO:Quartu Sant'Elena]]",
+          "[[TELEFONO:+39 333 610 4758]]"
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "char_boxes",
+      "label": "Tessera sanitaria",
+      "value": "[[TESSERA_SANITARIA:@ts]]"
+    },
+    {
+      "type": "checkboxes",
+      "columns": 3,
+      "items": [
+        [
+          "Prima richiesta",
+          true
+        ],
+        [
+          "Prosecuzione di cure",
+          false
+        ],
+        [
+          "Controllo post-trattamento",
+          false
+        ],
+        [
+          "Con accompagnatore",
+          true
+        ],
+        [
+          "Ricovero",
+          false
+        ],
+        [
+          "Regime ambulatoriale",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "2. Prescrizione"
+    },
+    {
+      "type": "paragraph",
+      "text": "Prestazione richiesta: [[TERAPIA:protonterapia con tecnica a fascio modulato (IMPT)]], dose prescritta [[TERAPIA:74 Gy(RBE) in 37 frazioni]], 5 sedute a settimana per circa 8 settimane."
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Centro erogatore",
+          "[[STRUTTURA_SANITARIA:Centro Adroterapico Valle del Ticino]], [[LUOGO:Pavia]]"
+        ],
+        [
+          "Prima visita",
+          "[[DATA_VISITA:26 maggio 2025]] (cod. prenotazione [[NUMERO_PRENOTAZIONE:CAVT-25-08812]])"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "3. Motivazione clinica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il sig. [[PERSONA:Pinna]] è affetto da [[DIAGNOSI:cordoma del clivo]] con estensione al seno cavernoso sinistro, sottoposto a [[INTERVENTO:asportazione subtotale per via endoscopica endonasale]] in data [[DATA:11.03.25]] presso la [[REPARTO:Neurochirurgia]] dell'[[STRUTTURA_SANITARIA:Ospedale di Sant'Avendrace]] (operatore Dott. [[MEDICO:Gavino Sanna]]). La RM post-operatoria a un mese dall'intervento documenta [[DIAGNOSI:residuo di malattia di 18 mm]] in stretta prossimità del chiasma ottico e del tronco encefalico."
+    },
+    {
+      "type": "paragraph",
+      "text": "Il residuo, data la radioresistenza dell'istotipo e la vicinanza a strutture critiche, non è trattabile con radioterapia a fotoni alle dosi efficaci. La protonterapia non è disponibile nel territorio regionale. Performance status: Karnofsky [[ESAME_VALORE:90%]]. Nessuna controindicazione al trasferimento."
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Medico proponente",
+          "Dott.ssa [[MEDICO:Laura Cocco]], [[REPARTO:S.C. Radioterapia Oncologica]]"
+        ],
+        [
+          "Iscr. Ordine CA",
+          "n. [[NUMERO_ALBO:6230]]"
+        ]
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Cagliari]], [[DATA_PRESCRIZIONE:6 maggio 2025]]",
+      "role": "Il medico specialista proponente",
+      "name": "Dott.ssa [[MEDICO:Laura Cocco]]",
+      "digital": false,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:Ospedale di Sant'Avendrace]]",
+        "[[REPARTO:S.C. Radioterapia Oncologica]]",
+        "Dott.ssa [[MEDICO:Laura Cocco]]"
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Accompagnatore e rimborso spese"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Accompagnatore",
+        "Rapporto",
+        "Documento",
+        "Periodo"
+      ],
+      "widths": [
+        3,
+        2,
+        3,
+        3
+      ],
+      "rows": [
+        [
+          "[[FAMILIARE:Giovanna Melis]]",
+          "coniuge",
+          "C.I. [[NUMERO_CARTA_IDENTITA:CA48213PL]]",
+          "intero ciclo di cure"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Accredito del rimborso sul conto intestato all'assistito, IBAN [[IBAN:@paz]]. La moglie, sig.ra [[FAMILIARE:Melis]], è autorizzata a presentare la documentazione delle spese per conto del marito."
+    },
+    {
+      "type": "section",
+      "text": "4. Parere della commissione"
+    },
+    {
+      "type": "checkboxes",
+      "columns": 3,
+      "items": [
+        [
+          "Autorizzata",
+          true
+        ],
+        [
+          "Non autorizzata",
+          false
+        ],
+        [
+          "Rinviata",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Vista la relazione del medico proponente e il parere favorevole del Centro di riferimento regionale, la Commissione autorizza il trattamento presso il centro indicato, con accompagnatore e rimborso delle spese di viaggio e soggiorno nei limiti regionali."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Cagliari]], [[DATA:14-05-2025]]",
+      "role": "Il Direttore Sanitario",
+      "name": "Dott. [[MEDICO:Salvatore Mura]]",
+      "digital": false,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:ASL del Campidano Meridionale]]",
+        "DIREZIONE SANITARIA",
+        "MOBILITÀ SANITARIA"
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Karnofsky",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    }
+  ]
+}

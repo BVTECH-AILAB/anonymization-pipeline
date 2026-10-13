@@ -1,0 +1,493 @@
+{
+  "id": "referto_radiologico_complessa_04",
+  "type": "referto_radiologico",
+  "difficulty": "complessa",
+  "style": {
+    "font": "helvetica",
+    "color": "#A3361F",
+    "font_size": 7.6,
+    "margins_mm": 11
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Serena",
+      "last_name": "Mura",
+      "sex": "F",
+      "birth_date": "1999-07-30",
+      "birth_place": "Sassari"
+    }
+  },
+  "letterhead": {
+    "logo": "AOLT",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Logudoro e Turritano]]",
+      "[[STRUTTURA_SANITARIA:Ospedale Santissima Annunziata del Monte]] - Trauma Center",
+      "[[REPARTO:SC Radiologia d'Urgenza e Interventistica]]",
+      "Direttore: Dott. [[MEDICO:Antonio Giuseppe Pintus]]",
+      "Guardia radiologica attiva H24 - DEA di II livello"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Italia 290]]",
+      "[[CAP:07100]] [[LUOGO:Sassari]]",
+      "Radiologia PS: [[TELEFONO:079 2618450]]",
+      "Angiografia: [[TELEFONO:079 2618466]]",
+      "Fax [[FAX:079 2618499]]",
+      "[[EMAIL:radiologia.urgenza@aolt.example.it]]"
+    ]
+  },
+  "running_header": "TC POLITRAUMA - [[COGNOME:MURA]] [[NOME:SERENA]] ([[DATA_NASCITA:30/07/1999]]) - Acc. PS [[NUMERO_ACCETTAZIONE:PS-2026-0458812]] - [[ACCESSION_NUMBER:TCWB-26-0118450]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Logudoro e Turritano]] - [[INDIRIZZO:Viale Italia 290]], [[CAP:07100]] [[LUOGO:Sassari]] - P.IVA [[PARTITA_IVA:@aolt]] - PEC [[PEC:protocollo@pec.aolt.example.it]]",
+    "Referto n. [[NUMERO_REFERTO:RU-26-0231187]] - Paziente [[PERSONA:Mura S.]] - Ricovero n. [[NUMERO_CARTELLA:2026/014773]]",
+    "Documento riservato contenente dati sanitari e dati relativi alle convinzioni religiose dell'interessata (art. 9 Reg. UE 2016/679)."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "REFERTO TC POLITRAUMA (TRAUMA TOTAL BODY)",
+      "subtitle": "TC encefalo e rachide cervicale senza mdc, TC torace-addome-pelvi con mdc trifasica, TC encefalo di controllo, angiografia con embolizzazione"
+    },
+    {
+      "type": "patient_box",
+      "title": "PAZIENTE (identificata in PS alle ore 23:05, già registrata come IGNOTA)",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome",
+          "[[COGNOME:MURA]]"
+        ],
+        [
+          "Nome",
+          "[[NOME:SERENA]]"
+        ],
+        [
+          "Nata a / il",
+          "[[LUOGO_NASCITA:Sassari]] - [[DATA_NASCITA:30/07/1999]]"
+        ],
+        [
+          "Età",
+          "[[ETA:27]] anni"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Gramsci 48]], [[CAP:07041]] [[LUOGO:Alghero]]"
+        ],
+        [
+          "Telefono",
+          "[[TELEFONO:+39 340 6128843]]"
+        ],
+        [
+          "ID provvisorio PS",
+          "[[ID_PAZIENTE:PS-IGN-0412]]"
+        ],
+        [
+          "ID anagrafico",
+          "[[ID_PAZIENTE:AOLT-00918266]]"
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Accettazione PS",
+              "[[NUMERO_ACCETTAZIONE:PS-2026-0458812]]"
+            ],
+            [
+              "Scheda 118",
+              "[[NUMERO_PROTOCOLLO:SS118-26-77104]]"
+            ],
+            [
+              "Data/ora evento",
+              "[[DATA:27/09/2026]] ore 22:40 circa"
+            ],
+            [
+              "Ingresso shock room",
+              "[[DATA_VISITA:27/09/2026]] ore 23:02"
+            ],
+            [
+              "Richiedente",
+              "Dott.ssa [[MEDICO:Maria Grazia Atzeni]] (trauma leader)"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "value": "[[ACCESSION_NUMBER:TCWB-26-0118450]]",
+          "label": "TC total body",
+          "align": "left"
+        },
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "value": "[[ACCESSION_NUMBER:TCE-26-0118457]]",
+          "label": "TC encefalo controllo",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "C.F.",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "section",
+      "text": "DATI CLINICI (TRAUMA TEAM)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Trauma maggiore: [[DIAGNOSI:incidente stradale ad alta energia]], passeggera di motociclo, sbalzata a distanza dopo urto con autovettura, casco integrale indossato. Trasportata dal 118 (MSA) con collare e tavola spinale. All'arrivo: Glasgow Coma Scale [[ESAME_VALORE:13]] (E3 V4 M6), [[MISURE_ANTROPOMETRICHE:PA 86/52 mmHg]], FC [[ESAME_VALORE:124]] bpm, SpO2 [[ESAME_VALORE:93%]] in O2. eFAST eseguita dal Dott. [[MEDICO:Paolo Lai]] in shock room: [[DIAGNOSI:versamento nello spazio di Morison e periplenico]]; sliding pleurico ridotto a sinistra. Emoglobina [[ESAME_VALORE:8,9]] g/dL, lattati [[ESAME_VALORE:4,7]] mmol/L, [[GRAVIDANZA:beta-hCG sierica negativa]]. Etanolemia [[ESAME_VALORE:0,38]] g/L; screening tossicologico urinario positivo per cannabinoidi; il compagno riferisce [[DIPENDENZE:uso abituale di cannabinoidi]]."
+    },
+    {
+      "type": "note",
+      "text": "IMPORTANTE - La paziente, [[RELIGIONE:Testimone di Geova]], porta con sé disposizioni anticipate di trattamento (DAT) del [[DATA:12/01/2025]] con [[RELIGIONE:rifiuto di emotrasfusione di sangue intero ed emocomponenti]], confermato verbalmente in shock room alla presenza della Dott.ssa [[MEDICO:Atzeni]] e del compagno sig. [[CONTATTO_EMERGENZA:Matteo Solinas]]. Accetta l'uso di cell-salvage e di [[FARMACO:acido tranexamico]]. Per tale motivo il trauma team ha privilegiato il trattamento angiografico non operatorio. Allergie: [[ALLERGIA:FANS (orticaria da ketorolac)]]; non note reazioni a mezzi di contrasto."
+    },
+    {
+      "type": "section",
+      "text": "TECNICA E MEZZO DI CONTRASTO"
+    },
+    {
+      "type": "paragraph",
+      "text": "TC multistrato 256 strati, protocollo politrauma aziendale. Encefalo e rachide cervicale senza mdc; torace-addome-pelvi in fase arteriosa (bolus tracking), portale a 70 s e tardiva escretoria a 5 min, con braccia sollevate per la sola acquisizione toraco-addominale. Mdc: [[FARMACO:iopamidolo 370 mgI/mL]], [[ESAME_VALORE:110]] mL a 4 mL/s da accesso venoso 18G in v. antecubitale destra posizionato dall'inf. [[OPERATORE_SANITARIO:Ignazio Floris]]. TSRM: [[OPERATORE_SANITARIO:Fabrizio Usai]], [[OPERATORE_SANITARIO:Roberta Sanna]]. Acquisizione con supporto dell'anestesista Dott. [[MEDICO:Giovanni Melis]]."
+    },
+    {
+      "type": "paragraph",
+      "text": "**Confronto:** RX torace e bacino in shock room del [[DATA:27.09.26]] (acc. [[ACCESSION_NUMBER:RXS-26-0118441]]) ed eFAST. Precedente TC addome con mdc del [[DATA:16 aprile 2022]] eseguita presso il [[STRUTTURA_SANITARIA:Poliambulatorio Nurra Diagnostica]] di [[LUOGO:Alghero]] per [[PATOLOGIA:colica renale destra]], visionata su PACS regionale: reperto di [[DIAGNOSI:milza accessoria di 9 mm]] all'ilo splenico."
+    },
+    {
+      "type": "section",
+      "text": "REPERTI"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Encefalo e rachide cervicale"
+        },
+        {
+          "type": "paragraph",
+          "text": "[[DIAGNOSI:Focolaio lacero-contusivo frontale basale destro]] di [[ESAME_VALORE:7 x 5]] mm. [[DIAGNOSI:Sottile falda di ematoma subdurale fronto-parietale destro]], spessore massimo [[ESAME_VALORE:3,5]] mm, senza effetto massa; linea mediana in asse. Non fratture della volta e della base cranica. Rachide cervicale: allineamento conservato, non fratture; spazi prevertebrali nei limiti."
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Torace"
+        },
+        {
+          "type": "paragraph",
+          "text": "[[DIAGNOSI:Fratture costali scomposte dal IV al VII arco sinistro]] sulla linea ascellare media, con [[DIAGNOSI:volet costale]] tra V e VII costa. [[DIAGNOSI:Pneumotorace sinistro]] anteriore di [[ESAME_VALORE:14,5]] mm; [[DIAGNOSI:contusione polmonare del lobo inferiore sinistro]]. Non pneumomediastino. Aorta toracica regolare, senza segni di lesione intimale. Non versamento pericardico."
+        }
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Addome e pelvi"
+        },
+        {
+          "type": "paragraph",
+          "text": "**[[DIAGNOSI:Lacerazione splenica multipla con interessamento dell'ilo]]**, con [[DIAGNOSI:stravaso attivo di mdc in fase arteriosa]] che aumenta in fase portale (polo inferiore). [[DIAGNOSI:Emoperitoneo moderato]] periepatico, perisplenico, nella tasca di Morison e nel cavo del Douglas (densità [[ESAME_VALORE:52]] UH). [[DIAGNOSI:Lacerazione epatica del VI segmento]] di [[ESAME_VALORE:24,5]] mm di profondità, senza stravaso. Reni con regolare escrezione in fase tardiva, non lesioni delle vie escretrici. Pancreas, surreni e anse intestinali senza segni di lesione; non aria libera."
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Scheletro assile e bacino"
+        },
+        {
+          "type": "paragraph",
+          "text": "[[DIAGNOSI:Frattura da compressione del soma di L1]] con riduzione dell'altezza anteriore del [[ESAME_VALORE:22%]], muro posteriore integro (tipo A1 secondo AO Spine; colonna anteriore secondo Denis). [[DIAGNOSI:Frattura composta della branca ileo-pubica destra]], anello pelvico stabile (Tile A2). Articolazioni sacro-iliache congruenti."
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "caption": "Riepilogo lesioni e grading (inserito nel registro traumi dal TSRM [[OPERATORE_SANITARIO:F. Usai]])",
+      "header": [
+        "Distretto",
+        "Lesione",
+        "Classificazione",
+        "Gestione proposta"
+      ],
+      "widths": [
+        1.2,
+        3.2,
+        1.8,
+        2.4
+      ],
+      "font_size": 7,
+      "rows": [
+        [
+          "Milza",
+          "lacerazione con coinvolgimento ilare e stravaso attivo",
+          "[[ESAME_VALORE:AAST grado IV]]",
+          "angioembolizzazione urgente"
+        ],
+        [
+          "Fegato",
+          "lacerazione VI segmento, profondità [[ESAME_VALORE:24,5]] mm",
+          "[[ESAME_VALORE:AAST grado II]]",
+          "trattamento conservativo"
+        ],
+        [
+          "Torace sx",
+          "fratture IV-VII costa, volet, PNX anteriore",
+          "-",
+          "drenaggio pleurico\n(chirurgia toracica)"
+        ],
+        [
+          "Encefalo",
+          "contusione frontale dx, ESD sottile",
+          "[[ESAME_VALORE:Marshall II]]",
+          "TC di controllo a 6 ore"
+        ],
+        [
+          "Rachide",
+          "frattura L1 da compressione",
+          "AO Spine A1",
+          "corsetto, consulenza ortopedica"
+        ],
+        [
+          "Bacino",
+          "frattura branca ileo-pubica dx",
+          "Tile A2",
+          "trattamento conservativo"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "CONCLUSIONI PRELIMINARI (comunicate al trauma leader alle ore 23:31)"
+    },
+    {
+      "type": "paragraph",
+      "text": "**[[DIAGNOSI:Politrauma]] con [[DIAGNOSI:lesione splenica AAST IV con sanguinamento attivo]] ed emoperitoneo moderato, in paziente emodinamicamente instabile che rifiuta le emotrasfusioni: indicazione ad angioembolizzazione splenica in urgenza. Associati pneumotorace sinistro con [[DIAGNOSI:volet costale]], contusione cerebrale frontale e falda subdurale destra senza effetto massa, frattura L1 stabile, frattura della branca ileo-pubica destra.** Discusso direttamente con la Dott.ssa [[MEDICO:M. G. Atzeni]], il chirurgo d'urgenza Dott. [[MEDICO:Lai]] e il radiologo interventista di reperibilità Dott. [[MEDICO:Nicola Porcu]]."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Sassari]], [[DATA_REFERTO:27/09/2026]] ore 23:44",
+      "role": "Il Medico Radiologo di guardia (referto preliminare)",
+      "name": "Dott. [[MEDICO:Efisio Cossu]]",
+      "digital": true
+    },
+    {
+      "type": "section",
+      "text": "ADDENDUM 1 - ANGIOGRAFIA ED EMBOLIZZAZIONE SPLENICA"
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "Acc. angiografia",
+          "[[ACCESSION_NUMBER:ANG-26-0118466]]"
+        ],
+        [
+          "Inizio procedura",
+          "[[DATA_VISITA:28/09/2026]] ore 00:12"
+        ],
+        [
+          "Operatore",
+          "Dott. [[MEDICO:Nicola Porcu]]"
+        ],
+        [
+          "Secondo operatore",
+          "dott.ssa [[OPERATORE_SANITARIO:Irene Fadda]] (specializzanda)"
+        ],
+        [
+          "Infermiere di sala",
+          "[[OPERATORE_SANITARIO:Gavino Tola]]"
+        ],
+        [
+          "Anestesista",
+          "Dott. [[MEDICO:G. Melis]]"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Accesso femorale comune destro ecoguidato, introduttore 5F. Arteriografia selettiva del tripode celiaco e dell'arteria splenica: conferma di [[DIAGNOSI:stravaso attivo da ramo polare inferiore]] e [[DIAGNOSI:pseudoaneurisma di 6 mm]] in sede ilare. Eseguita [[INTERVENTO:embolizzazione superselettiva del ramo polare inferiore con microspirali]] e [[INTERVENTO:embolizzazione prossimale dell'arteria splenica con plug vascolare 8 mm]]. Controllo finale: assenza di stravaso, perfusione splenica residua da collaterali pancreatici. Emostasi con dispositivo di chiusura percutanea. Fluoroscopia [[ESAME_VALORE:11,2]] min, PKA [[ESAME_VALORE:48,7]] Gy·cm². Rientro in Terapia Intensiva alle ore 01:20."
+    },
+    {
+      "type": "section",
+      "text": "ADDENDUM 2 - TC ENCEFALO DI CONTROLLO (CONFRONTO CON TC DEL [[DATA:27/09/2026]])"
+    },
+    {
+      "type": "paragraph",
+      "text": "Esame del [[DATA_VISITA:28.09.2026]] ore 05:40 (acc. [[ACCESSION_NUMBER:TCE-26-0118457]]), eseguito su richiesta del Dott. [[MEDICO:Davide Piredda]] ([[REPARTO:SC Anestesia e Rianimazione - Terapia Intensiva Generale]]). Rispetto all'esame d'ingresso: [[DIAGNOSI:focolaio contusivo frontale basale destro sostanzialmente invariato]] ([[ESAME_VALORE:8 x 5]] mm), con iniziale alone edematoso; falda subdurale invariata ([[ESAME_VALORE:3,6]] mm). Non nuove raccolte ematiche. Non idrocefalo. **Quadro stabile.**"
+    },
+    {
+      "type": "section",
+      "text": "INFORMAZIONI DOSIMETRICHE (D.Lgs. 101/2020)"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Acquisizione",
+        "Accession",
+        "CTDIvol (mGy)",
+        "DLP (mGy·cm)"
+      ],
+      "widths": [
+        3,
+        2,
+        1.4,
+        1.4
+      ],
+      "font_size": 7,
+      "rows": [
+        [
+          "Encefalo + rachide cervicale",
+          "[[ACCESSION_NUMBER:TCWB-26-0118450]]",
+          "[[ESAME_VALORE:52,4]]",
+          "[[ESAME_VALORE:1186]]"
+        ],
+        [
+          "Torace-addome-pelvi (3 fasi)",
+          "[[ACCESSION_NUMBER:TCWB-26-0118450]]",
+          "[[ESAME_VALORE:9,8]]",
+          "[[ESAME_VALORE:2276]]"
+        ],
+        [
+          "Encefalo di controllo",
+          "[[ACCESSION_NUMBER:TCE-26-0118457]]",
+          "[[ESAME_VALORE:50,9]]",
+          "[[ESAME_VALORE:871]]"
+        ],
+        [
+          "Totale TC",
+          "-",
+          "-",
+          "[[ESAME_VALORE:4333]]"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "size": 7,
+      "text": "Dose efficace complessiva stimata (TC) [[ESAME_VALORE:19,6]] mSv; angiografia: v. addendum 1. [[GRAVIDANZA:Gravidanza esclusa]] prima dell'esposizione (beta-hCG del [[DATA:27/09/2026]] ore 23:09)."
+    },
+    {
+      "type": "section",
+      "text": "REFERTO DEFINITIVO"
+    },
+    {
+      "type": "paragraph",
+      "text": "Si conferma il referto preliminare del Dott. [[MEDICO:E. Cossu]], integrato con gli addenda. Esito della procedura: [[DIAGNOSI:emostasi splenica efficace]] con conservazione parziale del parenchima. Il caso è stato discusso al trauma meeting del [[DATA:28 settembre 2026]]. La madre della paziente, sig.ra [[FAMILIARE:Giovanna Pinna]], informata dai sanitari della Terapia Intensiva con il consenso della sig.ra [[PERSONA:Mura]]; il compagno [[CONTATTO_EMERGENZA:M. Solinas]] è indicato come persona di riferimento (tel. [[TELEFONO:347 5509261]]). La paziente, [[PROFESSIONE:cameriera]] presso [[DATORE_LAVORO:Hotel Baia di Porto Conte S.r.l.]], ha chiesto che non siano fornite informazioni al datore di lavoro."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Sassari]], [[DATA_REFERTO:28/09/2026]]",
+      "role": "Il Dirigente Medico Radiologo (validazione)",
+      "name": "Dott.ssa [[MEDICO:Bianca Deiana]]",
+      "extra": [
+        "Referto preliminare: Dott. [[MEDICO:Efisio Cossu]] - Angiografia: Dott. [[MEDICO:Nicola Porcu]]"
+      ],
+      "digital": true,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:A.O. LOGUDORO E TURRITANO]]",
+        "RADIOLOGIA D'URGENZA",
+        "Dott.ssa [[MEDICO:BIANCA DEIANA]]",
+        "OMCeO SS n. [[NUMERO_ALBO:5127]]"
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "stamp",
+          "lines": [
+            "RADIOLOGIA INTERVENTISTICA",
+            "Dott. [[MEDICO:NICOLA PORCU]]",
+            "Ord. Med. SS n. [[NUMERO_ALBO:4682]]"
+          ],
+          "angle": -9,
+          "align": "center"
+        }
+      ],
+      "right": [
+        {
+          "type": "barcode",
+          "kind": "qr",
+          "value": "https://pacs.aolt.example.it/viewer?acc=[[ACCESSION_NUMBER:TCWB-26-0118450]]",
+          "label": "Immagini di [[PERSONA:MURA SERENA]]",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Classificazioni: AAST Organ Injury Scale (revisione 2018) per milza e fegato; Marshall per la TC encefalo; AO Spine e Denis per il rachide; Tile per l'anello pelvico. Glasgow Coma Scale all'ingresso rilevata dal 118 e confermata in shock room.",
+        "Referto preliminare trasmesso alle ore 23:46 alla [[REPARTO:SC Chirurgia d'Urgenza e del Trauma]] e alla Terapia Intensiva; telefonata di conferma ricevuta dall'inf. [[OPERATORE_SANITARIO:Lucia Manca]].",
+        "Le DAT della paziente sono depositate presso il Comune di [[LUOGO:Alghero]]; fiduciario indicato: il fratello, sig. [[TUTORE_DELEGATO:Andrea Mura]]. Copia acquisita in cartella clinica n. [[NUMERO_CARTELLA:2026/014773]]."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Morison",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Douglas",
+      "forbidden_categories": [
+        "PERSONA",
+        "NOME"
+      ]
+    },
+    {
+      "value": "Glasgow",
+      "forbidden_categories": [
+        "LUOGO"
+      ]
+    },
+    {
+      "value": "Denis",
+      "forbidden_categories": [
+        "PERSONA",
+        "NOME"
+      ]
+    },
+    {
+      "value": "Tile",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Marshall",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "AAST",
+      "forbidden_categories": [
+        "ORGANIZZAZIONE"
+      ]
+    }
+  ]
+}

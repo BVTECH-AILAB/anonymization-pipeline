@@ -1,0 +1,1581 @@
+{
+  "id": "referto_esterno_complessa_02",
+  "type": "referto_esterno",
+  "difficulty": "complessa",
+  "pages": 3,
+  "entities": [
+    {
+      "value": "Azienda Sanitaria Locale Jonica Sud",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ospedale Civile Madonna delle Gravine",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "U.O.C. Malattie Infettive e Tropicali",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Mariangela Lo Russo",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "signature"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Mar Piccolo 140",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "74121",
+      "category": "CAP",
+      "group": "residenza",
+      "family": "CAP",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Taranto",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 4,
+      "locations": [
+        "letterhead",
+        "footer",
+        "patient_box",
+        "signature"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "099 4581722",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "099 4581730",
+      "category": "FAX",
+      "group": "contatti",
+      "family": "FAX",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "dh.infettivi@asljonicasud.example.it",
+      "category": "EMAIL",
+      "group": "contatti",
+      "family": "EMAIL",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "OKAFOR C.",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "running_header"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "STP1601130004517",
+      "category": "CODICE_STP_ENI",
+      "group": "identificativi",
+      "family": "CODICE_STP_ENI",
+      "mentions": 3,
+      "locations": [
+        "running_header",
+        "fields",
+        "char_boxes"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "DH-MI-2024-0911",
+      "category": "NUMERO_ACCETTAZIONE",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_ACCETTAZIONE",
+      "mentions": 1,
+      "locations": [
+        "running_header"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ASL Jonica Sud",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Viale Virgilio 31",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "27026754294",
+      "category": "PARTITA_IVA",
+      "group": "identificativi",
+      "family": "PARTITA_IVA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "N. Adeyemi",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Okafor",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "footer",
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ambulatorio STP",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 3,
+      "locations": [
+        "address",
+        "table",
+        "footnotes"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Centro Salute Globale Ghirlandina",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 2,
+      "locations": [
+        "address",
+        "table"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Emilia Est 455",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "address"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "41122",
+      "category": "CAP",
+      "group": "residenza",
+      "family": "CAP",
+      "mentions": 1,
+      "locations": [
+        "address"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Modena",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 4,
+      "locations": [
+        "address",
+        "paragraph",
+        "footnotes"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Stefano Guidetti Serra",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "address"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Okafor Chukwuemeka",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Emeka",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Enugu (Nigeria)",
+      "category": "LUOGO_NASCITA",
+      "group": "anagrafica",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "14/02/1994",
+      "category": "DATA_NASCITA",
+      "group": "anagrafica",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "nigeriana",
+      "category": "CITTADINANZA",
+      "group": "anagrafica",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "M",
+      "category": "SESSO",
+      "group": "anagrafica",
+      "family": "SESSO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "CAS Il Ponte",
+      "category": "ORGANIZZAZIONE",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via per Statte km 3",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "02/05/2024",
+      "category": "DATA_RILASCIO",
+      "group": "documenti",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "01/11/2024",
+      "category": "DATA_SCADENZA",
+      "group": "documenti",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "A09817264",
+      "category": "NUMERO_PASSAPORTO",
+      "group": "documenti",
+      "family": "NUMERO_PASSAPORTO",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "MI/24/0911",
+      "category": "NUMERO_CARTELLA",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_CARTELLA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "+39 351 708 2264",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Chukwuemeka Okafor",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "30",
+      "category": "ETA",
+      "group": "anagrafica",
+      "family": "ETA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Vito Semeraro",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "calo ponderale di circa 7 kg",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "linfoadenopatia laterocervicale",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "febbricola serotina",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "21/05/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ngozi Adeyemi",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "footnotes"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Rosaria Cassano",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "eterosessuali",
+      "category": "ORIENTAMENTO_SESSUALE",
+      "group": "particolari",
+      "family": "ORIENTAMENTO_SESSUALE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "reattivo",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "positivo HIV-1",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "28/05/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 3,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "212 cell/µL",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "14,8%",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "0,21",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "184.000 copie/mL",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "positivo",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 3,
+      "locations": [
+        "table",
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "3.400 UI/mL",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "negativo",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 2,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "6,1 kPa",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "04/06/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 3,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "negativo per lesioni attive",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "positivo / 1:16",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "61 kg",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "178 cm",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Infezione da HIV-1, stadio CDC B2",
+      "category": "MALATTIE_INFETTIVE",
+      "group": "sanitari",
+      "family": "MALATTIE_INFETTIVE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "candidosi orofaringea",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Epatite cronica B HBeAg-negativa",
+      "category": "MALATTIE_INFETTIVE",
+      "group": "sanitari",
+      "family": "MALATTIE_INFETTIVE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Infezione tubercolare latente",
+      "category": "MALATTIE_INFETTIVE",
+      "group": "sanitari",
+      "family": "MALATTIE_INFETTIVE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Sifilide latente di durata indeterminata",
+      "category": "MALATTIE_INFETTIVE",
+      "group": "sanitari",
+      "family": "MALATTIE_INFETTIVE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 1
+    },
+    {
+      "value": "Bictegravir/emtricitabina/tenofovir alafenamide 50/200/25 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "11/06/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 2,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Isoniazide 300 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "piridossina 25 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "25/06/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Fluconazolo 150 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Benzatina benzilpenicillina 2,4 MUI i.m.",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "12/06/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Cosimo Petraroli",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "10 settembre 2024",
+      "category": "DATA_VISITA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "62 copie/mL",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "318 cell/µL",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ikenna Okafor",
+      "category": "CONTATTO_EMERGENZA",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Canaletto Sud 71",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "+39 329 551 0846",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Anna Maria Leone",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "TA-2024-PI-00871",
+      "category": "NUMERO_PERMESSO_SOGGIORNO",
+      "group": "documenti",
+      "family": "NUMERO_PERMESSO_SOGGIORNO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Blessing Eze",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Castel Volturno",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "08/10/2024",
+      "category": "DATA_VISITA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "MO-STP-24-3317",
+      "category": "NUMERO_PRENOTAZIONE",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_PRENOTAZIONE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ottobre 2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "dicembre 2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "marzo 2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "15/11/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Federica Nardelli",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "signature"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "099 4581745",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "f.nardelli@asljonicasud.example.it",
+      "category": "EMAIL",
+      "group": "contatti",
+      "family": "EMAIL",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "MI-24-0911-OK",
+      "category": "ID_PAZIENTE",
+      "group": "identificativi_sanitari",
+      "family": "ID_PAZIENTE",
+      "mentions": 1,
+      "locations": [
+        "barcode"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "12.09.2024",
+      "category": "DATA_REFERTO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "signature"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "U.O.C. MALATTIE INFETTIVE",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "F. NARDELLI",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "3318",
+      "category": "NUMERO_ALBO",
+      "group": "persone_correlate",
+      "family": "NUMERO_ALBO",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "OSPEDALE CIVILE MADONNA DELLE GRAVINE",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "M. LO RUSSO",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "TA-002147",
+      "category": "NUMERO_ALBO",
+      "group": "persone_correlate",
+      "family": "NUMERO_ALBO",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "C. Okafor",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "12/09/2024",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "VIR-24-118802",
+      "category": "CODICE_CAMPIONE",
+      "group": "identificativi_sanitari",
+      "family": "CODICE_CAMPIONE",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Kaposi",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Mantoux",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Ziehl-Neelsen",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Western Blot",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    }
+  ],
+  "sha256": "944dabebf8dda76eb750a6db032d0aabc66f200b0fdf8d63c59adbae8a6fd74e"
+}

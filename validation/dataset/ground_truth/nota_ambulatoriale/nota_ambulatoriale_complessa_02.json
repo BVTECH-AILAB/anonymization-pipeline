@@ -1,0 +1,1546 @@
+{
+  "id": "nota_ambulatoriale_complessa_02",
+  "type": "nota_ambulatoriale",
+  "difficulty": "complessa",
+  "pages": 3,
+  "entities": [
+    {
+      "value": "Azienda Sanitaria Territoriale Riviera del Conero",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Centro di Salute Mentale Ancona Sud",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Maria Teresa Bianco",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Tiziano 44",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "60125",
+      "category": "CAP",
+      "group": "residenza",
+      "family": "CAP",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ancona",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 4,
+      "locations": [
+        "letterhead",
+        "patient_box",
+        "paragraph",
+        "signature"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "071 8702210",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "csm.anconasud@ast-conero.example.it",
+      "category": "EMAIL",
+      "group": "contatti",
+      "family": "EMAIL",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "CSM Ancona Sud",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "running_header"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "CSM-AN-2014-0672",
+      "category": "NUMERO_CARTELLA",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_CARTELLA",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "fields"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Marchetti Rosa",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "running_header"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "04/07/1979",
+      "category": "DATA_NASCITA",
+      "group": "anagrafica",
+      "family": "DATA",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "19099824997",
+      "category": "PARTITA_IVA",
+      "group": "identificativi",
+      "family": "PARTITA_IVA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ast.conero@pec.example.it",
+      "category": "PEC",
+      "group": "contatti",
+      "family": "PEC",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "M. Rossetti",
+      "category": "TUTORE_DELEGATO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "1427/2021",
+      "category": "NUMERO_PROTOCOLLO",
+      "group": "identificativi",
+      "family": "NUMERO_PROTOCOLLO",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "MARCHETTI Rosa",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ancona",
+      "category": "LUOGO_NASCITA",
+      "group": "anagrafica",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Flaminia 233",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "divorziata",
+      "category": "STATO_CIVILE",
+      "group": "anagrafica",
+      "family": "STATO_CIVILE",
+      "mentions": 2,
+      "locations": [
+        "patient_box",
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "diploma di ragioneria",
+      "category": "TITOLO_STUDIO",
+      "group": "anagrafica",
+      "family": "TITOLO_STUDIO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "044",
+      "category": "CODICE_ESENZIONE",
+      "group": "identificativi",
+      "family": "CODICE_ESENZIONE",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "75%",
+      "category": "INVALIDITA",
+      "group": "sanitari",
+      "family": "INVALIDITA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "80380010004966810714",
+      "category": "TESSERA_SANITARIA",
+      "group": "identificativi",
+      "family": "TESSERA_SANITARIA",
+      "mentions": 1,
+      "locations": [
+        "char_boxes"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "24/09/2025",
+      "category": "DATA_VISITA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 2,
+      "locations": [
+        "fields",
+        "title"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "AG-CSM-250924-07",
+      "category": "NUMERO_PRENOTAZIONE",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_PRENOTAZIONE",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "MRCRSO79L44A271I",
+      "category": "CODICE_FISCALE",
+      "group": "identificativi",
+      "family": "CODICE_FISCALE",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Samuele Pieroni",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 3,
+      "locations": [
+        "fields",
+        "table"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Paolo Fermani",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "fields",
+        "table"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Sole Marchetti",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 3,
+      "locations": [
+        "paragraph",
+        "table"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "19.09.25",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Marchetti",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "46",
+      "category": "ETA",
+      "group": "anagrafica",
+      "family": "ETA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "disturbo bipolare di tipo I",
+      "category": "SALUTE_MENTALE",
+      "group": "sanitari",
+      "family": "SALUTE_MENTALE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "trattamento sanitario obbligatorio",
+      "category": "SALUTE_MENTALE",
+      "group": "sanitari",
+      "family": "SALUTE_MENTALE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "disturbo da uso di alcol di grado moderato",
+      "category": "DIPENDENZE",
+      "group": "sanitari",
+      "family": "DIPENDENZE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Matteo Rossetti",
+      "category": "TUTORE_DELEGATO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 3,
+      "locations": [
+        "paragraph",
+        "table"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "addetta alla mensa",
+      "category": "PROFESSIONE",
+      "group": "anagrafica",
+      "family": "PROFESSIONE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Cooperativa Sociale Il Faro",
+      "category": "DATORE_LAVORO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Franco Gabrielli",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Sole",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "litio",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 5,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "procedimento penale ex art. 186 C.d.S., definito con lavori di pubblica utilità",
+      "category": "DATI_GIUDIZIARI",
+      "group": "particolari",
+      "family": "DATI_GIUDIZIARI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "11/06/2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "27/60",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "6/60",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "episodio maniacale moderato",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "9/52",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "11/52",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "sintomi depressivi lievi (quadro misto)",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "21/40",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "12/40",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "consumo dannoso, probabile dipendenza",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Irene Gentili",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "142/90 mmHg",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "96 bpm",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "68 kg",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "0,31 g/L",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "22/09/2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "0,12 mEq/L",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "118 U/L",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "101 fL",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "2,1 mUI/L",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "0,74 mg/dL",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "428 ms",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Rossetti",
+      "category": "TUTORE_DELEGATO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "R. Marchetti",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Disturbo bipolare di tipo I, episodio attuale maniacale con caratteristiche miste",
+      "category": "SALUTE_MENTALE",
+      "group": "sanitari",
+      "family": "SALUTE_MENTALE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Disturbo da uso di alcol moderato, in ricaduta",
+      "category": "DIPENDENZE",
+      "group": "sanitari",
+      "family": "DIPENDENZE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Litio carbonato 300 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Olanzapina 10 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Lorazepam 1 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Tiamina 100 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "S. Pieroni",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Gianluca Moretti",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "terapia anticraving con acamprosato",
+      "category": "TERAPIA",
+      "group": "sanitari",
+      "family": "TERAPIA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Psicoeducazione familiare",
+      "category": "TERAPIA",
+      "group": "sanitari",
+      "family": "TERAPIA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Gentili",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "1° ottobre 2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Lucia Cardinali",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "071 2074418",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Corso Garibaldi 87",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "+39 333 851 0942",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "071 8702236",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "SerD Ancona",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "071 8709120",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "30/09/2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "071 2861175",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "1 ottobre 2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "24 settembre 2025",
+      "category": "DATA_REFERTO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "signature"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Giacomo Santarelli",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "signature",
+        "stamp"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "CSM ANCONA SUD",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "4517",
+      "category": "NUMERO_ALBO",
+      "group": "persone_correlate",
+      "family": "NUMERO_ALBO",
+      "mentions": 2,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Rosa Marchetti",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "table"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Rosa",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "heading",
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "olanzapina",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "aloperidolo",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "distonia acuta",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "G. Santarelli",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "24/09/2025",
+      "category": "DATA_REFERTO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "S. Marchetti",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "F. Gabrielli",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Wernicke",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Korsakoff",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Hamilton",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Young",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "vino bianco",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    }
+  ],
+  "sha256": "80cb4217e533a83ae9c8455408e8427cd0244c62082284d82711bb950daab761"
+}

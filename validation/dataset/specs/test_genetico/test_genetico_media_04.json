@@ -1,0 +1,73 @@
+{
+  "id": "test_genetico_media_04",
+  "type": "test_genetico",
+  "difficulty": "media",
+  "style": {"font": "times", "color": "#5D4037", "font_size": 9.5, "margins_mm": 19},
+  "persons": {
+    "paz": {"first_name": "Elira", "last_name": "Hoxha", "sex": "F", "birth_date": "1996-01-25", "birth_place": "Albania"}
+  },
+  "letterhead": {
+    "logo": "ACB",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASST Colli Bresciani]]",
+      "[[STRUTTURA_SANITARIA:Presidio Ospedaliero di Rovato Nord]]",
+      "[[REPARTO:S.S. Diagnostica Emoglobinopatie e Genetica Prenatale]]",
+      "Responsabile: Dott. [[MEDICO:Pierluigi Gnutti]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Lazzaretto 31]]",
+      "[[CAP:25038]] [[LUOGO:Rovato]] (BS)",
+      "Tel. [[TELEFONO:030 7214556]]"
+    ]
+  },
+  "running_header": "Sig.ra [[PERSONA:Elira Hoxha]] - C.F. [[CODICE_FISCALE:@paz]] - Richiesta [[NUMERO_ACCETTAZIONE:EMG-25-0716]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASST Colli Bresciani]] - Sistema Socio Sanitario - P.IVA [[PARTITA_IVA:@asst]]",
+    "Referto disponibile sul Fascicolo Sanitario Elettronico. Esame urgente in corso di gravidanza: priorità B."
+  ],
+  "blocks": [
+    {"type": "title", "text": "DIAGNOSI MOLECOLARE DELLE EMOGLOBINOPATIE", "subtitle": "Screening del portatore in gravidanza"},
+    {"type": "patient_box", "columns": 2, "title": "ASSISTITA", "fields": [
+      ["Nome e cognome", "[[PERSONA:Elira Hoxha]]"],
+      ["Nata il", "[[DATA_NASCITA:25/01/1996]]"],
+      ["Luogo di nascita", "[[LUOGO_NASCITA:Durazzo (Albania)]]"],
+      ["Cittadinanza", "[[CITTADINANZA:albanese]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Domicilio", "[[INDIRIZZO:Via Castello 17]], [[LUOGO:Chiari]]"],
+      ["Inviante", "Dott.ssa [[MEDICO:Federica Bonomi]]"],
+      ["Struttura inviante", "[[REPARTO:Consultorio Familiare di Chiari]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Prelievo", "[[DATA_VISITA:13 febbraio 2025]]"],
+      ["Gestazione", "[[GRAVIDANZA:11 settimane + 2 gg]]"],
+      ["Referto", "[[DATA_REFERTO:20/02/2025]]"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Provetta EDTA", "value": "[[CODICE_CAMPIONE:EM250716A]]", "align": "left"},
+    {"type": "section", "text": "Esami di primo livello"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento", ""], "widths": [4, 2, 1.5, 3, 0.6], "flag_column": 4, "rows": [
+      ["Emoglobina", "[[ESAME_VALORE:10,9]]", "g/dL", "11,5 - 15,5", "L"],
+      ["MCV", "[[ESAME_VALORE:63,2]]", "fL", "80 - 99", "L"],
+      ["MCH", "[[ESAME_VALORE:20,1]]", "pg", "27 - 33", "L"],
+      ["Globuli rossi", "[[ESAME_VALORE:5,42]]", "10^6/µL", "3,80 - 5,20", "H"],
+      ["HbA2 (HPLC)", "[[ESAME_VALORE:5,6]]", "%", "2,2 - 3,3", "H"],
+      ["HbF (HPLC)", "[[ESAME_VALORE:1,1]]", "%", "< 1,0", "H"],
+      ["Ferritina", "[[ESAME_VALORE:46]]", "ng/mL", "15 - 150", ""]
+    ]},
+    {"type": "section", "text": "Analisi molecolare"},
+    {"type": "paragraph", "text": "Sequenziamento Sanger del gene HBB (esoni 1-3, regioni introniche fiancheggianti e promotore) e ricerca delle delezioni alfa-talassemiche più comuni (-alfa3.7, -alfa4.2, --MED, --SEA) mediante gap-PCR."},
+    {"type": "table", "header": ["Gene", "Trascritto", "Variante c.", "Variante p.", "Zigosità", "Classe ACMG"], "widths": [1.1, 2.1, 2.2, 2.3, 1.9, 2.2], "rows": [
+      ["HBB", "NM_000518.5", "[[DATO_GENETICO:c.118C>T]]", "[[DATO_GENETICO:p.(Gln40Ter)]]", "[[DATO_GENETICO:Eterozigote]]", "Patogenetica"],
+      ["HBA1/HBA2", "-", "Nessuna delezione", "-", "Genotipo aa/aa", "-"]
+    ]},
+    {"type": "paragraph", "text": "**Conclusione.** La sig.ra [[PERSONA:Hoxha]] è [[DATO_GENETICO:portatrice di beta-zero talassemia (codone 39 C>T)]]. Il quadro ematologico è coerente con il genotipo e non indica carenza marziale."},
+    {"type": "page_break"},
+    {"type": "section", "text": "Indicazioni urgenti per la coppia"},
+    {"type": "paragraph", "text": "Considerata la gravidanza in corso (data presunta del parto [[GRAVIDANZA:2 settembre 2025]]), si raccomanda di eseguire con urgenza l'emocromo e l'HPLC al partner, sig. [[FAMILIARE:Ardit Kola]], nato il [[DATA_NASCITA:09.04.93]], anch'egli di cittadinanza [[CITTADINANZA:albanese]]. Qualora risultasse portatore di una variante beta-talassemica, la coppia avrebbe un rischio del 25% di concepire un figlio affetto da [[DIAGNOSI:talassemia major]] e sarà indirizzata alla diagnosi prenatale su villi coriali entro la 13a settimana."},
+    {"type": "paragraph", "text": "La pz. è stata informata telefonicamente in data [[DATA:20.02.2025]] con l'ausilio della mediatrice culturale [[OPERATORE_SANITARIO:Blerina Dervishi]]; l'appuntamento per il partner è fissato per il [[DATA:24/02/2025]] alle ore 8:15. Si informa inoltre che la sorella della pz., sig.ra [[FAMILIARE:Mirela Hoxha]], può accedere allo screening gratuito presso il nostro servizio."},
+    {"type": "note", "text": "Le delezioni alfa-talassemiche rare e le varianti puntiformi dei geni HBA non sono escluse dall'analisi eseguita. In presenza di HbA2 borderline nel partner è indicato il sequenziamento del gene HBB."},
+    {"type": "signature", "place_date": "[[LUOGO:Rovato]], [[DATA_REFERTO:20/02/2025]]", "role": "Il Dirigente Biologo", "name": "Dott. [[MEDICO:Pierluigi Gnutti]]", "digital": true},
+    {"type": "signature", "place_date": "Visto per la consulenza genetica", "role": "Il Medico Genetista", "name": "Dott.ssa [[MEDICO:Cristina Zanardelli]]", "stamp": ["[[STRUTTURA_SANITARIA:ASST COLLI BRESCIANI]]", "Genetica Medica", "Dott.ssa [[MEDICO:C. Zanardelli]]", "OMCeO BS n. [[NUMERO_ALBO:BS 8841]]"]}
+  ],
+  "negatives": []
+}

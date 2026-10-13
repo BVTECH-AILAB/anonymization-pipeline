@@ -1,0 +1,78 @@
+{
+  "id": "referto_radiologico_media_01",
+  "type": "referto_radiologico",
+  "difficulty": "media",
+  "style": {"font": "helvetica", "color": "#7A1F2B", "font_size": 9, "margins_mm": 16},
+  "persons": {
+    "paz": {"first_name": "Carlo Alberto", "last_name": "Zanetti", "sex": "M", "birth_date": "1953-08-30", "birth_place": "Ferrara"}
+  },
+  "letterhead": {
+    "logo": "PM",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Policlinico Monteguidi]]",
+      "Azienda Ospedaliero-Universitaria",
+      "[[REPARTO:UOC Radiologia Oncologica e Interventistica]]",
+      "Direttore: Prof. [[MEDICO:Ludovico Sarti Amadei]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Gaspare Nadi 55]]",
+      "[[CAP:40138]] [[LUOGO:Bologna]]",
+      "Segreteria TC: [[TELEFONO:051 2147730]]"
+    ]
+  },
+  "running_header": "Paz. [[PERSONA:Zanetti Carlo Alberto]] - nato il [[DATA_NASCITA:30.08.1953]] - Acc. [[ACCESSION_NUMBER:TC2025-118842]] - Referto n. [[NUMERO_REFERTO:R/RAD/2025/0447193]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Policlinico Monteguidi]] - Azienda Ospedaliero-Universitaria - P.IVA [[PARTITA_IVA:@aou]] - PEC [[PEC:protocollo@pec.monteguidi.example.it]]",
+    "Informazioni dosimetriche riportate ai sensi dell'art. 161 del D.Lgs. 101/2020. Immagini disponibili su richiesta presso l'archivio PACS."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO TC", "subtitle": "TC torace e addome completo con mezzo di contrasto - ristadiazione oncologica"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Zanetti Carlo Alberto]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Luogo e data di nascita", "[[LUOGO_NASCITA:Ferrara]], [[DATA_NASCITA:30/08/1953]]"],
+      ["Residenza", "[[INDIRIZZO:Via Emilia Levante 214]], [[CAP:40068]] [[LUOGO:San Lazzaro di Savena]]"],
+      ["N. referto", "[[NUMERO_REFERTO:R/RAD/2025/0447193]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Accession", "[[ACCESSION_NUMBER:TC2025-118842]]"],
+      ["Data esame", "[[DATA_VISITA:7 ottobre 2025]]"],
+      ["Data referto", "[[DATA_REFERTO:08/10/2025]]"],
+      ["Reparto inviante", "[[REPARTO:Day Hospital Oncologico]]"],
+      ["Richiedente", "Dott. [[MEDICO:Matteo Righi]]"],
+      ["Priorità", "B (entro 10 giorni)"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Accession", "value": "[[ACCESSION_NUMBER:TC2025-118842]]", "align": "right"},
+    {"type": "section", "text": "Quesito clinico"},
+    {"type": "paragraph", "text": "Pz. di 72 aa. con [[PATOLOGIA:adenocarcinoma del sigma pT3 N1a M0]], sottoposto a [[INTERVENTO:resezione anteriore del retto-sigma]] il [[DATA:14.03.24]] presso la nostra [[REPARTO:u.o. di Chirurgia Generale e d'Urgenza]] e successivamente a [[TERAPIA:chemioterapia adiuvante secondo schema CAPOX]], conclusa a settembre 2024. Al follow-up [[DIAGNOSI:rialzo progressivo del CEA]] (ultimo valore [[ESAME_VALORE:9,4]] ng/mL). Si richiede ristadiazione."},
+    {"type": "section", "text": "Anamnesi allergologica e preparazione"},
+    {"type": "paragraph", "text": "Il pz. riferisce [[ALLERGIA:reazione orticarioide a mezzo di contrasto iodato]] in occasione di una TC eseguita nel 2019. È stata eseguita premedicazione secondo il protocollo aziendale con [[FARMACO:prednisone 50 mg]] per os 13, 7 e 1 ora prima dell'esame e [[FARMACO:cetirizina 10 mg]] un'ora prima. Funzionalità renale nella norma per età: creatinina [[ESAME_VALORE:1,12]] mg/dL, eGFR [[ESAME_VALORE:64]] mL/min/1,73 m² (prelievo del [[DATA:03-10-2025]]).\nIl sig. [[PERSONA:Zanetti]] è accompagnato dalla figlia, sig.ra [[FAMILIARE:Federica Zanetti]], presente durante la raccolta del consenso informato e dell'anamnesi."},
+    {"type": "section", "text": "Tecnica"},
+    {"type": "paragraph", "text": "TC multistrato a 128 file di detettori. Acquisizione basale sull'addome superiore, quindi, dopo somministrazione endovenosa di [[FARMACO:iomeprolo 350 mgI/mL]] (volume 90 mL, flusso 3 mL/s), acquisizioni in fase arteriosa tardiva sul fegato e in fase portale su torace, addome e pelvi. Ricostruzioni multiplanari con spessore di strato di 1,25 mm. Nessuna reazione avversa immediata; il paziente è rimasto in osservazione per 30 minuti, assistito dall'inf. [[OPERATORE_SANITARIO:Stefano Lelli]]."},
+    {"type": "section", "text": "Confronto"},
+    {"type": "paragraph", "text": "Confronto con la precedente TC del [[DATA:12 marzo 2025]], eseguita presso l'[[STRUTTURA_SANITARIA:Ospedale Civile di Castel Mirandola]] e importata nel PACS aziendale."},
+    {"type": "section", "text": "Descrizione"},
+    {"type": "heading", "text": "Torace"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Micronodulo solido subcentimetrico al segmento apicale del lobo inferiore destro]], invariato rispetto al precedente controllo e di significato aspecifico. Non nuovi noduli parenchimali. Non versamento pleurico né pericardico. Linfonodi mediastinici e ilari di dimensioni non significative."},
+    {"type": "page_break"},
+    {"type": "heading", "text": "Addome e pelvi"},
+    {"type": "paragraph", "text": "Fegato di normali dimensioni. Al segmento VII [[DIAGNOSI:nuova lesione ipodensa con enhancement periferico ad anello]] in fase portale, non presente nel precedente esame, sospetta per [[DIAGNOSI:localizzazione secondaria epatica]]. Al segmento IVb piccola [[DIAGNOSI:cisti biliare semplice]], invariata.\nVie biliari non dilatate. Pancreas, milza e surreni nei limiti. Reni di normali dimensioni, con regolare escrezione del mezzo di contrasto.\nAnastomosi colo-rettale regolare, senza ispessimenti parietali sospetti. [[DIAGNOSI:Linfonodo mesenterico para-anastomotico in lieve aumento dimensionale]]. Non versamento libero. Non lesioni ossee di tipo sostitutivo nei segmenti esaminati."},
+    {"type": "table", "caption": "Lesioni misurabili (diametro maggiore, criteri RECIST 1.1)", "header": ["Lesione", "Sede", "TC precedente", "TC attuale", "Note"], "widths": [1, 3.2, 1.8, 1.6, 3], "rows": [
+      ["L1", "Fegato, segmento VII", "non presente", "[[ESAME_VALORE:17]] mm", "Nuova lesione"],
+      ["N1", "Linfonodo para-anastomotico", "[[ESAME_VALORE:7,5]] mm (asse corto)", "[[ESAME_VALORE:11]] mm (asse corto)", "In aumento, sospetto"]
+    ]},
+    {"type": "section", "text": "Informazioni dosimetriche"},
+    {"type": "table", "header": ["Serie", "kV", "CTDIvol (mGy)", "DLP (mGy·cm)"], "widths": [5, 1.2, 2, 2], "rows": [
+      ["Basale addome superiore", "120", "[[ESAME_VALORE:6,8]]", "[[ESAME_VALORE:231]]"],
+      ["Arteriosa tardiva fegato", "100", "[[ESAME_VALORE:7,4]]", "[[ESAME_VALORE:205]]"],
+      ["Portale torace-addome-pelvi", "120", "[[ESAME_VALORE:8,1]]", "[[ESAME_VALORE:596]]"],
+      ["Totale esame", "", "", "[[ESAME_VALORE:1032]]"]
+    ]},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "**Comparsa di una lesione focale epatica al segmento VII e lieve incremento di un linfonodo para-anastomotico, reperti sospetti per [[DIAGNOSI:progressione di malattia]]. Invariato il micronodulo polmonare destro.**\nSi suggerisce completamento con RM epatica con mezzo di contrasto epatospecifico e discussione del caso al Gruppo Oncologico Multidisciplinare colorettale."},
+    {"type": "paragraph", "text": "Esito anticipato telefonicamente al Dott. [[MEDICO:Righi]] in data odierna, alle ore 12:40."},
+    {"type": "signature", "place_date": "[[LUOGO:Bologna]], [[DATA_REFERTO:08/10/2025]]", "role": "Il Medico Radiologo", "name": "Dott.ssa [[MEDICO:Ilaria Bonfiglioli]]", "digital": true, "stamp": ["[[STRUTTURA_SANITARIA:POLICLINICO MONTEGUIDI]]", "Dott.ssa [[MEDICO:Ilaria Bonfiglioli]]", "Medico Radiologo"]}
+  ],
+  "negatives": []
+}

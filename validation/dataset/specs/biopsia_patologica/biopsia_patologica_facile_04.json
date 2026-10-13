@@ -1,0 +1,57 @@
+{
+  "id": "biopsia_patologica_facile_04",
+  "type": "biopsia_patologica",
+  "difficulty": "facile",
+  "style": {"font": "helvetica", "color": "#4A3B8F", "font_size": 9, "margins_mm": 14},
+  "persons": {
+    "paz": {"first_name": "Gianfranco", "last_name": "Zanotto", "sex": "M", "birth_date": "1959-06-30", "birth_place": "Vicenza"}
+  },
+  "letterhead": {
+    "logo": "CDG",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Centro Diagnostico Villa Ginestra]]",
+      "Laboratorio di Istopatologia e Citologia",
+      "Direttore Sanitario: Dott. [[MEDICO:Ruggero Pavan]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Corso Porta Nuova 31]]",
+      "[[CAP:37122]] [[LUOGO:Verona]]",
+      "Tel. [[TELEFONO:045 8034417]]",
+      "www.villaginestra.example.it"
+    ]
+  },
+  "footer": [
+    "Struttura sanitaria privata accreditata - Autorizzazione all'esercizio n. 118/2019",
+    "Le informazioni contenute nel presente referto sono riservate e destinate esclusivamente al paziente e al medico curante."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO ISTOPATOLOGICO", "subtitle": "Polipectomie endoscopiche del colon"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Gianfranco Zanotto]]"],
+      ["Nato il", "[[DATA_NASCITA:30/06/1959]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Telefono", "[[TELEFONO:348 7710263]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Accettazione n.", "[[NUMERO_ACCETTAZIONE:VG25-07741]]"],
+      ["Data esecuzione", "[[DATA_VISITA:02/09/2025]]"],
+      ["Inviato da", "Dott. [[MEDICO:Matteo Scapin]], gastroenterologo"],
+      ["Data referto", "[[DATA_REFERTO:09/09/2025]]"]
+    ]},
+    {"type": "section", "text": "Informazioni cliniche"},
+    {"type": "paragraph", "text": "Colonscopia di screening dopo [[ESAME_VALORE:sangue occulto fecale positivo]]. Asportati tre polipi con ansa diatermica."},
+    {"type": "section", "text": "Esito per singolo campione"},
+    {"type": "table", "header": ["Campione", "Sede", "Dimensioni", "Diagnosi istologica", "Margine"], "widths": [1.2, 2, 1.5, 5, 1.6], "rows": [
+      ["A", "Colon sigmoideo", "[[ESAME_VALORE:12 mm]]", "[[DIAGNOSI:Adenoma tubulo-villoso con displasia di basso grado]]", "Indenne"],
+      ["B", "Colon discendente", "[[ESAME_VALORE:6 mm]]", "[[DIAGNOSI:Adenoma tubulare con displasia di basso grado]]", "Indenne"],
+      ["C", "Retto", "[[ESAME_VALORE:4 mm]]", "[[DIAGNOSI:Polipo iperplastico]]", "Non valutabile"]
+    ]},
+    {"type": "section", "text": "Descrizione"},
+    {"type": "paragraph", "text": "Il campione A è costituito da una formazione polipoide peduncolata con componente villosa pari a circa il [[ESAME_VALORE:30%]] della lesione; il peduncolo è libero da displasia. Il campione B mostra ghiandole tubulari con nuclei allungati e pseudostratificati. Il campione C presenta cripte con profilo seghettato limitato alla metà superficiale, senza alterazioni architetturali basali."},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Adenomi del colon con displasia di basso grado]], asportati in modo completo.** Non evidenza di carcinoma. Indicazione al controllo colonscopico secondo le linee guida per la sorveglianza post-polipectomia."},
+    {"type": "signature", "place_date": "[[LUOGO:Verona]], [[DATA_REFERTO:09/09/2025]]", "role": "Medico Specialista in Anatomia Patologica", "name": "Dott.ssa [[MEDICO:Paola Gecchele]]", "digital": false, "stamp": ["[[STRUTTURA_SANITARIA:VILLA GINESTRA]]", "Istopatologia"]}
+  ],
+  "negatives": []
+}

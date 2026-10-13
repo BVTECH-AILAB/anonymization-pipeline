@@ -1,0 +1,1563 @@
+{
+  "id": "biopsia_patologica_complessa_04",
+  "type": "biopsia_patologica",
+  "difficulty": "complessa",
+  "pages": 3,
+  "entities": [
+    {
+      "value": "A.O. Monte Lauro",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 2
+    },
+    {
+      "value": "Presidio Ospedaliero Gaetano Fichera",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "UOC Anatomia Patologica e Patologia Molecolare",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Giovanna D'Urso",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "signature"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Santa Sofia 210",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "95123",
+      "category": "CAP",
+      "group": "residenza",
+      "family": "CAP",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Catania",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 4,
+      "locations": [
+        "letterhead",
+        "patient_box",
+        "signature",
+        "table"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "095 7436612",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ap.fichera@aomontelauro.example.it",
+      "category": "EMAIL",
+      "group": "contatti",
+      "family": "EMAIL",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "NGUYEN THANH",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "barcode"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "22/04/1961",
+      "category": "DATA_NASCITA",
+      "group": "anagrafica",
+      "family": "DATA",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "2025-CT-07719",
+      "category": "NUMERO_REFERTO",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_REFERTO",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "fields"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "EST-25-0388",
+      "category": "NUMERO_REFERTO",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_REFERTO",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "50709647056",
+      "category": "PARTITA_IVA",
+      "group": "identificativi",
+      "family": "PARTITA_IVA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Nguyen T.",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "25/018834",
+      "category": "NUMERO_CARTELLA",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_CARTELLA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "NGUYEN",
+      "category": "COGNOME",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "THANH",
+      "category": "NOME",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Lione (Francia)",
+      "category": "LUOGO_NASCITA",
+      "group": "anagrafica",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "francese",
+      "category": "CITTADINANZA",
+      "group": "anagrafica",
+      "family": "LUOGO",
+      "mentions": 2,
+      "locations": [
+        "patient_box",
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Garibaldi 288",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "95121",
+      "category": "CAP",
+      "group": "residenza",
+      "family": "CAP",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "saldatore navale",
+      "category": "PROFESSIONE",
+      "group": "anagrafica",
+      "family": "PROFESSIONE",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "RIC-25-118402",
+      "category": "NUMERO_ACCETTAZIONE",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_ACCETTAZIONE",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "10/02/2025",
+      "category": "DATA_RICOVERO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "10.02.25",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "24/02/2025",
+      "category": "DATA_REFERTO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Salvatore Privitera",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "fields",
+        "table"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Agata Russo Spampinato",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "NGYTNH61D22Z110X",
+      "category": "CODICE_FISCALE",
+      "group": "identificativi",
+      "family": "CODICE_FISCALE",
+      "mentions": 1,
+      "locations": [
+        "char_boxes"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "80380160196130540595",
+      "category": "TESSERA_SANITARIA",
+      "group": "identificativi",
+      "family": "TESSERA_SANITARIA",
+      "mentions": 1,
+      "locations": [
+        "char_boxes"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "63",
+      "category": "ETA",
+      "group": "anagrafica",
+      "family": "ETA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "tabagismo attivo (40 pack-years)",
+      "category": "DIPENDENZE",
+      "group": "sanitari",
+      "family": "DIPENDENZE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "saldatore",
+      "category": "PROFESSIONE",
+      "group": "anagrafica",
+      "family": "PROFESSIONE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Cantieri Navali Ionici S.p.A.",
+      "category": "DATORE_LAVORO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "invalidità civile al 75%",
+      "category": "INVALIDITA",
+      "group": "sanitari",
+      "family": "INVALIDITA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "disturbo d'ansia generalizzato",
+      "category": "SALUTE_MENTALE",
+      "group": "sanitari",
+      "family": "SALUTE_MENTALE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "escitalopram 10 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "BPCO GOLD 2",
+      "category": "PATOLOGIA",
+      "group": "sanitari",
+      "family": "PATOLOGIA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "nodulo solido spiculato di 34 mm del lobo superiore destro",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "9,6",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "2025-CT-01408",
+      "category": "NUMERO_REFERTO",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_REFERTO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Speranza Lo Iacono",
+      "category": "CONTATTO_EMERGENZA",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "table"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "+39 392 115 4870",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "table"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Luca Nguyen",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "10/02/2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "stamp"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Privitera",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Orazio Licciardello",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "inf. Rosario Finocchiaro",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Chiara Mangano",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Rosa Pappalardo",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "55%",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "15%",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "20%",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 1
+    },
+    {
+      "value": "10%",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "3,3 cm",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "G3",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "enfisema centrolobulare",
+      "category": "PATOLOGIA",
+      "group": "sanitari",
+      "family": "PATOLOGIA",
+      "mentions": 2,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "3 corpuscoli/cm²",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "0/17",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 2,
+      "locations": [
+        "table",
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "positivo diffuso",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "positiva",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "negativo",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 3,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "TPS 30%",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 2,
+      "locations": [
+        "table",
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "delezione esone 19 p.E746_A750del",
+      "category": "DATO_GENETICO",
+      "group": "sanitari",
+      "family": "DATO_GENETICO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "27%",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "variante TP53 p.R273H",
+      "category": "DATO_GENETICO",
+      "group": "sanitari",
+      "family": "DATO_GENETICO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "nessuna alterazione",
+      "category": "DATO_GENETICO",
+      "group": "sanitari",
+      "family": "DATO_GENETICO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "60%",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "NGS-25-0217",
+      "category": "CODICE_CAMPIONE",
+      "group": "identificativi_sanitari",
+      "family": "CODICE_CAMPIONE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Emanuele Pappalardo",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "adenocarcinoma polmonare invasivo non mucinoso a prevalenza acinare, grado 3 IASLC",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "pT2a pN0 (8a ed. TNM)",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "EGFR mutato (delezione esone 19)",
+      "category": "DATO_GENETICO",
+      "group": "sanitari",
+      "family": "DATO_GENETICO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "placca pleurica fibroialina",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "pregressa esposizione professionale ad amianto",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Cantieri Navali Ionici",
+      "category": "DATORE_LAVORO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "D'Urso",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "INAIL-CT-2025-004417",
+      "category": "NUMERO_PROTOCOLLO",
+      "group": "identificativi",
+      "family": "NUMERO_PROTOCOLLO",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "26/02/2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Lo Iacono",
+      "category": "CONTATTO_EMERGENZA",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "T. Nguyen",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "24 febbraio 2025",
+      "category": "DATA_REFERTO",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "signature"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "O. LICCIARDELLO",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "9914",
+      "category": "NUMERO_ALBO",
+      "group": "persone_correlate",
+      "family": "NUMERO_ALBO",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "5 marzo 2025",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "title"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Bao Tran Moretti",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "UOC Oncologia Medica",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "095 7436288",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "UOC Chirurgia Toracica",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "A. Russo Spampinato",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ambulatorio di Pneumologia Interventistica",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Carmelo Sciacca",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Etnea 402",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "095 441208",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Patronato Sicilia Lavoro",
+      "category": "ORGANIZZAZIONE",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "PSL/25/0912",
+      "category": "NUMERO_PROTOCOLLO",
+      "group": "identificativi",
+      "family": "NUMERO_PROTOCOLLO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Nguyen",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "checkboxes"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Luca",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "checkboxes"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "delezione dell'esone 19 di EGFR",
+      "category": "DATO_GENETICO",
+      "group": "sanitari",
+      "family": "DATO_GENETICO",
+      "mentions": 1,
+      "locations": [
+        "note"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "terapia adiuvante con osimertinib",
+      "category": "TERAPIA",
+      "group": "sanitari",
+      "family": "TERAPIA",
+      "mentions": 1,
+      "locations": [
+        "note"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Centro Antifumo",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "note"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "dott.ssa Valeria Ingrassia",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "note"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "GOMT-25-0071",
+      "category": "ID_PAZIENTE",
+      "group": "identificativi_sanitari",
+      "family": "ID_PAZIENTE",
+      "mentions": 1,
+      "locations": [
+        "barcode"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Clara",
+      "forbidden_categories": [
+        "NOME",
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "van Gieson",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Kulchitsky",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Perls",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Gaetano Fichera",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Garibaldi",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ],
+  "sha256": "a33aca36e45a5ecf6529ea47a746213932844046c55c85ab35fafc658b3d3826"
+}

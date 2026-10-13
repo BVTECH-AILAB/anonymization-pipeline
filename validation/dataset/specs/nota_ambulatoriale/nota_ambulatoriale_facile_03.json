@@ -1,0 +1,55 @@
+{
+  "id": "nota_ambulatoriale_facile_03",
+  "type": "nota_ambulatoriale",
+  "difficulty": "facile",
+  "style": {"font": "dejavu", "color": "#8B1E3F", "font_size": 9, "margins_mm": 15},
+  "persons": {
+    "paz": {"first_name": "Giuseppe", "last_name": "Lo Cascio", "sex": "M", "birth_date": "1948-02-07", "birth_place": "Palermo"}
+  },
+  "letterhead": {
+    "logo": "VG",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Villa delle Ginestre]]",
+      "Dipartimento Testa-Collo",
+      "[[REPARTO:U.O.C. Oculistica - Ambulatorio Cataratta]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Ernesto Basile 117]] - [[LUOGO:Palermo]]",
+      "Segreteria [[TELEFONO:091 6623408]]",
+      "[[EMAIL:oculistica@villaginestre.example.it]]"
+    ]
+  },
+  "footer": [
+    "Il presente referto non sostituisce il certificato per il rinnovo della patente di guida"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO VISITA OCULISTICA", "subtitle": "Esame complessivo dell'occhio - cod. 95.02"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Giuseppe Lo Cascio]]"],
+      ["Data di nascita", "[[DATA_NASCITA:07/02/1948]]"],
+      ["Cod. fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Tess. sanitaria", "[[TESSERA_SANITARIA:@ts]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Data", "[[DATA_VISITA:18/11/2024]]"],
+      ["N. prenot.", "[[NUMERO_PRENOTAZIONE:PA-776120]]"],
+      ["NRE", "[[NUMERO_RICETTA:190A40917733205]]"]
+    ]},
+    {"type": "section", "text": "Anamnesi"},
+    {"type": "paragraph", "text": "Riferisce [[DIAGNOSI:calo visivo progressivo in OO]], maggiore in OD, con abbagliamento nella guida notturna da circa un anno. [[PATOLOGIA:Diabete mellito tipo 2]] in terapia con [[FARMACO:metformina 850 mg]] x 2/die, senza retinopatia nota. [[PATOLOGIA:Ipertensione arteriosa]] in trattamento. Non pregressi interventi oculari."},
+    {"type": "section", "text": "Esame obiettivo"},
+    {"type": "table", "header": ["", "Occhio destro (OD)", "Occhio sinistro (OS)"], "widths": [3, 3, 3], "rows": [
+      ["Visus naturale", "[[ESAME_VALORE:2/10]]", "[[ESAME_VALORE:5/10]]"],
+      ["Visus corretto", "[[ESAME_VALORE:4/10]] n.m.l.", "[[ESAME_VALORE:7/10]] con -0,75 sf"],
+      ["Tono oculare (Goldmann)", "[[ESAME_VALORE:17 mmHg]]", "[[ESAME_VALORE:18 mmHg]]"],
+      ["Cristallino", "[[ESAME_VALORE:opacità corticonucleare 3+]]", "[[ESAME_VALORE:opacità nucleare 2+]]"],
+      ["Fondo oculare (in midriasi)", "[[ESAME_VALORE:nei limiti, non segni di retinopatia]]", "[[ESAME_VALORE:nei limiti]]"]
+    ]},
+    {"type": "paragraph", "text": "Segmento anteriore: cornea trasparente, camera anteriore di normale profondità, pupilla isocorica e reagente. Motilità oculare conservata."},
+    {"type": "section", "text": "Diagnosi e indicazioni"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Cataratta senile corticonucleare bilaterale]], più evoluta in OD.\nSi pone indicazione a [[INTERVENTO:facoemulsificazione con impianto di IOL in OD]]; il paziente viene inserito in lista d'attesa (classe B) ed eseguirà biometria ottica e visita preoperatoria. Il paziente è informato dei rischi e dei benefici dell'intervento.\nSi raccomanda di evitare la guida notturna fino all'intervento. Controllo del fondo oculare annuale per il [[PATOLOGIA:diabete]]."},
+    {"type": "signature", "place_date": "[[LUOGO:Palermo]], [[DATA_REFERTO:18/11/2024]]", "role": "Il Dirigente Medico Oculista", "name": "Dott.ssa [[MEDICO:Rosalia Termini]]", "digital": false}
+  ],
+  "negatives": [{"value": "Goldmann", "forbidden_categories": ["PERSONA", "MEDICO"]}]
+}

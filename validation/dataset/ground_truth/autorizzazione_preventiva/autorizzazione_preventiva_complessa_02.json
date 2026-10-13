@@ -1,0 +1,1506 @@
+{
+  "id": "autorizzazione_preventiva_complessa_02",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "complessa",
+  "pages": 3,
+  "entities": [
+    {
+      "value": "ASL Adriatica Pescara-Vestina",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 3,
+      "locations": [
+        "letterhead",
+        "footer",
+        "stamp"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Raffaele Di Febo",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "letterhead",
+        "table"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Via Renato Paolini 47",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "65124",
+      "category": "CAP",
+      "group": "residenza",
+      "family": "CAP",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Pescara",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 5,
+      "locations": [
+        "letterhead",
+        "patient_box",
+        "signature",
+        "table",
+        "address"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "085 4253906",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "caf.innovativi@aslpv.example.it",
+      "category": "EMAIL",
+      "group": "contatti",
+      "family": "EMAIL",
+      "mentions": 1,
+      "locations": [
+        "letterhead"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Sole Dell'Orto",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "paragraph"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "DLLSLO26C58G482W",
+      "category": "CODICE_FISCALE",
+      "group": "identificativi",
+      "family": "CODICE_FISCALE",
+      "mentions": 2,
+      "locations": [
+        "running_header",
+        "char_boxes"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "CAF/INN/2026/031",
+      "category": "NUMERO_PROTOCOLLO",
+      "group": "identificativi",
+      "family": "NUMERO_PROTOCOLLO",
+      "mentions": 3,
+      "locations": [
+        "running_header",
+        "footer",
+        "fields"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "S. Dell'Orto",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "09126727966",
+      "category": "PARTITA_IVA",
+      "group": "identificativi",
+      "family": "PARTITA_IVA",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "protocollo@pec.aslpv.example.it",
+      "category": "PEC",
+      "group": "contatti",
+      "family": "PEC",
+      "mentions": 1,
+      "locations": [
+        "footer"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "onasemnogene abeparvovec",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 2,
+      "locations": [
+        "title",
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "04.08.26",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "RFG050",
+      "category": "CODICE_ESENZIONE",
+      "group": "identificativi",
+      "family": "CODICE_ESENZIONE",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "MR-PE-2026-00714",
+      "category": "ID_PAZIENTE",
+      "group": "identificativi_sanitari",
+      "family": "ID_PAZIENTE",
+      "mentions": 1,
+      "locations": [
+        "barcode"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Dell'Orto",
+      "category": "COGNOME",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Sole",
+      "category": "NOME",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "patient_box",
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "18/03/2026",
+      "category": "DATA_NASCITA",
+      "group": "anagrafica",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Pescara",
+      "category": "LUOGO_NASCITA",
+      "group": "anagrafica",
+      "family": "LUOGO",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Strada Colle Innamorati 22",
+      "category": "INDIRIZZO",
+      "group": "residenza",
+      "family": "INDIRIZZO",
+      "mentions": 2,
+      "locations": [
+        "patient_box",
+        "address"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "65125",
+      "category": "CAP",
+      "group": "residenza",
+      "family": "CAP",
+      "mentions": 2,
+      "locations": [
+        "patient_box",
+        "address"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "6,4 kg",
+      "category": "MISURE_ANTROPOMETRICHE",
+      "group": "sanitari",
+      "family": "MISURE_ANTROPOMETRICHE",
+      "mentions": 1,
+      "locations": [
+        "patient_box"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "80380030986431471278",
+      "category": "TESSERA_SANITARIA",
+      "group": "identificativi",
+      "family": "TESSERA_SANITARIA",
+      "mentions": 1,
+      "locations": [
+        "char_boxes"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Bianca Mariani",
+      "category": "TUTORE_DELEGATO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 3,
+      "locations": [
+        "table",
+        "fields",
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "05/11/1992",
+      "category": "DATA_NASCITA",
+      "group": "anagrafica",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "MRNBNC92S45A271M",
+      "category": "CODICE_FISCALE",
+      "group": "identificativi",
+      "family": "CODICE_FISCALE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "+39 339 418 2270",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "bianca.mariani@posta.example.it",
+      "category": "EMAIL",
+      "group": "contatti",
+      "family": "EMAIL",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Matteo Dell'Orto",
+      "category": "TUTORE_DELEGATO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "table",
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "21/06/1989",
+      "category": "DATA_NASCITA",
+      "group": "anagrafica",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "DLLMTT89H21G482M",
+      "category": "CODICE_FISCALE",
+      "group": "identificativi",
+      "family": "CODICE_FISCALE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "+39 348 775 0164",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "autotrasportatore",
+      "category": "PROFESSIONE",
+      "group": "anagrafica",
+      "family": "PROFESSIONE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "1,1 x 10^14 vg/kg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "infusione e.v. unica in 60 minuti",
+      "category": "TERAPIA",
+      "group": "sanitari",
+      "family": "TERAPIA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Policlinico Universitario Colle dell'Ateneo",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 3,
+      "locations": [
+        "table",
+        "address"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Roma",
+      "category": "LUOGO",
+      "group": "residenza",
+      "family": "LUOGO",
+      "mentions": 4,
+      "locations": [
+        "table",
+        "paragraph"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "31/08/2026",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "prednisolone",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 2,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "1 mg/kg/die",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "U.O.S.D. Neurologia Pediatrica e Malattie Neuromuscolari",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 2,
+      "locations": [
+        "fields",
+        "address"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ospedale Civile San Cetteo",
+      "category": "STRUTTURA_SANITARIA",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 3,
+      "locations": [
+        "fields",
+        "stamp",
+        "table"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ludovica Di Nardo",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 3,
+      "locations": [
+        "fields",
+        "signature",
+        "address"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "3391",
+      "category": "NUMERO_ALBO",
+      "group": "persone_correlate",
+      "family": "NUMERO_ALBO",
+      "mentions": 2,
+      "locations": [
+        "fields",
+        "stamp"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "30/07/2026",
+      "category": "DATA_PRESCRIZIONE",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ZOL-26-PE-0093",
+      "category": "NUMERO_RICETTA",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_RICETTA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "atrofia muscolare spinale",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "21/03/2026",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "delezione omozigote dell'esone 7 del gene SMN1",
+      "category": "DATO_GENETICO",
+      "group": "sanitari",
+      "family": "DATO_GENETICO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "2 copie del gene SMN2",
+      "category": "DATO_GENETICO",
+      "group": "sanitari",
+      "family": "DATO_GENETICO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "SMA di tipo 1",
+      "category": "DIAGNOSI",
+      "group": "sanitari",
+      "family": "DIAGNOSI",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "footnotes"
+      ],
+      "pages": [
+        1,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "portatori eterozigoti di delezione SMN1",
+      "category": "DATO_GENETICO",
+      "group": "sanitari",
+      "family": "DATO_GENETICO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "9 aprile 2026",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Federico Ianni D'Alessandro",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "signature"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "nusinersen intratecale 12 mg",
+      "category": "FARMACO",
+      "group": "sanitari",
+      "family": "FARMACO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "02/06/2026",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "15/04/2026",
+      "category": "DATA_VISITA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "38/64",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "3/26",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Marco Rapino",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 3,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1,
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "10/06/2026",
+      "category": "DATA_VISITA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "41/64",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "4/26",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "22/07/2026",
+      "category": "DATA_VISITA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "43/64",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "5/26",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "M. Rapino",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "negativi (titolo < 1:50)",
+      "category": "ESAME_VALORE",
+      "group": "sanitari",
+      "family": "ESAME_VALORE",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Chiara Zappacosta",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        1
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "30 luglio 2026",
+      "category": "DATA_PRESCRIZIONE",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "signature"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "L. Di Nardo",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "stamp",
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "31/07/2026",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "signature"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "F. Ianni D'Alessandro",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "2875",
+      "category": "NUMERO_ALBO",
+      "group": "persone_correlate",
+      "family": "NUMERO_ALBO",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ottavia Sbardella",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Neuropsichiatria Infantile",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "ambulatorio neuromuscolare",
+      "category": "REPARTO",
+      "group": "organizzazioni",
+      "family": "ORGANIZZAZIONE",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "C. Zappacosta",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Giada Pompilio",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "table",
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "24 agosto 2026",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "CDA-OSP-26-4471",
+      "category": "NUMERO_PRENOTAZIONE",
+      "group": "identificativi_sanitari",
+      "family": "NUMERO_PRENOTAZIONE",
+      "mentions": 1,
+      "locations": [
+        "fields"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Mariani",
+      "category": "TUTORE_DELEGATO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "address"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Dell'Orto",
+      "category": "TUTORE_DELEGATO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "paragraph",
+        "address"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Aurora Dell'Orto",
+      "category": "FAMILIARE",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "note"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "6 agosto 2026",
+      "category": "DATA",
+      "group": "date",
+      "family": "DATA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Dell'Orto S.",
+      "category": "PERSONA",
+      "group": "anagrafica",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Ilenia Ciccone",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "table",
+        "address"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Nicola De Laurentiis",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "table"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Tommaso Cilli",
+      "category": "OPERATORE_SANITARIO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 2,
+      "locations": [
+        "table",
+        "paragraph"
+      ],
+      "pages": [
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "M. Dell'Orto",
+      "category": "TUTORE_DELEGATO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        2
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "R. Di Febo",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "1960",
+      "category": "NUMERO_ALBO",
+      "group": "persone_correlate",
+      "family": "NUMERO_ALBO",
+      "mentions": 1,
+      "locations": [
+        "stamp"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "O. Sbardella",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "address"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "085 4253911",
+      "category": "TELEFONO",
+      "group": "contatti",
+      "family": "TELEFONO",
+      "mentions": 1,
+      "locations": [
+        "paragraph"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "AAV-26-11873",
+      "category": "CODICE_CAMPIONE",
+      "group": "identificativi_sanitari",
+      "family": "CODICE_CAMPIONE",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "Zappacosta",
+      "category": "MEDICO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "unmarked": 0
+    },
+    {
+      "value": "B. Mariani",
+      "category": "TUTORE_DELEGATO",
+      "group": "persone_correlate",
+      "family": "PERSONA",
+      "mentions": 1,
+      "locations": [
+        "footnotes"
+      ],
+      "pages": [
+        3
+      ],
+      "unmarked": 0
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Werdnig-Hoffmann",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Kugelberg-Welander",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Hammersmith",
+      "forbidden_categories": [
+        "LUOGO",
+        "STRUTTURA_SANITARIA"
+      ]
+    },
+    {
+      "value": "CHOP INTEND",
+      "forbidden_categories": [
+        "ORGANIZZAZIONE",
+        "STRUTTURA_SANITARIA"
+      ]
+    }
+  ],
+  "sha256": "6a9b3087000f13aa107fc9e2594331a20fb3af1ff6ceb0f598d8a6d881862cb2"
+}

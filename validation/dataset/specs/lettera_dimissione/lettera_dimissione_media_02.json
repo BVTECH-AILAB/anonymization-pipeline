@@ -1,0 +1,282 @@
+{
+  "id": "lettera_dimissione_media_02",
+  "type": "lettera_dimissione",
+  "difficulty": "media",
+  "style": {
+    "font": "times",
+    "color": "#0D3B66",
+    "font_size": 9.5,
+    "margins_mm": 18
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Roberto",
+      "last_name": "Galimberti",
+      "sex": "M",
+      "birth_date": "1966-09-09",
+      "birth_place": "Bergamo"
+    }
+  },
+  "letterhead": {
+    "logo": "OSA",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Sant'Ambrogio di Roccalta]]",
+      "Dipartimento di Neuroscienze",
+      "[[REPARTO:S.C. Neurologia - Stroke Unit]]",
+      "Direttore: Prof. [[MEDICO:Giorgio Locatelli]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Piave 43]]",
+      "[[CAP:24047]] [[LUOGO:Treviglio]]",
+      "Stroke Unit [[TELEFONO:0363 424715]]"
+    ]
+  },
+  "running_header": "[[PERSONA:GALIMBERTI ROBERTO]] - SDO n. [[NUMERO_ACCETTAZIONE:A25/0047731]] - Lettera di dimissione",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale Sant'Ambrogio di Roccalta]] - [[INDIRIZZO:Viale Piave 43]], [[CAP:24047]] [[LUOGO:Treviglio]]"
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "align": "right",
+      "lines": [
+        "Egregio Dott. [[MEDICO:Enrico Bonfanti]]",
+        "Medico di Medicina Generale",
+        "[[LUOGO:Seriate]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "Lettera di dimissione",
+      "subtitle": "Stroke Unit - ricovero in regime ordinario"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "fields": [
+        [
+          "Paziente",
+          "[[PERSONA:GALIMBERTI ROBERTO]]"
+        ],
+        [
+          "Nato il",
+          "[[DATA_NASCITA:09/09/1966]]"
+        ],
+        [
+          "Codice fiscale",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Residente",
+          "[[INDIRIZZO:Via Paderno 27]], [[LUOGO:Seriate]]"
+        ],
+        [
+          "SDO n.",
+          "[[NUMERO_ACCETTAZIONE:A25/0047731]]"
+        ],
+        [
+          "Cartella",
+          "[[NUMERO_CARTELLA:NEU-25-000614]]"
+        ],
+        [
+          "Ammissione",
+          "[[DATA_RICOVERO:17/03/2025]] ore 10:12"
+        ],
+        [
+          "Dimissione",
+          "[[DATA_RICOVERO:25/03/2025]]"
+        ]
+      ]
+    },
+    {
+      "type": "barcode",
+      "kind": "code128",
+      "label": "SDO",
+      "value": "[[NUMERO_ACCETTAZIONE:A25/0047731]]",
+      "align": "left"
+    },
+    {
+      "type": "paragraph",
+      "text": "Caro Collega,\nTi scriviamo in merito al Tuo assistito sig. [[PERSONA:Roberto Galimberti]], di [[ETA:58]] anni, giunto in PS il [[DATA_RICOVERO:17 marzo]] u.s. con attivazione del percorso Code Stroke, per [[DIAGNOSI:emiparesi destra]] e [[DIAGNOSI:afasia motoria]] insorte alle ore 8:40 durante la colazione. L'esordio è stato riferito dalla moglie, sig.ra [[FAMILIARE:Laura Cattaneo]], presente all'evento."
+    },
+    {
+      "type": "heading",
+      "text": "Anamnesi patologica remota"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[PATOLOGIA:Ipertensione arteriosa]] in trattamento irregolare. [[PATOLOGIA:Sindrome delle apnee ostruttive nel sonno]] non trattata. [[DIPENDENZE:Fumatore attivo]] (20 sigarette/die). Non allergie note. Familiarità positiva per ictus (padre)."
+    },
+    {
+      "type": "heading",
+      "text": "Decorso clinico"
+    },
+    {
+      "type": "paragraph",
+      "text": "All'arrivo [[ESAME_VALORE:NIHSS 9]], PA [[MISURE_ANTROPOMETRICHE:178/96 mmHg]], peso stimato [[MISURE_ANTROPOMETRICHE:82 kg]]. La TC encefalo senza mdc escludeva lesioni emorragiche ([[ESAME_VALORE:ASPECTS 8]]); l'angio-TC non mostrava occlusioni di grosso vaso. Alle ore 09:55 è stata eseguita [[TERAPIA:trombolisi sistemica]] con [[FARMACO:alteplase 0,9 mg/kg]] (dose totale [[FARMACO:74 mg]]), senza complicanze emorragiche. A 24 ore [[ESAME_VALORE:NIHSS 4]], alla dimissione [[ESAME_VALORE:NIHSS 2]] per lieve deficit di forza alla mano destra e minime difficoltà di denominazione.\nIl monitoraggio ECG continuo ha documentato in terza giornata un episodio di [[DIAGNOSI:fibrillazione atriale parossistica]] della durata di circa 6 ore, confermato all'Holter. Dopo controllo neuroradiologico, in quinta giornata è stata avviata [[TERAPIA:terapia anticoagulante orale]]. Valutazione logopedica a cura della dott.ssa [[OPERATORE_SANITARIO:Silvia Mapelli]]: deglutizione sicura, afasia in rapido miglioramento."
+    },
+    {
+      "type": "heading",
+      "text": "Indagini strumentali"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Esame",
+        "Data",
+        "N. accesso",
+        "Esito sintetico"
+      ],
+      "widths": [
+        2.6,
+        1.6,
+        2,
+        5
+      ],
+      "rows": [
+        [
+          "TC encefalo + angio-TC",
+          "[[DATA_VISITA:17/03/2025]]",
+          "[[ACCESSION_NUMBER:RX2503170231]]",
+          "Non emorragie, non occlusioni di grosso vaso"
+        ],
+        [
+          "RM encefalo",
+          "[[DATA_VISITA:19/03/2025]]",
+          "[[ACCESSION_NUMBER:RM2503190088]]",
+          "[[DIAGNOSI:Lesione ischemica acuta cortico-sottocorticale frontoinsulare sinistra]]"
+        ],
+        [
+          "ECG Holter 24 h",
+          "[[DATA_VISITA:20/03/2025]]",
+          "[[ACCESSION_NUMBER:HO2503200019]]",
+          "FA parossistica, FC media 84 bpm"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Diagnosi di dimissione"
+    },
+    {
+      "type": "paragraph",
+      "text": "**[[DIAGNOSI:Ictus ischemico cardioembolico in territorio dell'arteria cerebrale media sinistra]]**, trattato con [[TERAPIA:trombolisi sistemica]]. [[DIAGNOSI:Fibrillazione atriale parossistica di nuova diagnosi]] (CHA2DS2-VASc 3). [[PATOLOGIA:Ipertensione arteriosa]]. Alla dimissione [[ESAME_VALORE:mRS 1]] (scala di Rankin modificata)."
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "heading",
+      "text": "Terapia alla dimissione"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Dose",
+        "Orari",
+        "Note"
+      ],
+      "widths": [
+        3,
+        1.4,
+        1.8,
+        3.8
+      ],
+      "rows": [
+        [
+          "[[FARMACO:Apixaban 5 mg]]",
+          "1 cpr",
+          "ore 8 e ore 20",
+          "non sospendere senza parere medico"
+        ],
+        [
+          "[[FARMACO:Atorvastatina 40 mg]]",
+          "1 cpr",
+          "ore 21",
+          ""
+        ],
+        [
+          "[[FARMACO:Amlodipina 5 mg]]",
+          "1 cpr",
+          "ore 8",
+          "obiettivo PA < 130/80"
+        ],
+        [
+          "[[FARMACO:Perindopril 5 mg]]",
+          "1 cpr",
+          "ore 8",
+          ""
+        ],
+        [
+          "[[FARMACO:Vareniclina 0,5 mg]]",
+          "1 cpr",
+          "secondo schema",
+          "supporto alla cessazione del fumo"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Follow-up"
+    },
+    {
+      "type": "fields",
+      "columns": 1,
+      "fields": [
+        [
+          "Visita neurologica",
+          "a 6 settimane presso il nostro ambulatorio (prenotazione [[NUMERO_PRENOTAZIONE:P25-118804]])"
+        ],
+        [
+          "Logopedia",
+          "ciclo di 10 sedute presso il servizio di riabilitazione territoriale"
+        ],
+        [
+          "Polisonnografia",
+          "da programmare tramite CUP per sospette apnee notturne"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Si raccomanda l'astensione dalla guida per almeno 30 giorni. Il paziente e la moglie, sig.ra [[FAMILIARE:Cattaneo]], sono stati istruiti sul riconoscimento dei segni di allarme (scala FAST) e sull'assunzione dell'anticoagulante."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Treviglio]], [[DATA_REFERTO:25-03-2025]]",
+      "role": "Il Dirigente Medico",
+      "name": "Dott.ssa [[MEDICO:Chiara Pesenti]]",
+      "digital": false,
+      "stamp": [
+        "[[REPARTO:NEUROLOGIA - STROKE UNIT]]",
+        "Dott.ssa [[MEDICO:Chiara Pesenti]]",
+        "Iscr. Albo BG n. [[NUMERO_ALBO:8127]]"
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "Visto per la dimissione",
+      "role": "Il Direttore",
+      "name": "Prof. [[MEDICO:Giorgio Locatelli]]",
+      "digital": false
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Rankin",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Holter",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

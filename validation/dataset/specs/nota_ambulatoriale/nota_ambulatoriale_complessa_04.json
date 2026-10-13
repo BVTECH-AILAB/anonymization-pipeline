@@ -1,0 +1,182 @@
+{
+  "id": "nota_ambulatoriale_complessa_04",
+  "type": "nota_ambulatoriale",
+  "difficulty": "complessa",
+  "style": {"font": "helvetica", "color": "#1565C0", "font_size": 8, "margins_mm": 14},
+  "persons": {
+    "paz": {"first_name": "Celeste", "last_name": "De Marchi", "sex": "F", "birth_date": "2010-03-18", "birth_place": "Perugia"},
+    "madre": {"first_name": "Federica", "last_name": "Bellucci", "sex": "F", "birth_date": "1979-06-05", "birth_place": "Perugia"},
+    "padre": {"first_name": "Marco", "last_name": "De Marchi", "sex": "M", "birth_date": "1976-11-02", "birth_place": "Perugia"}
+  },
+  "letterhead": {
+    "logo": "AOVU",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Valle Umbra Nord]]",
+      "[[STRUTTURA_SANITARIA:Presidio Ospedaliero San Feliciano al Lago]]",
+      "[[REPARTO:S.S.D. Cardiologia Pediatrica e delle Cardiopatie Congenite]]",
+      "[[REPARTO:Ambulatorio Cardiomiopatie e Malattie Aritmogene]]",
+      "Responsabile: Prof. [[MEDICO:Emanuele Tosti]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale dei Tigli 40]]",
+      "[[CAP:06132]] [[LUOGO:Perugia]]",
+      "Segreteria [[TELEFONO:075 5781 440]]",
+      "Fax [[FAX:075 5781 449]]",
+      "[[EMAIL:cardioped@aovun.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:De Marchi Celeste]] (minore) - n. [[DATA_NASCITA:18/03/2010]] - C.F. [[CODICE_FISCALE:@paz]] - Cartella amb. [[NUMERO_CARTELLA:CMP-PED-0293]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Valle Umbra Nord]] - Sede legale [[INDIRIZZO:Piazza Ruggero Bonghi 3]], [[CAP:06121]] [[LUOGO:Perugia]] - P.IVA [[PARTITA_IVA:@ao]] - PEC [[PEC:protocollo@pec.aovun.example.it]]",
+    "Referto relativo a minore: consegna ai soli esercenti la responsabilità genitoriale ([[TUTORE_DELEGATO:F. Bellucci]], [[TUTORE_DELEGATO:M. De Marchi]]). Dati genetici trattati ai sensi dell'art. 9 Reg. UE 2016/679."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI VISITA CARDIOLOGICA PEDIATRICA DI CONTROLLO", "subtitle": "Prestazioni: 89.01 visita di controllo - 88.72.3 ecocolordopplergrafia cardiaca - 89.52 ECG - restituzione esiti RM cardiaca e Holter"},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "patient_box", "columns": 1, "title": "ASSISTITA (MINORE)", "fields": [
+        ["Cognome", "[[COGNOME:DE MARCHI]]"],
+        ["Nome", "[[NOME:CELESTE]]"],
+        ["Nata a / il", "[[LUOGO_NASCITA:Perugia]], [[DATA_NASCITA:18/03/2010]] ([[ETA:16]] anni)"],
+        ["Sesso", "[[SESSO:F]]"],
+        ["Residenza", "[[INDIRIZZO:Via dei Gelsi 27]], [[CAP:06073]] [[LUOGO:Corciano]]"],
+        ["Scuola", "[[SCUOLA:Liceo Linguistico Statale Colle Aurora]], classe III"],
+        ["Pediatra di libera scelta", "Dott. [[MEDICO:Stefano Bocciarelli]]"],
+        ["Esercenti resp. genitoriale", "madre [[TUTORE_DELEGATO:Federica Bellucci]] (affido condiviso, collocamento prevalente) - padre [[TUTORE_DELEGATO:Marco De Marchi]]"],
+        ["Recapiti", "madre [[TELEFONO:+39 349 220 7316]] - padre [[TELEFONO:+39 335 618 0942]]"]
+      ]}
+    ], "right": [
+      {"type": "fields", "columns": 1, "fields": [
+        ["Data visita", "[[DATA_VISITA:22/09/2026]] ore 9:40"],
+        ["Prenotazione CUP", "[[NUMERO_PRENOTAZIONE:PG26-CUP-0718842]]"],
+        ["NRE", "[[NUMERO_RICETTA:100A21004587631]]"],
+        ["Data prescrizione", "[[DATA_PRESCRIZIONE:28/07/2026]]"],
+        ["Esenzione", "[[CODICE_ESENZIONE:021.425]]"],
+        ["Cod. anagrafico", "[[ID_PAZIENTE:00718345]]"],
+        ["Tessera sanitaria", "[[TESSERA_SANITARIA:@ts]]"],
+        ["Accompagnata da", "madre e padre (presenti entrambi)"]
+      ]},
+      {"type": "barcode", "kind": "code128", "label": "Prenotazione CUP", "value": "[[NUMERO_PRENOTAZIONE:PG26-CUP-0718842]]", "align": "left"}
+    ]},
+    {"type": "char_boxes", "label": "Codice fiscale", "value": "[[CODICE_FISCALE:@paz]]"},
+    {"type": "section", "text": "Motivo della visita e anamnesi"},
+    {"type": "paragraph", "text": "**Quesito:** [[DIAGNOSI:cardiomiopatia ipertrofica a carattere familiare]], controllo semestrale e stratificazione del rischio aritmico; valutazione dell'idoneità sportiva. La ragazza era giunta alla nostra osservazione il [[DATA:14/11/2025]], inviata dal Dott. [[MEDICO:Alvaro Pazzaglia]] del [[STRUTTURA_SANITARIA:Centro di Medicina dello Sport Ellisse Medica]], dove l'ECG eseguito per il rinnovo del certificato agonistico (pallavolo, [[ORGANIZZAZIONE:A.S.D. Volley Gelsomino Corciano]], 4 allenamenti/settimana) mostrava [[DIAGNOSI:onde T negative profonde in V4-V6 con criteri di ipertrofia ventricolare sinistra]]. L'ecocardiogramma del [[DATA:02/12/2025]] documentava [[DIAGNOSI:ipertrofia settale asimmetrica]] con spessore massimo di [[ESAME_VALORE:21 mm]]."},
+    {"type": "paragraph", "text": "**Anamnesi familiare** (vedi tabella): lo zio paterno, sig. [[FAMILIARE:Paolo De Marchi]], è deceduto il [[DATA_DECESSO:07/06/2009]] all'età di [[ETA:34]] anni per [[DECESSO_CAUSA:morte cardiaca improvvisa]] durante una partita di calcio amatoriale; il riscontro autoptico, eseguito presso l'[[STRUTTURA_SANITARIA:Istituto di Medicina Legale di Perugia]], descriveva un cuore di 560 g con disarray miocitario. Il padre, sig. [[TUTORE_DELEGATO:Marco De Marchi]], ha ricevuto diagnosi di [[PATOLOGIA:cardiomiopatia ipertrofica non ostruttiva]] nel 2026 dopo lo screening a cascata ed è seguito dall'ambulatorio adulti del Dott. [[MEDICO:Leonardo Sciurpa]]. Il test genetico ha identificato nella paziente e nel padre la variante [[DATO_GENETICO:MYBPC3 c.1504C>T (p.Arg502Trp) in eterozigosi]], classificata patogenetica (referto n. [[NUMERO_REFERTO:GEN-25-1147]], campione DNA [[CODICE_CAMPIONE:DNA-25-03381]])."},
+    {"type": "table", "header": ["Familiare", "Grado / età", "Stato clinico", "Genotipo MYBPC3", "Note"], "widths": [3.2, 2.2, 3.6, 2.4, 3.6], "font_size": 7.2, "rows": [
+      ["[[TUTORE_DELEGATO:Marco De Marchi]]", "padre, [[ETA:49]] anni", "[[PATOLOGIA:CMI non ostruttiva]], SIV 19 mm", "[[DATO_GENETICO:c.1504C>T positivo]]", "seguito dal Dott. [[MEDICO:L. Sciurpa]]"],
+      ["[[TUTORE_DELEGATO:Federica Bellucci]]", "madre, [[ETA:47]] anni", "eco nella norma", "non testata (non a rischio)", "-"],
+      ["[[FAMILIARE:Viola De Marchi]]", "sorella, [[ETA:11]] anni", "eco e ECG nella norma", "[[DATO_GENETICO:c.1504C>T negativo]]", "dimessa dal follow-up"],
+      ["[[FAMILIARE:Paolo De Marchi]]", "zio paterno", "deceduto a [[ETA:34]] anni", "non disponibile", "[[DECESSO_CAUSA:morte improvvisa da sforzo]]"],
+      ["[[FAMILIARE:Liliana Ceccucci]]", "nonna paterna, [[ETA:76]] anni", "[[PATOLOGIA:fibrillazione atriale parossistica]]", "[[DATO_GENETICO:c.1504C>T positivo]]", "in carico presso la [[STRUTTURA_SANITARIA:Casa di Cura Villa Fonte Tiberina]]"]
+    ], "caption": "Albero genealogico completo allegato alla cartella [[NUMERO_CARTELLA:CMP-PED-0293]]; consulenza genetica eseguita dal Dott. [[MEDICO:Pierluigi Ceccarelli]]."},
+    {"type": "paragraph", "text": "**Anamnesi personale:** nata a termine, sviluppo regolare. [[ALLERGIA:Allergia ad amoxicillina]] (esantema orticarioide nel 2017). Nessuna sincope; riferisce sporadiche palpitazioni a riposo, di breve durata, e dispnea per sforzi intensi. Dal febbraio 2026 sospesa l'attività agonistica: da allora la madre riferisce [[SALUTE_MENTALE:umore deflesso, ritiro sociale e disturbi del sonno]], con calo del rendimento scolastico. In terapia con [[FARMACO:bisoprololo 2,5 mg]] 1 cp/die dal [[DATA:15/01/2026]], ben tollerato. Non assume integratori né bevande energetiche; non fuma."},
+    {"type": "section", "text": "Esame obiettivo e parametri"},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Peso", "[[MISURE_ANTROPOMETRICHE:58 kg]]"],
+      ["Altezza", "[[MISURE_ANTROPOMETRICHE:171 cm]]"],
+      ["BMI / BSA", "[[MISURE_ANTROPOMETRICHE:19,8 kg/m²]] - [[MISURE_ANTROPOMETRICHE:1,66 m²]]"],
+      ["PA braccio dx", "[[MISURE_ANTROPOMETRICHE:108/64 mmHg]]"],
+      ["FC", "[[ESAME_VALORE:58 bpm]], ritmica"],
+      ["SpO2 (aria)", "[[ESAME_VALORE:99%]]"]
+    ]},
+    {"type": "paragraph", "text": "Parametri rilevati dall'inf. [[OPERATORE_SANITARIO:Martina Brunetti]]. Buone condizioni generali, eupnoica. Itto della punta in V spazio intercostale, emiclaveare, sollevante. Toni validi, [[ESAME_VALORE:soffio sistolico eiettivo 2/6]] al mesocardio e al margine sternale sinistro, che si accentua in ortostatismo e durante la manovra di Valsalva; non sfregamenti. Polsi periferici presenti e simmetrici, non edemi. Torace: murmure vescicolare fisiologico. Addome nella norma."},
+    {"type": "section", "text": "Esami strumentali"},
+    {"type": "paragraph", "text": "**ECG a 12 derivazioni (odierno):** ritmo sinusale, FC [[ESAME_VALORE:58 bpm]], PR [[ESAME_VALORE:152 ms]], QRS [[ESAME_VALORE:96 ms]], QTc [[ESAME_VALORE:418 ms]]; [[ESAME_VALORE:voltaggi di IVS (Sokolow-Lyon 46 mm)]] con [[ESAME_VALORE:onde T negative asimmetriche in V4-V6, DI e aVL]]; assenza di preeccitazione (esclusa sindrome di Wolff-Parkinson-White)."},
+    {"type": "table", "header": ["Ecocardiogramma (acc. [[ACCESSION_NUMBER:ECO26-PED-04417]])", "[[DATA:02/12/2025]]", "[[DATA_VISITA:22.09.26]]", "Riferimento / commento"], "widths": [4.6, 2.2, 2.2, 4.4], "font_size": 7.4, "rows": [
+      ["Setto interventricolare basale", "[[ESAME_VALORE:21 mm]]", "[[ESAME_VALORE:22 mm]]", "z-score [[ESAME_VALORE:+7,9]]"],
+      ["Parete posteriore VS", "[[ESAME_VALORE:9 mm]]", "[[ESAME_VALORE:9,5 mm]]", "ipertrofia asimmetrica"],
+      ["Diametro telediastolico VS", "[[ESAME_VALORE:41 mm]]", "[[ESAME_VALORE:40 mm]]", "nella norma per BSA"],
+      ["Frazione di eiezione (Simpson biplano)", "[[ESAME_VALORE:68%]]", "[[ESAME_VALORE:66%]]", "conservata"],
+      ["Gradiente LVOT a riposo", "[[ESAME_VALORE:14 mmHg]]", "[[ESAME_VALORE:18 mmHg]]", "ostruzione se pari o superiore a 30 mmHg"],
+      ["Gradiente LVOT dopo Valsalva", "[[ESAME_VALORE:31 mmHg]]", "[[ESAME_VALORE:52 mmHg]]", "ostruzione latente inducibile"],
+      ["SAM della mitrale", "[[ESAME_VALORE:assente]]", "[[ESAME_VALORE:incompleto]]", "[[ESAME_VALORE:IM lieve]], getto posteriore"],
+      ["Atrio sinistro, diametro AP", "[[ESAME_VALORE:33 mm]]", "[[ESAME_VALORE:35 mm]]", "nei limiti"]
+    ], "caption": "Acquisizioni eseguite dalla TFCPC [[OPERATORE_SANITARIO:Sara Cesarini]]; refertazione Dott.ssa [[MEDICO:Ginevra Fioriti]]. Studio Doppler tissutale: E/e' medio [[ESAME_VALORE:10,6]]."},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "heading", "text": "ECG Holter 24 h"},
+      {"type": "paragraph", "text": "Registrazione del [[DATA:03.09.2026]] (acc. [[ACCESSION_NUMBER:HOL-26-01182]]), in terapia con betabloccante: ritmo sinusale, FC media [[ESAME_VALORE:61 bpm]] (min [[ESAME_VALORE:42 bpm]] notturna, max [[ESAME_VALORE:139 bpm]]). [[ESAME_VALORE:BEV isolati 212/24 h]], monomorfi; [[ESAME_VALORE:un episodio di TVNS di 4 battiti]] (FC [[ESAME_VALORE:165 bpm]]) alle ore 17:05, asintomatico secondo il diario. Non pause significative. Lettura a cura dell'inf. [[OPERATORE_SANITARIO:M. Brunetti]] e validazione medica."}
+    ], "right": [
+      {"type": "heading", "text": "RM cardiaca con gadolinio"},
+      {"type": "paragraph", "text": "Eseguita il [[DATA:19 agosto 2026]] presso la [[REPARTO:UOC Radiologia]] del [[STRUTTURA_SANITARIA:P.O. San Feliciano al Lago]] (acc. [[ACCESSION_NUMBER:RMC26-0072215]]), refertata dalla Dott.ssa [[MEDICO:Annarita Brunozzi]]: massa VS indicizzata [[ESAME_VALORE:78 g/m²]], spessore massimo [[ESAME_VALORE:23 mm]] al setto anteriore medio, [[ESAME_VALORE:LGE intramurale a chiazze pari al 4% della massa]], non aneurisma apicale."}
+    ]},
+    {"type": "paragraph", "text": "**Test cardiopolmonare (protocollo a rampa su cicloergometro, non protocollo di Bruce)** del [[DATA:10/09/2026]]: VO2 picco [[ESAME_VALORE:31,4 mL/kg/min]] ([[ESAME_VALORE:82% del predetto]]), [[ESAME_VALORE:risposta pressoria adeguata]] (PAS da [[ESAME_VALORE:105 mmHg]] a [[ESAME_VALORE:162 mmHg]]), nessuna aritmia da sforzo; interrotto per esaurimento muscolare."},
+    {"type": "section", "text": "Stratificazione del rischio"},
+    {"type": "table", "header": ["Variabile (HCM Risk-Kids)", "Valore della paziente"], "widths": [6, 6], "font_size": 7.4, "zebra": false, "rows": [
+      ["Sincope inspiegata", "no"],
+      ["TVNS all'Holter", "sì ([[ESAME_VALORE:1 episodio]])"],
+      ["Spessore massimo VS (z-score)", "[[ESAME_VALORE:+7,9]]"],
+      ["Diametro atriale sinistro (z-score)", "[[ESAME_VALORE:+1,3]]"],
+      ["Gradiente LVOT massimo", "[[ESAME_VALORE:52 mmHg]]"],
+      ["Rischio stimato di morte improvvisa a 5 anni", "**[[ESAME_VALORE:4,8%]]** (rischio intermedio, soglia ICD 6%)"]
+    ], "caption": "Storia familiare di morte improvvisa nel parente di primo grado non presente (zio = secondo grado), ma considerata come modificatore clinico."},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Cardiomiopatia ipertrofica sarcomerica (MYBPC3) con ostruzione latente all'efflusso ventricolare sinistro]]**, in classe NYHA [[ESAME_VALORE:I-II]]; [[DIAGNOSI:tachicardia ventricolare non sostenuta isolata]]; [[DIAGNOSI:fibrosi miocardica focale alla RM]]. Rischio aritmico intermedio, in lieve aumento rispetto al controllo di marzo. Ai sensi del D.M. 18/02/1982 e dei protocolli COCIS la paziente [[PERSONA:C. De Marchi]] **non è idonea all'attività sportiva agonistica**; consentita attività fisica ricreativa di intensità lieve-moderata. Si segnala inoltre [[SALUTE_MENTALE:disturbo dell'adattamento con ansia e umore depresso]] reattivo alla sospensione sportiva."},
+    {"type": "section", "text": "Terapia e prescrizioni"},
+    {"type": "table", "header": ["Farmaco / prestazione", "Posologia / indicazione", "Note"], "widths": [4.4, 4.6, 5], "font_size": 7.4, "rows": [
+      ["[[FARMACO:Bisoprololo 5 mg]]", "1 cp al mattino (aumento dose)", "controllo FC e PA dal pediatra dopo 2 settimane"],
+      ["Idratazione", "almeno 2 L/die, evitare disidratazione", "evitare vasodilatatori e diuretici; cautela con farmaci QT-prolunganti"],
+      ["ECG Holter 24 h + ecocardiogramma", "tra 3 mesi", "ricetta NRE [[NUMERO_RICETTA:100A21004599120]], classe di priorità D"],
+      ["[[TERAPIA:Percorso di supporto psicologico]]", "colloqui settimanali", "presso il [[REPARTO:Servizio di Psicologia Clinica dell'Età Evolutiva]], Dott.ssa [[OPERATORE_SANITARIO:Agnese Lupattelli]]"],
+      ["Loop recorder impiantabile", "da discutere al prossimo controllo", "se nuovi episodi di TVNS o sincope; non indicazione attuale a ICD"]
+    ]},
+    {"type": "paragraph", "text": "**Prossimo controllo:** [[DATA:15 dicembre 2026]] ore 10:00, Ambulatorio Cardiomiopatie (piano 2, stanza 14). La prenotazione è già inserita in agenda con codice [[NUMERO_PRENOTAZIONE:PG26-CUP-0951207]]. In caso di sincope, dolore toracico da sforzo o palpitazioni prolungate recarsi in Pronto Soccorso o chiamare il 112 mostrando questo referto."},
+    {"type": "signature", "place_date": "[[LUOGO:Perugia]], [[DATA_REFERTO:22/09/2026]]", "role": "Dirigente Medico - Cardiologia Pediatrica", "name": "Dott.ssa [[MEDICO:Ginevra Fioriti]]", "extra": ["Visto il Responsabile, Prof. [[MEDICO:E. Tosti]]", "Referto n. [[NUMERO_REFERTO:CPED-26-0922-0293]]"], "digital": false, "stamp": ["[[STRUTTURA_SANITARIA:A.O. VALLE UMBRA NORD]]", "[[REPARTO:CARDIOLOGIA PEDIATRICA]]", "Dott.ssa [[MEDICO:G. Fioriti]]", "OMCeO PG n. [[NUMERO_ALBO:5318]]"]},
+    {"type": "section", "text": "Scheda per il Pronto Soccorso e per la famiglia"},
+    {"type": "note", "text": "SCHEDA DI EMERGENZA - [[PERSONA:De Marchi Celeste]], [[ETA:16]] anni, gruppo sanguigno [[GRUPPO_SANGUIGNO:0 Rh positivo]]. [[DIAGNOSI:Cardiomiopatia ipertrofica con ostruzione latente]], in terapia con [[FARMACO:bisoprololo 5 mg]]; [[ALLERGIA:allergia ad amoxicillina]]. In caso di ipotensione evitare nitrati, diuretici e inotropi; preferire riempimento volemico e fenilefrina. Reperibilità del centro: [[TELEFONO:075 5781 440]] (ore 8-14), Dott.ssa [[MEDICO:G. Fioriti]]; fuori orario guardia cardiologica [[TELEFONO:075 5781 100]]. Familiari da avvisare: madre [[TELEFONO:+39 349 220 7316]], padre [[TELEFONO:+39 335 618 0942]]."},
+    {"type": "paragraph", "text": "**Indicazioni per la famiglia:** è stato consegnato alla madre, sig.ra [[TUTORE_DELEGATO:Bellucci]], il materiale informativo sulla cardiomiopatia ipertrofica e sull'uso del defibrillatore semiautomatico; si suggerisce che almeno un familiare frequenti il corso BLSD pediatrico organizzato dal [[REPARTO:Centro di Formazione Aziendale]]. Il padre, sig. [[TUTORE_DELEGATO:M. De Marchi]], prosegue i propri controlli presso l'ambulatorio adulti. Si raccomanda di informare la scuola della necessità di un DAE nella palestra dell'istituto, senza comunicare la diagnosi se non con il consenso dei genitori. [[PERSONA:Celeste]] potrà partecipare alle lezioni di educazione fisica con esonero dalle prove di resistenza e dai test massimali."},
+    {"type": "footnotes", "items": [
+      "Scheda di emergenza in formato tascabile consegnata in duplice copia alla minore e alla madre.",
+      "Le valutazioni di idoneità fanno riferimento ai protocolli COCIS 2023 e alle linee guida ESC 2023 sulle cardiomiopatie."
+    ]},
+    {"type": "page_break"},
+    {"type": "title", "text": "ALLEGATO A - COMUNICAZIONI E CONSENSI", "subtitle": "Comunicazione di non idoneità e consenso dei genitori alla trasmissione dei dati e allo screening familiare"},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Protocollo", "[[NUMERO_PROTOCOLLO:2026/0045871]]"],
+      ["Data", "[[DATA_REFERTO:22/09/2026]]"],
+      ["Rif. referto", "[[NUMERO_REFERTO:CPED-26-0922-0293]]"]
+    ]},
+    {"type": "address", "align": "right", "lines": [
+      "Al Dott. [[MEDICO:Alvaro Pazzaglia]]",
+      "[[STRUTTURA_SANITARIA:Centro di Medicina dello Sport Ellisse Medica]]",
+      "[[INDIRIZZO:Via Settevalli 233]] - [[CAP:06129]] [[LUOGO:Perugia]]",
+      "PEC [[PEC:ellissemedica@pec.example.it]]",
+      "e p.c. al Pediatra di libera scelta, Dott. [[MEDICO:S. Bocciarelli]]"
+    ]},
+    {"type": "paragraph", "text": "Oggetto: atleta [[PERSONA:Celeste De Marchi]], nata il [[DATA_NASCITA:18.03.2010]], tesserata [[ORGANIZZAZIONE:A.S.D. Volley Gelsomino Corciano]].\n\nGentile Collega, a seguito degli accertamenti eseguiti presso il nostro ambulatorio si conferma per l'atleta in oggetto la presenza di una cardiopatia che controindica in modo permanente l'attività sportiva agonistica. La comunicazione viene inviata con il consenso di entrambi i genitori, sottoscritto in calce. Le informazioni di natura genetica non sono trasmesse alla società sportiva, alla quale verrà comunicato il solo esito di non idoneità."},
+    {"type": "checkboxes", "label": "I genitori, esercenti la responsabilità genitoriale, dichiarano di:", "columns": 2, "items": [
+      ["autorizzare l'invio del referto al Medico dello Sport", true],
+      ["autorizzare l'invio al Pediatra di libera scelta", true],
+      ["autorizzare la comunicazione dell'esito alla scuola", false],
+      ["acconsentire allo screening clinico dei familiari a rischio", true],
+      ["acconsentire alla conservazione del DNA per ricerca", true],
+      ["richiedere copia dei tracciati e delle immagini", true]
+    ]},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "paragraph", "align": "left", "text": "**La madre:** [[TUTORE_DELEGATO:Federica Bellucci]]\nnata a [[LUOGO_NASCITA:Perugia]] il [[DATA_NASCITA:05/06/1979]]\ndoc. CI n. [[NUMERO_CARTA_IDENTITA:CA48210KT]] rilasciata dal [[ENTE_RILASCIO:Comune di Corciano]]\nFirma ______________________"},
+      {"type": "char_boxes", "label": "C.F. madre", "value": "[[CODICE_FISCALE:@madre]]"}
+    ], "right": [
+      {"type": "paragraph", "align": "left", "text": "**Il padre:** [[TUTORE_DELEGATO:Marco De Marchi]]\nnato a [[LUOGO_NASCITA:Perugia]] il [[DATA_NASCITA:02/11/1976]]\nresidente in [[INDIRIZZO:Via Pievaiola 118]], [[CAP:06128]] [[LUOGO:Perugia]]\nFirma ______________________"},
+      {"type": "char_boxes", "label": "C.F. padre", "value": "[[CODICE_FISCALE:@padre]]"}
+    ]},
+    {"type": "paragraph", "text": "La minore [[PERSONA:Celeste]] è stata informata con linguaggio adeguato all'età e ha espresso il proprio assenso; ha chiesto di poter proseguire l'attività in palestra come segnapunti e di essere accompagnata nel percorso psicologico dalla Dott.ssa [[OPERATORE_SANITARIO:A. Lupattelli]]. Testimone del colloquio: inf. [[OPERATORE_SANITARIO:Martina Brunetti]]."},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "barcode", "kind": "qr", "label": "Referto online per [[PERSONA:C. De Marchi]] - accesso con codice ritiro", "value": "https://referti.aovun.example.it/r/[[NUMERO_REFERTO:CPED-26-0922-0293]]", "align": "left"}
+    ], "right": [
+      {"type": "stamp", "lines": ["[[STRUTTURA_SANITARIA:AZIENDA OSPEDALIERA VALLE UMBRA NORD]]", "Ambulatorio Cardiomiopatie", "Prof. [[MEDICO:Emanuele Tosti]]", "Ord. Medici PG n. [[NUMERO_ALBO:3907]]"], "angle": 12, "align": "center"}
+    ]},
+    {"type": "footnotes", "items": [
+      "HCM Risk-Kids: modello validato in età pediatrica; al passaggio all'ambulatorio adulti il rischio verrà ricalcolato con il modello HCM Risk-SCD.",
+      "Lo screening clinico della sorella [[FAMILIARE:V. De Marchi]] non è più necessario (genotipo negativo); si raccomanda invece l'ECG ai cugini figli della zia, sig.ra [[FAMILIARE:Laura De Marchi]], che verranno contattati per il tramite del padre.",
+      "Il presente allegato è conservato nella cartella [[NUMERO_CARTELLA:CMP-PED-0293]]; il referto genetico originale resta presso il Laboratorio di Genetica Medica (Dott. [[MEDICO:P. Ceccarelli]])."
+    ]}
+  ],
+  "negatives": [
+    {"value": "Valsalva", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]},
+    {"value": "Wolff-Parkinson-White", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]},
+    {"value": "Holter", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]},
+    {"value": "Simpson", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]},
+    {"value": "Bruce", "forbidden_categories": ["PERSONA", "NOME", "MEDICO"]},
+    {"value": "Sokolow-Lyon", "forbidden_categories": ["PERSONA", "COGNOME", "LUOGO"]},
+    {"value": "Doppler", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]}
+  ]
+}

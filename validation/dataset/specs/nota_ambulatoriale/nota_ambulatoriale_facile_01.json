@@ -1,0 +1,61 @@
+{
+  "id": "nota_ambulatoriale_facile_01",
+  "type": "nota_ambulatoriale",
+  "difficulty": "facile",
+  "style": {"font": "helvetica", "color": "#1F5F99", "font_size": 9.5, "margins_mm": 18},
+  "persons": {
+    "paz": {"first_name": "Massimo", "last_name": "Carenzi", "sex": "M", "birth_date": "1961-09-23", "birth_place": "Torino"}
+  },
+  "letterhead": {
+    "logo": "OSL",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Santa Lucia dei Colli]]",
+      "[[REPARTO:S.C. Cardiologia - Ambulatorio Ipertensione]]",
+      "Direttore: Dott. [[MEDICO:Giorgio Vercellone]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Corso Moncalieri 210]]",
+      "[[CAP:10133]] [[LUOGO:Torino]]",
+      "Tel. [[TELEFONO:011 5582140]]",
+      "[[EMAIL:cardiologia@santalucia.example.it]]"
+    ]
+  },
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale Santa Lucia dei Colli]] - Servizio Sanitario Regionale - Referto ad uso del paziente e del medico curante",
+    "Le prenotazioni dei controlli si effettuano tramite CUP regionale o presso gli sportelli dell'ospedale"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI VISITA CARDIOLOGICA", "subtitle": "Prima visita ambulatoriale"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Massimo Carenzi]]"],
+      ["Nato il", "[[DATA_NASCITA:23/09/1961]]"],
+      ["C.F.", "[[CODICE_FISCALE:@paz]]"],
+      ["Sesso", "[[SESSO:M]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["N. prenotazione CUP", "[[NUMERO_PRENOTAZIONE:CUP24-0187733]]"],
+      ["NRE", "[[NUMERO_RICETTA:010A40038826174]]"],
+      ["Prestazione", "89.7A.3 - Prima visita cardiologica"],
+      ["Data visita", "[[DATA_VISITA:12/03/2024]]"],
+      ["Medico inviante", "Dott.ssa [[MEDICO:Paola Rinaudo]]"],
+      ["Regime", "SSN - classe di priorità D"]
+    ]},
+    {"type": "section", "text": "Anamnesi"},
+    {"type": "paragraph", "text": "Familiarità per [[PATOLOGIA:cardiopatia ischemica]]. [[DIPENDENZE:Ex fumatore]] (20 sigarette/die fino al 2015). Riferisce da circa sei mesi riscontro occasionale di valori pressori elevati al domicilio, in assenza di cefalea, dispnea o dolore toracico. Nota [[PATOLOGIA:dislipidemia]] in trattamento con [[FARMACO:atorvastatina 20 mg]] 1 cp la sera. Non allergie note."},
+    {"type": "section", "text": "Esame obiettivo e parametri vitali"},
+    {"type": "paragraph", "text": "Paziente in buone condizioni generali, eupnoico a riposo. Toni cardiaci validi, ritmici, pause libere. Murmure vescicolare fisiologico. Polsi periferici presenti e simmetrici. Non edemi declivi."},
+    {"type": "table", "header": ["Parametro", "Valore rilevato"], "widths": [3, 3], "rows": [
+      ["Pressione arteriosa (media di 3 misurazioni)", "[[MISURE_ANTROPOMETRICHE:152/94 mmHg]]"],
+      ["Frequenza cardiaca", "[[ESAME_VALORE:78 bpm]], ritmica"],
+      ["Peso / Altezza", "[[MISURE_ANTROPOMETRICHE:86 kg]] / [[MISURE_ANTROPOMETRICHE:176 cm]]"],
+      ["BMI", "[[MISURE_ANTROPOMETRICHE:27,8 kg/m²]]"]
+    ]},
+    {"type": "paragraph", "text": "**ECG:** ritmo sinusale, FC [[ESAME_VALORE:76/min]], PR [[ESAME_VALORE:0,16 s]], QRS stretto, [[ESAME_VALORE:non alterazioni della ripolarizzazione]]."},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Ipertensione arteriosa essenziale di grado 1]] in soggetto con [[PATOLOGIA:dislipidemia]] e [[DIAGNOSI:sovrappeso]]. Rischio cardiovascolare globale moderato."},
+    {"type": "paragraph", "text": "**Terapia consigliata:** [[FARMACO:ramipril 5 mg]] 1 cp al mattino. Proseguire [[FARMACO:atorvastatina 20 mg]]. Dieta iposodica, attività fisica aerobica regolare.\n**Accertamenti:** monitoraggio pressorio delle 24 ore, ecocardiogramma transtoracico, esami ematochimici (creatinina, potassio, profilo lipidico).\n**Controllo:** tra 3 mesi con l'esito degli accertamenti, prenotazione tramite CUP."},
+    {"type": "signature", "place_date": "[[LUOGO:Torino]], [[DATA_REFERTO:12/03/2024]]", "role": "Il Medico Specialista", "name": "Dott.ssa [[MEDICO:Silvia Bertolotti]]", "digital": false}
+  ],
+  "negatives": []
+}

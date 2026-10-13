@@ -1,0 +1,56 @@
+{
+  "id": "lettera_dimissione_facile_03",
+  "type": "lettera_dimissione",
+  "difficulty": "facile",
+  "style": {"font": "dejavu", "color": "#00796B", "font_size": 9, "margins_mm": 16},
+  "persons": {
+    "paz": {"first_name": "Elisa", "last_name": "Marchetti", "sex": "F", "birth_date": "1993-11-25", "birth_place": "Perugia"}
+  },
+  "letterhead": {
+    "logo": "OMA",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Maria Ausiliatrice]]",
+      "[[REPARTO:S.C. Ostetricia e Ginecologia]]",
+      "Area Materno-Infantile - Blocco Parto"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via della Pineta 9]]",
+      "[[CAP:06034]] [[LUOGO:Foligno]]",
+      "Tel. [[TELEFONO:0742 339410]]"
+    ]
+  },
+  "footer": [
+    "In caso di urgenza dopo la dimissione rivolgersi al Pronto Soccorso Ostetrico-Ginecologico, attivo 24 ore su 24."
+  ],
+  "blocks": [
+    {"type": "title", "text": "LETTERA DI DIMISSIONE OSTETRICA", "subtitle": "Puerperio fisiologico"},
+    {"type": "patient_box", "title": "DATI DELLA PAZIENTE", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Elisa Marchetti]]"],
+      ["Data di nascita", "[[DATA_NASCITA:25/11/1993]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Telefono", "[[TELEFONO:+39 340 518 7726]]"],
+      ["Cartella clinica", "[[NUMERO_CARTELLA:OST-2025-00912]]"],
+      ["Gruppo sanguigno", "[[GRUPPO_SANGUIGNO:0 Rh positivo]]"],
+      ["Ingresso", "[[DATA_RICOVERO:06/05/2025]]"],
+      ["Dimissione", "[[DATA_RICOVERO:09/05/2025]]"]
+    ]},
+    {"type": "paragraph", "text": "Gentile Collega,\nLe affidiamo la Sua assistita, dimessa in data odierna in buone condizioni insieme al neonato."},
+    {"type": "section", "text": "Gravidanza e parto"},
+    {"type": "paragraph", "text": "Primigravida. [[GRAVIDANZA:Gravidanza fisiologica a termine]], [[GRAVIDANZA:39 settimane + 4 giorni]]. Screening infettivologici negativi. Ricoverata per [[DIAGNOSI:inizio di travaglio spontaneo]].\nIl [[DATA:07/05/2025]] [[INTERVENTO:parto vaginale spontaneo]] con [[INTERVENTO:episiotomia medio-laterale destra]]. Perdita ematica stimata [[ESAME_VALORE:350 mL]]. Nato vivo di sesso maschile, peso [[ESAME_VALORE:3.420 g]], Apgar 9-10."},
+    {"type": "section", "text": "Decorso del puerperio"},
+    {"type": "paragraph", "text": "Regolare. Utero ben contratto, lochiazioni nella norma, episiorrafia in ordine. Allattamento al seno avviato. Emoglobina in seconda giornata [[ESAME_VALORE:10,3]] g/dL, per cui si prescrive supplementazione marziale."},
+    {"type": "section", "text": "Diagnosi alla dimissione"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Puerperio fisiologico dopo parto spontaneo]]**; [[DIAGNOSI:anemia post-partum lieve]]."},
+    {"type": "section", "text": "Terapia"},
+    {"type": "table", "header": ["Farmaco", "Dose", "Orari", "Note"], "widths": [3.2, 1.4, 1.6, 3.4], "rows": [
+      ["[[FARMACO:Ferro solfato 105 mg]] cpr", "1 cpr", "ore 10", "lontano dai pasti, per 2 mesi"],
+      ["[[FARMACO:Acido folico 5 mg]] cpr", "1 cpr", "ore 8", "per 1 mese"],
+      ["[[FARMACO:Ibuprofene 400 mg]] cpr", "1 cpr", "al bisogno", "compatibile con l'allattamento"]
+    ]},
+    {"type": "section", "text": "Controlli"},
+    {"type": "paragraph", "text": "Visita ginecologica di controllo a 40 giorni dal parto presso il consultorio di zona. Emocromo tra 4 settimane. Igiene quotidiana della ferita perineale. Contraccezione da discutere alla visita post-partum."},
+    {"type": "signature", "place_date": "[[LUOGO:Foligno]], [[DATA_REFERTO:09/05/2025]]", "role": "Il Medico Ostetrico", "name": "Dott.ssa [[MEDICO:Valentina Proietti]]", "digital": false}
+  ],
+  "negatives": [{"value": "Apgar", "forbidden_categories": ["PERSONA", "COGNOME"]}]
+}

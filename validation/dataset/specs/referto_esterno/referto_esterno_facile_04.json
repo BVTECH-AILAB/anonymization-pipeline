@@ -1,0 +1,53 @@
+{
+  "id": "referto_esterno_facile_04",
+  "type": "referto_esterno",
+  "difficulty": "facile",
+  "style": {"font": "dejavu", "color": "#2E6B30", "font_size": 9, "margins_mm": 15},
+  "persons": {
+    "paz": {"first_name": "Assunta", "last_name": "Lorusso", "sex": "F", "birth_date": "1952-08-07", "birth_place": "Potenza"}
+  },
+  "letterhead": {
+    "logo": "AOSL",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Regionale San Leucio]]",
+      "Dipartimento Testa-Collo",
+      "[[REPARTO:U.O.C. Oculistica]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Contrada Macchia Romana 5]]",
+      "[[CAP:85100]] [[LUOGO:Potenza]]",
+      "Tel. [[TELEFONO:0971 384520]]"
+    ]
+  },
+  "footer": [
+    "Servizio Sanitario Regionale - Prestazione erogata a paziente residente fuori regione (mobilità sanitaria interregionale)."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI VISITA OCULISTICA"},
+    {"type": "patient_box", "columns": 1, "align": "right", "fields": [
+      ["Paziente", "[[PERSONA:Assunta Lorusso]]"],
+      ["Data di nascita", "[[DATA_NASCITA:07/08/1952]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Residenza", "[[LUOGO:Bologna]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Data visita", "[[DATA_VISITA:22/07/2024]]"],
+      ["N. prenotazione CUP", "[[NUMERO_PRENOTAZIONE:2024PZ0098341]]"]
+    ]},
+    {"type": "heading", "text": "Anamnesi"},
+    {"type": "paragraph", "text": "Paziente in visita presso familiari, riferisce calo visivo progressivo bilaterale, più marcato in OD, e abbagliamento nella guida notturna. In terapia per [[PATOLOGIA:glaucoma cronico ad angolo aperto]] con [[FARMACO:latanoprost 0,005% collirio]] una goccia la sera in entrambi gli occhi. [[PATOLOGIA:Diabete mellito tipo 2]] in trattamento orale."},
+    {"type": "heading", "text": "Esame obiettivo"},
+    {"type": "table", "header": ["", "Occhio destro (OD)", "Occhio sinistro (OS)"], "widths": [3, 3, 3], "rows": [
+      ["Visus naturale", "[[ESAME_VALORE:3/10]]", "[[ESAME_VALORE:6/10]]"],
+      ["Visus corretto", "[[ESAME_VALORE:4/10]] n.m.l.", "[[ESAME_VALORE:8/10]]"],
+      ["Tono oculare (mmHg)", "[[ESAME_VALORE:17]]", "[[ESAME_VALORE:16]]"],
+      ["Cristallino", "[[ESAME_VALORE:cataratta corticonucleare 3+]]", "[[ESAME_VALORE:cataratta nucleare 2+]]"],
+      ["Fondo oculare", "[[ESAME_VALORE:C/D 0,6]], non retinopatia", "[[ESAME_VALORE:C/D 0,5]], non retinopatia"]
+    ]},
+    {"type": "heading", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Cataratta senile bilaterale]], più evoluta in OD. Glaucoma compensato in terapia. Si pone indicazione a [[INTERVENTO:facoemulsificazione con impianto di IOL in OD]], da programmare presso struttura vicina alla residenza. Proseguire la terapia in atto. Controllo del campo visivo tra 6 mesi."},
+    {"type": "signature", "place_date": "[[LUOGO:Potenza]], [[DATA_REFERTO:22/07/2024]]", "role": "Il Dirigente Medico", "name": "Dott. [[MEDICO:Vito Santangelo]]", "digital": true}
+  ],
+  "negatives": []
+}

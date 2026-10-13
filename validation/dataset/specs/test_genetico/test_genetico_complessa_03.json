@@ -1,0 +1,538 @@
+{
+  "id": "test_genetico_complessa_03",
+  "type": "test_genetico",
+  "difficulty": "complessa",
+  "style": {
+    "font": "times",
+    "color": "#37474F",
+    "font_size": 8.2,
+    "margins_mm": 15
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Nicola",
+      "last_name": "Pierantoni",
+      "sex": "M",
+      "birth_date": "1990-06-21",
+      "birth_place": "Ancona"
+    },
+    "padre": {
+      "first_name": "Ottavio",
+      "last_name": "Pierantoni",
+      "sex": "M",
+      "birth_date": "1961-01-09",
+      "birth_place": "Ancona"
+    }
+  },
+  "letterhead": {
+    "logo": "AOUD",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliero Universitaria Dorica]]",
+      "[[REPARTO:SOD Genetica Medica]] - [[REPARTO:Laboratorio di Genetica Molecolare]]",
+      "Centro per le malattie neurodegenerative ereditarie",
+      "Direttore: Prof. [[MEDICO:Ercole Bonvecchio]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Conca del Monte 71]]",
+      "[[CAP:60126]] [[LUOGO:Ancona]]",
+      "Tel. [[TELEFONO:071 5963308]]",
+      "[[EMAIL:genetica.medica@aou-dorica.example.it]]"
+    ]
+  },
+  "running_header": "TEST PREDITTIVO HTT - [[PERSONA:Pierantoni Nicola]] - n. pratica [[NUMERO_PROTOCOLLO:HD-PRED-2024/07]] - riservato",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:AOU Dorica]] - P.IVA [[PARTITA_IVA:@aoud]] - PEC [[PEC:aou.dorica@pec.example.it]]",
+    "Protocollo conforme alle linee guida EHDN/IHA-WFN per il test predittivo. Copia unica consegnata a mano all'interessato ([[PERSONA:N. P.]])"
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "TEST GENETICO PREDITTIVO PER LA MALATTIA DI HUNTINGTON",
+      "subtitle": "Determinazione del numero di ripetizioni CAG nel gene HTT - referto e sintesi del percorso di consulenza"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "title": "SOGGETTO A RISCHIO (CONSULTANDO)",
+      "fields": [
+        [
+          "Cognome e nome",
+          "[[PERSONA:PIERANTONI NICOLA]]"
+        ],
+        [
+          "Nato a / il",
+          "[[LUOGO_NASCITA:Ancona]], [[DATA_NASCITA:21.06.1990]]"
+        ],
+        [
+          "Codice fiscale",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Stato civile",
+          "[[STATO_CIVILE:convivente]]"
+        ],
+        [
+          "Professione",
+          "[[PROFESSIONE:geometra]] presso [[DATORE_LAVORO:Studio Tecnico Brecciarolo & Ferretti]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Flaminia 344]], [[CAP:60015]] [[LUOGO:Falconara Marittima]]"
+        ],
+        [
+          "Cellulare",
+          "[[TELEFONO:+39 340 6631278]]"
+        ],
+        [
+          "Persona di supporto",
+          "[[CONTATTO_EMERGENZA:Bianca Sartini]] (compagna)"
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "left": [
+        {
+          "type": "heading",
+          "text": "Dati di laboratorio"
+        },
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Codice anonimo",
+              "[[CODICE_CAMPIONE:HTT-24-X071]]"
+            ],
+            [
+              "Accettazione",
+              "[[NUMERO_ACCETTAZIONE:LGM-24-002213]]"
+            ],
+            [
+              "Prelievo",
+              "[[DATA_VISITA:5 novembre 2024]]"
+            ],
+            [
+              "Analisi",
+              "[[DATA:19/11/2024]]"
+            ],
+            [
+              "Comunicazione",
+              "[[DATA_REFERTO:2 dicembre 2024]]"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "size": 7,
+          "text": "Per tutelare la riservatezza, il campione è stato processato in forma anonima; l'abbinamento codice/nominativo è custodito dalla sola dott.ssa [[OPERATORE_SANITARIO:Gloria Mancinelli]]."
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Probando affetto della famiglia"
+        },
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Padre",
+              "[[FAMILIARE:Ottavio Pierantoni]]"
+            ],
+            [
+              "C.F.",
+              "[[CODICE_FISCALE:@padre]]"
+            ],
+            [
+              "Diagnosi",
+              "[[DIAGNOSI:malattia di Huntington]] dal 2015"
+            ],
+            [
+              "Genotipo",
+              "[[DATO_GENETICO:HTT 17/44 CAG]]"
+            ],
+            [
+              "Referto",
+              "[[NUMERO_REFERTO:LGM-15-000874]] del [[DATA:14/04/2015]]"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "size": 7,
+          "text": "Nonna paterna, sig.ra [[FAMILIARE:Iolanda Cingolani]], deceduta nel [[DATA_DECESSO:1998]] con diagnosi clinica di \"corea\"."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Percorso di consulenza pre-test"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il sig. [[PERSONA:Pierantoni]] ha chiesto spontaneamente il test predittivo, motivandolo con il desiderio di pianificare il futuro di coppia e una eventuale genitorialità. Secondo il protocollo del centro il percorso ha previsto almeno tre incontri a distanza di non meno di un mese, una valutazione neurologica per escludere segni motori iniziali e una valutazione psicologica strutturata. Il consultando si è presentato a tutti i colloqui accompagnato dalla compagna, sig.ra [[CONTATTO_EMERGENZA:B. Sartini]], individuata come persona di supporto."
+    },
+    {
+      "type": "table",
+      "font_size": 7.2,
+      "header": [
+        "Data",
+        "Incontro",
+        "Operatori",
+        "Esito sintetico"
+      ],
+      "widths": [
+        1.8,
+        2.6,
+        3.6,
+        5.6
+      ],
+      "rows": [
+        [
+          "[[DATA:11/06/2024]]",
+          "1. Consulenza genetica",
+          "Prof. [[MEDICO:E. Bonvecchio]]\ndott.ssa [[OPERATORE_SANITARIO:G. Mancinelli]]",
+          "Informazione su malattia, modalità di trasmissione, implicazioni di un esito positivo e negativo. Consegnato materiale informativo."
+        ],
+        [
+          "[[DATA:16/07/2024]]",
+          "2. Valutazione neurologica",
+          "Dott.ssa [[MEDICO:Anna Maria D'Angelo]]\n[[REPARTO:Clinica Neurologica]]",
+          "Esame obiettivo neurologico nella norma; UHDRS motoria [[ESAME_VALORE:punteggio 2]] (lievi alterazioni saccadiche non specifiche). Nessun segno coreico."
+        ],
+        [
+          "[[DATA:23/07/2024]]",
+          "3. Valutazione psicologica",
+          "dott.ssa [[OPERATORE_SANITARIO:Gloria Mancinelli]]\npsicologa psicoterapeuta",
+          "BDI-II [[ESAME_VALORE:14/63]], HAM-A [[ESAME_VALORE:12/56]]. Quadro compatibile con [[SALUTE_MENTALE:disturbo dell'adattamento con ansia]]; nessun rischio suicidario attuale."
+        ],
+        [
+          "[[DATA:24/09/2024]]",
+          "4. Consulenza psichiatrica",
+          "Dott. [[MEDICO:Samuele Ruggeri]]\n[[REPARTO:SPDC - Psichiatria]]",
+          "Pregresso [[DIPENDENZE:uso di cannabinoidi]] in età giovanile, in remissione da oltre 8 anni. Idoneo al proseguimento del percorso."
+        ],
+        [
+          "[[DATA:05/11/2024]]",
+          "5. Consenso e prelievo",
+          "Prof. [[MEDICO:E. Bonvecchio]]\ninf. [[OPERATORE_SANITARIO:Loredana Giacani]]",
+          "Firmato consenso informato; concordata la modalità di comunicazione del risultato (di persona, alla presenza della persona di supporto)."
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Durante il terzo colloquio il consultando ha riferito che, per [[RELIGIONE:convinzioni religiose cattoliche]], non prenderebbe in considerazione l'interruzione di gravidanza; è stata comunque illustrata la diagnosi preimpianto come possibile alternativa. Non sono emerse pressioni esterne alla decisione di sottoporsi al test, né richieste da parte del datore di lavoro o di compagnie assicurative."
+    },
+    {
+      "type": "section",
+      "text": "Metodo"
+    },
+    {
+      "type": "paragraph",
+      "text": "DNA genomico estratto da sangue periferico. Amplificazione mediante PCR fluorescente della regione contenente la ripetizione (CAG)n dell'esone 1 del gene HTT (NM_002111.8) e analisi dei frammenti su sequenziatore capillare; dimensionamento con standard di riferimento certificati. Analisi aggiuntiva con TP-PCR per escludere alleli espansi non amplificabili. Accuratezza: +/- 1 ripetizione nell'intervallo 30-50 CAG. Il campione è stato analizzato in doppio da due operatori indipendenti (TSLB [[OPERATORE_SANITARIO:Federico Pigini]] e TSLB [[OPERATORE_SANITARIO:Sole Amici]])."
+    },
+    {
+      "type": "section",
+      "text": "Risultato"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Gene",
+        "Allele 1 (CAG)",
+        "Allele 2 (CAG)",
+        "Categoria allele 2",
+        "Interpretazione"
+      ],
+      "widths": [
+        1.2,
+        2.6,
+        2.6,
+        2.8,
+        4.4
+      ],
+      "rows": [
+        [
+          "HTT",
+          "[[DATO_GENETICO:17 ripetizioni]]",
+          "[[DATO_GENETICO:42 ripetizioni]]",
+          "[[DATO_GENETICO:Allele a penetranza completa (>= 40)]]",
+          "Risultato **POSITIVO**: portatore di espansione patologica"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "**Conclusione.** Il consultando è [[DATO_GENETICO:portatore di un allele HTT espanso con 42 ripetizioni CAG]], ereditato dal padre. Il risultato indica che svilupperà la [[DIAGNOSI:malattia di Huntington]] nel corso della vita; l'età di esordio non è prevedibile con precisione nel singolo individuo. Al momento non vi sono segni clinici di malattia: il soggetto deve essere considerato **portatore presintomatico** e non affetto."
+    },
+    {
+      "type": "section",
+      "text": "Comunicazione del risultato e follow-up"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il risultato è stato comunicato il [[DATA_REFERTO:02/12/2024]] dal Prof. [[MEDICO:Bonvecchio]] alla presenza della dott.ssa [[OPERATORE_SANITARIO:Mancinelli]] e della compagna. Il sig. [[PERSONA:N. Pierantoni]] ha accolto la notizia con reazione emotiva intensa ma contenuta; è stato concordato un colloquio psicologico a una settimana ([[DATA:9 dicembre 2024]]) e a un mese. È stata proposta l'adesione allo studio osservazionale ENROLL-HD e la presa in carico presso l'[[REPARTO:Ambulatorio Malattie Extrapiramidali]] con visite annuali."
+    },
+    {
+      "type": "table",
+      "font_size": 7.2,
+      "header": [
+        "Familiare",
+        "Relazione",
+        "Rischio a priori",
+        "Indicazioni"
+      ],
+      "widths": [
+        3.2,
+        2.2,
+        2,
+        6.2
+      ],
+      "rows": [
+        [
+          "[[FAMILIARE:Chiara Pierantoni]]",
+          "Sorella, 31 anni",
+          "50%",
+          "Non desidera al momento eseguire il test (riferito dal consultando). Rispettare il diritto a non sapere."
+        ],
+        [
+          "[[FAMILIARE:Ottavio Pierantoni]]",
+          "Padre, affetto",
+          "-",
+          "In carico presso [[STRUTTURA_SANITARIA:RSA Villa dei Gelsi]], [[LUOGO:Osimo]]; caregiver la moglie [[FAMILIARE:Marisa Cardinali]]"
+        ],
+        [
+          "Futura prole",
+          "-",
+          "50%",
+          "Diagnosi prenatale o preimpianto disponibili su richiesta della coppia; consulenza dedicata"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "text": "Il test predittivo non fornisce informazioni sull'età di esordio, sulla gravità o sul decorso. Alleli intermedi (27-35 CAG) e a penetranza ridotta (36-39 CAG) richiedono interpretazione specifica in consulenza. Il presente referto non deve essere trasmesso a terzi, compresi datore di lavoro e compagnie assicurative, senza il consenso scritto dell'interessato."
+    },
+    {
+      "type": "checkboxes",
+      "label": "Destinatari del referto autorizzati dall'interessato",
+      "columns": 3,
+      "items": [
+        [
+          "Interessato",
+          true
+        ],
+        [
+          "Medico di medicina generale",
+          true
+        ],
+        [
+          "Neurologo curante",
+          true
+        ],
+        [
+          "Fascicolo Sanitario Elettronico",
+          false
+        ],
+        [
+          "Familiari",
+          false
+        ],
+        [
+          "Altri",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "size": 7.5,
+      "text": "MMG: Dott. [[MEDICO:Gianluca Spadoni]], [[INDIRIZZO:Piazza Mazzini 3]], [[LUOGO:Falconara Marittima]] - copia inviata in busta chiusa il [[DATA:03-12-2024]]."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Ancona]], [[DATA_REFERTO:02/12/2024]]",
+      "role": "Il Dirigente Biologo",
+      "name": "Dott. [[MEDICO:Tobia Fermani]]",
+      "digital": true
+    },
+    {
+      "type": "signature",
+      "place_date": "Per presa visione e consegna",
+      "role": "Il Direttore della [[REPARTO:SOD Genetica Medica]]",
+      "name": "Prof. [[MEDICO:Ercole Bonvecchio]]",
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:A.O.U. DORICA]] - GENETICA MEDICA",
+        "Prof. [[MEDICO:ERCOLE BONVECCHIO]]",
+        "Spec. Genetica Medica",
+        "Ord. Medici AN n. [[NUMERO_ALBO:AN 4471]]"
+      ]
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "CONSEGNATO A MANO",
+        "il [[DATA_REFERTO:02/12/2024]]",
+        "firma ricevente: [[PERSONA:N. Pierantoni]]",
+        "testimone: [[CONTATTO_EMERGENZA:Bianca Sartini]]"
+      ],
+      "angle": 9,
+      "align": "left"
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Classificazione degli alleli HTT secondo le raccomandazioni ACMG/ASHG e EMQN Best Practice Guidelines 2022.",
+        "Punteggi: BDI-II = Beck Depression Inventory II; HAM-A = scala di Hamilton per l'ansia; test di Stroop e Trail Making nella norma per età e scolarità.",
+        "La sig.ra [[FAMILIARE:C. Pierantoni]] potrà rivolgersi direttamente al centro in qualsiasi momento ([[TELEFONO:071 5963308]], interno riservato)."
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "title",
+      "text": "ALLEGATO 1 - CONSENSO INFORMATO AL TEST PREDITTIVO",
+      "subtitle": "Copia conforme all'originale conservato nella cartella di consulenza [[NUMERO_CARTELLA:GM-AN-2024-0388]]"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il sottoscritto [[PERSONA:Nicola Pierantoni]], nato a [[LUOGO_NASCITA:Ancona]] il [[DATA_NASCITA:21/06/1990]], dichiara di aver ricevuto dal Prof. [[MEDICO:Ercole Bonvecchio]] e dalla dott.ssa [[OPERATORE_SANITARIO:Gloria Mancinelli]] informazioni chiare e comprensibili su:"
+    },
+    {
+      "type": "paragraph",
+      "text": "a) le caratteristiche della [[DIAGNOSI:malattia di Huntington]] e la sua modalità di trasmissione autosomica dominante;\nb) il significato di un risultato positivo, negativo, intermedio o a penetranza ridotta;\nc) l'assenza, allo stato attuale, di terapie in grado di prevenire o ritardare l'esordio della malattia;\nd) le possibili conseguenze psicologiche, familiari, lavorative e assicurative del risultato;\ne) la possibilità di interrompere il percorso in qualsiasi momento, anche dopo il prelievo e prima della comunicazione del risultato.",
+      "align": "left"
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "checkboxes",
+      "label": "Il sottoscritto dichiara inoltre di:",
+      "columns": 1,
+      "items": [
+        [
+          "voler conoscere il risultato del test di persona, alla presenza della persona di supporto indicata",
+          true
+        ],
+        [
+          "autorizzare la conservazione del DNA residuo per eventuali ulteriori indagini diagnostiche",
+          true
+        ],
+        [
+          "autorizzare l'utilizzo del campione in forma anonima per ricerca (studio ENROLL-HD)",
+          true
+        ],
+        [
+          "autorizzare la comunicazione del risultato alla sorella in caso di sua richiesta",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "left": [
+        {
+          "type": "heading",
+          "text": "Firma dell'interessato"
+        },
+        {
+          "type": "paragraph",
+          "text": "[[PERSONA:Nicola Pierantoni]]\nDocumento: C.I. n. [[NUMERO_CARTA_IDENTITA:CA48211QX]]\nrilasciata da [[ENTE_RILASCIO:Comune di Falconara Marittima]] il [[DATA_RILASCIO:12/03/2021]]",
+          "align": "left"
+        },
+        {
+          "type": "heading",
+          "text": "Persona di supporto"
+        },
+        {
+          "type": "paragraph",
+          "text": "[[CONTATTO_EMERGENZA:Bianca Sartini]], nata il [[DATA_NASCITA:30/09/1992]]",
+          "align": "left"
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Medico che ha raccolto il consenso"
+        },
+        {
+          "type": "paragraph",
+          "text": "Prof. [[MEDICO:Ercole Bonvecchio]]\nOrd. Medici AN n. [[NUMERO_ALBO:AN 4471]]",
+          "align": "left"
+        },
+        {
+          "type": "heading",
+          "text": "Testimone"
+        },
+        {
+          "type": "paragraph",
+          "text": "inf. [[OPERATORE_SANITARIO:Loredana Giacani]], matricola [[NUMERO_ALBO:MAT 20-3318]]",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Ancona]], [[DATA_VISITA:05/11/2024]]",
+      "role": "Firma del consultando",
+      "name": "[[PERSONA:Nicola Pierantoni]]"
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "[[REPARTO:SOD GENETICA MEDICA]]",
+        "COPIA CONFORME",
+        "[[DATA:02 DIC 2024]]",
+        "[[OPERATORE_SANITARIO:G. Mancinelli]]"
+      ],
+      "angle": -14,
+      "align": "right"
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Huntington",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Beck",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Hamilton",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Stroop",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Mazzini",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

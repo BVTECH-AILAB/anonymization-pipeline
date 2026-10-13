@@ -1,0 +1,139 @@
+{
+  "id": "autorizzazione_preventiva_complessa_01",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "complessa",
+  "style": {"font": "dejavu", "color": "#0D47A1", "font_size": 8, "margins_mm": 14},
+  "persons": {
+    "paz": {"first_name": "Youssef", "last_name": "El Amrani", "sex": "M", "birth_date": "1985-03-14", "birth_place": "Marocco"}
+  },
+  "letterhead": {
+    "logo": "RM",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda USL Riviera Malatestiana]]",
+      "Dipartimento Farmaceutico - Farmacia Territoriale",
+      "Gruppo Aziendale Farmaci Antivirali per l'Epatite C",
+      "Referente: Dott. [[MEDICO:Gianmarco Fabbri Montanari]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Coriano 38]]",
+      "[[CAP:47924]] [[LUOGO:Rimini]]",
+      "Tel. [[TELEFONO:0541 707312]]",
+      "[[EMAIL:antivirali.hcv@auslrm.example.it]]"
+    ]
+  },
+  "running_header": "Pratica [[NUMERO_PROTOCOLLO:HCV-2025-0217]] - Assistito [[PERSONA:EL AMRANI Youssef]] - [[CODICE_STP_ENI:STP0800110004872]] / C.F. [[CODICE_FISCALE:@paz]]",
+  "footer": [
+    "Pratica [[NUMERO_PROTOCOLLO:HCV-2025-0217]] - [[PERSONA:Y. El Amrani]] - Documento con dati relativi alla salute e a categorie particolari (art. 9 Reg. UE 2016/679)",
+    "[[STRUTTURA_SANITARIA:Azienda USL Riviera Malatestiana]] - P.IVA [[PARTITA_IVA:@ausl]] - PEC [[PEC:farmaceutico@pec.auslrm.example.it]]"
+  ],
+  "blocks": [
+    {"type": "columns", "divider": false, "left": [
+      {"type": "paragraph", "text": "**RICHIESTA DI AUTORIZZAZIONE PREVENTIVA ALLA DISPENSAZIONE DI FARMACI ANTIVIRALI AD AZIONE DIRETTA (DAA)**\nAssistito straniero: STP convertito in iscrizione SSN per cure mediche", "align": "left"},
+      {"type": "checkboxes", "columns": 2, "items": [["Prima richiesta", true], ["Ritrattamento", false], ["Urgenza clinica", false], ["Priorità AIFA", true]]}
+    ], "right": [
+      {"type": "barcode", "kind": "code128", "label": "Pratica", "value": "[[NUMERO_PROTOCOLLO:HCV-2025-0217]]", "align": "right"},
+      {"type": "fields", "columns": 1, "fields": [["Pervenuta il", "[[DATA:22.09.25]]"], ["Registro AIFA", "scheda n. [[NUMERO_RICETTA:RA-25-664109]]"]]}
+    ]},
+    {"type": "section", "text": "1. DATI DELL'ASSISTITO"},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "patient_box", "title": "Assistito", "columns": 1, "fields": [
+        ["Cognome", "[[COGNOME:El Amrani]]"],
+        ["Nome", "[[NOME:Youssef]]"],
+        ["Nato a", "[[LUOGO_NASCITA:Casablanca (Marocco)]]"],
+        ["Data di nascita", "[[DATA_NASCITA:14/03/1985]]"],
+        ["Cittadinanza", "[[CITTADINANZA:marocchina]]"],
+        ["Domicilio", "[[INDIRIZZO:Via Pascoli 117]], [[CAP:47923]] [[LUOGO:Rimini]]"],
+        ["Cellulare", "[[TELEFONO:+39 351 448 2093]]"]
+      ]}
+    ], "right": [
+      {"type": "char_boxes", "label": "C.F.", "value": "[[CODICE_FISCALE:@paz]]"},
+      {"type": "char_boxes", "label": "STP", "value": "[[CODICE_STP_ENI:STP0800110004872]]"},
+      {"type": "char_boxes", "label": "TEAM", "value": "[[TESSERA_SANITARIA:@team]]"},
+      {"type": "paragraph", "text": "Codice esenzione: [[CODICE_ESENZIONE:016]] (in attesa di rilascio della tessera definitiva). Lingua veicolare: francese, arabo; presente la mediazione dell'assistente sanitaria [[OPERATORE_SANITARIO:Samira Ouazzani]].", "size": 7.5}
+    ]},
+    {"type": "table", "header": ["Documento", "Numero", "Rilasciato da", "Validità"], "widths": [3, 2.6, 3.2, 2.6], "font_size": 7.5, "rows": [
+      ["Tesserino STP\n(dal 2019 al 2025)", "[[CODICE_STP_ENI:STP0800110004872]]", "[[STRUTTURA_SANITARIA:Azienda USL Riviera Malatestiana]]", "scaduto il [[DATA_SCADENZA:30/06/2025]]"],
+      ["Permesso di soggiorno\nper cure mediche", "[[NUMERO_PERMESSO_SOGGIORNO:I12007845]]", "[[ENTE_RILASCIO:Questura di Rimini]]", "fino al [[DATA_SCADENZA:16/07/2026]]"],
+      ["Passaporto", "[[NUMERO_PASSAPORTO:VK2286019]]", "[[ENTE_RILASCIO:Royaume du Maroc]]", "fino al [[DATA_SCADENZA:03/02/2029]]"]
+    ], "caption": "Documenti esibiti all'atto della richiesta (verificati dall'operatore dello sportello [[OPERATORE_SANITARIO:Luca Semprini]])"},
+    {"type": "paragraph", "text": "Persona di riferimento indicata dall'assistito: la compagna, sig.ra [[FAMILIARE:Fatima Zahra Bennani]], convivente, tel. [[TELEFONO:+39 347 902 1185]]. Il sig. [[PERSONA:El Amrani]] acconsente a che la sig.ra [[FAMILIARE:Bennani]] ritiri il farmaco in sua vece previa delega scritta."},
+    {"type": "section", "text": "2. PRESCRIZIONE"},
+    {"type": "table", "header": ["Principio attivo", "Posologia", "Durata", "Confezioni", "Note"], "widths": [3.4, 2.6, 1.6, 1.6, 3.6], "font_size": 7.5, "rows": [
+      ["[[FARMACO:sofosbuvir/velpatasvir 400/100 mg]]", "[[FARMACO:1 cp/die per os]]", "12 settimane", "3 da 28 cp", "Dispensazione mensile presso la Farmacia del P.O.; aderenza verificata dal SerD"],
+      ["[[FARMACO:bictegravir/emtricitabina/tenofovir alafenamide]]", "[[FARMACO:1 cp/die]]", "in corso", "-", "Terapia ART già in atto, nessuna interazione clinicamente rilevante"],
+      ["[[FARMACO:metadone cloridrato soluzione orale]]", "[[FARMACO:60 mg/die]]", "in corso", "-", "Affidamento settimanale; nessun aggiustamento previsto"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Centro prescrittore", "[[REPARTO:U.O. Malattie Infettive]], [[STRUTTURA_SANITARIA:Ospedale degli Infermi di Marecchia]]"],
+      ["Medico prescrittore", "Dott.ssa [[MEDICO:Elisabetta De Carolis]] (iscr. Ordine RN n. [[NUMERO_ALBO:2654]])"],
+      ["Data prescrizione", "[[DATA_PRESCRIZIONE:19/09/2025]]"],
+      ["Ricetta (NRE)", "[[NUMERO_RICETTA:0800A4419273551]]"]
+    ]},
+    {"type": "checkboxes", "label": "Documentazione allegata", "columns": 3, "items": [
+      ["Relazione clinica", true], ["Referto elastografia", true], ["Genotipo HCV", true],
+      ["Copia permesso di soggiorno", true], ["Consenso informato", true], ["Dichiarazione di indigenza", false]
+    ]},
+    {"type": "page_break"},
+    {"type": "section", "text": "3. MOTIVAZIONE CLINICA"},
+    {"type": "paragraph", "text": "Paziente di [[ETA:40]] anni, in Italia dal 2017, giunto alla nostra osservazione nel luglio 2025 su invio del [[REPARTO:Servizio Dipendenze Patologiche (SerD)]] (medico referente Dott. [[MEDICO:Paolo Righetti Vannucci]]). Anamnesi di [[DIPENDENZE:disturbo da uso di oppioidi]], attualmente in [[DIPENDENZE:remissione sostenuta in terapia agonista con metadone]] da oltre 24 mesi, con controlli urinari negativi. Riferito pregresso [[DIPENDENZE:uso di sostanze per via iniettiva]] fino al 2021."},
+    {"type": "paragraph", "text": "Diagnosi: [[MALATTIE_INFETTIVE:epatite cronica C, genotipo 3a]] in paziente con [[MALATTIE_INFETTIVE:infezione da HIV-1]] nota dal 2020, in terapia antiretrovirale efficace. Il pz. non è mai stato trattato per HCV. Elastografia epatica (Fibroscan) con stiffness di [[ESAME_VALORE:11,8]] kPa, compatibile con [[DIAGNOSI:fibrosi avanzata F3]]; ecografia senza segni di ipertensione portale né lesioni focali. Funzione epatica conservata, classe Child-Pugh A5."},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "heading", "text": "Esami di laboratorio"},
+      {"type": "table", "header": ["Esame", "Valore", "Data"], "widths": [3, 2.2, 2], "font_size": 7.2, "rows": [
+        ["HCV-RNA (UI/mL)", "[[ESAME_VALORE:2.340.000]]", "[[DATA:03/09/2025]]"],
+        ["Genotipo HCV", "[[ESAME_VALORE:3a]]", "[[DATA:03/09/2025]]"],
+        ["HIV-RNA (copie/mL)", "[[ESAME_VALORE:< 20]]", "[[DATA:28/08/2025]]"],
+        ["Linfociti CD4+ (/µL)", "[[ESAME_VALORE:512]]", "[[DATA:28/08/2025]]"],
+        ["ALT (U/L)", "[[ESAME_VALORE:96]]", "[[DATA:03/09/2025]]"],
+        ["Piastrine (x10^3/µL)", "[[ESAME_VALORE:148]]", "[[DATA:03/09/2025]]"],
+        ["HBsAg / anti-HBc", "[[ESAME_VALORE:neg / pos]]", "[[DATA:03/09/2025]]"]
+      ]}
+    ], "right": [
+      {"type": "heading", "text": "Criteri di eleggibilità"},
+      {"type": "paragraph", "text": "Il paziente rientra nel criterio AIFA n. 1 (tutti i pazienti con infezione cronica da HCV) (1). La positività isolata dell'anti-HBc impone il monitoraggio dell'HBV-DNA durante il trattamento (2). Con il SerD è stato concordato un percorso di aderenza: assunzione del DAA contestuale all'affido del metadone, con verifica settimanale da parte dell'infermiera [[OPERATORE_SANITARIO:Rosa Canducci]].", "size": 7.5},
+      {"type": "note", "text": "Riferimento in reparto: inf. case manager [[OPERATORE_SANITARIO:R. Canducci]], tel. interno [[TELEFONO:0541 705560]]."}
+    ]},
+    {"type": "table", "header": ["Farmaco concomitante", "Interazione con SOF/VEL", "Gestione proposta"], "widths": [3.4, 3.6, 5], "font_size": 7.2, "caption": "Verifica delle interazioni (consultazione banca dati aggiornata il [[DATA:15/09/2025]], farmacista [[OPERATORE_SANITARIO:Sofia Gennari]])", "rows": [
+      ["Bictegravir/FTC/TAF", "Nessuna clinicamente rilevante", "Nessuna modifica; monitoraggio della funzione renale"],
+      ["Metadone", "Nessuna attesa", "Rilevazione di segni di astinenza o sovradosaggio da parte del SerD"],
+      ["Omeprazolo (al bisogno)", "Riduzione dell'assorbimento di velpatasvir", "Sospeso; se necessario, assumere il DAA con il cibo 4 ore prima"],
+      ["Integratori a base di iperico", "Controindicato", "Paziente istruito a non assumerli (colloquio con mediazione linguistica)"]
+    ]},
+    {"type": "paragraph", "text": "Si richiede pertanto l'autorizzazione alla dispensazione di sofosbuvir/velpatasvir per 12 settimane senza ribavirina. In considerazione della condizione di fragilità sociale dell'assistito (domicilio presso la compagna, attività lavorativa stagionale come [[PROFESSIONE:aiuto cuoco]]) si chiede la dispensazione mensile presso la farmacia ospedaliera anziché in distribuzione per conto."},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "signature", "place_date": "[[LUOGO:Rimini]], [[DATA_PRESCRIZIONE:19 settembre 2025]]", "role": "Il medico prescrittore", "name": "Dott.ssa [[MEDICO:Elisabetta De Carolis]]", "digital": false, "stamp": ["[[STRUTTURA_SANITARIA:Ospedale degli Infermi di Marecchia]]", "U.O. MALATTIE INFETTIVE", "Dott.ssa [[MEDICO:E. De Carolis]]", "Ord. Med. RN [[NUMERO_ALBO:2654]]"]}
+    ], "right": [
+      {"type": "signature", "role": "Visto, il medico del SerD", "place_date": "[[DATA:20/09/2025]]", "name": "Dott. [[MEDICO:Paolo Righetti Vannucci]]", "digital": false, "stamp": ["SERVIZIO DIPENDENZE PATOLOGICHE", "Dott. [[MEDICO:P. Righetti Vannucci]]", "Ord. Med. FC n. [[NUMERO_ALBO:3108]]"]}
+    ]},
+    {"type": "page_break"},
+    {"type": "section", "text": "4. PARERE DELLA COMMISSIONE"},
+    {"type": "paragraph", "text": "Il Gruppo Aziendale Farmaci Antivirali, riunito in data [[DATA:30 settembre 2025]], esaminata la richiesta relativa all'assistito [[PERSONA:El Amrani Y.]] e la documentazione allegata, verificata l'eleggibilità secondo i criteri AIFA e l'assenza di interazioni con la terapia in atto, esprime il seguente parere:"},
+    {"type": "checkboxes", "columns": 3, "items": [["Favorevole", true], ["Favorevole con prescrizioni", false], ["Non favorevole", false]]},
+    {"type": "table", "header": ["Componente", "Qualifica", "Presenza"], "widths": [4, 5, 2], "font_size": 7.5, "rows": [
+      ["Dott. [[MEDICO:Gianmarco Fabbri Montanari]]", "Referente, Direttore Farmacia Territoriale", "presente"],
+      ["Dott.ssa [[OPERATORE_SANITARIO:Sofia Gennari]]", "Farmacista dirigente, segretaria verbalizzante", "presente"],
+      ["Dott. [[MEDICO:Matteo Ricci Oddi]]", "Infettivologo, componente esterno", "presente"],
+      ["Dott.ssa [[MEDICO:Anna Maria Della Rovere]]", "Medico di Direzione Sanitaria", "assente giustificata"]
+    ]},
+    {"type": "paragraph", "text": "Prescrizioni: dispensazione mensile; controllo HCV-RNA a fine terapia e a 12 settimane dalla fine (SVR12); HBV-DNA a 4 e 12 settimane. Copia del presente parere è trasmessa al centro prescrittore, al SerD e, su richiesta dell'interessato, al medico di medicina generale Dott. [[MEDICO:Stefano Pazzaglini]]."},
+    {"type": "stamp", "lines": ["[[STRUTTURA_SANITARIA:Azienda USL Riviera Malatestiana]]", "GRUPPO FARMACI ANTIVIRALI", "Il Referente Dott. [[MEDICO:G. Fabbri Montanari]]", "Verbale n. [[NUMERO_PROTOCOLLO:GAFA-41/2025]]"], "angle": -9, "align": "right"},
+    {"type": "heading", "text": "Dichiarazione dell'assistito"},
+    {"type": "paragraph", "text": "Il sottoscritto [[PERSONA:Youssef El Amrani]], informato con l'ausilio della mediazione linguistica, dichiara di aver compreso le modalità di assunzione del farmaco, l'importanza dell'aderenza e la necessità di evitare la reinfezione, e delega al ritiro la sig.ra [[FAMILIARE:Fatima Zahra Bennani]] (doc. C.I. n. [[NUMERO_CARTA_IDENTITA:CA77104RB]])."},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "paragraph", "text": "Firma dell'assistito\n\n______________________________\n([[PERSONA:Y. El Amrani]])", "align": "center"}
+    ], "right": [
+      {"type": "paragraph", "text": "Firma dell'operatore che ha raccolto la dichiarazione\n\n______________________________\n(a.s. [[OPERATORE_SANITARIO:Samira Ouazzani]])", "align": "center"}
+    ]},
+    {"type": "footnotes", "items": [
+      "Criteri di trattamento AIFA per l'epatite C cronica, aggiornamento vigente. La fibrosi è stata stadiata secondo il sistema Metavir.",
+      "In caso di riattivazione dell'HBV il prescrittore ne darà comunicazione al Gruppo; referente per il monitoraggio Dott.ssa [[MEDICO:De Carolis]].",
+      "I dati relativi a dipendenze e infezione da HIV sono comunicati ai soli operatori coinvolti nel percorso di cura (D.P.R. 309/1990, L. 135/1990)."
+    ]}
+  ],
+  "negatives": [
+    {"value": "Child-Pugh", "forbidden_categories": ["PERSONA", "MEDICO"]},
+    {"value": "Metavir", "forbidden_categories": ["ORGANIZZAZIONE", "PERSONA"]},
+    {"value": "Fibroscan", "forbidden_categories": ["ORGANIZZAZIONE", "ID_DISPOSITIVO"]}
+  ]
+}

@@ -1,0 +1,868 @@
+{
+  "documents": [
+    {
+      "id": "autorizzazione_preventiva_complessa_01",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 91,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_complessa_01.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_complessa_01.json"
+    },
+    {
+      "id": "autorizzazione_preventiva_complessa_02",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 99,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_complessa_02.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_complessa_02.json"
+    },
+    {
+      "id": "autorizzazione_preventiva_complessa_03",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 122,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_complessa_03.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_complessa_03.json"
+    },
+    {
+      "id": "autorizzazione_preventiva_complessa_04",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 132,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_complessa_04.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_complessa_04.json"
+    },
+    {
+      "id": "autorizzazione_preventiva_facile_01",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 26,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_facile_01.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_facile_01.json"
+    },
+    {
+      "id": "autorizzazione_preventiva_facile_02",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 25,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_facile_02.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_facile_02.json"
+    },
+    {
+      "id": "autorizzazione_preventiva_facile_03",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 25,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_facile_03.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_facile_03.json"
+    },
+    {
+      "id": "autorizzazione_preventiva_facile_04",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 30,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_facile_04.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_facile_04.json"
+    },
+    {
+      "id": "autorizzazione_preventiva_media_01",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 49,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_media_01.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_media_01.json"
+    },
+    {
+      "id": "autorizzazione_preventiva_media_02",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 39,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_media_02.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_media_02.json"
+    },
+    {
+      "id": "autorizzazione_preventiva_media_03",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 54,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_media_03.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_media_03.json"
+    },
+    {
+      "id": "autorizzazione_preventiva_media_04",
+      "type": "autorizzazione_preventiva",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 39,
+      "pdf": "pdf/autorizzazione_preventiva/autorizzazione_preventiva_media_04.pdf",
+      "ground_truth": "ground_truth/autorizzazione_preventiva/autorizzazione_preventiva_media_04.json"
+    },
+    {
+      "id": "biopsia_patologica_complessa_01",
+      "type": "biopsia_patologica",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 104,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_complessa_01.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_complessa_01.json"
+    },
+    {
+      "id": "biopsia_patologica_complessa_02",
+      "type": "biopsia_patologica",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 109,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_complessa_02.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_complessa_02.json"
+    },
+    {
+      "id": "biopsia_patologica_complessa_03",
+      "type": "biopsia_patologica",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 95,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_complessa_03.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_complessa_03.json"
+    },
+    {
+      "id": "biopsia_patologica_complessa_04",
+      "type": "biopsia_patologica",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 104,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_complessa_04.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_complessa_04.json"
+    },
+    {
+      "id": "biopsia_patologica_facile_01",
+      "type": "biopsia_patologica",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 25,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_facile_01.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_facile_01.json"
+    },
+    {
+      "id": "biopsia_patologica_facile_02",
+      "type": "biopsia_patologica",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 23,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_facile_02.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_facile_02.json"
+    },
+    {
+      "id": "biopsia_patologica_facile_03",
+      "type": "biopsia_patologica",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 19,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_facile_03.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_facile_03.json"
+    },
+    {
+      "id": "biopsia_patologica_facile_04",
+      "type": "biopsia_patologica",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 25,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_facile_04.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_facile_04.json"
+    },
+    {
+      "id": "biopsia_patologica_media_01",
+      "type": "biopsia_patologica",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 65,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_media_01.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_media_01.json"
+    },
+    {
+      "id": "biopsia_patologica_media_02",
+      "type": "biopsia_patologica",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 53,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_media_02.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_media_02.json"
+    },
+    {
+      "id": "biopsia_patologica_media_03",
+      "type": "biopsia_patologica",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 47,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_media_03.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_media_03.json"
+    },
+    {
+      "id": "biopsia_patologica_media_04",
+      "type": "biopsia_patologica",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 54,
+      "pdf": "pdf/biopsia_patologica/biopsia_patologica_media_04.pdf",
+      "ground_truth": "ground_truth/biopsia_patologica/biopsia_patologica_media_04.json"
+    },
+    {
+      "id": "lettera_dimissione_complessa_01",
+      "type": "lettera_dimissione",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 166,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_complessa_01.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_complessa_01.json"
+    },
+    {
+      "id": "lettera_dimissione_complessa_02",
+      "type": "lettera_dimissione",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 118,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_complessa_02.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_complessa_02.json"
+    },
+    {
+      "id": "lettera_dimissione_complessa_03",
+      "type": "lettera_dimissione",
+      "difficulty": "complessa",
+      "pages": 4,
+      "entities": 192,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_complessa_03.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_complessa_03.json"
+    },
+    {
+      "id": "lettera_dimissione_complessa_04",
+      "type": "lettera_dimissione",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 167,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_complessa_04.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_complessa_04.json"
+    },
+    {
+      "id": "lettera_dimissione_facile_01",
+      "type": "lettera_dimissione",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 40,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_facile_01.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_facile_01.json"
+    },
+    {
+      "id": "lettera_dimissione_facile_02",
+      "type": "lettera_dimissione",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 27,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_facile_02.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_facile_02.json"
+    },
+    {
+      "id": "lettera_dimissione_facile_03",
+      "type": "lettera_dimissione",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 30,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_facile_03.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_facile_03.json"
+    },
+    {
+      "id": "lettera_dimissione_facile_04",
+      "type": "lettera_dimissione",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 32,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_facile_04.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_facile_04.json"
+    },
+    {
+      "id": "lettera_dimissione_media_01",
+      "type": "lettera_dimissione",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 83,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_media_01.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_media_01.json"
+    },
+    {
+      "id": "lettera_dimissione_media_02",
+      "type": "lettera_dimissione",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 59,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_media_02.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_media_02.json"
+    },
+    {
+      "id": "lettera_dimissione_media_03",
+      "type": "lettera_dimissione",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 60,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_media_03.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_media_03.json"
+    },
+    {
+      "id": "lettera_dimissione_media_04",
+      "type": "lettera_dimissione",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 51,
+      "pdf": "pdf/lettera_dimissione/lettera_dimissione_media_04.pdf",
+      "ground_truth": "ground_truth/lettera_dimissione/lettera_dimissione_media_04.json"
+    },
+    {
+      "id": "nota_ambulatoriale_complessa_01",
+      "type": "nota_ambulatoriale",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 106,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_complessa_01.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_complessa_01.json"
+    },
+    {
+      "id": "nota_ambulatoriale_complessa_02",
+      "type": "nota_ambulatoriale",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 102,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_complessa_02.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_complessa_02.json"
+    },
+    {
+      "id": "nota_ambulatoriale_complessa_03",
+      "type": "nota_ambulatoriale",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 112,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_complessa_03.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_complessa_03.json"
+    },
+    {
+      "id": "nota_ambulatoriale_complessa_04",
+      "type": "nota_ambulatoriale",
+      "difficulty": "complessa",
+      "pages": 4,
+      "entities": 190,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_complessa_04.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_complessa_04.json"
+    },
+    {
+      "id": "nota_ambulatoriale_facile_01",
+      "type": "nota_ambulatoriale",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 33,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_facile_01.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_facile_01.json"
+    },
+    {
+      "id": "nota_ambulatoriale_facile_02",
+      "type": "nota_ambulatoriale",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 21,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_facile_02.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_facile_02.json"
+    },
+    {
+      "id": "nota_ambulatoriale_facile_03",
+      "type": "nota_ambulatoriale",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 32,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_facile_03.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_facile_03.json"
+    },
+    {
+      "id": "nota_ambulatoriale_facile_04",
+      "type": "nota_ambulatoriale",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 26,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_facile_04.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_facile_04.json"
+    },
+    {
+      "id": "nota_ambulatoriale_media_01",
+      "type": "nota_ambulatoriale",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 74,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_media_01.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_media_01.json"
+    },
+    {
+      "id": "nota_ambulatoriale_media_02",
+      "type": "nota_ambulatoriale",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 62,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_media_02.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_media_02.json"
+    },
+    {
+      "id": "nota_ambulatoriale_media_03",
+      "type": "nota_ambulatoriale",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 64,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_media_03.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_media_03.json"
+    },
+    {
+      "id": "nota_ambulatoriale_media_04",
+      "type": "nota_ambulatoriale",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 56,
+      "pdf": "pdf/nota_ambulatoriale/nota_ambulatoriale_media_04.pdf",
+      "ground_truth": "ground_truth/nota_ambulatoriale/nota_ambulatoriale_media_04.json"
+    },
+    {
+      "id": "referto_esterno_complessa_01",
+      "type": "referto_esterno",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 108,
+      "pdf": "pdf/referto_esterno/referto_esterno_complessa_01.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_complessa_01.json"
+    },
+    {
+      "id": "referto_esterno_complessa_02",
+      "type": "referto_esterno",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 107,
+      "pdf": "pdf/referto_esterno/referto_esterno_complessa_02.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_complessa_02.json"
+    },
+    {
+      "id": "referto_esterno_complessa_03",
+      "type": "referto_esterno",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 108,
+      "pdf": "pdf/referto_esterno/referto_esterno_complessa_03.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_complessa_03.json"
+    },
+    {
+      "id": "referto_esterno_complessa_04",
+      "type": "referto_esterno",
+      "difficulty": "complessa",
+      "pages": 4,
+      "entities": 131,
+      "pdf": "pdf/referto_esterno/referto_esterno_complessa_04.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_complessa_04.json"
+    },
+    {
+      "id": "referto_esterno_facile_01",
+      "type": "referto_esterno",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 33,
+      "pdf": "pdf/referto_esterno/referto_esterno_facile_01.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_facile_01.json"
+    },
+    {
+      "id": "referto_esterno_facile_02",
+      "type": "referto_esterno",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 23,
+      "pdf": "pdf/referto_esterno/referto_esterno_facile_02.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_facile_02.json"
+    },
+    {
+      "id": "referto_esterno_facile_03",
+      "type": "referto_esterno",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 23,
+      "pdf": "pdf/referto_esterno/referto_esterno_facile_03.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_facile_03.json"
+    },
+    {
+      "id": "referto_esterno_facile_04",
+      "type": "referto_esterno",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 29,
+      "pdf": "pdf/referto_esterno/referto_esterno_facile_04.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_facile_04.json"
+    },
+    {
+      "id": "referto_esterno_media_01",
+      "type": "referto_esterno",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 48,
+      "pdf": "pdf/referto_esterno/referto_esterno_media_01.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_media_01.json"
+    },
+    {
+      "id": "referto_esterno_media_02",
+      "type": "referto_esterno",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 56,
+      "pdf": "pdf/referto_esterno/referto_esterno_media_02.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_media_02.json"
+    },
+    {
+      "id": "referto_esterno_media_03",
+      "type": "referto_esterno",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 45,
+      "pdf": "pdf/referto_esterno/referto_esterno_media_03.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_media_03.json"
+    },
+    {
+      "id": "referto_esterno_media_04",
+      "type": "referto_esterno",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 50,
+      "pdf": "pdf/referto_esterno/referto_esterno_media_04.pdf",
+      "ground_truth": "ground_truth/referto_esterno/referto_esterno_media_04.json"
+    },
+    {
+      "id": "referto_laboratorio_complessa_01",
+      "type": "referto_laboratorio",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 112,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_complessa_01.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_complessa_01.json"
+    },
+    {
+      "id": "referto_laboratorio_complessa_02",
+      "type": "referto_laboratorio",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 101,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_complessa_02.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_complessa_02.json"
+    },
+    {
+      "id": "referto_laboratorio_complessa_03",
+      "type": "referto_laboratorio",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 99,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_complessa_03.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_complessa_03.json"
+    },
+    {
+      "id": "referto_laboratorio_complessa_04",
+      "type": "referto_laboratorio",
+      "difficulty": "complessa",
+      "pages": 4,
+      "entities": 175,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_complessa_04.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_complessa_04.json"
+    },
+    {
+      "id": "referto_laboratorio_facile_01",
+      "type": "referto_laboratorio",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 23,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_facile_01.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_facile_01.json"
+    },
+    {
+      "id": "referto_laboratorio_facile_02",
+      "type": "referto_laboratorio",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 20,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_facile_02.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_facile_02.json"
+    },
+    {
+      "id": "referto_laboratorio_facile_03",
+      "type": "referto_laboratorio",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 27,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_facile_03.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_facile_03.json"
+    },
+    {
+      "id": "referto_laboratorio_facile_04",
+      "type": "referto_laboratorio",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 26,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_facile_04.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_facile_04.json"
+    },
+    {
+      "id": "referto_laboratorio_media_01",
+      "type": "referto_laboratorio",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 44,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_media_01.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_media_01.json"
+    },
+    {
+      "id": "referto_laboratorio_media_02",
+      "type": "referto_laboratorio",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 56,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_media_02.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_media_02.json"
+    },
+    {
+      "id": "referto_laboratorio_media_03",
+      "type": "referto_laboratorio",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 54,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_media_03.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_media_03.json"
+    },
+    {
+      "id": "referto_laboratorio_media_04",
+      "type": "referto_laboratorio",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 51,
+      "pdf": "pdf/referto_laboratorio/referto_laboratorio_media_04.pdf",
+      "ground_truth": "ground_truth/referto_laboratorio/referto_laboratorio_media_04.json"
+    },
+    {
+      "id": "referto_radiologico_complessa_01",
+      "type": "referto_radiologico",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 102,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_complessa_01.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_complessa_01.json"
+    },
+    {
+      "id": "referto_radiologico_complessa_02",
+      "type": "referto_radiologico",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 162,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_complessa_02.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_complessa_02.json"
+    },
+    {
+      "id": "referto_radiologico_complessa_03",
+      "type": "referto_radiologico",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 144,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_complessa_03.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_complessa_03.json"
+    },
+    {
+      "id": "referto_radiologico_complessa_04",
+      "type": "referto_radiologico",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 141,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_complessa_04.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_complessa_04.json"
+    },
+    {
+      "id": "referto_radiologico_facile_01",
+      "type": "referto_radiologico",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 23,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_facile_01.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_facile_01.json"
+    },
+    {
+      "id": "referto_radiologico_facile_02",
+      "type": "referto_radiologico",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 24,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_facile_02.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_facile_02.json"
+    },
+    {
+      "id": "referto_radiologico_facile_03",
+      "type": "referto_radiologico",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 24,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_facile_03.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_facile_03.json"
+    },
+    {
+      "id": "referto_radiologico_facile_04",
+      "type": "referto_radiologico",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 27,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_facile_04.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_facile_04.json"
+    },
+    {
+      "id": "referto_radiologico_media_01",
+      "type": "referto_radiologico",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 61,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_media_01.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_media_01.json"
+    },
+    {
+      "id": "referto_radiologico_media_02",
+      "type": "referto_radiologico",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 49,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_media_02.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_media_02.json"
+    },
+    {
+      "id": "referto_radiologico_media_03",
+      "type": "referto_radiologico",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 59,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_media_03.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_media_03.json"
+    },
+    {
+      "id": "referto_radiologico_media_04",
+      "type": "referto_radiologico",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 52,
+      "pdf": "pdf/referto_radiologico/referto_radiologico_media_04.pdf",
+      "ground_truth": "ground_truth/referto_radiologico/referto_radiologico_media_04.json"
+    },
+    {
+      "id": "test_genetico_complessa_01",
+      "type": "test_genetico",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 91,
+      "pdf": "pdf/test_genetico/test_genetico_complessa_01.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_complessa_01.json"
+    },
+    {
+      "id": "test_genetico_complessa_02",
+      "type": "test_genetico",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 95,
+      "pdf": "pdf/test_genetico/test_genetico_complessa_02.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_complessa_02.json"
+    },
+    {
+      "id": "test_genetico_complessa_03",
+      "type": "test_genetico",
+      "difficulty": "complessa",
+      "pages": 3,
+      "entities": 96,
+      "pdf": "pdf/test_genetico/test_genetico_complessa_03.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_complessa_03.json"
+    },
+    {
+      "id": "test_genetico_complessa_04",
+      "type": "test_genetico",
+      "difficulty": "complessa",
+      "pages": 4,
+      "entities": 125,
+      "pdf": "pdf/test_genetico/test_genetico_complessa_04.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_complessa_04.json"
+    },
+    {
+      "id": "test_genetico_facile_01",
+      "type": "test_genetico",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 26,
+      "pdf": "pdf/test_genetico/test_genetico_facile_01.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_facile_01.json"
+    },
+    {
+      "id": "test_genetico_facile_02",
+      "type": "test_genetico",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 20,
+      "pdf": "pdf/test_genetico/test_genetico_facile_02.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_facile_02.json"
+    },
+    {
+      "id": "test_genetico_facile_03",
+      "type": "test_genetico",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 21,
+      "pdf": "pdf/test_genetico/test_genetico_facile_03.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_facile_03.json"
+    },
+    {
+      "id": "test_genetico_facile_04",
+      "type": "test_genetico",
+      "difficulty": "facile",
+      "pages": 1,
+      "entities": 23,
+      "pdf": "pdf/test_genetico/test_genetico_facile_04.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_facile_04.json"
+    },
+    {
+      "id": "test_genetico_media_01",
+      "type": "test_genetico",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 46,
+      "pdf": "pdf/test_genetico/test_genetico_media_01.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_media_01.json"
+    },
+    {
+      "id": "test_genetico_media_02",
+      "type": "test_genetico",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 47,
+      "pdf": "pdf/test_genetico/test_genetico_media_02.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_media_02.json"
+    },
+    {
+      "id": "test_genetico_media_03",
+      "type": "test_genetico",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 43,
+      "pdf": "pdf/test_genetico/test_genetico_media_03.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_media_03.json"
+    },
+    {
+      "id": "test_genetico_media_04",
+      "type": "test_genetico",
+      "difficulty": "media",
+      "pages": 2,
+      "entities": 47,
+      "pdf": "pdf/test_genetico/test_genetico_media_04.pdf",
+      "ground_truth": "ground_truth/test_genetico/test_genetico_media_04.json"
+    }
+  ]
+}

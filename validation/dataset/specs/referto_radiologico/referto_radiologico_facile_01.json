@@ -1,0 +1,55 @@
+{
+  "id": "referto_radiologico_facile_01",
+  "type": "referto_radiologico",
+  "difficulty": "facile",
+  "style": {"font": "helvetica", "color": "#1F3A68", "font_size": 9.5, "margins_mm": 18},
+  "persons": {
+    "paz": {"first_name": "Giuseppe", "last_name": "Lanzetta", "sex": "M", "birth_date": "1958-03-21", "birth_place": "Torino"}
+  },
+  "letterhead": {
+    "logo": "PMA",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Presidio Ospedaliero Monte Alberino]]",
+      "[[REPARTO:S.C. Radiodiagnostica]]",
+      "Direttore: Dott. [[MEDICO:Renato Gallesio]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Corso Valsesia 41]]",
+      "[[CAP:10149]] [[LUOGO:Torino]]",
+      "Segreteria tel. [[TELEFONO:011 4092217]]",
+      "[[EMAIL:radiologia@montealberino.example.it]]"
+    ]
+  },
+  "footer": [
+    "Documento firmato digitalmente ai sensi del D.Lgs. 82/2005 - P.IVA [[PARTITA_IVA:@asl]]",
+    "Il referto è consultabile anche sul Fascicolo Sanitario Elettronico. Le immagini sono archiviate nel sistema PACS aziendale."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI RADIOLOGIA", "subtitle": "RX Torace in due proiezioni (PA e LL)"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Giuseppe Lanzetta]]"],
+      ["Data di nascita", "[[DATA_NASCITA:21/03/1958]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Medico richiedente", "Dott.ssa [[MEDICO:Laura Bertone]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["N. accesso", "[[ACCESSION_NUMBER:RX25-0147736]]"],
+      ["Data esame", "[[DATA_VISITA:14/05/2025]] ore 09:12"],
+      ["Data referto", "[[DATA_REFERTO:15/05/2025]]"],
+      ["Prestazione", "87.44.1 - RX torace standard"],
+      ["Regime", "Esterno SSN"],
+      ["Sala diagnostica", "DR 2 - piano terra"]
+    ]},
+    {"type": "section", "text": "Quesito diagnostico"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Tosse produttiva e febbricola da circa dieci giorni]], non responsiva a terapia sintomatica. Noto [[PATOLOGIA:BPCO]] in ex fumatore."},
+    {"type": "section", "text": "Tecnica"},
+    {"type": "paragraph", "text": "Radiogrammi del torace in proiezione postero-anteriore e laterale sinistra, eseguiti in ortostatismo e in inspirazione profonda. Esame tecnicamente adeguato. Non disponibili precedenti per confronto."},
+    {"type": "section", "text": "Descrizione"},
+    {"type": "paragraph", "text": "Area di [[DIAGNOSI:addensamento parenchimale a margini sfumati in sede basale destra]], proiettivamente riferibile al segmento laterale del lobo medio, con broncogramma aereo nel contesto.\nAccentuazione diffusa del disegno interstiziale e iperdiafania delle basi, reperti compatibili con la nota [[PATOLOGIA:broncopneumopatia cronica ostruttiva]].\nSeni costofrenici liberi bilateralmente. Ilo destro lievemente ingrandito, verosimilmente di natura vascolare-reattiva.\nOmbra cardiaca nei limiti per morfologia e dimensioni (indice cardio-toracico [[ESAME_VALORE:0,48]]). Aorta toracica lievemente ectasica e calcifica a livello dell'arco. Strutture ossee in esame senza alterazioni focali di rilievo."},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "**Quadro radiografico compatibile con [[DIAGNOSI:focolaio broncopneumonico basale destro]] in paziente con [[PATOLOGIA:BPCO]].**\nSi consiglia controllo radiografico a distanza di 4-6 settimane dal termine della terapia antibiotica, per documentare la risoluzione del reperto."},
+    {"type": "signature", "place_date": "[[LUOGO:Torino]], [[DATA_REFERTO:15/05/2025]]", "role": "Il Medico Radiologo", "name": "Dott. [[MEDICO:Paolo Cerutti]]", "digital": true}
+  ],
+  "negatives": []
+}

@@ -1,0 +1,341 @@
+{
+  "id": "referto_laboratorio_media_01",
+  "type": "referto_laboratorio",
+  "difficulty": "media",
+  "style": {
+    "font": "helvetica",
+    "color": "#0B5394",
+    "font_size": 9,
+    "margins_mm": 16
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Giulia",
+      "last_name": "Bianchi Ferraro",
+      "sex": "F",
+      "birth_date": "1978-04-12",
+      "birth_place": "Bologna"
+    }
+  },
+  "letterhead": {
+    "logo": "AUV",
+    "logo_shape": "shield",
+    "lines": [
+      "Servizio Sanitario Regionale - [[STRUTTURA_SANITARIA:Azienda USL di Valmarina]]",
+      "[[STRUTTURA_SANITARIA:Presidio Ospedaliero San Teodoro]]",
+      "[[REPARTO:U.O.C. Patologia Clinica e Laboratorio Analisi]]",
+      "Direttore: Dott.ssa [[MEDICO:Elena Martelli]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via delle Querce 18]] - [[CAP:40139]] [[LUOGO:Bologna]]",
+      "Tel. [[TELEFONO:051 6448210]] - Fax [[FAX:051 6448299]]",
+      "[[EMAIL:laboratorio.santeodoro@ausl-valmarina.example.it]]"
+    ]
+  },
+  "running_header": "Paziente: [[PERSONA:Giulia Bianchi Ferraro]] - Nato/a il [[DATA_NASCITA:12/04/1978]] - N. accettazione [[NUMERO_ACCETTAZIONE:24A0318772]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda USL di Valmarina]] - Sede legale [[INDIRIZZO:Via Roma 112]], [[CAP:40121]] [[LUOGO:Bologna]] - P.IVA [[PARTITA_IVA:@ausl]]",
+    "PEC: [[PEC:protocollo@pec.ausl-valmarina.example.it]] - Il referto e' disponibile anche sul Fascicolo Sanitario Elettronico"
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "REFERTO DI LABORATORIO",
+      "subtitle": "Esami ematochimici di routine"
+    },
+    {
+      "type": "patient_box",
+      "align": "full",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome e nome",
+          "[[PERSONA:Giulia Bianchi Ferraro]]"
+        ],
+        [
+          "Codice fiscale",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Data di nascita",
+          "[[DATA_NASCITA:12/04/1978]]"
+        ],
+        [
+          "Sesso",
+          "[[SESSO:F]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Saragozza 74]], [[LUOGO:Bologna]]"
+        ],
+        [
+          "Tessera sanitaria",
+          "[[TESSERA_SANITARIA:@ts]]"
+        ],
+        [
+          "Medico richiedente",
+          "Dott. [[MEDICO:Marco Galli]]"
+        ],
+        [
+          "Provenienza",
+          "[[REPARTO:Ambulatorio Diabetologico]]"
+        ]
+      ]
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "N. accettazione",
+          "[[NUMERO_ACCETTAZIONE:24A0318772]]"
+        ],
+        [
+          "Data prelievo",
+          "[[DATA_VISITA:03/06/2024]] ore 07:42"
+        ],
+        [
+          "Data referto",
+          "[[DATA_REFERTO:04/06/2024]]"
+        ]
+      ]
+    },
+    {
+      "type": "barcode",
+      "kind": "code128",
+      "label": "Campione",
+      "value": "[[CODICE_CAMPIONE:S24-0318772-01]]",
+      "align": "right"
+    },
+    {
+      "type": "section",
+      "text": "Ematologia"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Esame",
+        "Risultato",
+        "U.M.",
+        "Valori di riferimento",
+        ""
+      ],
+      "widths": [
+        4,
+        2,
+        1.5,
+        3,
+        0.6
+      ],
+      "flag_column": 4,
+      "rows": [
+        [
+          "Emoglobina",
+          "[[ESAME_VALORE:11,2]]",
+          "g/dL",
+          "12,0 - 15,5",
+          "L"
+        ],
+        [
+          "Globuli bianchi",
+          "[[ESAME_VALORE:7,8]]",
+          "10^3/uL",
+          "4,0 - 10,0",
+          ""
+        ],
+        [
+          "Piastrine",
+          "[[ESAME_VALORE:256]]",
+          "10^3/uL",
+          "150 - 400",
+          ""
+        ],
+        [
+          "MCV",
+          "[[ESAME_VALORE:76]]",
+          "fL",
+          "80 - 99",
+          "L"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Chimica clinica"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Esame",
+        "Risultato",
+        "U.M.",
+        "Valori di riferimento",
+        ""
+      ],
+      "widths": [
+        4,
+        2,
+        1.5,
+        3,
+        0.6
+      ],
+      "flag_column": 4,
+      "rows": [
+        [
+          "Glucosio",
+          "[[ESAME_VALORE:142]]",
+          "mg/dL",
+          "70 - 100",
+          "H"
+        ],
+        [
+          "Emoglobina glicata (HbA1c)",
+          "[[ESAME_VALORE:58]]",
+          "mmol/mol",
+          "< 42",
+          "H"
+        ],
+        [
+          "Creatinina",
+          "[[ESAME_VALORE:0,82]]",
+          "mg/dL",
+          "0,50 - 0,90",
+          ""
+        ],
+        [
+          "Colesterolo totale",
+          "[[ESAME_VALORE:214]]",
+          "mg/dL",
+          "< 200",
+          "H"
+        ],
+        [
+          "Ferritina",
+          "[[ESAME_VALORE:9]]",
+          "ng/mL",
+          "15 - 150",
+          "L"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "text": "Quadro compatibile con [[DIAGNOSI:anemia sideropenica]] in paziente con [[PATOLOGIA:diabete mellito di tipo 2]] in terapia con [[FARMACO:metformina 1000 mg]]. Si consiglia controllo a 3 mesi. Nessuna correlazione con il morbo di Parkinson segnalato nel quesito."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Bologna]], [[DATA_REFERTO:04/06/2024]]",
+      "role": "Il Dirigente Biologo",
+      "name": "Dott.ssa [[MEDICO:Chiara Lombardi]]",
+      "digital": true
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "Sierologia"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Esame",
+        "Risultato",
+        "Interpretazione"
+      ],
+      "widths": [
+        3,
+        2,
+        4
+      ],
+      "rows": [
+        [
+          "HBsAg",
+          "[[ESAME_VALORE:Negativo]]",
+          "Assenza di infezione in atto"
+        ],
+        [
+          "Anti-HCV",
+          "[[ESAME_VALORE:Negativo]]",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "left": [
+        {
+          "type": "heading",
+          "text": "Note metodologiche"
+        },
+        {
+          "type": "paragraph",
+          "text": "Emocromo eseguito su analizzatore automatico. HbA1c in HPLC, metodo allineato IFCC."
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Contatti"
+        },
+        {
+          "type": "paragraph",
+          "text": "Per chiarimenti: tecnico di laboratorio [[OPERATORE_SANITARIO:Luca Ferri]], tel. [[TELEFONO:051 6448213]]."
+        },
+        {
+          "type": "char_boxes",
+          "label": "C.F.",
+          "value": "[[CODICE_FISCALE:@paz]]"
+        }
+      ]
+    },
+    {
+      "type": "checkboxes",
+      "label": "Consegna referto",
+      "columns": 3,
+      "items": [
+        [
+          "Ritiro allo sportello",
+          false
+        ],
+        [
+          "Fascicolo Sanitario",
+          true
+        ],
+        [
+          "Invio postale",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "barcode",
+      "kind": "qr",
+      "label": "Verifica autenticita",
+      "value": "https://referti.ausl-valmarina.example.it/v/[[NUMERO_REFERTO:R24-0098812]]"
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "LABORATORIO ANALISI",
+        "Dott.ssa [[MEDICO:Chiara Lombardi]]",
+        "Iscr. Ordine Biologi n. [[NUMERO_ALBO:AA_071223]]"
+      ],
+      "angle": -8
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "I valori di riferimento sono riferiti a soggetti adulti di sesso femminile."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Parkinson",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    }
+  ]
+}

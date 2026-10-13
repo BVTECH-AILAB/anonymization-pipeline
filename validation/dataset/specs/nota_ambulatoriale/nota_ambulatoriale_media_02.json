@@ -1,0 +1,75 @@
+{
+  "id": "nota_ambulatoriale_media_02",
+  "type": "nota_ambulatoriale",
+  "difficulty": "media",
+  "style": {"font": "times", "color": "#283593", "font_size": 10, "margins_mm": 20},
+  "persons": {
+    "paz": {"first_name": "Luciana", "last_name": "Pavan", "sex": "F", "birth_date": "1952-03-09", "birth_place": "Padova"}
+  },
+  "letterhead": {
+    "logo": "AOE",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Euganea]]",
+      "[[REPARTO:U.O.C. Neurologia - Centro Disturbi del Movimento]]",
+      "Direttore: Prof. [[MEDICO:Ottavio Schiavon]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via San Massimo 74]]",
+      "[[CAP:35129]] [[LUOGO:Padova]]",
+      "Segreteria [[TELEFONO:049 8217455]]",
+      "[[EMAIL:cdm.neurologia@aoeuganea.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:Pavan Luciana]] - nata il [[DATA_NASCITA:09.03.1952]] - visita del [[DATA_VISITA:7 ottobre 2024]] - referto n. [[NUMERO_REFERTO:NEU-24-11872]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Euganea]] - P.IVA [[PARTITA_IVA:@ao]] - PEC [[PEC:protocollo@pec.aoeuganea.example.it]]",
+    "Referto consultabile sul Fascicolo Sanitario Elettronico. Conservare con la documentazione clinica personale."
+  ],
+  "blocks": [
+    {"type": "title", "text": "Referto di visita neurologica", "subtitle": "Visita di controllo (cod. 89.01) - Ambulatorio malattia di Parkinson e parkinsonismi"},
+    {"type": "patient_box", "title": "ASSISTITA", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Pavan Luciana]]"],
+      ["Data di nascita", "[[DATA_NASCITA:09/03/1952]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Tessera sanitaria", "[[TESSERA_SANITARIA:@ts]]"],
+      ["Indirizzo", "[[INDIRIZZO:Via Chiesanuova 18]], [[CAP:35136]] [[LUOGO:Padova]]"],
+      ["Esenzione", "[[CODICE_ESENZIONE:038.332]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Data visita", "[[DATA_VISITA:07/10/2024]]"],
+      ["N. referto", "[[NUMERO_REFERTO:NEU-24-11872]]"],
+      ["Prenotazione", "[[NUMERO_PRENOTAZIONE:CUP-PD-2024-338901]]"],
+      ["NRE", "[[NUMERO_RICETTA:050A40762280931]]"],
+      ["Inviata da", "Dott. [[MEDICO:Ivo Zorzi]] (MMG)"],
+      ["Classe di priorità", "P"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Referto", "value": "[[NUMERO_REFERTO:NEU-24-11872]]", "align": "right"},
+    {"type": "section", "text": "Anamnesi"},
+    {"type": "paragraph", "text": "La sig.ra [[PERSONA:Pavan]], di [[ETA:72]] anni, ex [[PROFESSIONE:insegnante di scuola primaria]] in pensione, è seguita presso questo Centro dal 2019 per [[DIAGNOSI:malattia di Parkinson idiopatica]] ad esordio con tremore all'arto superiore destro. Giunge accompagnata dal marito, sig. [[FAMILIARE:Renzo Bortolami]], che collabora all'anamnesi.\nDall'ultima visita ([[DATA:03/04/24]]) la pz. riferisce [[DIAGNOSI:fluttuazioni motorie]] con esaurimento dell'effetto della dose di [[FARMACO:levodopa]] dopo circa 3 ore, [[DIAGNOSI:discinesie di picco lievi]], non invalidanti, e brevi episodi di [[DIAGNOSI:freezing della marcia]] nei passaggi stretti. Il sig. [[FAMILIARE:Bortolami]] segnala vocalizzazioni e movimenti bruschi durante il sonno, compatibili con [[DIAGNOSI:disturbo comportamentale in sonno REM]]. [[DIAGNOSI:Stipsi cronica]]. Riferita una caduta a domicilio il [[DATA:14/08/2024]], senza fratture. Non allucinazioni, non disturbi del controllo degli impulsi."},
+    {"type": "section", "text": "Terapia in atto"},
+    {"type": "table", "header": ["Farmaco", "Posologia", "Orari"], "widths": [3.6, 2.4, 2.6], "rows": [
+      ["[[FARMACO:Levodopa/carbidopa 100/25 mg]]", "1 cp x 4/die", "7 - 11 - 15 - 19"],
+      ["[[FARMACO:Pramipexolo RP 1,05 mg]]", "1 cp/die", "ore 8"],
+      ["[[FARMACO:Rasagilina 1 mg]]", "1 cp/die", "ore 8"],
+      ["[[FARMACO:Macrogol 13,8 g]]", "1 bustina/die", "al bisogno"]
+    ]},
+    {"type": "section", "text": "Esame obiettivo neurologico"},
+    {"type": "paragraph", "text": "Esaminata in fase ON, circa 90 minuti dopo l'assunzione della dose delle 11. Vigile, orientata, eloquio ipofonico. Facies ipomimica. Bradicinesia prevalente a destra alle prove di tapping e di apertura-chiusura della mano. Rigidità plastica di grado lieve-moderato ai quattro arti, con segno della ruota dentata a destra. Tremore a riposo all'arto superiore destro, di bassa ampiezza. Riflessi osteotendinei normoevocabili e simmetrici, Babinski negativo bilateralmente. Marcia a piccoli passi con ridotta pendolarità degli arti superiori, girata in 4 passi; pull test con 2 passi di retropulsione, recupera autonomamente.\nPA in clinostatismo [[MISURE_ANTROPOMETRICHE:136/82 mmHg]], in ortostatismo dopo 3 minuti [[MISURE_ANTROPOMETRICHE:118/74 mmHg]]."},
+    {"type": "table", "header": ["Scala di valutazione", "Punteggio", "Visita precedente"], "widths": [4, 2, 2.4], "rows": [
+      ["MDS-UPDRS parte III (fase ON)", "[[ESAME_VALORE:31]]", "[[ESAME_VALORE:26]]"],
+      ["Stadio di Hoehn e Yahr", "[[ESAME_VALORE:2,5]]", "[[ESAME_VALORE:2,0]]"],
+      ["MoCA (corretto per scolarità)", "[[ESAME_VALORE:25/30]]", "[[ESAME_VALORE:27/30]]"]
+    ]},
+    {"type": "section", "text": "Conclusioni e indicazioni"},
+    {"type": "paragraph", "text": "Quadro di [[DIAGNOSI:malattia di Parkinson idiopatica]] in progressione (stadio di Hoehn e Yahr come da tabella), con [[DIAGNOSI:fluttuazioni motorie di tipo wearing-off]] e [[DIAGNOSI:lieve ipotensione ortostatica]].\n**Modifiche terapeutiche:**\n- frazionare la [[FARMACO:levodopa]] in 5 somministrazioni ([[FARMACO:levodopa/carbidopa 100/25 mg]] alle ore 7 - 10 - 13 - 16 - 19), a distanza di almeno 1 ora dai pasti proteici;\n- introdurre [[FARMACO:opicapone 50 mg]] 1 cp la sera al momento di coricarsi;\n- proseguire [[FARMACO:pramipexolo]] e [[FARMACO:rasagilina]] invariati.\n**Indicazioni:** [[TERAPIA:fisioterapia neuromotoria]] con esercizi per il freezing (cicli di 10 sedute); [[TERAPIA:valutazione logopedica]] per l'ipofonia; idratazione adeguata e cauti cambi di postura. Rimuovere i tappeti e installare maniglioni in bagno per ridurre il rischio di cadute.\nIl marito è informato dei segni di allarme (cadute ripetute, allucinazioni, confusione) per cui contattare il Centro.\n**Prossimo controllo:** tra 4 mesi, con diario motorio compilato dalla pz. e dal sig. [[FAMILIARE:Bortolami]]."},
+    {"type": "paragraph", "text": "Visita eseguita con la collaborazione della Dott.ssa [[OPERATORE_SANITARIO:Marta Carraro]], medico in formazione specialistica in Neurologia."},
+    {"type": "signature", "place_date": "[[LUOGO:Padova]], [[DATA_REFERTO:07/10/2024]]", "role": "Il Dirigente Medico Neurologo", "name": "Dott. [[MEDICO:Enrico Zanella]]", "digital": false, "stamp": ["Dott. [[MEDICO:Enrico Zanella]]", "Specialista in Neurologia", "Iscr. Ordine dei Medici n. [[NUMERO_ALBO:PD-07731]]"]}
+  ],
+  "negatives": [
+    {"value": "Parkinson", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]},
+    {"value": "Babinski", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]},
+    {"value": "Hoehn", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]},
+    {"value": "Yahr", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]}
+  ]
+}

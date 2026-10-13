@@ -1,0 +1,552 @@
+{
+  "id": "lettera_dimissione_complessa_04",
+  "type": "lettera_dimissione",
+  "difficulty": "complessa",
+  "style": {
+    "font": "times",
+    "color": "#7A2333",
+    "font_size": 8.3,
+    "margins_mm": 15
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Gabriele",
+      "last_name": "D'Ambrosio",
+      "sex": "M",
+      "birth_date": "1979-07-14",
+      "birth_place": "Salerno"
+    }
+  },
+  "letterhead": {
+    "logo": "AOSC",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Santa Caterina del Reno]]",
+      "Dipartimento di Medicina Specialistica",
+      "[[REPARTO:U.O.C. Malattie Infettive e Tropicali]]",
+      "Degenza ordinaria - Day Hospital - [[REPARTO:Ambulatorio HIV]]",
+      "Direttrice: Prof.ssa [[MEDICO:Marisa Calzolari]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Larga del Navile 140]]",
+      "[[CAP:40131]] [[LUOGO:Bologna]]",
+      "Degenza [[TELEFONO:051 6382 210]]",
+      "[[REPARTO:Ambulatorio HIV]] [[TELEFONO:051 6382 245]]",
+      "Fax [[FAX:051 6382 299]]",
+      "[[EMAIL:malinfettive@aoscr.example.it]]"
+    ]
+  },
+  "running_header": "Malattie Infettive - [[PERSONA:D'Ambrosio Gabriele]] - nato il [[DATA_NASCITA:14/07/1979]] - ricovero n. [[NUMERO_ACCETTAZIONE:2025/MI/004127]] - DOCUMENTO RISERVATO",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Santa Caterina del Reno]] - [[INDIRIZZO:Via Larga del Navile 140]], [[CAP:40131]] [[LUOGO:Bologna]] - P.IVA [[PARTITA_IVA:@aoscr]] - PEC [[PEC:direzione@pec.aoscr.example.it]]",
+    "Documento soggetto alla tutela della riservatezza ai sensi della L. 135/1990 - consegnato in busta chiusa a [[PERSONA:Gabriele D'Ambrosio]] - cartella [[NUMERO_CARTELLA:MI-25-1183]]"
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "align": "right",
+      "lines": [
+        "Al sig. [[PERSONA:Gabriele D'Ambrosio]] - consegna a mano",
+        "e, previo consenso dell'interessato, al Dott. [[MEDICO:Pierluigi Venturi]]",
+        "Medico di Medicina Generale, [[INDIRIZZO:Via Irnerio 22]], [[LUOGO:Bologna]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "LETTERA DI DIMISSIONE",
+      "subtitle": "Ricovero ordinario in [[REPARTO:U.O.C. Malattie Infettive e Tropicali]]"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome e nome",
+          "[[PERSONA:D'AMBROSIO GABRIELE]]"
+        ],
+        [
+          "Sesso",
+          "[[SESSO:M]]"
+        ],
+        [
+          "Nato a",
+          "[[LUOGO_NASCITA:Salerno]] il [[DATA_NASCITA:14 luglio 1979]]"
+        ],
+        [
+          "Stato civile",
+          "[[STATO_CIVILE:unito civilmente]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Mascarella 63]], [[CAP:40126]] [[LUOGO:Bologna]]"
+        ],
+        [
+          "Telefono",
+          "[[TELEFONO:+39 333 718 4402]]"
+        ],
+        [
+          "Professione",
+          "[[PROFESSIONE:grafico pubblicitario]]"
+        ],
+        [
+          "Datore di lavoro",
+          "[[DATORE_LAVORO:Studio Lanterna Comunicazione S.r.l.]]"
+        ],
+        [
+          "Tessera sanitaria",
+          "[[TESSERA_SANITARIA:@ts]]"
+        ],
+        [
+          "Esenzione",
+          "[[CODICE_ESENZIONE:020.042]]"
+        ],
+        [
+          "N. ricovero",
+          "[[NUMERO_ACCETTAZIONE:2025/MI/004127]]"
+        ],
+        [
+          "Codice paziente",
+          "[[ID_PAZIENTE:HIV-BO-07731]]"
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "Ricovero",
+          "[[DATA_RICOVERO:02/09/2025]]"
+        ],
+        [
+          "Provenienza",
+          "[[REPARTO:Pronto Soccorso Generale]]"
+        ],
+        [
+          "Dimissione",
+          "[[DATA_RICOVERO:22-09-2025]]"
+        ],
+        [
+          "Cartella clinica",
+          "[[NUMERO_CARTELLA:MI-25-1183]]"
+        ],
+        [
+          "Medico referente",
+          "Dott. [[MEDICO:Lorenzo Mazzacurati]]"
+        ],
+        [
+          "Infermiera case manager",
+          "[[OPERATORE_SANITARIO:Monica Grandi]]"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Consenso alla comunicazione dei dati sanitari"
+    },
+    {
+      "type": "checkboxes",
+      "columns": 2,
+      "label": "Ai sensi della L. 135/1990 il paziente acconsente alla comunicazione della diagnosi a:",
+      "items": [
+        [
+          "Medico di Medicina Generale",
+          true
+        ],
+        [
+          "Partner convivente, sig. [[CONTATTO_EMERGENZA:Samuele Viola]]",
+          true
+        ],
+        [
+          "Familiari (madre, sorella)",
+          false
+        ],
+        [
+          "Datore di lavoro (solo prognosi)",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Persona di riferimento"
+        },
+        {
+          "type": "paragraph",
+          "align": "left",
+          "text": "Partner [[STATO_CIVILE:unito civilmente]] e contatto di emergenza: sig. [[CONTATTO_EMERGENZA:Samuele Viola]], tel. [[TELEFONO:+39 349 562 0718]], [[EMAIL:samuele.viola@posta.example.it]]. È l'unica persona autorizzata a ricevere informazioni cliniche, anche telefoniche."
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Familiari non autorizzati"
+        },
+        {
+          "type": "paragraph",
+          "align": "left",
+          "text": "La madre, sig.ra [[FAMILIARE:Carmela Iannone]], residente a [[LUOGO:Cava de' Tirreni]], e la sorella, sig.ra [[FAMILIARE:Stella D'Ambrosio]], hanno chiesto notizie per telefono il [[DATA:05/09/2025]]: sono state fornite solo informazioni generiche, per esplicita volontà del paziente (1)."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Gentile Collega,\nTi scrivo in merito al sig. [[PERSONA:D'Ambrosio]], [[ETA:46]] anni, ricoverato presso il nostro reparto dal [[DATA_RICOVERO:2 settembre 2025]] al [[DATA_RICOVERO:22.09.25]] per insufficienza respiratoria acuta, con nuova diagnosi di infezione da HIV in fase avanzata. Il paziente ha autorizzato per iscritto la trasmissione della presente lettera."
+    },
+    {
+      "type": "section",
+      "text": "Motivo del ricovero e anamnesi"
+    },
+    {
+      "type": "paragraph",
+      "text": "Giunto in PS per [[DIAGNOSI:febbre]] serotina da circa 3 settimane, [[DIAGNOSI:tosse secca]], [[DIAGNOSI:dispnea ingravescente da sforzo]] e [[DIAGNOSI:calo ponderale di 9 kg]] in due mesi. All'ingresso FR 30 atti/min, SpO2 [[ESAME_VALORE:86%]] in aria ambiente, emogasanalisi con PaO2 [[ESAME_VALORE:54 mmHg]]; peso [[MISURE_ANTROPOMETRICHE:61 kg]], altezza [[MISURE_ANTROPOMETRICHE:178 cm]], BMI [[MISURE_ANTROPOMETRICHE:19,3]]. All'esame obiettivo [[DIAGNOSI:candidosi orofaringea]] e [[DIAGNOSI:lesioni maculo-papulari di colore viola]] agli arti inferiori.\n**Anamnesi.** [[PATOLOGIA:Herpes zoster toracico]] nel 2023; [[PATOLOGIA:sifilide primaria]] trattata nel 2018 presso il centro MST di [[LUOGO:Napoli]]. Ultimo test HIV negativo nel 2019. Fattore di rischio: [[ORIENTAMENTO_SESSUALE:rapporti sessuali con partner dello stesso sesso]]. Riferito [[DIPENDENZE:uso occasionale di mefedrone e GHB in contesto di chemsex]]; non fumo, alcol occasionale. Nessuna allergia nota all'ingresso (vedi decorso). Vive a [[LUOGO:Bologna]] con il partner dal 2016."
+    },
+    {
+      "type": "section",
+      "text": "Esami principali"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Esame",
+        "[[DATA:02/09]]",
+        "[[DATA:15/09]]",
+        "[[DATA:21/09]]",
+        "U.M."
+      ],
+      "widths": [
+        3.4,
+        1.6,
+        1.6,
+        1.6,
+        1.6
+      ],
+      "font_size": 7.6,
+      "rows": [
+        [
+          "Linfociti T CD4+",
+          "[[ESAME_VALORE:38]]",
+          "-",
+          "[[ESAME_VALORE:71]]",
+          "cell/µL"
+        ],
+        [
+          "CD4+ percentuale",
+          "[[ESAME_VALORE:4,1%]]",
+          "-",
+          "[[ESAME_VALORE:6,8%]]",
+          "%"
+        ],
+        [
+          "HIV-1 RNA",
+          "[[ESAME_VALORE:412.000]]",
+          "-",
+          "[[ESAME_VALORE:1.940]]",
+          "copie/mL"
+        ],
+        [
+          "LDH",
+          "[[ESAME_VALORE:612]]",
+          "[[ESAME_VALORE:388]]",
+          "[[ESAME_VALORE:251]]",
+          "U/L"
+        ],
+        [
+          "Beta-D-glucano",
+          "[[ESAME_VALORE:> 500]]",
+          "-",
+          "-",
+          "pg/mL"
+        ],
+        [
+          "Emoglobina",
+          "[[ESAME_VALORE:10,9]]",
+          "[[ESAME_VALORE:10,2]]",
+          "[[ESAME_VALORE:11,4]]",
+          "g/dL"
+        ],
+        [
+          "Potassio",
+          "[[ESAME_VALORE:4,3]]",
+          "[[ESAME_VALORE:5,9]]",
+          "[[ESAME_VALORE:4,6]]",
+          "mmol/L"
+        ],
+        [
+          "CMV-DNA plasmatico",
+          "[[ESAME_VALORE:840]]",
+          "-",
+          "[[ESAME_VALORE:non rilevabile]]",
+          "UI/mL"
+        ]
+      ]
+    },
+    {
+      "type": "table",
+      "header": [
+        "Indagine",
+        "Data",
+        "Codice / accesso",
+        "Esito"
+      ],
+      "widths": [
+        2.8,
+        1.4,
+        2.2,
+        5
+      ],
+      "font_size": 7.6,
+      "rows": [
+        [
+          "Test HIV Ag/Ab combo + Western blot",
+          "[[DATA:02/09/2025]]",
+          "[[CODICE_CAMPIONE:SI25-0902-0417]]",
+          "[[MALATTIE_INFETTIVE:HIV-1 positivo]], confermato"
+        ],
+        [
+          "Broncoscopia con BAL\n(Dott.ssa [[MEDICO:Irene Fabbri]])",
+          "[[DATA:04/09/2025]]",
+          "[[CODICE_CAMPIONE:BAL25-00981]]",
+          "PCR e immunofluorescenza positive per [[MALATTIE_INFETTIVE:Pneumocystis jirovecii]]; colture batteriche e micobatteri negative"
+        ],
+        [
+          "TC torace senza mdc",
+          "[[DATA:03/09/2025]]",
+          "[[ACCESSION_NUMBER:CT25-118402]]",
+          "opacità a vetro smerigliato bilaterali, prevalenti ai lobi superiori"
+        ],
+        [
+          "Biopsia cutanea gamba sinistra",
+          "[[DATA:08/09/2025]]",
+          "[[CODICE_CAMPIONE:IST25-07726]]",
+          "[[DIAGNOSI:sarcoma di Kaposi]], HHV-8 positivo all'immunoistochimica"
+        ],
+        [
+          "Sierologia sifilide (TPHA/RPR)",
+          "[[DATA:02/09/2025]]",
+          "[[CODICE_CAMPIONE:SI25-0902-0418]]",
+          "TPHA positivo, RPR [[ESAME_VALORE:1:16]]"
+        ],
+        [
+          "Test di resistenza genotipico",
+          "[[DATA:05/09/2025]]",
+          "[[NUMERO_REFERTO:GRT-25-0322]]",
+          "sottotipo B, nessuna mutazione di resistenza rilevante"
+        ],
+        [
+          "HLA-B*57:01",
+          "[[DATA:05/09/2025]]",
+          "[[NUMERO_REFERTO:HLA-25-1094]]",
+          "[[DATO_GENETICO:HLA-B*57:01 negativo]]"
+        ]
+      ],
+      "caption": "Codici campione del laboratorio di microbiologia; il referto di genetica (2) è archiviato nel fascicolo di [[PERSONA:G. D'Ambrosio]]."
+    },
+    {
+      "type": "section",
+      "text": "Decorso clinico"
+    },
+    {
+      "type": "paragraph",
+      "text": "All'ingresso avviata ossigenoterapia con alti flussi (FiO2 0,45) e terapia empirica; dopo il BAL del [[DATA:4 settembre]] diagnosi di [[MALATTIE_INFETTIVE:polmonite da Pneumocystis jirovecii]] in [[MALATTIE_INFETTIVE:infezione da HIV-1 in stadio C3 (AIDS)]]. Terapia con [[FARMACO:trimetoprim-sulfametossazolo 15 mg/kg/die]] e [[FARMACO:prednisone 40 mg]] due volte al giorno secondo schema, con progressivo miglioramento degli scambi respiratori: in aria ambiente dal [[DATA:11/09/2025]]. Il [[DATA:14/09/2025]] comparsa di [[ALLERGIA:esantema maculo-papulare da cotrimossazolo]] con [[DIAGNOSI:iperkaliemia]] (potassio [[ESAME_VALORE:5,9 mmol/L]]): terapia proseguita a dosaggio ridotto con antistaminico, con risoluzione del rash in 4 giorni (consulenza dermatologica della Dott.ssa [[MEDICO:Chiara Nguyen]]).\nIl [[DATA:16/09/2025]], a 14 giorni dall'inizio della terapia per la polmonite, è stata avviata la [[TERAPIA:terapia antiretrovirale]] con [[FARMACO:bictegravir/emtricitabina/tenofovir alafenamide]], ben tollerata. La [[MALATTIE_INFETTIVE:sifilide latente tardiva]] è stata trattata con [[FARMACO:penicillina G benzatina 2,4 MUI]] i.m. (prima dose il [[DATA:10/09/2025]], seconda il [[DATA:17/09/2025]]) dopo test di tolleranza. Riscontro di [[MALATTIE_INFETTIVE:viremia da CMV]] a bassa carica, senza retinite all'esame del fundus (Dott. [[MEDICO:Ruggero Tassinari]], Oculistica); negativizzata senza terapia.\nIl [[DIAGNOSI:sarcoma di Kaposi cutaneo]] (stadio T0 I0 S1) è stato discusso con l'oncologo Dott. [[MEDICO:Andrea Melandri]]: si attende la risposta all'immunoricostituzione prima di valutare la chemioterapia.\nAlla comunicazione della diagnosi il paziente ha presentato una [[SALUTE_MENTALE:reazione di adattamento con ansia]]; ha effettuato tre colloqui con la psicologa dott.ssa [[OPERATORE_SANITARIO:Beatrice Lolli]] e chiede di proseguire il supporto. Il partner, sig. [[CONTATTO_EMERGENZA:Viola]], è stato informato con il consenso del paziente il [[DATA:06/09/2025]] e si è sottoposto al test HIV, risultato negativo; è stato indirizzato al counselling per la PrEP. Il paziente è stato assistito durante il ricovero dalla specializzanda dott.ssa [[OPERATORE_SANITARIO:Agnese Tura]] e dal coordinatore infermieristico [[OPERATORE_SANITARIO:Nicola Pancaldi]]."
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi alla dimissione"
+    },
+    {
+      "type": "paragraph",
+      "text": "1. **[[MALATTIE_INFETTIVE:Infezione da HIV-1 in stadio C3 (AIDS) di nuova diagnosi]]** (CD4 nadir [[ESAME_VALORE:38]] cell/µL).\n2. [[MALATTIE_INFETTIVE:Polmonite da Pneumocystis jirovecii]] con [[DIAGNOSI:insufficienza respiratoria acuta ipossiemica]], in risoluzione.\n3. [[DIAGNOSI:Sarcoma di Kaposi cutaneo]] (HHV-8 correlato).\n4. [[MALATTIE_INFETTIVE:Sifilide latente tardiva]], in trattamento; [[MALATTIE_INFETTIVE:candidosi orofaringea]], risolta.\n5. [[ALLERGIA:Reazione cutanea da cotrimossazolo]] (non grave, non controindica la profilassi).\n6. [[SALUTE_MENTALE:Disturbo dell'adattamento con ansia]]."
+    },
+    {
+      "type": "section",
+      "text": "Terapia alla dimissione"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Dose",
+        "Orari",
+        "Note"
+      ],
+      "widths": [
+        3.6,
+        1.6,
+        1.6,
+        4.6
+      ],
+      "font_size": 7.6,
+      "rows": [
+        [
+          "[[FARMACO:Bictegravir 50 mg / emtricitabina 200 mg / tenofovir alafenamide 25 mg]]",
+          "1 cpr",
+          "ore 20",
+          "non assumere insieme ad antiacidi o integratori di ferro e calcio; distribuzione diretta dalla farmacia ospedaliera"
+        ],
+        [
+          "[[FARMACO:Cotrimossazolo 800/160 mg]]",
+          "1 cpr",
+          "ore 8",
+          "profilassi secondaria; sospendere solo con CD4 > 200 cell/µL per 3 mesi"
+        ],
+        [
+          "[[FARMACO:Prednisone 20 mg]]",
+          "1 cpr",
+          "ore 8",
+          "fino al [[DATA:24/09/2025]], poi sospendere (completa 21 giorni)"
+        ],
+        [
+          "[[FARMACO:Penicillina G benzatina 2,4 MUI]]",
+          "1 fl i.m.",
+          "-",
+          "terza dose il [[DATA_VISITA:24/09/2025]] presso il Day Hospital"
+        ],
+        [
+          "[[FARMACO:Cetirizina 10 mg]]",
+          "1 cpr",
+          "ore 21",
+          "per 7 giorni"
+        ],
+        [
+          "[[FARMACO:Pantoprazolo 20 mg]]",
+          "1 cpr",
+          "ore 7",
+          "fino al termine dello steroide"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Controlli programmati"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Servizio",
+        "Referente",
+        "Data",
+        "Prenotazione / recapito"
+      ],
+      "widths": [
+        3,
+        3,
+        2,
+        3.4
+      ],
+      "font_size": 7.6,
+      "rows": [
+        [
+          "[[REPARTO:Day Hospital Malattie Infettive]]",
+          "inf. [[OPERATORE_SANITARIO:Monica Grandi]]",
+          "[[DATA_VISITA:24/09/2025]] ore 9:00",
+          "[[NUMERO_PRENOTAZIONE:DH-MI-25-03381]]"
+        ],
+        [
+          "[[REPARTO:Ambulatorio HIV]]",
+          "Dott. [[MEDICO:Lorenzo Mazzacurati]]",
+          "[[DATA_VISITA:07/10/2025]] ore 11:30",
+          "CD4, HIV-RNA, funzione renale\n[[TELEFONO:051 6382 245]]"
+        ],
+        [
+          "[[REPARTO:Ambulatorio di Oncologia Medica]]",
+          "Dott. [[MEDICO:Andrea Melandri]]",
+          "[[DATA_VISITA:21/10/2025]] ore 14:00",
+          "[[NUMERO_PRENOTAZIONE:CUP-BO-25-551870]]"
+        ],
+        [
+          "Supporto psicologico",
+          "dott.ssa [[OPERATORE_SANITARIO:Beatrice Lolli]]",
+          "da concordare",
+          "[[EMAIL:psicologia.mi@aoscr.example.it]]"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Si raccomanda: vaccinazione anti-pneumococcica e anti-HBV dopo il recupero dei CD4 (HBsAg e anti-HBs negativi); screening per HPV anale; uso del profilattico. Il sig. [[PERSONA:Gabriele]] è stato informato che, con viremia stabilmente [[ESAME_VALORE:non rilevabile]], il rischio di trasmissione sessuale è nullo (U=U). La certificazione per il datore di lavoro riporta la sola prognosi."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Bologna]], [[DATA_REFERTO:22 settembre 2025]]",
+      "role": "Il Medico Referente",
+      "name": "Dott. [[MEDICO:Lorenzo Mazzacurati]]",
+      "extra": [
+        "Dirigente Medico - Malattie Infettive"
+      ],
+      "digital": false,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:AZ. OSP. SANTA CATERINA DEL RENO]]",
+        "[[REPARTO:U.O.C. MALATTIE INFETTIVE]]",
+        "Dott. [[MEDICO:L. Mazzacurati]]",
+        "Ord. Medici BO n. [[NUMERO_ALBO:18842]]"
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "Visto",
+      "role": "La Direttrice dell'U.O.C.",
+      "name": "Prof.ssa [[MEDICO:Marisa Calzolari]]",
+      "digital": false
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "[[STRUTTURA_SANITARIA:AZIENDA OSP. S. CATERINA DEL RENO]]",
+        "MALATTIE INFETTIVE E TROPICALI",
+        "Prof.ssa [[MEDICO:M. Calzolari]]",
+        "Ord. Medici BO n. [[NUMERO_ALBO:11307]]"
+      ],
+      "angle": 8,
+      "align": "center"
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Consenso scritto e dichiarazione di non comunicazione ai familiari acquisiti il [[DATA:03/09/2025]], prot. n. [[NUMERO_PROTOCOLLO:MI/2025/00877]]; in caso di urgenza contattare esclusivamente il sig. [[CONTATTO_EMERGENZA:S. Viola]] ([[TELEFONO:+39 349 562 0718]]).",
+        "Test farmacogenetico eseguito prima di un eventuale uso di abacavir; nessuna indagine genetica estesa ai familiari.",
+        "La notifica di caso di AIDS al sistema di sorveglianza è stata effettuata in forma anonima, senza dati identificativi del sig. [[PERSONA:D'Ambrosio]]."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Kaposi",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Pneumocystis jirovecii",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "viola",
+      "forbidden_categories": [
+        "COGNOME",
+        "CONTATTO_EMERGENZA",
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Western",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

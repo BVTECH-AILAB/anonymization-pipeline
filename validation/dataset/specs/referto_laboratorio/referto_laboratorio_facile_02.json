@@ -1,0 +1,53 @@
+{
+  "id": "referto_laboratorio_facile_02",
+  "type": "referto_laboratorio",
+  "difficulty": "facile",
+  "style": {"font": "times", "color": "#6A1B9A", "font_size": 10.5, "margins_mm": 22},
+  "persons": {
+    "paz": {"first_name": "Francesca", "last_name": "Moretti", "sex": "F", "birth_date": "1994-02-27", "birth_place": "Ancona"}
+  },
+  "letterhead": {
+    "logo": "ASL",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Sanitaria Locale Valle Serena]]",
+      "Dipartimento di Medicina di Laboratorio",
+      "[[REPARTO:Punto Prelievi Distretto Nord]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Flaminia 87]] - [[CAP:60126]] [[LUOGO:Ancona]]",
+      "Tel. [[TELEFONO:071 8834120]]",
+      "Orario prelievi: lun-ven 7:30 - 10:00"
+    ]
+  },
+  "footer": [
+    "Servizio Sanitario Regionale - Referto consultabile anche sul Fascicolo Sanitario Elettronico",
+    "Conservare il presente documento e mostrarlo al proprio medico curante"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI LABORATORIO", "subtitle": "Funzionalita' tiroidea"},
+    {"type": "patient_box", "align": "full", "columns": 2, "fields": [
+      ["Cognome", "[[COGNOME:Moretti]]"],
+      ["Nome", "[[NOME:Francesca]]"],
+      ["Data di nascita", "[[DATA_NASCITA:27/02/1994]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Tessera sanitaria", "[[TESSERA_SANITARIA:@ts]]"],
+      ["Sesso", "[[SESSO:F]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["N. richiesta", "[[NUMERO_ACCETTAZIONE:2026/PP/0071934]]"],
+      ["Data prelievo", "[[DATA_VISITA:21/09/2026]]"],
+      ["Esito del", "[[DATA_REFERTO:23/09/2026]]"],
+      ["Regime", "SSN - con impegnativa"]
+    ]},
+    {"type": "section", "text": "Endocrinologia"},
+    {"type": "table", "header": ["Esame", "Risultato", "Unita' di misura", "Intervallo di riferimento", ""], "widths": [4, 2, 2.2, 3.2, 0.6], "flag_column": 4, "rows": [
+      ["TSH reflex", "[[ESAME_VALORE:6,84]]", "µUI/mL", "0,35 - 4,94", "H"],
+      ["FT4 (tiroxina libera)", "[[ESAME_VALORE:0,86]]", "ng/dL", "0,70 - 1,48", ""],
+      ["Anticorpi anti-tireoperossidasi (AbTPO)", "[[ESAME_VALORE:312]]", "UI/mL", "< 5,6", "H"],
+      ["Anticorpi anti-tireoglobulina (AbTg)", "[[ESAME_VALORE:28,5]]", "UI/mL", "< 4,1", "H"]
+    ]},
+    {"type": "paragraph", "text": "Metodo: immunodosaggio in chemiluminescenza (CMIA). Il dosaggio di FT4 e' stato eseguito in automatico (reflex) per TSH fuori intervallo."},
+    {"type": "signature", "place_date": "[[LUOGO:Ancona]], [[DATA_REFERTO:23/09/2026]]", "role": "Il Dirigente Medico", "name": "Dott.ssa [[MEDICO:Laura Pieroni]]", "digital": true}
+  ]
+}

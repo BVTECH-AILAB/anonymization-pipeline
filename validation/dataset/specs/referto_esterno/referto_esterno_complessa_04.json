@@ -1,0 +1,561 @@
+{
+  "id": "referto_esterno_complessa_04",
+  "type": "referto_esterno",
+  "difficulty": "complessa",
+  "style": {
+    "font": "dejavu",
+    "color": "#7A5C14",
+    "font_size": 8,
+    "margins_mm": 13,
+    "fax_line": "18/11/2024 18:44  DA: [[FAX:011 5612290]]  [[STRUTTURA_SANITARIA:STUDIO ASS. PORTA NUOVA]]  A: [[FAX:0832 245517]]  RIF. [[PERSONA:NGUYEN L.]]"
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Linh",
+      "last_name": "Nguyen",
+      "sex": "F",
+      "birth_date": "1983-09-08",
+      "birth_place": "Milano"
+    }
+  },
+  "letterhead": {
+    "logo": "SPN",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Studio Medico Associato Porta Nuova]]",
+      "Oncologia medica - Genetica clinica - Psico-oncologia",
+      "Dott.ssa [[MEDICO:Silvia Ferrero Bertolini]] - Dott. [[MEDICO:Hamid Rahimi]]",
+      "Autorizzazione sanitaria n. 2271/2018"
+    ],
+    "right": [
+      "[[INDIRIZZO:Corso Vittorio Emanuele II 118]]",
+      "[[CAP:10121]] [[LUOGO:Torino]]",
+      "Tel. [[TELEFONO:011 5612280]]",
+      "Fax [[FAX:011 5612290]]",
+      "[[EMAIL:segreteria@studioportanuova.example.it]]"
+    ]
+  },
+  "running_header": "Consulenza [[PERSONA:Nguyen Linh]] ([[DATA_NASCITA:08/09/1983]]) - Pratica [[NUMERO_REFERTO:SPN-ONC-24/0412]] - Pag. riservata al medico curante",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Studio Medico Associato Porta Nuova]] - P.IVA [[PARTITA_IVA:@studio]] - IBAN [[IBAN:@studio]] - Prestazione esente IVA (art. 10 DPR 633/72)",
+    "Copia consegnata alla paziente sig.ra [[PERSONA:L. Nguyen]] e, su sua delega scritta, al compagno sig. [[FAMILIARE:Marco Quarta]].",
+    "Contiene dati genetici: trattamento consentito ai sensi dell'art. 9 Reg. UE 2016/679 e delle prescrizioni del Garante sui dati genetici."
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "lines": [
+        "Egr. Dott. [[MEDICO:Cosimo De Pascalis]] - MMG",
+        "[[INDIRIZZO:Viale Otranto 44]], [[CAP:73100]] [[LUOGO:Lecce]] - fax [[FAX:0832 245517]]",
+        "e p.c. Breast Unit, [[STRUTTURA_SANITARIA:Presidio Ospedaliero Sant'Oronzo dei Messapi]]",
+        "Dott.ssa [[MEDICO:Agnese Dell'Acqua]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "CONSULENZA ONCOLOGICA E GENETICA",
+      "subtitle": "Secondo parere su [[PATOLOGIA:carcinoma mammario]] in portatrice di variante patogenetica BRCA1"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "columns": 1,
+          "fields": [
+            [
+              "Paziente",
+              "[[PERSONA:Linh Nguyen]]"
+            ],
+            [
+              "Nata a",
+              "[[LUOGO_NASCITA:Milano]] il [[DATA_NASCITA:08/09/1983]]"
+            ],
+            [
+              "Residenza",
+              "[[INDIRIZZO:Via Leuca 23]], [[LUOGO:Lecce]]"
+            ],
+            [
+              "Professione",
+              "[[PROFESSIONE:farmacista]]"
+            ],
+            [
+              "Recapito",
+              "[[TELEFONO:+39 392 448 1306]]"
+            ],
+            [
+              "E-mail",
+              "[[EMAIL:linh.nguyen83@posta.example.it]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Data consulenza",
+              "[[DATA_VISITA:15/11/2024]]"
+            ],
+            [
+              "N. pratica",
+              "[[NUMERO_REFERTO:SPN-ONC-24/0412]]"
+            ],
+            [
+              "Fondo sanitario",
+              "[[ORGANIZZAZIONE:Cassa Mutua Farmacisti Associati]]"
+            ],
+            [
+              "Polizza",
+              "[[NUMERO_POLIZZA:CMFA-2019-004781]]"
+            ],
+            [
+              "Inviante",
+              "Dott. [[MEDICO:Cosimo De Pascalis]] (MMG)"
+            ]
+          ]
+        },
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "label": "Pratica",
+          "value": "[[NUMERO_REFERTO:SPN-ONC-24/0412]]",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "section",
+      "text": "Quesito"
+    },
+    {
+      "type": "paragraph",
+      "text": "La sig.ra [[PERSONA:Nguyen]], [[ETA:41]] anni, nata in Italia da genitori di origine vietnamita, si rivolge al nostro Studio per un secondo parere sul percorso terapeutico proposto presso il centro di riferimento della propria regione per **[[DIAGNOSI:carcinoma duttale infiltrante della mammella sinistra, triplo negativo, cT2 cN1 M0]]**, diagnosticato a ottobre 2024, e per la gestione del rischio eredo-familiare dopo il riscontro della **[[DATO_GENETICO:variante patogenetica BRCA1 c.5266dupC]]**. È accompagnata dal compagno, sig. [[FAMILIARE:Marco Quarta]]."
+    },
+    {
+      "type": "section",
+      "text": "Documentazione esaminata"
+    },
+    {
+      "type": "table",
+      "font_size": 7.2,
+      "header": [
+        "Data",
+        "Esame / documento",
+        "Struttura e refertante",
+        "Esito principale"
+      ],
+      "widths": [
+        1.4,
+        2.6,
+        3.2,
+        3.6
+      ],
+      "rows": [
+        [
+          "[[DATA:07/10/2024]]",
+          "Ecografia e mammografia bilaterale\nacc. n. [[ACCESSION_NUMBER:RAD-LE-24-338120]]",
+          "[[STRUTTURA_SANITARIA:Presidio Ospedaliero Sant'Oronzo dei Messapi]]\nDott. [[MEDICO:Paolo Greco Elia]]",
+          "[[ESAME_VALORE:nodulo QSE sinistro di 31 mm, BI-RADS 5]]; linfonodo ascellare sospetto"
+        ],
+        [
+          "[[DATA:11/10/2024]]",
+          "Biopsia ecoguidata\ncampione [[CODICE_CAMPIONE:B24-07731-A1]]",
+          "Anatomia Patologica, stesso presidio\nDott.ssa [[MEDICO:Rosa Miglietta]]",
+          "[[ESAME_VALORE:CDI G3, ER 0%, PgR 0%, HER2 score 0, Ki-67 70%]]"
+        ],
+        [
+          "[[DATA:24/10/2024]]",
+          "PET-TC total body",
+          "Medicina Nucleare\nDott. [[MEDICO:Ettore Bray]]",
+          "[[ESAME_VALORE:captazione mammaria e ascellare sinistra; non localizzazioni a distanza]]"
+        ],
+        [
+          "[[DATA:30/10/2024]]",
+          "Test BRCA1/BRCA2 su sangue\nNGS + MLPA",
+          "[[STRUTTURA_SANITARIA:Laboratorio di Genetica Medica Salento Gen]]\nDott. [[MEDICO:Ludovico Starace]]",
+          "[[DATO_GENETICO:BRCA1 c.5266dupC p.(Gln1756Profs*74), eterozigosi, classe 5]]; BRCA2 senza varianti"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Anamnesi familiare (albero genealogico ricostruito in consulenza)"
+    },
+    {
+      "type": "table",
+      "font_size": 7.2,
+      "header": [
+        "Parentela",
+        "Nominativo",
+        "Età / stato",
+        "Storia oncologica"
+      ],
+      "widths": [
+        1.8,
+        2.6,
+        2.2,
+        4.2
+      ],
+      "rows": [
+        [
+          "Madre",
+          "[[FAMILIARE:Tran Thi Hoa]]",
+          "deceduta il [[DATA_DECESSO:03/04/2016]] a [[ETA:58]] anni",
+          "[[DECESSO_CAUSA:carcinoma ovarico sieroso di alto grado]], diagnosi a 55 anni"
+        ],
+        [
+          "Zia materna",
+          "[[FAMILIARE:Tran Thi Lan]]",
+          "vivente, 67 anni\n(residente in Vietnam)",
+          "[[PATOLOGIA:carcinoma mammario]] a 45 anni; non testata"
+        ],
+        [
+          "Padre",
+          "[[FAMILIARE:Nguyen Van Duc]]",
+          "vivente, 72 anni",
+          "[[PATOLOGIA:adenocarcinoma prostatico]] a 68 anni"
+        ],
+        [
+          "Sorella",
+          "[[FAMILIARE:Mai Nguyen]]",
+          "38 anni, residente a [[LUOGO:Milano]]",
+          "nessuna; test a cascata da proporre"
+        ],
+        [
+          "Figlia",
+          "[[FAMILIARE:Bianca Quarta]]",
+          "9 anni",
+          "minore: test non indicato prima dei 18 anni"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Rischio a priori (modello di Manchester e modello Tyrer-Cuzick) elevato anche prima del test. Gravidanze: [[GRAVIDANZA:una gravidanza a termine nel 2015]], allattamento per 8 mesi. Menarca a 12 anni, cicli regolari. Non assume contraccettivi ormonali. Non sintomi riferibili a malattia di Paget del capezzolo."
+    },
+    {
+      "type": "section",
+      "text": "Anamnesi personale ed esame obiettivo"
+    },
+    {
+      "type": "paragraph",
+      "text": "Anamnesi patologica remota: [[PATOLOGIA:tiroidite cronica autoimmune]] in [[FARMACO:levotiroxina 50 µg/die]], [[PATOLOGIA:emicrania senz'aura]]. [[ALLERGIA:Allergia a amoxicillina-clavulanato]] (orticaria generalizzata nel 2012). Non fumatrice, consumo di alcol occasionale. [[INTERVENTO:Appendicectomia]] in età giovanile. Lavora come [[PROFESSIONE:farmacista]] presso la [[DATORE_LAVORO:Farmacia Comunale Lecce 3]], attualmente in congedo per malattia."
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "Peso",
+          "[[MISURE_ANTROPOMETRICHE:58 kg]]"
+        ],
+        [
+          "Altezza",
+          "[[MISURE_ANTROPOMETRICHE:162 cm]]"
+        ],
+        [
+          "BMI",
+          "[[MISURE_ANTROPOMETRICHE:22,1 kg/m²]]"
+        ],
+        [
+          "PA",
+          "[[MISURE_ANTROPOMETRICHE:118/74 mmHg]]"
+        ],
+        [
+          "FC",
+          "[[ESAME_VALORE:76 bpm]]"
+        ],
+        [
+          "Performance status",
+          "[[ESAME_VALORE:ECOG 0]]"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "All'esame obiettivo: [[ESAME_VALORE:nodulo duro-ligneo di circa 3 cm al quadrante supero-esterno della mammella sinistra]], mobile sui piani profondi; [[ESAME_VALORE:linfonodo ascellare sinistro palpabile di 1,5 cm]]. Mammella destra e cavi ascellari controlaterali indenni. Non epatomegalia. Ecografia cardiaca pre-trattamento con FEVS [[ESAME_VALORE:62%]] (eseguita presso il [[STRUTTURA_SANITARIA:Centro Cardiologico Rudiae]] il [[DATA:12.11.24]])."
+    },
+    {
+      "type": "section",
+      "text": "Valutazione"
+    },
+    {
+      "type": "paragraph",
+      "text": "Concordiamo con la proposta del gruppo multidisciplinare della Breast Unit della Dott.ssa [[MEDICO:Dell'Acqua]]: in carcinoma triplo negativo in stadio II con interessamento linfonodale è indicato il trattamento neoadiuvante con [[TERAPIA:chemio-immunoterapia secondo schema con pembrolizumab]] associato a [[FARMACO:carboplatino AUC 5 ogni 3 settimane]] e [[FARMACO:paclitaxel 80 mg/m² settimanale]], seguiti da antracicline. La presenza della variante BRCA1 rende ragionevole, dopo la terapia sistemica, discutere con la paziente la [[INTERVENTO:mastectomia bilaterale con ricostruzione]] in alternativa alla chirurgia conservativa, e programmare la [[INTERVENTO:salpingo-ovariectomia bilaterale profilattica]] entro i 45 anni. In caso di residuo di malattia dopo la neoadiuvante potrà essere considerato [[FARMACO:olaparib 300 mg x 2]] in adiuvante."
+    },
+    {
+      "type": "paragraph",
+      "text": "La sig.ra [[PERSONA:L. Nguyen]] ha chiesto informazioni sulla preservazione della fertilità: è stata indirizzata a consulenza urgente presso il centro PMA di riferimento, compatibilmente con i tempi di avvio della chemioterapia (beta-hCG richiesta prima del primo ciclo)."
+    },
+    {
+      "type": "section",
+      "text": "Consulenza genetica e familiari"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il Dott. [[MEDICO:Rahimi]] ha illustrato alla paziente il significato della variante, la trasmissione autosomica dominante e il rischio del 50% per ciascun consanguineo di primo grado. La paziente acconsente a informare personalmente la sorella, sig.ra [[FAMILIARE:Mai Nguyen]], alla quale viene consegnata lettera per il test a cascata presso un servizio di genetica medica di [[LUOGO:Milano]]; è stato suggerito di valutare il test anche nel padre, sig. [[FAMILIARE:Nguyen Van Duc]], per la possibile segregazione paterna (meno probabile). Per la figlia [[FAMILIARE:Bianca]] il test non è indicato prima della maggiore età."
+    },
+    {
+      "type": "section",
+      "text": "Programma proposto e appuntamenti"
+    },
+    {
+      "type": "table",
+      "font_size": 7.2,
+      "header": [
+        "Quando",
+        "Prestazione",
+        "Sede",
+        "Riferimento / prenotazione"
+      ],
+      "widths": [
+        1.6,
+        3.4,
+        3.4,
+        2.6
+      ],
+      "rows": [
+        [
+          "[[DATA:21/11/2024]]",
+          "Consulenza preservazione fertilità\n(crioconservazione ovociti)",
+          "[[STRUTTURA_SANITARIA:Centro PMA Ospedale Vito Fazzi Nuovo]]\nDott.ssa [[MEDICO:Grazia Lupo Andriani]]",
+          "CUP [[NUMERO_PRENOTAZIONE:LE-24-7781203]]"
+        ],
+        [
+          "[[DATA:02/12/2024]]",
+          "Posizionamento PICC e\nprimo ciclo neoadiuvante",
+          "[[REPARTO:Day Hospital Oncologico]], [[STRUTTURA_SANITARIA:Presidio Ospedaliero Sant'Oronzo dei Messapi]]",
+          "rif. Dott.ssa [[MEDICO:Dell'Acqua]]"
+        ],
+        [
+          "[[DATA:09/01/2025]]",
+          "RM mammaria di rivalutazione\n(dopo 4 cicli)",
+          "Radiologia, stesso presidio",
+          "impegnativa NRE [[NUMERO_RICETTA:1600A4812337905]]"
+        ],
+        [
+          "[[DATA:16/01/2025]]",
+          "Visita di controllo telematica",
+          "[[STRUTTURA_SANITARIA:Studio Medico Associato Porta Nuova]]",
+          "pratica [[NUMERO_REFERTO:SPN-ONC-24/0412]]"
+        ],
+        [
+          "entro 30 gg",
+          "Test a cascata della sorella",
+          "Servizio di genetica medica di [[LUOGO:Milano]]",
+          "lettera allegata (All. 2)"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Esami da eseguire prima del primo ciclo: emocromo, funzionalità epatica e renale, TSH reflex, glicemia, markers epatite B e C e HIV (per pembrolizumab e per la profilassi della riattivazione HBV), beta-hCG. La paziente riferisce di aver eseguito la vaccinazione antinfluenzale il [[DATA:28/10/2024]]; si raccomanda di completare il richiamo anti-COVID prima della chemioterapia. In caso di febbre ≥ 38 °C durante il trattamento la paziente contatterà il reparto o, fuori orario, il Pronto Soccorso; recapito del compagno per le emergenze: [[TELEFONO:+39 347 902 1158]]."
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Supporto psico-oncologico"
+        },
+        {
+          "type": "paragraph",
+          "text": "Colloquio con la psico-oncologa Dott.ssa [[OPERATORE_SANITARIO:Luce Gariglio]] il [[DATA_VISITA:15.11.24]]: buone risorse personali, ansia reattiva alla diagnosi. Proposto un ciclo di colloqui on-line (6 incontri)."
+        },
+        {
+          "type": "barcode",
+          "kind": "qr",
+          "label": "Area riservata paziente",
+          "value": "https://portale.studioportanuova.example.it/p/[[URL_PERSONALE:nguyen.linh.0412]]"
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Onorario"
+        },
+        {
+          "type": "paragraph",
+          "text": "Consulenza oncologica e genetica: fattura n. [[NUMERO_PROTOCOLLO:FT-2024/1187]] del [[DATA:15/11/2024]], richiesta di rimborso al fondo [[ORGANIZZAZIONE:Cassa Mutua Farmacisti Associati]] (polizza [[NUMERO_POLIZZA:CMFA-2019-004781]]). Pagamento con bonifico su IBAN [[IBAN:@studio]], intestato allo Studio, P.IVA [[PARTITA_IVA:@studio]]."
+        }
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Torino]], [[DATA_REFERTO:18 novembre 2024]]",
+      "role": "L'Oncologa",
+      "name": "Dott.ssa [[MEDICO:Silvia Ferrero Bertolini]]",
+      "digital": false,
+      "stamp": [
+        "Dott.ssa [[MEDICO:S. FERRERO BERTOLINI]]",
+        "Specialista in Oncologia",
+        "OMCeO TO n. [[NUMERO_ALBO:15521]]"
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Torino]], [[DATA_REFERTO:18 novembre 2024]]",
+      "role": "Il Medico Genetista",
+      "name": "Dott. [[MEDICO:Hamid Rahimi]]",
+      "digital": false,
+      "stamp": [
+        "Dott. [[MEDICO:HAMID RAHIMI]]",
+        "Specialista in Genetica Medica",
+        "OMCeO TO n. [[NUMERO_ALBO:17044]]"
+      ]
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Nomenclatura della variante secondo HGVS (trascritto NM_007294.4); classificazione secondo le linee guida ACMG/AMP. Il referto originale del laboratorio [[STRUTTURA_SANITARIA:Salento Gen]] (n. [[NUMERO_REFERTO:SG-24-11873]]) è conservato agli atti.",
+        "Il pedigree completo, con i dati della linea materna forniti dalla paziente e dalla cugina sig.ra [[FAMILIARE:Pham Thi Thu]], è disponibile su richiesta per i servizi di genetica che prenderanno in carico i familiari.",
+        "La presente consulenza è un secondo parere e non sostituisce le decisioni del gruppo multidisciplinare che ha in cura la paziente."
+      ]
+    },
+    {
+      "type": "title",
+      "text": "ALLEGATO 1 - CONSENSO E DELEGA",
+      "subtitle": "Trattamento dei dati genetici, comunicazione ai familiari e ritiro della documentazione"
+    },
+    {
+      "type": "paragraph",
+      "text": "La sottoscritta [[PERSONA:Linh Nguyen]], nata a [[LUOGO_NASCITA:Milano]] il [[DATA_NASCITA:08/09/1983]], residente in [[INDIRIZZO:Via Leuca 23]], [[CAP:73100]] [[LUOGO:Lecce]], identificata mediante carta d'identità n. [[NUMERO_CARTA_IDENTITA:CA48291KX]] rilasciata dal [[ENTE_RILASCIO:Comune di Lecce]] il [[DATA_RILASCIO:14/06/2021]], dopo aver ricevuto dalla Dott.ssa [[MEDICO:Ferrero Bertolini]] e dal Dott. [[MEDICO:H. Rahimi]] adeguata informazione sul significato del test BRCA1/BRCA2 e sulle sue implicazioni per i consanguinei, dichiara quanto segue:"
+    },
+    {
+      "type": "checkboxes",
+      "columns": 1,
+      "items": [
+        [
+          "acconsente al trattamento dei propri dati genetici da parte dello Studio per le finalità di diagnosi e cura",
+          true
+        ],
+        [
+          "acconsente alla trasmissione della presente consulenza al MMG e alla Breast Unit che la ha in carico",
+          true
+        ],
+        [
+          "chiede di essere informata di eventuali riclassificazioni della variante che dovessero intervenire in futuro",
+          true
+        ],
+        [
+          "autorizza lo Studio a contattare direttamente i familiari a rischio",
+          false
+        ],
+        [
+          "si impegna a comunicare personalmente il risultato alla sorella, consegnandole la lettera di cui all'Allegato 2",
+          true
+        ],
+        [
+          "acconsente alla conservazione del campione di DNA per ulteriori analisi",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "**Delega.** La sottoscritta delega il compagno, sig. [[FAMILIARE:Marco Quarta]], nato il [[DATA:21/02/1980]], documento n. [[NUMERO_CARTA_IDENTITA:CA77104PL]], al ritiro della documentazione clinica e alla ricezione delle comunicazioni telefoniche relative agli appuntamenti, con esclusione dei risultati dei test genetici, che le dovranno essere consegnati personalmente."
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Torino]], [[DATA:15/11/2024]]",
+          "role": "Firma della paziente",
+          "name": "[[PERSONA:Linh Nguyen]]",
+          "digital": false
+        },
+        {
+          "type": "signature",
+          "place_date": "per accettazione della delega",
+          "role": "Firma del delegato",
+          "name": "[[FAMILIARE:Marco Quarta]]",
+          "digital": false
+        }
+      ],
+      "right": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Torino]], [[DATA:15/11/2024]]",
+          "role": "Il medico che ha raccolto il consenso",
+          "name": "Dott. [[MEDICO:Hamid Rahimi]]",
+          "digital": false
+        },
+        {
+          "type": "stamp",
+          "lines": [
+            "STUDIO MEDICO ASSOCIATO",
+            "PORTA NUOVA - TORINO",
+            "Segreteria: [[OPERATORE_SANITARIO:Carla Bossolasco]]",
+            "acquisito il [[DATA:15/11/2024]]"
+          ],
+          "angle": -8,
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Allegato 2 - Lettera per i familiari"
+    },
+    {
+      "type": "address",
+      "align": "left",
+      "lines": [
+        "Gentile sig.ra [[FAMILIARE:Mai Nguyen]]",
+        "[[INDIRIZZO:Via Padova 207]], [[CAP:20127]] [[LUOGO:Milano]]"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Gentile Signora, Sua sorella, sig.ra [[PERSONA:Linh N.]], ci ha autorizzato a consegnarLe questa lettera. Nel corso di accertamenti eseguiti presso il [[STRUTTURA_SANITARIA:Laboratorio di Genetica Medica Salento Gen]] è stata identificata in Sua sorella una variante del gene BRCA1 ([[DATO_GENETICO:c.5266dupC, p.(Gln1756Profs*74)]]) che aumenta in modo significativo il rischio di tumore della mammella e dell'ovaio. Trattandosi di una condizione ereditaria, ogni fratello o sorella ha una probabilità del 50% di esserne portatore.\n\nLe consigliamo di rivolgersi al Suo medico curante per una richiesta di consulenza genetica presso un servizio di Genetica Medica del Servizio Sanitario Nazionale, portando con sé questa lettera e copia del referto di Sua sorella. Il test mirato alla sola variante familiare è rapido e, in caso di esito positivo, consente di accedere a programmi di sorveglianza dedicati e alle misure di riduzione del rischio. In caso di esito negativo, il Suo rischio torna sostanzialmente pari a quello della popolazione generale.\n\nResta inteso che la decisione di eseguire il test è libera e personale. Per qualsiasi chiarimento potrà contattare la nostra segreteria al numero [[TELEFONO:011 5612280]] o scrivere a [[EMAIL:genetica@studioportanuova.example.it]], citando il riferimento [[NUMERO_PROTOCOLLO:SPN-FAM-24/0412-1]]."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Torino]], [[DATA_REFERTO:18/11/24]]",
+      "role": "Il Medico Genetista",
+      "name": "Dott. [[MEDICO:Hamid Rahimi]]",
+      "digital": false
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Manchester",
+      "forbidden_categories": [
+        "LUOGO",
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Tyrer-Cuzick",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Paget",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Porta Nuova",
+      "forbidden_categories": [
+        "INDIRIZZO",
+        "PERSONA"
+      ]
+    }
+  ]
+}

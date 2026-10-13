@@ -1,0 +1,713 @@
+{
+  "id": "autorizzazione_preventiva_complessa_04",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "complessa",
+  "style": {
+    "font": "courier",
+    "color": "#0277BD",
+    "font_size": 7.8,
+    "margins_mm": 12,
+    "fax_line": "08/09/2026 09:14  DA: [[FAX:0424 885213]]  CSM BASSANO - DSM ULSS CBB"
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Gabriele",
+      "last_name": "Dal Pozzo",
+      "sex": "M",
+      "birth_date": "2001-09-03",
+      "birth_place": "Padova"
+    }
+  },
+  "letterhead": {
+    "logo": "CBB",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda ULSS Colli Berici e Brenta]]",
+      "Dipartimento di Salute Mentale - Distretto Nord",
+      "Unità di Valutazione Multidimensionale Distrettuale",
+      "Direttore DSM: Dott. [[MEDICO:Ermanno Bortolazzi]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale delle Fosse 76]]",
+      "[[CAP:36061]] [[LUOGO:Bassano del Grappa]]",
+      "Tel. [[TELEFONO:0424 885200]]",
+      "[[EMAIL:uvmd.nord@ulsscbb.example.it]]"
+    ]
+  },
+  "running_header": "UVMD [[NUMERO_PROTOCOLLO:UVMD-N/2026/0157]] - [[PERSONA:DAL POZZO Gabriele]] - C.F. [[CODICE_FISCALE:@paz]] - Cartella CSM [[NUMERO_CARTELLA:CSM-BA-14388]]",
+  "footer": [
+    "Pratica [[NUMERO_PROTOCOLLO:UVMD-N/2026/0157]] - [[PERSONA:G. Dal Pozzo]] - Dati sanitari e giudiziari: accesso riservato agli operatori del PTRI",
+    "[[STRUTTURA_SANITARIA:Azienda ULSS Colli Berici e Brenta]] - P.IVA [[PARTITA_IVA:@ulss]] - PEC [[PEC:dsm.nord@pec.ulsscbb.example.it]]"
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "AUTORIZZAZIONE ALL'INSERIMENTO IN STRUTTURA RESIDENZIALE PSICHIATRICA",
+      "subtitle": "Progetto Terapeutico Riabilitativo Individualizzato (PTRI) - Comunità Terapeutica Riabilitativa Protetta (CTRP, tipologia SRP2)"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "N. pratica",
+              "[[NUMERO_PROTOCOLLO:UVMD-N/2026/0157]]"
+            ],
+            [
+              "Ricevuta il",
+              "[[DATA:08-09-2026]] via fax"
+            ],
+            [
+              "Inviante",
+              "[[REPARTO:CSM di Bassano]]"
+            ]
+          ]
+        },
+        {
+          "type": "checkboxes",
+          "columns": 2,
+          "items": [
+            [
+              "Prima richiesta",
+              false
+            ],
+            [
+              "Rinnovo / proroga",
+              true
+            ],
+            [
+              "Urgente",
+              false
+            ],
+            [
+              "Ordinaria",
+              true
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "label": "Pratica UVMD",
+          "value": "[[NUMERO_PROTOCOLLO:UVMD-N/2026/0157]]",
+          "align": "center"
+        },
+        {
+          "type": "checkboxes",
+          "label": "Tipo di prestazione",
+          "columns": 1,
+          "items": [
+            [
+              "Residenzialità psichiatrica (SRP1/SRP2)",
+              true
+            ],
+            [
+              "Semiresidenzialità (Centro Diurno)",
+              false
+            ],
+            [
+              "Inserimento in comunità per dipendenze",
+              false
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "1. DATI DELL'ASSISTITO"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "title": "Assistito",
+          "columns": 1,
+          "fields": [
+            [
+              "Cognome",
+              "[[COGNOME:Dal Pozzo]]"
+            ],
+            [
+              "Nome",
+              "[[NOME:Gabriele]]"
+            ],
+            [
+              "Nato a",
+              "[[LUOGO_NASCITA:Padova]]"
+            ],
+            [
+              "Il",
+              "[[DATA_NASCITA:03/09/2001]]"
+            ],
+            [
+              "Residenza",
+              "[[INDIRIZZO:Via Santa Croce 12]]"
+            ],
+            [
+              "Comune",
+              "[[CAP:36061]] [[LUOGO:Bassano del Grappa]]"
+            ],
+            [
+              "Titolo di studio",
+              "[[TITOLO_STUDIO:diploma di perito informatico]]"
+            ],
+            [
+              "Invalidità",
+              "[[INVALIDITA:invalidità civile 75%]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "char_boxes",
+          "label": "C.F.",
+          "value": "[[CODICE_FISCALE:@paz]]"
+        },
+        {
+          "type": "char_boxes",
+          "label": "T.S.",
+          "value": "[[TESSERA_SANITARIA:@ts]]"
+        },
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Esenzione",
+              "[[CODICE_ESENZIONE:044.295]]"
+            ],
+            [
+              "MMG",
+              "Dott. [[MEDICO:Paolo Lunardon]]"
+            ],
+            [
+              "Cell.",
+              "[[TELEFONO:+39 351 640 2279]]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "header": [
+        "Rete di riferimento",
+        "Ruolo",
+        "Recapiti",
+        "Note"
+      ],
+      "widths": [
+        3.6,
+        3,
+        3.4,
+        4.2
+      ],
+      "font_size": 7,
+      "rows": [
+        [
+          "Avv. [[TUTORE_DELEGATO:Lucia Moretto Zen]]",
+          "amministratrice di sostegno",
+          "[[TELEFONO:0424 523018]]\n[[PEC:l.morettozen@pec.avvocati.example.it]]",
+          "decreto G.T. [[LUOGO:Vicenza]] n. [[NUMERO_PROTOCOLLO:R.G. 2187/2024]]; consenso alle cure"
+        ],
+        [
+          "[[FAMILIARE:Mercedes Reyes]]",
+          "madre",
+          "[[TELEFONO:+39 342 118 5506]]",
+          "nata nelle [[LUOGO_NASCITA:Filippine]]; convivente fino al 2025"
+        ],
+        [
+          "[[CONTATTO_EMERGENZA:Stella Dal Pozzo]]",
+          "sorella",
+          "[[TELEFONO:+39 348 902 7731]]",
+          "contatto per le emergenze, residente a [[LUOGO:Treviso]]"
+        ],
+        [
+          "[[FAMILIARE:Renato Dal Pozzo]]",
+          "padre",
+          "-",
+          "deceduto il [[DATA_DECESSO:14/02/2019]]"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "2. PRESCRIZIONE / PROPOSTA DI INSERIMENTO"
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Struttura",
+          "[[STRUTTURA_SANITARIA:CTRP Villa Glicine]]"
+        ],
+        [
+          "Ente gestore",
+          "[[ORGANIZZAZIONE:Cooperativa Sociale Il Ponte Levatoio]]"
+        ],
+        [
+          "Sede",
+          "[[INDIRIZZO:Via Rameston 9]], [[LUOGO:Marostica]]"
+        ],
+        [
+          "P.IVA ente gestore",
+          "[[PARTITA_IVA:@coop]]"
+        ],
+        [
+          "Responsabile sanitario",
+          "Dott. [[MEDICO:Alvise Tonin]]"
+        ],
+        [
+          "Periodo richiesto",
+          "dal [[DATA:01/10/2026]] al [[DATA:31/03/2027]]"
+        ],
+        [
+          "Psichiatra prescrittore",
+          "Dott.ssa [[MEDICO:Francesca Pegoraro]]"
+        ],
+        [
+          "Iscrizione Albo",
+          "Ord. Med. VI n. [[NUMERO_ALBO:6021]]"
+        ],
+        [
+          "Data proposta",
+          "[[DATA_PRESCRIZIONE:04/09/2026]]"
+        ],
+        [
+          "Retta giornaliera",
+          "180,00 euro (quota sanitaria 100%)"
+        ]
+      ]
+    },
+    {
+      "type": "table",
+      "header": [
+        "Terapia in atto",
+        "Posologia",
+        "Prescrittore",
+        "Note"
+      ],
+      "widths": [
+        3.8,
+        3.2,
+        2.8,
+        4.4
+      ],
+      "font_size": 7,
+      "rows": [
+        [
+          "[[FARMACO:paliperidone palmitato]]",
+          "[[FARMACO:150 mg i.m. ogni 28 giorni]]",
+          "[[REPARTO:CSM di Bassano]]",
+          "somministrazione in CSM\n(inf. [[OPERATORE_SANITARIO:Nicolò Battistella]])"
+        ],
+        [
+          "[[FARMACO:clozapina]]",
+          "[[FARMACO:200 mg/die in due somministrazioni]]",
+          "Dott.ssa [[MEDICO:F. Pegoraro]]",
+          "emocromo mensile; registro farmacovigilanza"
+        ],
+        [
+          "[[FARMACO:sertralina]]",
+          "[[FARMACO:50 mg/die]]",
+          "Dott.ssa [[MEDICO:F. Pegoraro]]",
+          "per sintomi depressivi post-psicotici"
+        ],
+        [
+          "[[FARMACO:N-acetilcisteina]]",
+          "[[FARMACO:1200 mg/die]]",
+          "Dott. [[MEDICO:Ruggero Scapin]]",
+          "su indicazione del [[REPARTO:SerD]]"
+        ]
+      ]
+    },
+    {
+      "type": "checkboxes",
+      "label": "Documentazione allegata",
+      "columns": 3,
+      "items": [
+        [
+          "Relazione psichiatrica",
+          true
+        ],
+        [
+          "PTRI firmato",
+          true
+        ],
+        [
+          "Scale HoNOS / BPRS",
+          true
+        ],
+        [
+          "Decreto di nomina AdS",
+          true
+        ],
+        [
+          "Provvedimento giudiziario",
+          true
+        ],
+        [
+          "Relazione [[REPARTO:SerD]]",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "3. MOTIVAZIONE CLINICA"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il sig. [[PERSONA:Dal Pozzo]], [[ETA:25]] anni, è in carico al [[REPARTO:CSM di Bassano]] dal 2020 per [[SALUTE_MENTALE:schizofrenia paranoide (ICD-10 F20.0)]], esordita a 18 anni con deliri persecutori e allucinazioni uditive commentanti, in comorbilità con [[DIPENDENZE:disturbo da uso di cannabis di grado grave]] e [[DIPENDENZE:abuso episodico di alcol]]. Ha avuto tre ricoveri in [[REPARTO:SPDC]] dell'[[STRUTTURA_SANITARIA:Ospedale San Bassiano del Brenta]], di cui due in regime di [[SALUTE_MENTALE:trattamento sanitario obbligatorio]] ([[DATA_RICOVERO:11/06/2023]] e [[DATA_RICOVERO:27 gennaio 2025]]). Dopo il secondo TSO, in seguito ad agiti aggressivi nei confronti della madre, è stato sottoposto alla [[DATI_GIUDIZIARI:misura di sicurezza della libertà vigilata con prescrizione di permanenza in struttura terapeutica]] (ordinanza del Magistrato di Sorveglianza di [[LUOGO:Padova]] del [[DATA:19.05.25]])."
+    },
+    {
+      "type": "paragraph",
+      "text": "L'inserimento in CTRP, avviato il [[DATA:02/04/2026]], ha consentito il passaggio a [[FARMACO:clozapina]] per [[SALUTE_MENTALE:resistenza al trattamento]] e una progressiva riduzione della sintomatologia positiva. Persistono [[SALUTE_MENTALE:sintomi negativi (apatia, ritiro sociale)]], scarsa consapevolezza di malattia e un episodio di [[DIPENDENZE:uso di cannabis]] durante un permesso a domicilio (luglio 2026, test urinario positivo). Il paziente ha lavorato per otto mesi come [[PROFESSIONE:magazziniere]] presso [[DATORE_LAVORO:Logistica Pedemontana S.r.l.]] prima dell'esordio; il progetto prevede un tirocinio di inclusione con l'educatore [[OPERATORE_SANITARIO:Felice Zordan]]."
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Valutazioni standardizzate"
+        },
+        {
+          "type": "table",
+          "header": [
+            "Scala",
+            "Ingresso",
+            "Attuale"
+          ],
+          "widths": [
+            3,
+            1.6,
+            1.6
+          ],
+          "font_size": 7,
+          "caption": "Somministrate dalla psicologa Dott.ssa [[OPERATORE_SANITARIO:Serena Toniolo]]",
+          "rows": [
+            [
+              "BPRS-24",
+              "[[ESAME_VALORE:68]]",
+              "[[ESAME_VALORE:47]]"
+            ],
+            [
+              "HoNOS totale",
+              "[[ESAME_VALORE:23]]",
+              "[[ESAME_VALORE:15]]"
+            ],
+            [
+              "PANSS negativa",
+              "[[ESAME_VALORE:29]]",
+              "[[ESAME_VALORE:26]]"
+            ],
+            [
+              "PSP",
+              "[[ESAME_VALORE:38]]",
+              "[[ESAME_VALORE:52]]"
+            ],
+            [
+              "Scala di Hamilton (HAM-D)",
+              "[[ESAME_VALORE:21]]",
+              "[[ESAME_VALORE:12]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Parametri e monitoraggio [[FARMACO:clozapina]]"
+        },
+        {
+          "type": "paragraph",
+          "text": "Peso [[MISURE_ANTROPOMETRICHE:91 kg]] (+9 kg dall'ingresso), BMI [[MISURE_ANTROPOMETRICHE:29,4]], circonferenza vita [[MISURE_ANTROPOMETRICHE:104 cm]]. Neutrofili [[ESAME_VALORE:3.420/µL]], clozapinemia [[ESAME_VALORE:412 ng/mL]], glicemia a digiuno [[ESAME_VALORE:108 mg/dL]].",
+          "size": 7.4
+        },
+        {
+          "type": "note",
+          "text": "Test di Rorschach non ripetuto. Prossimo emocromo il [[DATA:28/09/2026]] a cura dell'inf. [[OPERATORE_SANITARIO:N. Battistella]]."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Obiettivi del PTRI per il periodo richiesto"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Area",
+        "Obiettivo",
+        "Operatore referente",
+        "Verifica"
+      ],
+      "widths": [
+        2.2,
+        6,
+        3.4,
+        2
+      ],
+      "font_size": 7,
+      "rows": [
+        [
+          "Clinica",
+          "Stabilizzazione con [[FARMACO:clozapina]]; riduzione del peso con programma alimentare e attività motoria",
+          "Dott.ssa [[MEDICO:F. Pegoraro]]\n(case manager)",
+          "mensile"
+        ],
+        [
+          "Dipendenze",
+          "Astensione dalla cannabis, test urinari settimanali, gruppo motivazionale",
+          "Dott. [[MEDICO:R. Scapin]] ([[REPARTO:SerD Bassano]])",
+          "bimestrale"
+        ],
+        [
+          "Abilità",
+          "Gestione autonoma della terapia orale e del denaro (con AdS)",
+          "ed. [[OPERATORE_SANITARIO:F. Zordan]]",
+          "trimestrale"
+        ],
+        [
+          "Famiglia",
+          "Incontri di psicoeducazione con la madre, sig.ra [[FAMILIARE:Reyes]], e la sorella [[CONTATTO_EMERGENZA:Stella]]",
+          "a.s. [[OPERATORE_SANITARIO:Marta Gasparotto]]",
+          "trimestrale"
+        ],
+        [
+          "Giudiziaria",
+          "Relazioni periodiche all'UEPE e al Magistrato di Sorveglianza",
+          "Dott.ssa [[MEDICO:F. Pegoraro]]",
+          "ogni 3 mesi"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "**Motivazione della proroga.** Il quadro clinico è migliorato ma non consente ancora il rientro a domicilio né l'inserimento in gruppo appartamento: la ricaduta nell'uso di sostanze, la [[FARMACO:clozapina]] in fase di titolazione e la misura giudiziaria in corso richiedono un contesto con assistenza sulle 24 ore. Si propone la proroga per 6 mesi, con passaggio successivo a struttura SRP3 a bassa intensità. L'amministratrice di sostegno, avv. [[TUTORE_DELEGATO:Moretto Zen]], ha espresso il proprio consenso; il sig. [[PERSONA:Gabriele]] ha firmato il PTRI pur manifestando ambivalenza."
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Bassano]], [[DATA_PRESCRIZIONE:04.09.26]]",
+          "role": "Lo psichiatra case manager",
+          "name": "Dott.ssa [[MEDICO:Francesca Pegoraro]]",
+          "digital": false,
+          "stamp": [
+            "[[STRUTTURA_SANITARIA:ULSS COLLI BERICI E BRENTA]]",
+            "CSM BASSANO",
+            "Dott.ssa [[MEDICO:F. Pegoraro]]",
+            "Ord. Med. VI [[NUMERO_ALBO:6021]]"
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "signature",
+          "place_date": "[[DATA:05/09/2026]]",
+          "role": "Il Responsabile sanitario CTRP",
+          "name": "Dott. [[MEDICO:Alvise Tonin]]",
+          "digital": false,
+          "stamp": [
+            "[[STRUTTURA_SANITARIA:CTRP VILLA GLICINE]]",
+            "Dott. [[MEDICO:A. Tonin]]",
+            "Ord. Med. VI n. [[NUMERO_ALBO:5487]]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "CONSENSO DELL'ASSISTITO E DELL'AMMINISTRATORE DI SOSTEGNO"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il sottoscritto [[PERSONA:Gabriele Dal Pozzo]], nato a [[LUOGO_NASCITA:Padova]] il [[DATA_NASCITA:3 settembre 2001]], e l'avv. [[TUTORE_DELEGATO:Lucia Moretto Zen]], amministratrice di sostegno con decreto del Giudice Tutelare del [[DATA:12/11/2024]], dichiarano di aver ricevuto informazioni sul progetto, sulla durata dell'inserimento, sul regolamento della comunità (incluso il divieto di introdurre sostanze e il programma di test tossicologici) e di accettarlo. L'assistito autorizza la comunicazione delle informazioni cliniche alla madre, sig.ra [[FAMILIARE:Mercedes Reyes]], e alla sorella [[CONTATTO_EMERGENZA:Stella Dal Pozzo]]; non autorizza la comunicazione ad altri familiari."
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "paragraph",
+          "text": "Firma dell'assistito\n\n______________________________\n([[PERSONA:G. Dal Pozzo]])",
+          "align": "center"
+        }
+      ],
+      "right": [
+        {
+          "type": "paragraph",
+          "text": "Firma dell'amministratrice di sostegno\n\n______________________________\n(avv. [[TUTORE_DELEGATO:L. Moretto Zen]])",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "4. PARERE DELLA COMMISSIONE (UVMD)"
+    },
+    {
+      "type": "paragraph",
+      "text": "L'Unità di Valutazione Multidimensionale Distrettuale, riunita il [[DATA:22 settembre 2026]] alla presenza del paziente e dell'amministratrice di sostegno, esaminati la relazione del CSM, la relazione del [[REPARTO:SerD]] a firma del Dott. [[MEDICO:Scapin]] e la scheda di valutazione SVaMDi, esprime parere:"
+    },
+    {
+      "type": "checkboxes",
+      "columns": 3,
+      "items": [
+        [
+          "Favorevole",
+          false
+        ],
+        [
+          "Favorevole con prescrizioni",
+          true
+        ],
+        [
+          "Non favorevole",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "table",
+      "header": [
+        "Componente UVMD",
+        "Qualifica",
+        "Presenza"
+      ],
+      "widths": [
+        4.4,
+        6,
+        2.2
+      ],
+      "font_size": 7,
+      "rows": [
+        [
+          "Dott.ssa [[MEDICO:Graziella Bonotto]]",
+          "Direttrice di Distretto, presidente",
+          "presente"
+        ],
+        [
+          "Dott. [[MEDICO:Ermanno Bortolazzi]]",
+          "Direttore DSM",
+          "delega"
+        ],
+        [
+          "Dott.ssa [[MEDICO:Francesca Pegoraro]]",
+          "Psichiatra CSM, case manager",
+          "presente"
+        ],
+        [
+          "Dott. [[MEDICO:Paolo Lunardon]]",
+          "MMG dell'assistito",
+          "assente"
+        ],
+        [
+          "Sig.ra [[OPERATORE_SANITARIO:Marta Gasparotto]]",
+          "Assistente sociale, verbalizzante",
+          "presente"
+        ],
+        [
+          "Dott. [[MEDICO:Matteo Xausa]]",
+          "Psichiatra delegato DSM",
+          "presente"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Prescrizioni: proroga autorizzata fino al [[DATA:31/03/2027]]; verifica intermedia a 3 mesi; in caso di nuova positività ai test tossicologici il CSM valuterà con il [[REPARTO:SerD Bassano]] il passaggio a struttura a doppia diagnosi. La quota sanitaria è a totale carico dell'Azienda; la quota sociale non è dovuta."
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "[[STRUTTURA_SANITARIA:AZIENDA ULSS COLLI BERICI E BRENTA]]",
+        "U.V.M.D. DISTRETTO NORD",
+        "La Presidente",
+        "Dott.ssa [[MEDICO:G. Bonotto]]",
+        "Verbale n. [[NUMERO_PROTOCOLLO:47/2026]] del [[DATA:22.09.26]]"
+      ],
+      "angle": 7,
+      "align": "right"
+    },
+    {
+      "type": "heading",
+      "text": "Trasmissione dell'esito"
+    },
+    {
+      "type": "address",
+      "align": "left",
+      "lines": [
+        "Alla Dott.ssa [[MEDICO:Francesca Pegoraro]]",
+        "[[REPARTO:CSM di Bassano]] - sede",
+        "Al Dott. [[MEDICO:A. Tonin]] - [[STRUTTURA_SANITARIA:CTRP Villa Glicine]]",
+        "All'avv. [[TUTORE_DELEGATO:Lucia Moretto Zen]]",
+        "([[PEC:l.morettozen@pec.avvocati.example.it]])",
+        "All'UEPE di [[LUOGO:Padova]], c.a. [[PERSONA:Daniela Cecchetto]]"
+      ]
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "HoNOS: Health of the Nation Outcome Scales; BPRS: Brief Psychiatric Rating Scale; PSP: Personal and Social Performance; HAM-D: scala di Hamilton per la depressione.",
+        "La documentazione giudiziaria è conservata in busta chiusa presso la segreteria UVMD (referente sig.ra [[OPERATORE_SANITARIO:M. Gasparotto]]) e non è trasmessa all'ente gestore.",
+        "Documento ricevuto via fax dal CSM; l'originale firmato è agli atti della cartella [[NUMERO_CARTELLA:CSM-BA-14388]]."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Hamilton",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Rorschach",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "HoNOS",
+      "forbidden_categories": [
+        "ORGANIZZAZIONE",
+        "STRUTTURA_SANITARIA"
+      ]
+    },
+    {
+      "value": "SVaMDi",
+      "forbidden_categories": [
+        "ORGANIZZAZIONE",
+        "ID_PAZIENTE"
+      ]
+    },
+    {
+      "value": "UEPE",
+      "forbidden_categories": [
+        "STRUTTURA_SANITARIA",
+        "PERSONA"
+      ]
+    }
+  ]
+}

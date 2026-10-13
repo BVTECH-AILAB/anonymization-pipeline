@@ -1,0 +1,61 @@
+{
+  "id": "lettera_dimissione_facile_04",
+  "type": "lettera_dimissione",
+  "difficulty": "facile",
+  "style": {"font": "helvetica", "color": "#2E6B30", "font_size": 9, "margins_mm": 15},
+  "persons": {
+    "paz": {"first_name": "Giuseppe", "last_name": "Cantarella", "sex": "M", "birth_date": "1958-01-30", "birth_place": "Catania"}
+  },
+  "letterhead": {
+    "logo": "OCP",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Civile di Pianalta]]",
+      "[[REPARTO:U.O.C. Cardiologia con UTIC]]",
+      "Emodinamica e Cardiologia Interventistica"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Vittorio Emanuele 301]]",
+      "[[CAP:95024]] [[LUOGO:Acireale]]",
+      "Tel. [[TELEFONO:095 7681440]]"
+    ]
+  },
+  "footer": [
+    "Lettera redatta ai sensi della normativa sulla continuità assistenziale ospedale-territorio."
+  ],
+  "blocks": [
+    {"type": "address", "align": "right", "lines": ["Gentile Collega", "Medico di Medicina Generale"]},
+    {"type": "title", "text": "LETTERA DI DIMISSIONE"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Giuseppe Cantarella]]"],
+      ["Nato il", "[[DATA_NASCITA:30/01/1958]]"],
+      ["C.F.", "[[CODICE_FISCALE:@paz]]"],
+      ["Età", "[[ETA:66]] anni"],
+      ["Cartella n.", "[[NUMERO_CARTELLA:C2024-11853]]"],
+      ["Provenienza", "Pronto Soccorso"],
+      ["Ricovero", "[[DATA_RICOVERO:21/10/2024]]"],
+      ["Dimissione", "[[DATA_RICOVERO:26/10/2024]]"]
+    ]},
+    {"type": "heading", "text": "Motivo del ricovero"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Dolore toracico oppressivo]] insorto a riposo, della durata di circa 40 minuti, con [[DIAGNOSI:sottoslivellamento del tratto ST]] in sede anterolaterale."},
+    {"type": "heading", "text": "Fattori di rischio e anamnesi"},
+    {"type": "paragraph", "text": "[[DIPENDENZE:Ex fumatore]] (30 pack-years, ha smesso nel 2015). [[PATOLOGIA:Dislipidemia]]. [[PATOLOGIA:Ipertensione arteriosa]]. Familiarità per cardiopatia ischemica. Nessuna allergia nota."},
+    {"type": "heading", "text": "Decorso clinico e procedure"},
+    {"type": "paragraph", "text": "Troponina I ad alta sensibilità [[ESAME_VALORE:1.842]] ng/L con successiva discesa. Coronarografia: stenosi critica (90%) del ramo interventricolare anteriore prossimale, trattata con [[INTERVENTO:angioplastica coronarica e impianto di stent medicato]]. Ecocardiogramma: frazione di eiezione [[ESAME_VALORE:52%]], ipocinesia apicale. Decorso successivo privo di aritmie e di recidive anginose. Accesso radiale destro in ordine."},
+    {"type": "heading", "text": "Diagnosi di dimissione"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Infarto miocardico acuto senza sopraslivellamento del tratto ST (NSTEMI)]]**. [[DIAGNOSI:Malattia coronarica monovasale]] trattata con [[INTERVENTO:PTCA + DES su IVA prossimale]]."},
+    {"type": "heading", "text": "Terapia alla dimissione"},
+    {"type": "table", "header": ["Farmaco", "Dose", "Orari", "Note"], "widths": [3, 1.3, 1.6, 3.6], "rows": [
+      ["[[FARMACO:Acido acetilsalicilico 100 mg]]", "1 cpr", "ore 13", "a tempo indeterminato"],
+      ["[[FARMACO:Ticagrelor 90 mg]]", "1 cpr", "ore 8 e 20", "per 12 mesi, non sospendere"],
+      ["[[FARMACO:Atorvastatina 80 mg]]", "1 cpr", "ore 21", "controllo LDL a 6 settimane"],
+      ["[[FARMACO:Bisoprololo 2,5 mg]]", "1 cpr", "ore 8", ""],
+      ["[[FARMACO:Ramipril 2,5 mg]]", "1 cpr", "ore 20", "controllo creatinina e potassio"],
+      ["[[FARMACO:Pantoprazolo 40 mg]]", "1 cpr", "ore 7", "gastroprotezione"]
+    ]},
+    {"type": "heading", "text": "Follow-up"},
+    {"type": "paragraph", "text": "Visita cardiologica con ECG ed ecocardiogramma a 30 giorni (prenotazione a cura del reparto). Avvio di programma di riabilitazione cardiologica ambulatoriale. Dieta mediterranea, attività fisica aerobica moderata, astensione dal fumo."},
+    {"type": "signature", "place_date": "[[LUOGO:Acireale]], [[DATA_REFERTO:26/10/2024]]", "role": "Il Cardiologo di Reparto", "name": "Dott. [[MEDICO:Salvatore Pappalardo]]", "digital": false}
+  ],
+  "negatives": []
+}

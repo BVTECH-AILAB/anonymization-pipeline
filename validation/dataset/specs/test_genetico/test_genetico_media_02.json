@@ -1,0 +1,67 @@
+{
+  "id": "test_genetico_media_02",
+  "type": "test_genetico",
+  "difficulty": "media",
+  "style": {"font": "dejavu", "color": "#4A148C", "font_size": 8.8, "margins_mm": 15},
+  "persons": {
+    "paz": {"first_name": "Giovanni Battista", "last_name": "Parodi", "sex": "M", "birth_date": "1946-08-30", "birth_place": "Genova"}
+  },
+  "letterhead": {
+    "logo": "OSB",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale San Benigno]]",
+      "Servizio Sanitario Regionale",
+      "[[REPARTO:S.C. Laboratorio di Genetica Umana]]",
+      "Direttore f.f.: Dott. [[MEDICO:Marco Cevasco]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Salita della Lanterna 6]]",
+      "[[CAP:16126]] [[LUOGO:Genova]]",
+      "Tel. [[TELEFONO:010 5634720]]",
+      "[[EMAIL:genetica.umana@osb-genova.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:PARODI GIOVANNI BATTISTA]]  |  Acc. n. [[NUMERO_ACCETTAZIONE:2025/GU/00093]]  |  Analisi del gene TTR",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale San Benigno]] - PEC [[PEC:protocollo@pec.osb-genova.example.it]] - Struttura accreditata SSR",
+    "Dati trattati ai sensi del Reg. UE 2016/679. Il referto genetico è consegnato all'interessato o al delegato munito di delega scritta."
+  ],
+  "blocks": [
+    {"type": "title", "text": "Analisi molecolare del gene TTR (transtiretina)", "subtitle": "Sequenziamento Sanger degli esoni codificanti 1-4 e delle giunzioni introne-esone"},
+    {"type": "table", "header": ["Assistito", "Data di nascita", "Codice fiscale", "Accettazione", "Codice DNA"], "widths": [3.2, 2, 3.4, 2.4, 2.2], "zebra": false, "rows": [
+      ["[[PERSONA:PARODI GIOVANNI BATTISTA]]", "[[DATA_NASCITA:30/08/1946]]", "[[CODICE_FISCALE:@paz]]", "[[NUMERO_ACCETTAZIONE:2025/GU/00093]]", "[[CODICE_CAMPIONE:GU25-0093-D1]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Residenza", "[[INDIRIZZO:Via Bottini 14 int. 3]], [[LUOGO:Sestri Levante]]"],
+      ["Richiedente", "Dott.ssa [[MEDICO:Elisa Ferrando]]"],
+      ["Reparto inviante", "[[REPARTO:Ambulatorio Amiloidosi Cardiaca]]"],
+      ["Data prelievo", "[[DATA_VISITA:08-01-2025]]"],
+      ["Caregiver", "[[CONTATTO_EMERGENZA:Paola Parodi]] (figlia)"],
+      ["Recapito caregiver", "[[TELEFONO:+39 347 2290815]]"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Campione DNA", "value": "[[CODICE_CAMPIONE:GU25-0093-D1]]", "align": "right"},
+    {"type": "section", "text": "Notizie cliniche e quesito"},
+    {"type": "paragraph", "text": "Pz. di [[ETA:78]] aa., accompagnato dalla figlia, con [[DIAGNOSI:scompenso cardiaco a frazione di eiezione preservata]], [[PATOLOGIA:sindrome del tunnel carpale bilaterale]] operata e [[DIAGNOSI:ipertrofia ventricolare sinistra]] di grado moderato. La scintigrafia ossea con 99mTc-DPD documenta captazione cardiaca di grado 3 secondo Perugini, in assenza di componente monoclonale. Si richiede la tipizzazione genetica per distinguere tra forma wild-type ed ereditaria di [[DIAGNOSI:amiloidosi cardiaca da transtiretina]]."},
+    {"type": "section", "text": "Risultato"},
+    {"type": "table", "header": ["Gene", "Trascritto", "HGVS c.", "HGVS p.", "Nomenclatura storica", "Zigosità", "Classe ACMG"], "widths": [1, 1.8, 1.7, 2, 2, 1.7, 1.9], "rows": [
+      ["TTR", "NM_000371.4", "[[DATO_GENETICO:c.424G>A]]", "[[DATO_GENETICO:p.(Val142Ile)]]", "[[DATO_GENETICO:Val122Ile]]", "[[DATO_GENETICO:Eterozigote]]", "Patogenetica"]
+    ]},
+    {"type": "paragraph", "text": "Nessun'altra variante rilevata nelle regioni analizzate. Polimorfismi senza rilevanza clinica non riportati."},
+    {"type": "section", "text": "Commento"},
+    {"type": "paragraph", "text": "Il sig. [[PERSONA:Parodi]] è risultato [[DATO_GENETICO:eterozigote per la variante TTR p.Val142Ile]], associata ad amiloidosi ATTR ereditaria a prevalente coinvolgimento cardiaco e a penetranza età-dipendente. Il risultato conferma la diagnosi di [[DIAGNOSI:amiloidosi cardiaca ATTRv]] e rende il paziente candidabile a [[FARMACO:tafamidis 61 mg]] secondo i criteri del Piano Terapeutico regionale."},
+    {"type": "page_break"},
+    {"type": "section", "text": "Indicazioni per i familiari"},
+    {"type": "paragraph", "text": "La variante si trasmette con modalità autosomica dominante. Si raccomanda consulenza genetica ai figli del paziente, la sig.ra [[CONTATTO_EMERGENZA:Paola Parodi]] e il sig. [[FAMILIARE:Andrea Parodi]], e alla sorella [[FAMILIARE:Rina Parodi]], già seguita presso il nostro ospedale per [[PATOLOGIA:fibrillazione atriale]]. Nei portatori asintomatici è indicato un follow-up cardiologico e neurologico periodico a partire da 10 anni prima dell'età di esordio nel familiare affetto."},
+    {"type": "table", "header": ["Nome", "Relazione con il probando", "Recapito comunicato", "Appuntamento"], "widths": [3, 3, 3, 3], "rows": [
+      ["[[CONTATTO_EMERGENZA:Paola Parodi]]", "Figlia, caregiver", "[[TELEFONO:+39 347 2290815]]", "[[DATA:4 marzo 2025]], ore 10:30"],
+      ["[[FAMILIARE:Andrea Parodi]]", "Figlio", "da comunicare tramite la sorella", "da fissare"],
+      ["[[FAMILIARE:Rina Parodi]]", "Sorella", "[[TELEFONO:0185 487220]]", "[[DATA:11 marzo 2025]], ore 09:00"]
+    ]},
+    {"type": "note", "text": "Il sequenziamento Sanger non rileva delezioni o duplicazioni di interi esoni né varianti in regioni non codificanti non analizzate. Per il gene TTR tali eventi sono eccezionali."},
+    {"type": "paragraph", "text": "Referto consegnato in data [[DATA_REFERTO:21 gennaio 2025]] alla figlia, sig.ra [[CONTATTO_EMERGENZA:P. Parodi]], munita di delega scritta del sig. [[PERSONA:G.B. Parodi]]."},
+    {"type": "signature", "place_date": "[[LUOGO:Genova]], [[DATA_REFERTO:21/01/2025]]", "role": "Il Dirigente Biologo", "name": "Dott. [[MEDICO:Marco Cevasco]]", "digital": true},
+    {"type": "signature", "place_date": "Consulenza genetica post-test eseguita", "role": "Il Medico Genetista", "name": "Dott.ssa [[MEDICO:Laura Repetto]]", "stamp": ["[[STRUTTURA_SANITARIA:OSPEDALE SAN BENIGNO]]", "S.C. Genetica Umana", "Dott.ssa [[MEDICO:Laura Repetto]]", "OMCeO GE n. [[NUMERO_ALBO:GE 11962]]"]}
+  ],
+  "negatives": [{"value": "Perugini", "forbidden_categories": ["PERSONA", "MEDICO", "COGNOME"]}]
+}

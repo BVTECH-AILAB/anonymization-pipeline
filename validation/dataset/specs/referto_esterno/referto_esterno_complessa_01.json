@@ -1,0 +1,423 @@
+{
+  "id": "referto_esterno_complessa_01",
+  "type": "referto_esterno",
+  "difficulty": "complessa",
+  "style": {
+    "font": "helvetica",
+    "color": "#3E5C3A",
+    "font_size": 8,
+    "margins_mm": 14,
+    "fax_line": "[[DATA:14/10/2024]] 09:52  DA: [[FAX:085 4471209]]  [[STRUTTURA_SANITARIA:VILLA AURORA DEL LAGO]]  A: [[STRUTTURA_SANITARIA:CSM PORTA MAGGIORE]]"
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Rosa",
+      "last_name": "De Santis",
+      "sex": "F",
+      "birth_date": "1976-06-23",
+      "birth_place": "Pescara"
+    }
+  },
+  "letterhead": {
+    "logo": "VAL",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Casa di Cura Villa Aurora del Lago]]",
+      "Casa di Cura neuropsichiatrica privata accreditata",
+      "[[REPARTO:Unità di Psichiatria e Alcologia]]",
+      "Responsabile: Dott.ssa [[MEDICO:Serena Valli]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Contrada Collalto 31]]",
+      "[[CAP:65017]] [[LUOGO:Penne]] (PE)",
+      "Tel. [[TELEFONO:085 4471200]]",
+      "Fax [[FAX:085 4471209]]",
+      "[[EMAIL:psichiatria@villaaurora.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:DE SANTIS ROSA]] - C.F. [[CODICE_FISCALE:@paz]] - Cartella n. [[NUMERO_CARTELLA:VA-2024/0688]] - DOCUMENTO RISERVATO",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Villa Aurora del Lago]] S.r.l. - P.IVA [[PARTITA_IVA:@clinica]] - PEC [[PEC:villaaurora@pec.villaaurora.example.it]]",
+    "Copia a: avv. [[TUTORE_DELEGATO:G. Dell'Orto]] (amministratore di sostegno) e [[STRUTTURA_SANITARIA:CSM Porta Maggiore]], [[LUOGO:Bologna]]",
+    "Documento contenente dati relativi alla salute mentale: ne è vietata la comunicazione a terzi non autorizzati (art. 9 Reg. UE 2016/679)."
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "lines": [
+        "Egr. Dott. [[MEDICO:Tiziano Grandi]] - Medico di Medicina Generale",
+        "e p.c. Dott.ssa [[MEDICO:Anna Ruggeri Lanza]]",
+        "[[STRUTTURA_SANITARIA:CSM Porta Maggiore]]",
+        "[[INDIRIZZO:Via del Pratello Nuovo 54]], [[CAP:40138]] [[LUOGO:Bologna]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "RELAZIONE CLINICA DI DIMISSIONE",
+      "subtitle": "Ricovero ordinario in area psichiatrica - trasmessa via fax su richiesta del servizio inviante"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "columns": 1,
+          "fields": [
+            [
+              "Cognome",
+              "[[COGNOME:De Santis]]"
+            ],
+            [
+              "Nome",
+              "[[NOME:Rosa]]"
+            ],
+            [
+              "Nata a",
+              "[[LUOGO_NASCITA:Pescara]] il [[DATA_NASCITA:23/06/1976]]"
+            ],
+            [
+              "Residenza",
+              "[[INDIRIZZO:Via Libia 88]], [[LUOGO:Bologna]]"
+            ],
+            [
+              "Stato civile",
+              "[[STATO_CIVILE:separata]]"
+            ],
+            [
+              "Professione",
+              "[[PROFESSIONE:impiegata amministrativa]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Ricovero dal",
+              "[[DATA_RICOVERO:02/09/2024]]"
+            ],
+            [
+              "Dimissione",
+              "[[DATA_RICOVERO:11/10/2024]]"
+            ],
+            [
+              "Cartella",
+              "[[NUMERO_CARTELLA:VA-2024/0688]]"
+            ],
+            [
+              "Provenienza",
+              "SPDC [[STRUTTURA_SANITARIA:Presidio Ospedaliero San Ruffillo]]"
+            ],
+            [
+              "Esenzione",
+              "[[CODICE_ESENZIONE:044]]"
+            ],
+            [
+              "Tessera SSN",
+              "[[TESSERA_SANITARIA:@ts]]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "section",
+      "text": "Motivo del ricovero"
+    },
+    {
+      "type": "paragraph",
+      "text": "La sig.ra [[PERSONA:De Santis]], di [[ETA:48]] anni, è stata trasferita presso la nostra struttura dal SPDC del [[STRUTTURA_SANITARIA:Presidio Ospedaliero San Ruffillo]], dove era ricoverata dal [[DATA_RICOVERO:18 agosto 2024]] (inizialmente in regime di TSO, convertito in ricovero volontario il [[DATA:22/08]]), per la prosecuzione delle cure in un contesto protetto e lontano dall'ambiente di vita. Diagnosi di ingresso: **[[SALUTE_MENTALE:disturbo bipolare di tipo I, episodio maniacale con caratteristiche psicotiche]]** in comorbilità con **[[DIPENDENZE:disturbo da uso di alcol di grado moderato]]** (1)."
+    },
+    {
+      "type": "section",
+      "text": "Anamnesi"
+    },
+    {
+      "type": "paragraph",
+      "text": "Esordio a 24 anni con episodio depressivo maggiore; primo episodio maniacale nel 2003. Tre precedenti ricoveri in SPDC (2003, 2011, 2019). In passato terapia con [[FARMACO:carbonato di litio]], sospesa autonomamente dalla paziente nella primavera 2024. Consumo di alcolici in aumento nell'ultimo anno (fino a circa 8 unità alcoliche al giorno), con [[DATI_GIUDIZIARI:procedimento penale per guida in stato di ebbrezza]] in corso e sospensione della patente. Pregressa [[MALATTIE_INFETTIVE:epatite C cronica]], eradicata nel 2019 con antivirali ad azione diretta. Familiarità: la madre, sig.ra [[FAMILIARE:Graziella Marinucci]], è seguita per [[SALUTE_MENTALE:disturbo depressivo ricorrente]]; un fratello, [[FAMILIARE:Paolo De Santis]], con [[DIPENDENZE:pregresso uso di cocaina]]. Dal 2023 la paziente è sostenuta da un amministratore di sostegno, l'avv. [[TUTORE_DELEGATO:Giorgio Dell'Orto]] del Foro di [[LUOGO:Bologna]], nominato con decreto del Giudice Tutelare per la gestione patrimoniale e il consenso alle cure."
+    },
+    {
+      "type": "section",
+      "text": "Valutazioni psicometriche e alcologiche"
+    },
+    {
+      "type": "table",
+      "font_size": 7.5,
+      "header": [
+        "Data",
+        "Strumento",
+        "Punteggio",
+        "Rilevatore / note"
+      ],
+      "widths": [
+        1.4,
+        3.2,
+        1.5,
+        4
+      ],
+      "rows": [
+        [
+          "[[DATA:03/09/2024]]",
+          "YMRS - Young Mania Rating Scale",
+          "[[ESAME_VALORE:31]]",
+          "Dott. [[MEDICO:Karim El Amrani]]\ningresso, ideazione di grandezza, insonnia"
+        ],
+        [
+          "[[DATA:05/09/2024]]",
+          "AUDIT\nCIWA-Ar",
+          "[[ESAME_VALORE:24]]\n[[ESAME_VALORE:11]]",
+          "Dott.ssa [[OPERATORE_SANITARIO:Ilaria Mancuso]] (psicologa)\nastinenza lieve-moderata"
+        ],
+        [
+          "[[DATA:20/09/2024]]",
+          "YMRS",
+          "[[ESAME_VALORE:15]]",
+          "Dott. [[MEDICO:K. El Amrani]]"
+        ],
+        [
+          "[[DATA:09/10/2024]]",
+          "YMRS\nHAM-D (Hamilton)",
+          "[[ESAME_VALORE:5]]\n[[ESAME_VALORE:7]]",
+          "Dott.ssa [[MEDICO:S. Valli]]\nremissione sintomatologica"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Esami ematochimici significativi"
+    },
+    {
+      "type": "table",
+      "font_size": 7.5,
+      "header": [
+        "Esame",
+        "Ingresso",
+        "Dimissione",
+        "U.M.",
+        "Intervallo di riferimento"
+      ],
+      "widths": [
+        3,
+        1.6,
+        1.6,
+        1.2,
+        2.6
+      ],
+      "rows": [
+        [
+          "Gamma-GT",
+          "[[ESAME_VALORE:148]]",
+          "[[ESAME_VALORE:62]]",
+          "U/L",
+          "8 - 38"
+        ],
+        [
+          "MCV",
+          "[[ESAME_VALORE:101,4]]",
+          "[[ESAME_VALORE:97,2]]",
+          "fL",
+          "80 - 99"
+        ],
+        [
+          "CDT (transferrina carboidrato-carente)",
+          "[[ESAME_VALORE:3,4 %]]",
+          "[[ESAME_VALORE:1,6 %]]",
+          "%",
+          "< 2,0"
+        ],
+        [
+          "Litiemia (a 12 h dall'ultima dose)",
+          "-",
+          "[[ESAME_VALORE:0,72]]",
+          "mEq/L",
+          "0,60 - 1,00"
+        ],
+        [
+          "HCV-RNA",
+          "[[ESAME_VALORE:non rilevabile]]",
+          "-",
+          "UI/mL",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Decorso clinico"
+    },
+    {
+      "type": "paragraph",
+      "text": "All'ingresso la paziente si presentava logorroica, con ideazione accelerata e contenuti di grandezza, scarsamente consapevole del disturbo. Nei primi giorni è stata impostata profilassi dell'encefalopatia di Wernicke con [[FARMACO:tiamina 300 mg/die e.v.]] e trattamento della sindrome astinenziale con [[FARMACO:diazepam a scalare]], senza complicanze; non sono comparsi segni suggestivi di sindrome di Korsakoff. Nella notte tra il 6 e il 7 settembre l'inf. [[OPERATORE_SANITARIO:Nicola Ferretti]] ha segnalato un episodio di agitazione psicomotoria, gestito con approccio verbale e [[FARMACO:olanzapina 10 mg i.m.]], senza necessità di contenzione fisica."
+    },
+    {
+      "type": "paragraph",
+      "text": "Dalla seconda settimana la sig.ra [[PERSONA:R. De Santis]] ha mostrato progressiva riduzione della sintomatologia maniacale, con ripresa del ritmo sonno-veglia e buona adesione alle attività riabilitative di gruppo condotte dall'educatrice [[OPERATORE_SANITARIO:Gaia Russo]]. La sorella, sig.ra [[FAMILIARE:Bianca De Santis]], ha partecipato a due colloqui familiari (il [[DATA:19.09.24]] e il [[DATA:03.10.24]]) ed è stata individuata, con il consenso della paziente, come familiare di riferimento. L'avv. [[TUTORE_DELEGATO:Dell'Orto]] ha sottoscritto il consenso alla reintroduzione del litio dopo colloquio con il medico di reparto. Alla dimissione la paziente [[PERSONA:De Santis]] appare eutimica, critica rispetto all'episodio e motivata a proseguire il percorso alcologico."
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi di dimissione"
+    },
+    {
+      "type": "paragraph",
+      "text": "1. **[[SALUTE_MENTALE:Disturbo bipolare di tipo I, episodio più recente maniacale grave con caratteristiche psicotiche, in remissione parziale]]** (ICD-10 F31.2).\n2. **[[DIPENDENZE:Disturbo da uso di alcol, moderato, in remissione iniziale in ambiente controllato]]** (ICD-10 F10.2).\n3. [[DIAGNOSI:Macrocitosi e incremento delle gamma-GT di verosimile origine alcolica]], in miglioramento."
+    },
+    {
+      "type": "section",
+      "text": "Terapia alla dimissione"
+    },
+    {
+      "type": "table",
+      "font_size": 7.5,
+      "header": [
+        "Farmaco",
+        "Dose",
+        "Orario",
+        "Note e monitoraggio"
+      ],
+      "widths": [
+        3,
+        1.8,
+        1.8,
+        4
+      ],
+      "rows": [
+        [
+          "[[FARMACO:Carbonato di litio 300 mg]]",
+          "1 cp + 2 cp",
+          "8:00 - 20:00",
+          "litiemia a 7 giorni e poi ogni 3 mesi;\nTSH e creatinina ogni 6 mesi"
+        ],
+        [
+          "[[FARMACO:Olanzapina 10 mg]]",
+          "1 cp",
+          "21:00",
+          "riduzione a 5 mg da valutare al CSM;\ncontrollo peso e glicemia"
+        ],
+        [
+          "[[FARMACO:Naltrexone 50 mg]]",
+          "1 cp",
+          "8:00",
+          "da proseguire su indicazione del Ser.D.;\nevitare oppioidi"
+        ],
+        [
+          "[[FARMACO:Tiamina 100 mg]]",
+          "1 cp",
+          "13:00",
+          "per 3 mesi"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Progetto di continuità assistenziale"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Servizi territoriali"
+        },
+        {
+          "type": "paragraph",
+          "text": "Primo appuntamento presso il [[STRUTTURA_SANITARIA:CSM Porta Maggiore]] con la Dott.ssa [[MEDICO:Ruggeri Lanza]] il [[DATA_VISITA:22 ottobre 2024]] ore 10:30. Presa in carico concordata con il [[STRUTTURA_SANITARIA:Ser.D. San Donato]] (referente Dott. [[MEDICO:Ettore Bassi]]) per il programma alcologico e il gruppo di auto-mutuo aiuto."
+        },
+        {
+          "type": "paragraph",
+          "text": "Il MMG è pregato di monitorare litiemia e funzionalità renale e tiroidea."
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Rete di supporto"
+        },
+        {
+          "type": "paragraph",
+          "text": "Familiare di riferimento: sorella [[FAMILIARE:Bianca De Santis]], tel. [[TELEFONO:+39 347 902 3381]].\nAmministratore di sostegno: avv. [[TUTORE_DELEGATO:Giorgio Dell'Orto]], [[INDIRIZZO:Via Castiglione 27]], [[LUOGO:Bologna]], tel. [[TELEFONO:051 6449021]].\nLa paziente rientra al proprio domicilio accompagnata dalla sorella."
+        }
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Penne]], [[DATA_REFERTO:11/10/2024]]",
+      "role": "Il Medico Psichiatra di reparto",
+      "name": "Dott. [[MEDICO:Karim El Amrani]]",
+      "digital": false,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:CASA DI CURA VILLA AURORA DEL LAGO]]",
+        "Dott. [[MEDICO:K. EL AMRANI]] - Psichiatra",
+        "OMCeO [[LUOGO:Pescara]] n. [[NUMERO_ALBO:2291]]"
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "Visto per la dimissione",
+      "role": "La Responsabile dell'Unità",
+      "name": "Dott.ssa [[MEDICO:Serena Valli]]",
+      "digital": false,
+      "stamp": [
+        "Dott.ssa [[MEDICO:SERENA VALLI]]",
+        "Specialista in Psichiatria",
+        "Ordine dei Medici PE n. [[NUMERO_ALBO:1874]]"
+      ]
+    },
+    {
+      "type": "stamp",
+      "angle": 9,
+      "align": "left",
+      "lines": [
+        "PERVENUTO VIA FAX",
+        "[[STRUTTURA_SANITARIA:CSM PORTA MAGGIORE]]",
+        "Prot. n. [[NUMERO_PROTOCOLLO:CSM/2024/11872]]",
+        "del [[DATA:14/10/2024]] - op. [[OPERATORE_SANITARIO:L. Gherardi]]"
+      ]
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Diagnosi formulate secondo i criteri DSM-5-TR; le scale YMRS e HAM-D sono state somministrate dal personale medico, AUDIT e CIWA-Ar dalla psicologa di reparto.",
+        "Il consenso al trattamento dei dati e alla trasmissione della presente relazione è stato prestato dalla paziente e controfirmato dall'amministratore di sostegno avv. [[TUTORE_DELEGATO:Giorgio Dell'Orto]] in data [[DATA:04/09/2024]].",
+        "Per comunicazioni urgenti con il reparto: infermeria tel. [[TELEFONO:085 4471236]], referente infermieristico [[OPERATORE_SANITARIO:Nicola Ferretti]]."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Young",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Hamilton",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Wernicke",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Korsakoff",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    }
+  ]
+}

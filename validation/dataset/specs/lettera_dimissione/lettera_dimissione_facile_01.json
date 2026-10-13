@@ -1,0 +1,185 @@
+{
+  "id": "lettera_dimissione_facile_01",
+  "type": "lettera_dimissione",
+  "difficulty": "facile",
+  "style": {
+    "font": "helvetica",
+    "color": "#24527A",
+    "font_size": 9,
+    "margins_mm": 16
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Carla",
+      "last_name": "Benedetti",
+      "sex": "F",
+      "birth_date": "1952-03-18",
+      "birth_place": "Padova"
+    }
+  },
+  "letterhead": {
+    "logo": "OSL",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Santa Lucia di Valdorno]]",
+      "[[REPARTO:U.O. Medicina Interna]]",
+      "Degenza ordinaria - Piano 3, Blocco B"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale dei Tigli 40]]",
+      "[[CAP:44121]] [[LUOGO:Ferrara]]",
+      "Tel. reparto [[TELEFONO:0532 418230]]"
+    ]
+  },
+  "footer": [
+    "Documento destinato al medico curante. Contiene dati personali e sanitari tutelati dal Regolamento UE 2016/679."
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "align": "right",
+      "lines": [
+        "Al Medico di Medicina Generale dell'assistita"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "LETTERA DI DIMISSIONE"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "fields": [
+        [
+          "Paziente",
+          "[[PERSONA:Carla Benedetti]]"
+        ],
+        [
+          "C.F.",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Nata il",
+          "[[DATA_NASCITA:18/03/1952]]"
+        ],
+        [
+          "Nata a",
+          "[[LUOGO_NASCITA:Padova]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Garibaldi 22]], [[LUOGO:Copparo]]"
+        ],
+        [
+          "N. cartella",
+          "[[NUMERO_CARTELLA:2024/004187]]"
+        ],
+        [
+          "Data ricovero",
+          "[[DATA_RICOVERO:04/03/2024]]"
+        ],
+        [
+          "Data dimissione",
+          "[[DATA_RICOVERO:12/03/2024]]"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Gentile Collega,\nLe comunichiamo che la Sua assistita è stata ricoverata presso il nostro reparto e viene oggi dimessa in buone condizioni generali."
+    },
+    {
+      "type": "heading",
+      "text": "Motivo del ricovero"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[DIAGNOSI:Febbre]] da tre giorni, [[DIAGNOSI:tosse produttiva]] e [[DIAGNOSI:dispnea da sforzo]]."
+    },
+    {
+      "type": "heading",
+      "text": "Anamnesi"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[PATOLOGIA:Ipertensione arteriosa]] in terapia. [[PATOLOGIA:Diabete mellito tipo 2]] in buon compenso. [[INTERVENTO:Colecistectomia]] nel 2009. [[ALLERGIA:Allergia alla penicillina]] (orticaria)."
+    },
+    {
+      "type": "heading",
+      "text": "Decorso clinico"
+    },
+    {
+      "type": "paragraph",
+      "text": "All'ingresso temperatura corporea [[ESAME_VALORE:38,6]] °C, saturazione in aria ambiente [[ESAME_VALORE:91%]]. Agli esami ematici leucocitosi neutrofila (GB [[ESAME_VALORE:14.320]]/µL) e PCR [[ESAME_VALORE:11,4]] mg/dL. La radiografia del torace ha evidenziato [[DIAGNOSI:addensamento parenchimale basale destro]]. È stata impostata [[TERAPIA:terapia antibiotica endovenosa]] con [[FARMACO:levofloxacina 750 mg]] e [[TERAPIA:ossigenoterapia a basso flusso]], sospesa in quinta giornata. Progressiva defervescenza e normalizzazione degli indici di flogosi (PCR alla dimissione [[ESAME_VALORE:0,9]] mg/dL)."
+    },
+    {
+      "type": "heading",
+      "text": "Diagnosi di dimissione"
+    },
+    {
+      "type": "paragraph",
+      "text": "**[[DIAGNOSI:Polmonite comunitaria del lobo inferiore destro]]**, in paziente con [[PATOLOGIA:ipertensione arteriosa]] e [[PATOLOGIA:diabete mellito tipo 2]]."
+    },
+    {
+      "type": "heading",
+      "text": "Terapia alla dimissione"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Dose",
+        "Orari",
+        "Note"
+      ],
+      "widths": [
+        3.2,
+        1.6,
+        1.8,
+        3.4
+      ],
+      "rows": [
+        [
+          "[[FARMACO:Levofloxacina 500 mg]] cpr",
+          "1 cpr",
+          "ore 8",
+          "per altri 4 giorni, poi sospendere"
+        ],
+        [
+          "[[FARMACO:Ramipril 5 mg]] cpr",
+          "1 cpr",
+          "ore 8",
+          "terapia abituale"
+        ],
+        [
+          "[[FARMACO:Metformina 850 mg]] cpr",
+          "1 cpr",
+          "ore 8 e ore 20",
+          "ai pasti"
+        ],
+        [
+          "[[FARMACO:Paracetamolo 1000 mg]] cpr",
+          "1 cpr",
+          "al bisogno",
+          "se rialzo termico, max 3 al giorno"
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Indicazioni"
+    },
+    {
+      "type": "paragraph",
+      "text": "Controllo clinico presso il curante entro 7 giorni. Radiografia del torace di controllo a 6 settimane. Emocromo e PCR tra 10 giorni."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Ferrara]], [[DATA_REFERTO:12/03/2024]]",
+      "role": "Il Medico di Reparto",
+      "name": "Dott. [[MEDICO:Stefano Gualandi]]",
+      "digital": false
+    }
+  ],
+  "negatives": []
+}

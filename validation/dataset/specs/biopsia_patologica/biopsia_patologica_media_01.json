@@ -1,0 +1,91 @@
+{
+  "id": "biopsia_patologica_media_01",
+  "type": "biopsia_patologica",
+  "difficulty": "media",
+  "style": {"font": "times", "color": "#003B6F", "font_size": 9.5, "margins_mm": 17},
+  "persons": {
+    "paz": {"first_name": "Ottavio", "last_name": "Brambilla", "sex": "M", "birth_date": "1956-03-14", "birth_place": "Bergamo"}
+  },
+  "letterhead": {
+    "logo": "ASTL",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASST del Lario Orientale]]",
+      "[[STRUTTURA_SANITARIA:Ospedale Generale di Monterosso]]",
+      "[[REPARTO:SC Anatomia Patologica]] - Dir. Dott. [[MEDICO:Ivan Locatelli]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Leonardo da Vinci 75]]",
+      "[[CAP:24123]] [[LUOGO:Bergamo]]",
+      "Tel. [[TELEFONO:035 2678840]]"
+    ]
+  },
+  "running_header": "Esame istologico n. [[NUMERO_REFERTO:B25.06614]] - Paziente [[PERSONA:Brambilla Ottavio]] - nato il [[DATA_NASCITA:14/03/1956]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASST del Lario Orientale]] - Sistema Socio Sanitario - C.F./P.IVA [[PARTITA_IVA:@asst]]",
+    "I preparati istologici sono conservati per 20 anni e possono essere richiesti per revisione o consulenza."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI ESAME ISTOLOGICO", "subtitle": "Biopsia prostatica transperineale ecoguidata (mapping a 12 prelievi)"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Brambilla Ottavio]]"],
+      ["Data di nascita", "[[DATA_NASCITA:14/03/1956]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Tessera sanitaria", "[[TESSERA_SANITARIA:@ts]]"],
+      ["Residenza", "[[INDIRIZZO:Via Gombito 18]], [[LUOGO:Bergamo]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["N. esame", "[[NUMERO_REFERTO:B25.06614]]"],
+      ["Accettato il", "[[DATA:21.10.25]]"],
+      ["Refertato il", "[[DATA_REFERTO:29/10/2025]]"],
+      ["Reparto", "[[REPARTO:u.o. Urologia]]"],
+      ["Prelievo", "[[DATA_VISITA:20-10-2025]]"],
+      ["Richiedente", "Dott. [[MEDICO:Paolo Carminati]]"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Caso", "value": "[[CODICE_CAMPIONE:B25.06614-AP]]", "align": "right"},
+    {"type": "section", "text": "Dati clinici"},
+    {"type": "paragraph", "text": "Pz. di aa. [[ETA:69]] con [[ESAME_VALORE:PSA totale 8,7 ng/mL]] (rapporto libero/totale [[ESAME_VALORE:0,11]]) in incremento rispetto al controllo del [[DATA:12 marzo 2025]]. RM multiparametrica: [[DIAGNOSI:lesione PI-RADS 4 della zona periferica postero-laterale sinistra]]. In anamnesi [[PATOLOGIA:ipertrofia prostatica benigna]] in terapia con [[FARMACO:tamsulosina 0,4 mg]]. Il sig. [[PERSONA:Brambilla]] è accompagnato dalla moglie, sig.ra [[FAMILIARE:Marisa Rota]], che ha richiesto di essere informata dell'esito (tel. [[TELEFONO:035 4127701]])."},
+    {"type": "section", "text": "Materiale inviato"},
+    {"type": "paragraph", "text": "Dodici contenitori etichettati da A a L, contenenti ciascuno un frustolo bioptico, secondo lo schema di mappatura allegato dal Dott. [[MEDICO:Carminati]]. Ulteriore contenitore M: prelievo mirato sulla lesione target (fusion RM/ecografia)."},
+    {"type": "section", "text": "Descrizione macroscopica"},
+    {"type": "paragraph", "text": "Tredici frustoli bioptici di colorito biancastro, di lunghezza compresa tra 0,9 e 1,7 cm, inclusi singolarmente (blocchetti A1-M1) e colorati con spugna di inchiostro per l'orientamento. Sezioni seriate a tre livelli."},
+    {"type": "section", "text": "Descrizione microscopica e sintesi per prelievo"},
+    {"type": "table", "header": ["Prel.", "Sede", "Lungh.", "Esito", "Score di Gleason", "% neoplasia"], "widths": [0.8, 2.6, 1.1, 4, 1.5, 1.3], "rows": [
+      ["A", "Base dx laterale", "[[ESAME_VALORE:14 mm]]", "Tessuto prostatico benigno", "-", "-"],
+      ["B", "Base dx mediale", "[[ESAME_VALORE:13 mm]]", "Tessuto prostatico benigno", "-", "-"],
+      ["C", "Medio dx laterale", "[[ESAME_VALORE:15 mm]]", "[[DIAGNOSI:Prostatite cronica focale]]", "-", "-"],
+      ["D", "Medio dx mediale", "[[ESAME_VALORE:11 mm]]", "Tessuto prostatico benigno", "-", "-"],
+      ["E", "Apice dx", "[[ESAME_VALORE:10 mm]]", "Tessuto prostatico benigno", "-", "-"],
+      ["F", "Base sn laterale", "[[ESAME_VALORE:16 mm]]", "[[DIAGNOSI:Adenocarcinoma acinare]]", "[[ESAME_VALORE:3+3=6]]", "[[ESAME_VALORE:15%]]"],
+      ["G", "Base sn mediale", "[[ESAME_VALORE:14 mm]]", "Tessuto prostatico benigno", "-", "-"],
+      ["H", "Medio sn laterale", "[[ESAME_VALORE:17 mm]]", "[[DIAGNOSI:Adenocarcinoma acinare]]", "[[ESAME_VALORE:3+4=7]]", "[[ESAME_VALORE:60%]]"],
+      ["I", "Medio sn mediale", "[[ESAME_VALORE:12 mm]]", "[[DIAGNOSI:ASAP (proliferazione microacinare atipica)]]", "-", "-"],
+      ["J", "Apice sn", "[[ESAME_VALORE:9 mm]]", "Tessuto prostatico benigno", "-", "-"],
+      ["K", "Zona transizionale dx", "[[ESAME_VALORE:13 mm]]", "[[DIAGNOSI:Iperplasia nodulare]]", "-", "-"],
+      ["L", "Zona transizionale sn", "[[ESAME_VALORE:15 mm]]", "[[DIAGNOSI:Iperplasia nodulare]]", "-", "-"],
+      ["M", "Target PI-RADS 4", "[[ESAME_VALORE:17 mm]]", "[[DIAGNOSI:Adenocarcinoma acinare]]", "[[ESAME_VALORE:3+4=7]]", "[[ESAME_VALORE:80%]]"]
+    ]},
+    {"type": "paragraph", "text": "Nei prelievi H e M la neoplasia è costituita da ghiandole ben formate (pattern 3) con aree di ghiandole fuse e cribriformi di piccole dimensioni (pattern 4, circa il [[ESAME_VALORE:20%]] della componente neoplastica). Nel prelievo H si osserva [[ESAME_VALORE:invasione perineurale]]. Non estensione extraprostatica nei frustoli esaminati. Assenza di carcinoma intraduttale."},
+    {"type": "section", "text": "Indagini immunoistochimiche"},
+    {"type": "table", "header": ["Anticorpo", "Blocchetto", "Risultato", "Interpretazione"], "widths": [2, 1.5, 2.5, 4], "rows": [
+      ["p63", "I1", "[[ESAME_VALORE:negativo]] (focale)", "Perdita delle cellule basali in alcune ghiandole"],
+      ["CK 34betaE12", "I1", "[[ESAME_VALORE:negativo]]", "Assenza di strato basale"],
+      ["AMACR (P504S)", "I1", "[[ESAME_VALORE:debolmente positivo]]", "Reperto non conclusivo su focolaio di 3 ghiandole"]
+    ]},
+    {"type": "section", "text": "Diagnosi"},
+    {"type": "paragraph", "text": "**Biopsie prostatiche (13 prelievi): [[DIAGNOSI:adenocarcinoma acinare della prostata]], score di Gleason [[ESAME_VALORE:3+4=7]] ([[ESAME_VALORE:Grade Group 2]] ISUP), presente in 3 prelievi su 13 (lobo sinistro e target), con [[ESAME_VALORE:invasione perineurale]].**\nNel prelievo I: [[DIAGNOSI:proliferazione microacinare atipica (ASAP)]], si suggerisce stretto monitoraggio."},
+    {"type": "note", "text": "Il grading è espresso secondo i criteri ISUP 2019. Caso discusso in riunione di consenso con il Dott. [[MEDICO:Ivan Locatelli]] in data [[DATA:28 ottobre 2025]]. Il caso sarà presentato al Gruppo Oncologico Multidisciplinare uro-oncologico."},
+    {"type": "table", "caption": "Tracciabilità del campione", "header": ["Fase", "Data", "Operatore"], "widths": [3, 2, 4], "rows": [
+      ["Prelievo bioptico", "[[DATA_VISITA:20-10-2025]]", "Dott. [[MEDICO:Paolo Carminati]] ([[REPARTO:u.o. Urologia]])"],
+      ["Accettazione", "[[DATA:21.10.25]]", "TSLB [[OPERATORE_SANITARIO:Sara Pezzotta]]"],
+      ["Inclusione e taglio", "[[DATA:22.10.25]]", "TSLB [[OPERATORE_SANITARIO:Luca Ghilardi]]"],
+      ["Refertazione", "[[DATA_REFERTO:29/10/2025]]", "Dott.ssa [[MEDICO:Federica Magri]]"]
+    ]},
+    {"type": "signature", "place_date": "[[LUOGO:Bergamo]], [[DATA_REFERTO:29 ottobre 2025]]", "role": "Il Dirigente Medico", "name": "Dott.ssa [[MEDICO:Federica Magri]]", "digital": false, "stamp": ["[[STRUTTURA_SANITARIA:OSP. GEN. MONTEROSSO]]", "ANATOMIA PATOLOGICA", "Dott.ssa [[MEDICO:F. Magri]]"]},
+    {"type": "barcode", "kind": "qr", "label": "Referto online", "value": "https://referti.asst-lario.example.it/ap/[[NUMERO_REFERTO:B25.06614]]"}
+  ],
+  "negatives": [
+    {"value": "Gleason", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]},
+    {"value": "Leonardo da Vinci", "forbidden_categories": ["PERSONA", "MEDICO"]}
+  ]
+}

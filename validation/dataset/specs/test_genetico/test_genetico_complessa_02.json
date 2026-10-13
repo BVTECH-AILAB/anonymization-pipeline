@@ -1,0 +1,513 @@
+{
+  "id": "test_genetico_complessa_02",
+  "type": "test_genetico",
+  "difficulty": "complessa",
+  "style": {
+    "font": "dejavu",
+    "color": "#AD1457",
+    "font_size": 7.8,
+    "margins_mm": 14
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Viola",
+      "last_name": "Dellavalle",
+      "sex": "F",
+      "birth_date": "1978-12-04",
+      "birth_place": "Torino"
+    }
+  },
+  "letterhead": {
+    "logo": "SC",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:A.O. Subalpina Santa Clotilde]]",
+      "Dipartimento di Oncologia e Medicina di Laboratorio",
+      "[[REPARTO:S.C. Genetica Medica - Laboratorio di Oncogenetica]]",
+      "Direttrice: Prof.ssa [[MEDICO:Giovanna Ruffino]]",
+      "PDTA tumori eredo-familiari della mammella e dell'ovaio"
+    ],
+    "right": [
+      "[[INDIRIZZO:Corso Galileo Ferraris 197]]",
+      "[[CAP:10134]] [[LUOGO:Torino]]",
+      "Segreteria [[TELEFONO:011 6697310]]",
+      "Fax [[FAX:011 6697398]]",
+      "[[EMAIL:oncogenetica@ao-santaclotilde.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:DELLAVALLE VIOLA]] ([[DATA_NASCITA:04/12/1978]]) - Prot. [[NUMERO_PROTOCOLLO:OG/2025/0412]] - Test BRCA1/2 e pannello HBOC",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:A.O. Subalpina Santa Clotilde]] - Sede legale [[INDIRIZZO:Via Cibrario 59]], [[CAP:10143]] [[LUOGO:Torino]] - P.IVA [[PARTITA_IVA:@aosc]]",
+    "Documento riservato contenente dati genetici di [[PERSONA:Viola Dellavalle]]. La comunicazione ai familiari avviene solo tramite la paziente o con suo consenso scritto.",
+    "Riproduzione parziale vietata. Conservazione a tempo illimitato nell'archivio di genetica (Linee guida SIGU)."
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "align": "right",
+      "lines": [
+        "Alla Dott.ssa [[MEDICO:Federica Ghigo]]",
+        "[[REPARTO:S.C. Oncologia Medica 2 - Breast Unit]]",
+        "Sede"
+      ]
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "RICEVUTO BREAST UNIT",
+        "[[DATA:25 MAR 2025]]",
+        "Sig.ra [[OPERATORE_SANITARIO:Cinzia Audisio]] - segreteria"
+      ],
+      "angle": -10,
+      "align": "left"
+    },
+    {
+      "type": "title",
+      "text": "REFERTO DI TEST GENETICO ONCOLOGICO",
+      "subtitle": "Sindrome dei tumori ereditari della mammella e dell'ovaio (HBOC) - analisi NGS di 13 geni con MLPA di BRCA1/BRCA2"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome e nome",
+          "[[PERSONA:DELLAVALLE VIOLA]]"
+        ],
+        [
+          "Data di nascita",
+          "[[DATA_NASCITA:04/12/1978]]"
+        ],
+        [
+          "Codice fiscale",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Tessera SSN",
+          "[[TESSERA_SANITARIA:@ts]]"
+        ],
+        [
+          "Indirizzo",
+          "[[INDIRIZZO:Via Nizza 210]], [[CAP:10126]] [[LUOGO:Torino]]"
+        ],
+        [
+          "Telefono",
+          "[[TELEFONO:+39 333 5129084]]"
+        ],
+        [
+          "Esenzione",
+          "[[CODICE_ESENZIONE:048]] - [[CODICE_ESENZIONE:D99]]"
+        ],
+        [
+          "ID paziente",
+          "[[ID_PAZIENTE:SC-00781244]]"
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "left": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Campione",
+              "[[CODICE_CAMPIONE:OG25-0412-S]] (sangue EDTA)"
+            ],
+            [
+              "Prelievo",
+              "[[DATA_VISITA:17-02-2025]]"
+            ],
+            [
+              "Accettazione",
+              "[[NUMERO_ACCETTAZIONE:2025-SC-117734]]"
+            ],
+            [
+              "Refertazione",
+              "[[DATA_REFERTO:24 marzo 2025]]"
+            ],
+            [
+              "Priorità",
+              "Urgente (decisione terapeutica)"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "label": "DNA",
+          "value": "[[CODICE_CAMPIONE:OG25-0412-D]]",
+          "align": "center"
+        },
+        {
+          "type": "paragraph",
+          "size": 6.5,
+          "align": "center",
+          "text": "Etichetta stampata dall'inf. [[OPERATORE_SANITARIO:Simona Vottero]] al momento del prelievo"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Indicazione al test e storia oncologica"
+    },
+    {
+      "type": "paragraph",
+      "text": "La sig.ra [[PERSONA:Dellavalle]], [[ETA:46]] anni, [[PROFESSIONE:insegnante di scuola primaria]], è affetta da [[DIAGNOSI:carcinoma duttale infiltrante della mammella sinistra pT2 pN1a, G3, ER 90% PgR 40% HER2 negativo, Ki-67 28%]], sottoposta a [[INTERVENTO:mastectomia nipple-sparing sinistra con biopsia del linfonodo sentinella]] il [[DATA:10/01/2025]]. All'esame istologico non segni di malattia di Paget del capezzolo. Il test è richiesto con priorità per valutare l'eleggibilità a [[FARMACO:olaparib]] adiuvante e l'indicazione a [[INTERVENTO:mastectomia controlaterale profilattica]] e [[INTERVENTO:annessiectomia bilaterale]]. Rischio a priori: punteggio Manchester 22; modello Tyrer-Cuzick e BOADICEA (CanRisk) eseguiti in sede di consulenza."
+    },
+    {
+      "type": "heading",
+      "text": "Albero genealogico (sintesi, ramo materno informativo)"
+    },
+    {
+      "type": "table",
+      "font_size": 7,
+      "header": [
+        "Familiare",
+        "Grado",
+        "Patologia oncologica\n(età alla diagnosi)",
+        "Stato in vita",
+        "Documentazione"
+      ],
+      "widths": [
+        3.2,
+        1.8,
+        3.4,
+        2.4,
+        2.6
+      ],
+      "rows": [
+        [
+          "[[FAMILIARE:Bianca Ferrero]]",
+          "Madre",
+          "[[PATOLOGIA:Carcinoma sieroso di alto grado dell'ovaio]] (54)",
+          "Deceduta il [[DATA_DECESSO:02/11/2009]]",
+          "Referto istologico in copia"
+        ],
+        [
+          "[[FAMILIARE:Teresa Ferrero]]",
+          "Zia materna",
+          "[[PATOLOGIA:Carcinoma mammario bilaterale]] (41 e 49)",
+          "Vivente, 71 anni",
+          "Riferito, non documentato"
+        ],
+        [
+          "[[FAMILIARE:Davide Ferrero]]",
+          "Cugino materno",
+          "[[PATOLOGIA:Carcinoma della mammella maschile]] (58)",
+          "Vivente",
+          "Lettera di dimissione\n[[STRUTTURA_SANITARIA:Ospedale Civico di Pinerolo Alta]]"
+        ],
+        [
+          "[[FAMILIARE:Silvia Dellavalle]]",
+          "Sorella",
+          "Nessuna",
+          "Vivente, 43 anni",
+          "-"
+        ],
+        [
+          "[[FAMILIARE:Marco Dellavalle]]",
+          "Fratello",
+          "Nessuna",
+          "Vivente, 39 anni",
+          "-"
+        ],
+        [
+          "[[FAMILIARE:Elena Bertola]]",
+          "Figlia",
+          "Nessuna",
+          "Minore, 16 anni",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "size": 6.8,
+      "text": "Ramo paterno non informativo: padre, sig. [[FAMILIARE:Ernesto Dellavalle]], 77 anni, con [[PATOLOGIA:adenocarcinoma prostatico Gleason 3+4]] diagnosticato a 70 anni, senza ulteriori casi noti."
+    },
+    {
+      "type": "section",
+      "text": "Metodo"
+    },
+    {
+      "type": "paragraph",
+      "text": "Sequenziamento NGS (cattura ibrida, pannello HBOC custom) delle regioni codificanti e delle giunzioni introne-esone (+/- 20 bp) dei geni ATM, BARD1, BRCA1, BRCA2, BRIP1, CDH1, CHEK2, PALB2, PTEN, RAD51C, RAD51D, STK11, TP53. Piattaforma Illumina MiSeq, copertura minima 50x sul 100% delle regioni di interesse per BRCA1 e BRCA2. Ricerca di grandi riarrangiamenti di BRCA1 e BRCA2 mediante MLPA (SALSA P002 e P045). Conferma delle varianti con sequenziamento Sanger su secondo campione indipendente."
+    },
+    {
+      "type": "section",
+      "text": "Risultati"
+    },
+    {
+      "type": "table",
+      "font_size": 7,
+      "header": [
+        "Gene\nTrascritto",
+        "HGVS c.",
+        "HGVS p.",
+        "Zigosità",
+        "Classe\nACMG",
+        "Note"
+      ],
+      "widths": [
+        2.2,
+        2.4,
+        3,
+        1.8,
+        1.8,
+        3.4
+      ],
+      "rows": [
+        [
+          "BRCA2\nNM_000059.4",
+          "[[DATO_GENETICO:c.5946del]]",
+          "[[DATO_GENETICO:p.(Ser1982ArgfsTer22)]]",
+          "[[DATO_GENETICO:Eterozigote]]",
+          "5\nPatogenetica",
+          "Variante frameshift ricorrente (nota come 6174delT); confermata con Sanger"
+        ],
+        [
+          "ATM\nNM_000051.4",
+          "[[DATO_GENETICO:c.6067G>A]]",
+          "[[DATO_GENETICO:p.(Gly2023Arg)]]",
+          "[[DATO_GENETICO:Eterozigote]]",
+          "3\nVUS",
+          "Non utilizzabile a fini clinici né per test dei familiari"
+        ],
+        [
+          "Altri 11 geni",
+          "-",
+          "-",
+          "-",
+          "-",
+          "Nessuna variante di classe 3, 4 o 5; MLPA BRCA1/2 negativa"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Interpretazione e implicazioni cliniche"
+    },
+    {
+      "type": "paragraph",
+      "text": "La paziente è [[DATO_GENETICO:portatrice della variante patogenetica BRCA2 c.5946del]], che conferma la diagnosi di [[DIAGNOSI:sindrome HBOC BRCA2-correlata]]. Il risultato rende la sig.ra [[PERSONA:V. Dellavalle]] eleggibile a terapia adiuvante con [[FARMACO:olaparib 300 mg due volte al giorno]] per 12 mesi, in associazione alla [[TERAPIA:terapia endocrina con inibitore dell'aromatasi]]. Il rischio residuo di carcinoma mammario controlaterale e di carcinoma ovarico giustifica la discussione, in ambito multidisciplinare, delle procedure di riduzione del rischio. Per la paziente sono indicati inoltre screening del melanoma e valutazione del rischio pancreatico secondo le raccomandazioni AIOM 2024."
+    },
+    {
+      "type": "paragraph",
+      "text": "Nel corso della consulenza post-test la paziente, accompagnata dal marito sig. [[FAMILIARE:Giorgio Bertola]], ha manifestato marcata preoccupazione per la figlia. Considerata la storia di [[SALUTE_MENTALE:episodio depressivo maggiore]] nel 2019, trattato con [[FARMACO:escitalopram]], è stato attivato il supporto psico-oncologico con la dott.ssa [[OPERATORE_SANITARIO:Laura Ceirano]], psicologa del PDTA (primo colloquio il [[DATA:1 aprile 2025]])."
+    },
+    {
+      "type": "section",
+      "text": "Test a cascata nei familiari"
+    },
+    {
+      "type": "paragraph",
+      "text": "La variante si trasmette con modalità autosomica dominante; ogni familiare di primo grado ha una probabilità del 50% di esserne portatore. Con il consenso scritto della paziente viene consegnata la lettera informativa per i familiari elencati di seguito. Il test predittivo nella figlia [[FAMILIARE:Elena]], minorenne, non è indicato prima dei 18 anni in assenza di misure preventive specifiche per l'età."
+    },
+    {
+      "type": "table",
+      "font_size": 7,
+      "header": [
+        "Familiare",
+        "Probabilità a priori",
+        "Proposta",
+        "Centro / recapito"
+      ],
+      "widths": [
+        3,
+        2,
+        4,
+        4
+      ],
+      "rows": [
+        [
+          "[[FAMILIARE:Silvia Dellavalle]]",
+          "50%",
+          "Test mirato [[DATO_GENETICO:BRCA2 c.5946del]] + consulenza",
+          "Presso nostro ambulatorio\ntel. [[TELEFONO:+39 349 7720615]]"
+        ],
+        [
+          "[[FAMILIARE:Marco Dellavalle]]",
+          "50%",
+          "Test mirato (rischio di ca. mammella maschile, prostata, pancreas)",
+          "Residente a [[LUOGO:Cuneo]]: invio a [[STRUTTURA_SANITARIA:Genetica Medica ASO Monviso]]"
+        ],
+        [
+          "[[FAMILIARE:Teresa Ferrero]]",
+          "Affetta",
+          "Test mirato per conferma del ramo di origine",
+          "Da contattare tramite il cugino [[FAMILIARE:D. Ferrero]]"
+        ],
+        [
+          "[[FAMILIARE:Elena Bertola]]",
+          "50%",
+          "Consulenza al compimento dei 18 anni ([[DATA:19/06/2026]])",
+          "Su richiesta della madre"
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "text": "Limiti: la sensibilità del test per le varianti puntiformi e i piccoli indel è superiore al 99%; non sono rilevabili varianti in regioni regolatorie o introniche profonde e mosaicismi a bassa frazione allelica. La classificazione delle VUS può cambiare nel tempo: il laboratorio comunicherà alla Dott.ssa [[MEDICO:F. Ghigo]] eventuali riclassificazioni."
+    },
+    {
+      "type": "checkboxes",
+      "label": "Consenso della paziente (modulo SIGU, firmato il [[DATA:17-02-2025]])",
+      "columns": 2,
+      "items": [
+        [
+          "Ricevere il risultato del test",
+          true
+        ],
+        [
+          "Comunicazione diretta ai familiari da parte del centro",
+          false
+        ],
+        [
+          "Ricevere informazioni su reperti inattesi",
+          true
+        ],
+        [
+          "Conservazione del campione per ricerca",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale dell'interessata",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Torino]], [[DATA_REFERTO:24/03/2025]]",
+      "role": "Il Dirigente Biologo",
+      "name": "Dott. [[MEDICO:Andrea Chiesa Martinengo]]",
+      "digital": true
+    },
+    {
+      "type": "signature",
+      "place_date": "Consulenza post-test del [[DATA:27.03.25]]",
+      "role": "La Medica Genetista",
+      "name": "Prof.ssa [[MEDICO:Giovanna Ruffino]]",
+      "extra": [
+        "con la collaborazione della specializzanda dott.ssa [[OPERATORE_SANITARIO:Irene Bosco]]"
+      ],
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:A.O. SANTA CLOTILDE]] - [[LUOGO:TORINO]]",
+        "S.C. GENETICA MEDICA",
+        "Prof.ssa [[MEDICO:G. RUFFINO]]",
+        "Albo Medici TO n. [[NUMERO_ALBO:TO 0019473]]"
+      ]
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Classificazione delle varianti secondo ACMG/AMP 2015 e criteri ENIGMA per BRCA1 e BRCA2.",
+        "Il cugino [[FAMILIARE:Davide Ferrero]] ha eseguito test BRCA presso altra struttura nel [[DATA:2016]], con esito riferito negativo: il dato è discordante e andrà verificato acquisendo il referto originale.",
+        "Raccomandazioni AIOM-SIGU-SIBIOC-SIAPEC per l'implementazione del test BRCA nelle pazienti con carcinoma della mammella, aggiornamento 2024."
+      ]
+    },
+    {
+      "type": "spacer",
+      "mm": 6
+    },
+    {
+      "type": "section",
+      "text": "Allegato - Lettera informativa per i familiari"
+    },
+    {
+      "type": "address",
+      "align": "right",
+      "lines": [
+        "Gentile sig.ra [[FAMILIARE:Silvia Dellavalle]]",
+        "[[INDIRIZZO:Via Vandalino 88]]",
+        "[[CAP:10142]] [[LUOGO:Torino]]"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Gentile Signora,\nLe scriviamo su richiesta di Sua sorella, sig.ra [[PERSONA:Viola Dellavalle]], che ci ha autorizzato a informarLa di un risultato genetico che potrebbe riguardarLa. Nel corso di accertamenti eseguiti presso il nostro centro è stata identificata in Sua sorella una variante del gene BRCA2 che aumenta il rischio di sviluppare alcuni tumori, in particolare della mammella e dell'ovaio. Poiché la variante può essere trasmessa ai familiari, Le offriamo la possibilità di eseguire una consulenza genetica e, se lo desidera, un test mirato su un semplice prelievo di sangue."
+    },
+    {
+      "type": "paragraph",
+      "text": "La consulenza è gratuita (esenzione [[CODICE_ESENZIONE:D99]]) e non comporta alcun obbligo. Può prenotarla telefonando alla segreteria di Oncogenetica al numero [[TELEFONO:011 6697310]], dal lunedì al venerdì dalle 9 alle 12, citando il codice familiare [[ID_PAZIENTE:FAM-OG-0412]]. Il Suo medico di medicina generale, Dott. [[MEDICO:Ruggero Allasia]], può richiedere a Suo nome la prima visita con impegnativa."
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Variante familiare",
+          "[[DATO_GENETICO:BRCA2 c.5946del]]"
+        ],
+        [
+          "Probando",
+          "[[PERSONA:V. D.]] (sorella)"
+        ],
+        [
+          "Referto di riferimento",
+          "[[NUMERO_PROTOCOLLO:OG/2025/0412]]"
+        ],
+        [
+          "Lettera consegnata il",
+          "[[DATA:27/03/2025]]"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Restiamo a disposizione per ogni chiarimento. Le ricordiamo che la decisione di sottoporsi al test è personale e che i risultati sono coperti dal segreto professionale.\nCordiali saluti."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Torino]], [[DATA:27/03/2025]]",
+      "role": "Per l'équipe di Genetica Medica",
+      "name": "Prof.ssa [[MEDICO:Giovanna Ruffino]]",
+      "extra": [
+        "Consulente genetica: dott.ssa [[OPERATORE_SANITARIO:Irene Bosco]]"
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Paget",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Manchester",
+      "forbidden_categories": [
+        "PERSONA",
+        "LUOGO",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Tyrer-Cuzick",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Gleason",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Sanger",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,443 @@
+{
+  "id": "nota_ambulatoriale_complessa_03",
+  "type": "nota_ambulatoriale",
+  "difficulty": "complessa",
+  "style": {
+    "font": "dejavu",
+    "color": "#00695C",
+    "font_size": 7.8,
+    "margins_mm": 12
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Bianca",
+      "last_name": "Dell'Orto",
+      "sex": "F",
+      "birth_date": "1995-12-02",
+      "birth_place": "Bergamo"
+    }
+  },
+  "letterhead": {
+    "logo": "AOO",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASST Orobica Occidentale]]",
+      "[[STRUTTURA_SANITARIA:Presidio Ospedaliero Santa Grata]]",
+      "[[REPARTO:U.O.C. Gastroenterologia ed Endoscopia Digestiva]]",
+      "[[REPARTO:Centro MICI]] - Malattie Infiammatorie Croniche Intestinali",
+      "Direttore: Prof. [[MEDICO:Alberto Sala]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Borgo Palazzo 205]]",
+      "[[CAP:24125]] [[LUOGO:Bergamo]]",
+      "[[REPARTO:Centro MICI]] [[TELEFONO:035 4021877]]",
+      "Fax [[FAX:035 4021890]]",
+      "[[EMAIL:mici@asst-orobica.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:Dell'Orto Bianca]] - nata il [[DATA_NASCITA:02/12/1995]] - Esenzione [[CODICE_ESENZIONE:009.555]] - Cartella MICI [[NUMERO_CARTELLA:MICI-BG-0417]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASST Orobica Occidentale]] - P.IVA [[PARTITA_IVA:@asst]] - PEC [[PEC:protocollo@pec.asst-orobica.example.it]]",
+    "Per comunicazioni sulla terapia: Inf. [[OPERATORE_SANITARIO:M. Locatelli]], [[REPARTO:Centro MICI]], [[TELEFONO:035 4021877]] (lun-ven 8:30-12:30)"
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "REFERTO DI VISITA GASTROENTEROLOGICA - [[REPARTO:CENTRO MICI]]",
+      "subtitle": "Visita di controllo (cod. 89.01) e consulenza multidisciplinare chirurgica e anestesiologica"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "columns": 1,
+          "fields": [
+            [
+              "Cognome",
+              "[[COGNOME:DELL'ORTO]]"
+            ],
+            [
+              "Nome",
+              "[[NOME:BIANCA]]"
+            ],
+            [
+              "Nata a / il",
+              "[[LUOGO_NASCITA:Bergamo]], [[DATA_NASCITA:02/12/1995]]"
+            ],
+            [
+              "Residenza",
+              "[[INDIRIZZO:Via San Bernardino 71/C]], [[CAP:24126]] [[LUOGO:Bergamo]]"
+            ],
+            [
+              "Telefono",
+              "[[TELEFONO:+39 348 117 6620]]"
+            ],
+            [
+              "Professione",
+              "[[PROFESSIONE:educatrice di asilo nido]]"
+            ],
+            [
+              "MMG",
+              "Dott. [[MEDICO:Roberto Carminati]]"
+            ]
+          ]
+        },
+        {
+          "type": "char_boxes",
+          "label": "C.F.",
+          "value": "[[CODICE_FISCALE:@paz]]"
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Data visita",
+              "[[DATA_VISITA:09/07/2025]]"
+            ],
+            [
+              "Prenotazione",
+              "[[NUMERO_PRENOTAZIONE:BG25-MICI-03318]]"
+            ],
+            [
+              "NRE",
+              "[[NUMERO_RICETTA:030A50661204795]]"
+            ],
+            [
+              "Cartella MICI",
+              "[[NUMERO_CARTELLA:MICI-BG-0417]]"
+            ],
+            [
+              "Tessera sanitaria",
+              "[[TESSERA_SANITARIA:@ts]]"
+            ]
+          ]
+        },
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "label": "Prenotazione",
+          "value": "[[NUMERO_PRENOTAZIONE:BG25-MICI-03318]]",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Inquadramento"
+    },
+    {
+      "type": "paragraph",
+      "text": "La sig.ra [[PERSONA:Bianca Dell'Orto]], [[ETA:29]] anni, è seguita presso il ns. Centro dal 2017 per [[DIAGNOSI:malattia di Crohn ileocolica]] (classificazione di Montreal A2 L3 B2: fenotipo stenosante), diagnosticata dopo un episodio subocclusivo. Familiarità: la madre, sig.ra [[FAMILIARE:Ivana Rota]], è affetta da [[PATOLOGIA:rettocolite ulcerosa]]. Il pannello genetico eseguito nel 2018 ha evidenziato la [[DATO_GENETICO:variante NOD2 c.3019dupC (p.Leu1007fs) in eterozigosi]]. [[GRAVIDANZA:Pregressa gravidanza a termine nel 2021]] con parto cesareo, in remissione clinica. Non fumatrice."
+    },
+    {
+      "type": "paragraph",
+      "text": "Terapie precedenti: [[FARMACO:mesalazina]] (inefficace), [[FARMACO:azatioprina]] sospesa nel 2018 per [[DIAGNOSI:pancreatite acuta da farmaco]], [[FARMACO:infliximab]] 2018-2022 con perdita di risposta e anticorpi anti-farmaco, quindi [[FARMACO:adalimumab 40 mg]] s.c. ogni 7 giorni dal [[DATA:marzo 2023]]. Dal mese di aprile riferisce ripresa di dolore crampiforme in fossa iliaca destra post-prandiale, 4-5 evacuazioni/die di feci non formate, calo ponderale di 5 kg in tre mesi. La paziente, [[RELIGIONE:Testimone di Geova]], ha ribadito il rifiuto di trasfusioni di sangue ed emocomponenti, come già espresso nelle disposizioni anticipate di trattamento depositate il [[DATA:14/02/2024]]."
+    },
+    {
+      "type": "section",
+      "text": "Esame obiettivo"
+    },
+    {
+      "type": "paragraph",
+      "text": "Condizioni generali discrete, cute e mucose pallide. Peso [[MISURE_ANTROPOMETRICHE:51 kg]], altezza [[MISURE_ANTROPOMETRICHE:166 cm]], BMI [[MISURE_ANTROPOMETRICHE:18,5]]. PA [[MISURE_ANTROPOMETRICHE:105/65 mmHg]], FC [[ESAME_VALORE:92 bpm]], TC [[ESAME_VALORE:37,1 °C]]. Addome trattabile, dolente alla palpazione profonda in fossa iliaca destra dove si apprezza una tumefazione di consistenza duro-elastica; Blumberg negativo, peristalsi presente. Regione perianale: [[ESAME_VALORE:non fistole né ascessi]]. Cicatrice di laparotomia trasversale sovrapubica (cesareo)."
+    },
+    {
+      "type": "table",
+      "header": [
+        "Indice / esame",
+        "[[DATA:12/03/2025]]",
+        "[[DATA:9 luglio 2025]]",
+        "Riferimento / note"
+      ],
+      "widths": [
+        3.4,
+        2.2,
+        2.2,
+        3.6
+      ],
+      "rows": [
+        [
+          "Harvey-Bradshaw Index",
+          "[[ESAME_VALORE:4 punti]]",
+          "[[ESAME_VALORE:11 punti]]",
+          "> 8: attività moderata"
+        ],
+        [
+          "Emoglobina (g/dL)",
+          "[[ESAME_VALORE:11,9]]",
+          "[[ESAME_VALORE:9,4]]",
+          "12,0 - 15,5"
+        ],
+        [
+          "Ferritina (ng/mL)",
+          "[[ESAME_VALORE:31]]",
+          "[[ESAME_VALORE:7]]",
+          "15 - 150"
+        ],
+        [
+          "PCR (mg/L)",
+          "[[ESAME_VALORE:6,8]]",
+          "[[ESAME_VALORE:38,5]]",
+          "< 5"
+        ],
+        [
+          "Albumina (g/dL)",
+          "[[ESAME_VALORE:3,9]]",
+          "[[ESAME_VALORE:3,2]]",
+          "3,5 - 5,0"
+        ],
+        [
+          "Calprotectina fecale (µg/g)",
+          "[[ESAME_VALORE:240]]",
+          "[[ESAME_VALORE:1.180]]",
+          "< 50"
+        ],
+        [
+          "Livelli di adalimumab (µg/mL)",
+          "-",
+          "[[ESAME_VALORE:2,3]] con anticorpi [[ESAME_VALORE:assenti]]",
+          "range terapeutico 5 - 12"
+        ]
+      ],
+      "font_size": 7.5,
+      "caption": "Prelievi del 12/03 eseguiti presso il punto prelievi di [[LUOGO:Seriate]]; prelievi odierni raccolti in sala prelievi dall'Inf. [[OPERATORE_SANITARIO:Marta Locatelli]]."
+    },
+    {
+      "type": "section",
+      "text": "Esami strumentali"
+    },
+    {
+      "type": "paragraph",
+      "text": "**Entero-RM del [[DATA:24-06-2025]]** (acc. n. [[ACCESSION_NUMBER:RM25-0088127]]): ispessimento parietale dell'ultima ansa ileale per circa 18 cm con stenosi serrata e dilatazione pre-stenotica a monte (calibro massimo 38 mm); non raccolte ascessuali né fistole.\n**Ileocolonscopia del [[DATA:01.07.25]]** eseguita in sala endoscopica 2 dal Dott. [[MEDICO:Matteo Pesenti]]: stenosi della valvola ileocecale non superabile con lo strumento, ulcere aftoidi nel colon destro; biopsie coerenti con malattia di Crohn in fase attiva, negative per displasia. Tentativo di dilatazione endoscopica con palloncino non indicato per lunghezza della stenosi."
+    },
+    {
+      "type": "section",
+      "text": "Consulenza multidisciplinare"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Chirurgia colorettale"
+        },
+        {
+          "type": "paragraph",
+          "text": "Valutata dal Dott. [[MEDICO:Davide De Santis]]: indicazione a [[INTERVENTO:resezione ileocecale laparoscopica]] elettiva, previa ottimizzazione nutrizionale e correzione dell'anemia. Rischio stimato di perdite ematiche significative basso (< 5%). La paziente è informata della possibile necessità di stomia temporanea in caso di condizioni locali sfavorevoli."
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Anestesia - Patient Blood Management"
+        },
+        {
+          "type": "paragraph",
+          "text": "Dott.ssa [[MEDICO:Chiara Lo Presti]]: programma di risparmio del sangue. [[FARMACO:ferro carbossimaltosio 1000 mg]] e.v. in unica dose; [[FARMACO:epoetina alfa 40.000 UI]] s.c. settimanale per 3 settimane; [[FARMACO:acido tranexamico]] intraoperatorio. La paziente accetta il recupero intraoperatorio del sangue in circuito chiuso e rifiuta emazie, plasma, piastrine e albumina."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Conclusioni"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[DIAGNOSI:Malattia di Crohn ileocolica in fase di attività moderata]] con [[DIAGNOSI:stenosi fibro-infiammatoria dell'ileo terminale]] e [[DIAGNOSI:perdita secondaria di risposta ad adalimumab]]; [[DIAGNOSI:anemia sideropenica moderata]]; [[DIAGNOSI:malnutrizione proteico-calorica lieve]]."
+    },
+    {
+      "type": "heading",
+      "text": "Piano"
+    },
+    {
+      "type": "paragraph",
+      "text": "1. Sospendere adalimumab dalla data odierna.\n2. [[FARMACO:Budesonide 9 mg]] 1 cp al mattino per 8 settimane, con successiva riduzione.\n3. [[TERAPIA:Nutrizione enterale integrativa con formula polimerica]] 600 kcal/die, secondo il piano della dietista, Dott.ssa [[OPERATORE_SANITARIO:Giulia Mazzoleni]]; dieta a basso residuo.\n4. Infusione di ferro in Day Hospital il [[DATA:16/07/2025]]; emocromo dopo 3 settimane.\n5. Intervento di [[INTERVENTO:resezione ileocecale]] programmato in data [[DATA:10 settembre 2025]] (lista d'attesa chirurgica, classe A).\n6. Terapia di mantenimento post-operatoria con [[FARMACO:ustekinumab]] da valutare a 4 settimane dall'intervento; compilato piano terapeutico AIFA n. [[NUMERO_RICETTA:PT-LOM-25-118402]]. Ileocolonscopia a 6-12 mesi per lo score di Rutgeerts."
+    },
+    {
+      "type": "paragraph",
+      "text": "Alla visita era presente il marito, sig. [[FAMILIARE:Samuel Okafor]], che la paziente indica come persona di riferimento e che potrà ricevere informazioni cliniche (consenso firmato). Il sig. [[FAMILIARE:Okafor]] ha consegnato copia della tessera con le direttive anticipate, che viene allegata alla cartella. Le decisioni sulla gestione senza sangue sono state documentate e condivise con l'équipe chirurgica e anestesiologica."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Bergamo]], [[DATA_REFERTO:09/07/2025]]",
+      "role": "Dirigente Medico - [[REPARTO:Centro MICI]]",
+      "name": "Dott.ssa [[MEDICO:Elisa Nguyen]]",
+      "extra": [
+        "con il Dott. [[MEDICO:D. De Santis]] (Chirurgia) e la Dott.ssa [[MEDICO:C. Lo Presti]] (Anestesia)"
+      ],
+      "digital": true
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "title",
+      "text": "ALLEGATO - DICHIARAZIONE DI RIFIUTO DI EMOTRASFUSIONE",
+      "subtitle": "Acquisita in sede di visita ai sensi della L. 219/2017"
+    },
+    {
+      "type": "paragraph",
+      "text": "Io sottoscritta [[PERSONA:Bianca Dell'Orto]], nata a [[LUOGO_NASCITA:Bergamo]] il [[DATA_NASCITA:02.12.1995]], dopo essere stata informata in modo chiaro e completo dalla Dott.ssa [[MEDICO:Elisa Nguyen]] e dalla Dott.ssa [[MEDICO:Chiara Lo Presti]] sui benefici e sui rischi della trasfusione di sangue e degli emocomponenti e sulle possibili conseguenze del rifiuto, compreso il pericolo di vita in caso di emorragia grave, dichiaro, per motivi di coscienza connessi alla mia fede, di:"
+    },
+    {
+      "type": "checkboxes",
+      "columns": 2,
+      "items": [
+        [
+          "rifiutare emazie concentrate",
+          true
+        ],
+        [
+          "rifiutare plasma fresco congelato",
+          true
+        ],
+        [
+          "rifiutare concentrati piastrinici",
+          true
+        ],
+        [
+          "rifiutare sangue autologo predepositato",
+          true
+        ],
+        [
+          "accettare il recupero intraoperatorio in circuito continuo",
+          true
+        ],
+        [
+          "accettare fattori della coagulazione ricombinanti",
+          true
+        ],
+        [
+          "accettare albumina",
+          false
+        ],
+        [
+          "accettare emodiluizione normovolemica",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Dichiaro inoltre di aver indicato quale fiduciario, ai sensi dell'art. 4 della L. 219/2017, il coniuge [[FAMILIARE:Samuel Okafor]], nato a [[LUOGO_NASCITA:Lagos (Nigeria)]] il [[DATA_NASCITA:17/05/1990]], tel. [[TELEFONO:+39 320 448 9031]], e come sostituto la madre, [[FAMILIARE:Ivana Rota]]."
+    },
+    {
+      "type": "table",
+      "header": [
+        "Ruolo",
+        "Nominativo",
+        "Firma"
+      ],
+      "widths": [
+        3,
+        4.5,
+        3.5
+      ],
+      "zebra": false,
+      "rows": [
+        [
+          "La paziente",
+          "[[PERSONA:Bianca Dell'Orto]]",
+          ""
+        ],
+        [
+          "Il fiduciario",
+          "[[FAMILIARE:Samuel Okafor]]",
+          ""
+        ],
+        [
+          "Testimone (infermiera)",
+          "[[OPERATORE_SANITARIO:Marta Locatelli]]",
+          ""
+        ],
+        [
+          "Il medico che ha raccolto il consenso",
+          "Dott.ssa [[MEDICO:Elisa Nguyen]]",
+          ""
+        ]
+      ]
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "[[STRUTTURA_SANITARIA:ASST OROBICA OCCIDENTALE]]",
+        "[[REPARTO:CENTRO MICI]]",
+        "Dott.ssa [[MEDICO:E. Nguyen]]",
+        "Iscr. OMCeO BG n. [[NUMERO_ALBO:6104]]"
+      ],
+      "angle": -10,
+      "align": "right"
+    },
+    {
+      "type": "barcode",
+      "kind": "qr",
+      "label": "Copia digitale - [[PERSONA:Dell'Orto B.]]",
+      "value": "https://fse.asst-orobica.example.it/doc/[[NUMERO_REFERTO:MICI-25-0709-0417]]",
+      "align": "left"
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "La dichiarazione sostituisce quella del [[DATA:14/02/2024]], che resta agli atti; è revocabile in ogni momento dalla sig.ra [[PERSONA:B. Dell'Orto]] anche verbalmente.",
+        "Copia consegnata alla paziente e trasmessa al Dott. [[MEDICO:Carminati]] (MMG) con il consenso dell'interessata.",
+        "Harvey-Bradshaw Index: < 5 remissione, 5-7 attività lieve, 8-16 moderata, > 16 grave."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Crohn",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Harvey-Bradshaw",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Montreal",
+      "forbidden_categories": [
+        "LUOGO",
+        "LUOGO_NASCITA",
+        "STATO"
+      ]
+    },
+    {
+      "value": "Blumberg",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Rutgeerts",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "sala endoscopica",
+      "forbidden_categories": [
+        "MEDICO",
+        "COGNOME",
+        "PERSONA"
+      ]
+    }
+  ]
+}

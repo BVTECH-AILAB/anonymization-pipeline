@@ -1,0 +1,72 @@
+{
+  "id": "referto_radiologico_media_04",
+  "type": "referto_radiologico",
+  "difficulty": "media",
+  "style": {"font": "helvetica", "color": "#C05A00", "font_size": 9, "margins_mm": 17},
+  "persons": {
+    "paz": {"first_name": "Leonardo", "last_name": "Ferrando", "sex": "M", "birth_date": "2020-04-17", "birth_place": "Genova"}
+  },
+  "letterhead": {
+    "logo": "OPG",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Pediatrico Il Girasole]]",
+      "[[REPARTO:SC Radiologia Pediatrica]]",
+      "Direttore: Dott.ssa [[MEDICO:Elisabetta Ghiglione]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Salita San Bartolomeo Alto 6]]",
+      "[[CAP:16136]] [[LUOGO:Genova]]",
+      "Radiologia: [[TELEFONO:010 5563310]]",
+      "[[EMAIL:radiologia@ilgirasole.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:Ferrando Leonardo]] ([[DATA_NASCITA:17/04/2020]]) - Accessi [[ACCESSION_NUMBER:PED-US-26-4410]] / [[ACCESSION_NUMBER:PED-RX-26-1187]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale Pediatrico Il Girasole]] - Istituto a carattere pediatrico - P.IVA [[PARTITA_IVA:@osp]]",
+    "Esposizione radiologica giustificata e ottimizzata secondo il D.Lgs. 101/2020 per l'età pediatrica."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO RADIOLOGICO PEDIATRICO", "subtitle": "Ecografia renale e vescicale - Cistouretrografia minzionale (CUM)"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Ferrando Leonardo]]"],
+      ["Data di nascita", "[[DATA_NASCITA:17/04/2020]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Età", "[[ETA:5 anni e 10 mesi]]"],
+      ["Peso / altezza", "[[MISURE_ANTROPOMETRICHE:19,4]] kg / [[MISURE_ANTROPOMETRICHE:112]] cm"],
+      ["Esercente la resp. genitoriale", "sig.ra [[TUTORE_DELEGATO:Silvia Parodi]] (madre)"],
+      ["Recapito genitore", "[[TELEFONO:+39 340 918 2276]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Data esami", "[[DATA_VISITA:12 febbraio 2026]]"],
+      ["Ricetta NRE", "[[NUMERO_RICETTA:070A06210993381]]"],
+      ["Richiedente", "Dott.ssa [[MEDICO:Beatrice Canepa]]"],
+      ["Provenienza", "[[REPARTO:Ambulatorio di Nefrologia Pediatrica]]"]
+    ]},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "barcode", "kind": "code128", "label": "Ecografia", "value": "[[ACCESSION_NUMBER:PED-US-26-4410]]", "align": "left"}
+    ], "right": [
+      {"type": "barcode", "kind": "code128", "label": "CUM", "value": "[[ACCESSION_NUMBER:PED-RX-26-1187]]", "align": "right"}
+    ]},
+    {"type": "section", "text": "Quesito clinico"},
+    {"type": "paragraph", "text": "Bambino in età prescolare con [[DIAGNOSI:infezioni febbrili delle vie urinarie ricorrenti]] (tre episodi nell'ultimo anno, l'ultimo il [[DATA:28.12.25]] con ricovero presso la nostra [[REPARTO:u.o. di Pediatria d'Urgenza]]), in [[TERAPIA:profilassi antibiotica]] con [[FARMACO:trimetoprim-sulfametossazolo]] a basso dosaggio. Una precedente ecografia, eseguita il [[DATA:15/01/2026]] presso il [[STRUTTURA_SANITARIA:Centro Medico Pediatrico Arcobaleno]], descriveva una dilatazione pielica sinistra. Si richiede studio del reflusso vescico-ureterale."},
+    {"type": "section", "text": "Ecografia renale e vescicale"},
+    {"type": "paragraph", "text": "Esame eseguito con sonde convex e lineare ad alta frequenza, a vescica piena e dopo minzione. Il piccolo ha collaborato con l'aiuto della madre."},
+    {"type": "table", "header": ["Rene", "Diametro longitudinale", "Spessore parenchimale", "Pelvi (DAP)", "Note"], "widths": [1.2, 2.2, 2.2, 1.8, 3.6], "rows": [
+      ["Destro", "[[ESAME_VALORE:74]] mm", "[[ESAME_VALORE:13,5]] mm", "non dilatata", "Normale differenziazione cortico-midollare"],
+      ["Sinistro", "[[ESAME_VALORE:81]] mm", "[[ESAME_VALORE:11,5]] mm", "[[ESAME_VALORE:9,5]] mm", "[[DIAGNOSI:Dilatazione pielo-caliceale]], uretere\nprossimale visibile (4 mm)"]
+    ]},
+    {"type": "paragraph", "text": "Vescica a pareti regolari, di spessore [[ESAME_VALORE:2,6]] mm a riempimento. Ureteri distali non dilatati a vescica piena. Residuo post-minzionale di [[ESAME_VALORE:14]] mL."},
+    {"type": "section", "text": "Cistouretrografia minzionale"},
+    {"type": "paragraph", "text": "Previo consenso informato sottoscritto dalla madre, sig.ra [[TUTORE_DELEGATO:Parodi]], e applicazione di gel anestetico, cateterismo vescicale con catetere 6 Fr eseguito dall'inf. [[OPERATORE_SANITARIO:Marta Oliveri]]. Riempimento per gravità con [[FARMACO:iopamidolo diluito al 30%]] fino a un volume di [[ESAME_VALORE:180]] mL, con acquisizioni in fase di riempimento, minzionale e post-minzionale in scopia pulsata a basso dosaggio.\nSi documenta [[DIAGNOSI:reflusso vescico-ureterale passivo e attivo a sinistra di III grado]] (classificazione dell'International Reflux Study), con riempimento dell'uretere, della pelvi e dei calici, che appaiono lievemente dilatati, senza smussamento dei fornici. Non reflusso a destra. Uretra di normale calibro e morfologia in fase minzionale. Svuotamento vescicale completo."},
+    {"type": "table", "caption": "Dati dosimetrici CUM", "header": ["Tempo di scopia", "Prodotto dose-area (DAP)", "Immagini acquisite", "Protezione gonadi"], "rows": [
+      ["[[ESAME_VALORE:0,8]] min", "[[ESAME_VALORE:4,6]] µGy·m²", "9 (last image hold)", "Sì"]
+    ]},
+    {"type": "page_break"},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Reflusso vescico-ureterale sinistro di III grado]], passivo e attivo, con lieve dilatazione delle cavità renali omolaterali. Reni di dimensioni nei limiti per età; non reflusso a destra.**\nSi rimanda al nefrologo pediatra, Dott.ssa [[MEDICO:Canepa]], per la prosecuzione della profilassi e per la programmazione della scintigrafia renale con DMSA."},
+    {"type": "paragraph", "text": "Esami eseguiti con la collaborazione del medico in formazione specialistica dott. [[OPERATORE_SANITARIO:Pietro Bozzo]]. La madre, sig.ra [[TUTORE_DELEGATO:Silvia Parodi]], è stata informata dell'esito al termine dell'esame."},
+    {"type": "signature", "place_date": "[[LUOGO:Genova]], [[DATA_REFERTO:13/02/2026]]", "role": "Il Medico Radiologo Pediatra", "name": "Dott. [[MEDICO:Emanuele Rebora]]", "digital": true, "stamp": ["[[STRUTTURA_SANITARIA:OSPEDALE PEDIATRICO IL GIRASOLE]]", "Radiologia Pediatrica", "Dott. [[MEDICO:E. Rebora]]"]}
+  ],
+  "negatives": []
+}

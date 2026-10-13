@@ -1,0 +1,318 @@
+{
+  "id": "lettera_dimissione_media_01",
+  "type": "lettera_dimissione",
+  "difficulty": "media",
+  "style": {
+    "font": "helvetica",
+    "color": "#5B2C6F",
+    "font_size": 9,
+    "margins_mm": 16
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Ines",
+      "last_name": "Bortolotti",
+      "sex": "F",
+      "birth_date": "1938-06-14",
+      "birth_place": "Modena"
+    }
+  },
+  "letterhead": {
+    "logo": "AUSV",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda USL di Valsecchia]]",
+      "[[STRUTTURA_SANITARIA:Ospedale di Castel Ventoso]]",
+      "[[REPARTO:U.O. Geriatria e Ortogeriatria]]",
+      "Direttore: Dott. [[MEDICO:Alberto Monari]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Ruini 2]]",
+      "[[CAP:41049]] [[LUOGO:Sassuolo]]",
+      "Tel. [[TELEFONO:0536 862240]]"
+    ]
+  },
+  "running_header": "Paz. [[PERSONA:Bortolotti Ines]] - nata il [[DATA_NASCITA:14/06/1938]] - Cartella n. [[NUMERO_CARTELLA:2025/GER/00231]] - Lettera di dimissione",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda USL di Valsecchia]] - P.IVA [[PARTITA_IVA:@ausl]]",
+    "I dati contenuti nel presente documento sono trattati ai sensi del Reg. UE 2016/679 e del D.Lgs. 196/2003."
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "align": "right",
+      "lines": [
+        "Egr. Dott. [[MEDICO:Paolo Venturelli]]",
+        "Medico di Medicina Generale",
+        "[[LUOGO:Formigine]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "LETTERA DI DIMISSIONE",
+      "subtitle": "Ricovero ordinario in area geriatrica"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome e nome",
+          "[[PERSONA:Bortolotti Ines]]"
+        ],
+        [
+          "Codice fiscale",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Nata il",
+          "[[DATA_NASCITA:14/06/1938]]"
+        ],
+        [
+          "Nata a",
+          "[[LUOGO_NASCITA:Modena]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Cameazzo 14]], [[LUOGO:Formigine]]"
+        ],
+        [
+          "Tessera sanitaria",
+          "[[TESSERA_SANITARIA:@ts]]"
+        ],
+        [
+          "Caregiver",
+          "[[CONTATTO_EMERGENZA:Patrizia Rinaldi]] (figlia)"
+        ],
+        [
+          "Recapito",
+          "[[TELEFONO:+39 349 220 1846]]"
+        ]
+      ]
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "N. cartella",
+          "[[NUMERO_CARTELLA:2025/GER/00231]]"
+        ],
+        [
+          "Ricovero",
+          "[[DATA_RICOVERO:02/02/2025]]"
+        ],
+        [
+          "Dimissione",
+          "[[DATA_RICOVERO:14.02.25]]"
+        ]
+      ]
+    },
+    {
+      "type": "barcode",
+      "kind": "code128",
+      "label": "Cartella",
+      "value": "[[NUMERO_CARTELLA:2025/GER/00231]]",
+      "align": "right"
+    },
+    {
+      "type": "paragraph",
+      "text": "Gentile Collega,\ndimettiamo in data odierna la Sua assistita, sig.ra [[PERSONA:Ines Bortolotti]], di [[ETA:86]] aa., giunta nella ns. u.o. il [[DATA_RICOVERO:2 febbraio 2025]] dal Pronto Soccorso per [[DIAGNOSI:dispnea ingravescente]], [[DIAGNOSI:edemi declivi]] e [[DIAGNOSI:riduzione della diuresi]]."
+    },
+    {
+      "type": "section",
+      "text": "Anamnesi"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[PATOLOGIA:Fibrillazione atriale permanente]] in terapia anticoagulante. [[PATOLOGIA:Cardiopatia ipertensiva]] con disfunzione diastolica. [[PATOLOGIA:Insufficienza renale cronica stadio 3b]]. [[PATOLOGIA:Decadimento cognitivo lieve]] (MMSE [[ESAME_VALORE:23/30]]). [[PATOLOGIA:Osteoporosi]] con [[PATOLOGIA:pregressa frattura vertebrale L1]]. [[INTERVENTO:Protesi totale d'anca sinistra]] nel 2016.\nVive con la figlia, sig.ra [[CONTATTO_EMERGENZA:Rinaldi]], che la assiste nelle attività strumentali. Autonoma nella deambulazione con deambulatore; Barthel pre-ricovero [[ESAME_VALORE:75/100]]."
+    },
+    {
+      "type": "section",
+      "text": "Decorso clinico"
+    },
+    {
+      "type": "paragraph",
+      "text": "All'ingresso pz. dispnoica a riposo, SpO2 [[ESAME_VALORE:88%]] in aria ambiente, crepitii bibasali, edemi improntabili fino a metà gamba, peso [[MISURE_ANTROPOMETRICHE:64 kg]]. La radiografia del torace documentava [[DIAGNOSI:congestione del piccolo circolo]] e [[DIAGNOSI:versamento pleurico bilaterale]]. È stata impostata [[TERAPIA:terapia diuretica endovenosa]] con [[FARMACO:furosemide 40 mg x 2]] e ossigenoterapia, con buona risposta diuretica e progressivo miglioramento della dispnea.\nL'ecocardiogramma del [[DATA:05/02/2025]] ha evidenziato FE [[ESAME_VALORE:55%]], atrio sinistro dilatato, insufficienza mitralica moderata, PAPs stimata [[ESAME_VALORE:48 mmHg]].\nIn sesta giornata riscontro di [[DIAGNOSI:infezione delle vie urinarie]] da E. coli, trattata con [[FARMACO:fosfomicina]]. Un episodio di [[DIAGNOSI:delirium ipercinetico notturno]] è stato gestito con misure non farmacologiche e la presenza della figlia. Alla dimissione eupnoica in aria ambiente, peso [[MISURE_ANTROPOMETRICHE:59,5 kg]]."
+    },
+    {
+      "type": "section",
+      "text": "Esami di laboratorio"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Esame",
+        "All'ingresso",
+        "Alla dimissione",
+        "U.M."
+      ],
+      "widths": [
+        3.5,
+        2,
+        2,
+        1.6
+      ],
+      "rows": [
+        [
+          "NT-proBNP",
+          "[[ESAME_VALORE:8.420]]",
+          "[[ESAME_VALORE:1.260]]",
+          "pg/mL"
+        ],
+        [
+          "Creatinina",
+          "[[ESAME_VALORE:1,68]]",
+          "[[ESAME_VALORE:1,34]]",
+          "mg/dL"
+        ],
+        [
+          "eGFR (CKD-EPI)",
+          "[[ESAME_VALORE:28]]",
+          "[[ESAME_VALORE:37]]",
+          "mL/min"
+        ],
+        [
+          "Sodio",
+          "[[ESAME_VALORE:133]]",
+          "[[ESAME_VALORE:138]]",
+          "mmol/L"
+        ],
+        [
+          "Potassio",
+          "[[ESAME_VALORE:3,2]]",
+          "[[ESAME_VALORE:4,4]]",
+          "mmol/L"
+        ],
+        [
+          "Emoglobina",
+          "[[ESAME_VALORE:11,6]]",
+          "[[ESAME_VALORE:11,9]]",
+          "g/dL"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi di dimissione"
+    },
+    {
+      "type": "paragraph",
+      "text": "**[[DIAGNOSI:Scompenso cardiaco acuto a frazione d'eiezione preservata]]** in [[PATOLOGIA:fibrillazione atriale permanente]].\n[[DIAGNOSI:Infezione delle vie urinarie]], risolta. [[DIAGNOSI:Delirium]] in [[PATOLOGIA:decadimento cognitivo lieve]], regredito. [[DIAGNOSI:Ipokaliemia]] corretta."
+    },
+    {
+      "type": "section",
+      "text": "Terapia alla dimissione"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Dose",
+        "Orari",
+        "Note"
+      ],
+      "widths": [
+        3.2,
+        1.4,
+        1.8,
+        3.6
+      ],
+      "rows": [
+        [
+          "[[FARMACO:Furosemide 25 mg]]",
+          "1 cpr",
+          "ore 8 e ore 14",
+          "pesarsi ogni mattina"
+        ],
+        [
+          "[[FARMACO:Apixaban 2,5 mg]]",
+          "1 cpr",
+          "ore 8 e ore 20",
+          "dose ridotta per età e funzione renale"
+        ],
+        [
+          "[[FARMACO:Bisoprololo 2,5 mg]]",
+          "1 cpr",
+          "ore 8",
+          "controllo FC"
+        ],
+        [
+          "[[FARMACO:Spironolattone 25 mg]]",
+          "1 cpr",
+          "ore 14",
+          "controllo potassiemia"
+        ],
+        [
+          "[[FARMACO:Colecalciferolo 25.000 UI]]",
+          "1 flacone",
+          "ogni 15 giorni",
+          ""
+        ],
+        [
+          "[[FARMACO:Lattulosio sciroppo]]",
+          "15 mL",
+          "sera",
+          "al bisogno"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Controlli e appuntamenti"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Prestazione",
+        "Data e ora",
+        "Sede",
+        "Prenotazione"
+      ],
+      "widths": [
+        3,
+        2,
+        3,
+        2
+      ],
+      "rows": [
+        [
+          "Esami ematici (creatinina, Na, K)",
+          "[[DATA_VISITA:21/02/2025]] ore 8:00",
+          "Punto prelievi distrettuale",
+          "[[NUMERO_PRENOTAZIONE:CUP 25-0412988]]"
+        ],
+        [
+          "Visita cardiologica + ECG",
+          "[[DATA_VISITA:12/03/2025]] ore 10:30",
+          "Ambulatorio Scompenso, piano terra",
+          "[[NUMERO_PRENOTAZIONE:CUP 25-0413107]]"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Le indicazioni (restrizione idrica a 1,5 L/die, controllo quotidiano del peso, contatto con il curante in caso di aumento superiore a 2 kg in 3 giorni) sono state illustrate alla paziente e alla figlia [[CONTATTO_EMERGENZA:Patrizia Rinaldi]], che ha ricevuto copia della presente. Attivata l'assistenza domiciliare integrata (ADI) tramite il PUA del distretto."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Sassuolo]], [[DATA_REFERTO:14/02/2025]]",
+      "role": "Il Medico di Reparto",
+      "name": "Dott.ssa [[MEDICO:Federica Zanni]]",
+      "digital": false,
+      "stamp": [
+        "[[REPARTO:U.O. GERIATRIA]]",
+        "Dott.ssa [[MEDICO:Federica Zanni]]",
+        "Ord. Medici MO n. [[NUMERO_ALBO:6214]]"
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "Visto per la dimissione",
+      "role": "Il Direttore della U.O.",
+      "name": "Dott. [[MEDICO:Alberto Monari]]",
+      "digital": false
+    }
+  ],
+  "negatives": []
+}

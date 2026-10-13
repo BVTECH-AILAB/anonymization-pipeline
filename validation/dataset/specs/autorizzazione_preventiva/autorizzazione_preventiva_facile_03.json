@@ -1,0 +1,61 @@
+{
+  "id": "autorizzazione_preventiva_facile_03",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "facile",
+  "style": {"font": "courier", "color": "#37474F", "font_size": 8.5, "margins_mm": 16},
+  "persons": {
+    "paz": {"first_name": "Giorgio", "last_name": "Bertolotti", "sex": "M", "birth_date": "1971-11-23", "birth_place": "Torino"}
+  },
+  "letterhead": {
+    "logo": "ACT",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASL Collina Torinese]]",
+      "[[REPARTO:S.C. Medicina Fisica e Riabilitazione]]",
+      "Commissione per l'appropriatezza riabilitativa"
+    ],
+    "right": [
+      "[[INDIRIZZO:Corso Unione Sovietica 288]]",
+      "[[CAP:10135]] [[LUOGO:Torino]]",
+      "Tel. [[TELEFONO:011 4396520]]"
+    ]
+  },
+  "footer": [
+    "MOD. RIAB-02/AP - Il trattamento non può iniziare prima del rilascio dell'autorizzazione, salvo i casi di urgenza motivata"
+  ],
+  "blocks": [
+    {"type": "title", "text": "DOMANDA DI AUTORIZZAZIONE PREVENTIVA", "subtitle": "Trattamento riabilitativo ambulatoriale - Progetto Riabilitativo Individuale (PRI)"},
+    {"type": "section", "text": "1. DATI DELL'ASSISTITO"},
+    {"type": "fields", "columns": 1, "fields": [
+      ["Cognome e nome", "[[PERSONA:Giorgio Bertolotti]]"],
+      ["Nato il", "[[DATA_NASCITA:23/11/1971]]"],
+      ["Residenza", "[[INDIRIZZO:Strada Revigliasco 47]] - [[LUOGO:Moncalieri]]"]
+    ]},
+    {"type": "char_boxes", "label": "CODICE FISCALE", "value": "[[CODICE_FISCALE:@paz]]"},
+    {"type": "char_boxes", "label": "TESSERA SANITARIA", "value": "[[TESSERA_SANITARIA:@ts]]"},
+    {"type": "checkboxes", "columns": 3, "items": [
+      ["Prima richiesta", true], ["Proroga", false], ["Urgenza motivata", false],
+      ["Ambulatoriale", true], ["Domiciliare", false], ["Day hospital", false]
+    ]},
+    {"type": "section", "text": "2. PRESCRIZIONE"},
+    {"type": "table", "header": ["Codice", "Prestazione", "N. sedute", "Frequenza"], "widths": [1.6, 5, 1.4, 2], "rows": [
+      ["93.11.4", "[[TERAPIA:Rieducazione motoria individuale in motuleso grave]]", "20", "3/settimana"],
+      ["93.72.1", "[[TERAPIA:Training logopedico individuale per disturbi del linguaggio]]", "10", "2/settimana"],
+      ["93.01.3", "[[TERAPIA:Valutazione funzionale globale]]", "2", "inizio e fine ciclo"]
+    ]},
+    {"type": "section", "text": "3. MOTIVAZIONE CLINICA"},
+    {"type": "paragraph", "text": "Esiti di [[DIAGNOSI:ictus ischemico in territorio della arteria cerebrale media sinistra]] (evento acuto del [[DATA:02/03/2025]], trattato con [[INTERVENTO:trombolisi sistemica]]) con [[DIAGNOSI:emiparesi destra a prevalenza brachiale]] e [[DIAGNOSI:afasia non fluente di grado lieve]]. Concluso il ricovero in riabilitazione intensiva. Il paziente deambula con bastone canadese; residua deficit della motricità fine della mano destra. Obiettivo: recupero dell'autonomia nelle ADL e ripresa dell'attività lavorativa."},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Medico proponente", "Dott.ssa [[MEDICO:Silvia Garrone]]"],
+      ["Iscr. Ordine", "TO n. [[NUMERO_ALBO:15572]]"],
+      ["Data visita", "[[DATA_VISITA:16/04/2025]]"],
+      ["Data", "[[DATA_PRESCRIZIONE:17/04/2025]]"]
+    ]},
+    {"type": "signature", "place_date": "[[LUOGO:Torino]], [[DATA_PRESCRIZIONE:17/04/2025]]", "role": "Il medico fisiatra", "name": "Dott.ssa [[MEDICO:Silvia Garrone]]", "digital": false},
+    {"type": "section", "text": "4. PARERE DELLA COMMISSIONE"},
+    {"type": "paragraph", "text": "Prot. n. [[NUMERO_PROTOCOLLO:0041987/RIAB]]      Seduta del ____/____/________", "align": "left"},
+    {"type": "checkboxes", "columns": 3, "items": [["Autorizzato", false], ["Autorizzato parzialmente", false], ["Non autorizzato", false]]},
+    {"type": "paragraph", "text": "N. sedute autorizzate ______   Validità fino al ____/____/________\n\nIl Presidente della Commissione ________________________________", "align": "left"}
+  ],
+  "negatives": []
+}

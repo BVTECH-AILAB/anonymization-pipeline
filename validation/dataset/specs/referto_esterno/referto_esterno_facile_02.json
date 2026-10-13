@@ -1,0 +1,51 @@
+{
+  "id": "referto_esterno_facile_02",
+  "type": "referto_esterno",
+  "difficulty": "facile",
+  "style": {"font": "times", "color": "#7A1F2B", "font_size": 10.5, "margins_mm": 22},
+  "persons": {
+    "paz": {"first_name": "Chiara", "last_name": "Pavan", "sex": "F", "birth_date": "1990-05-21", "birth_place": "Padova"}
+  },
+  "letterhead": {
+    "logo": null,
+    "lines": [
+      "Dott.ssa [[MEDICO:Federica Lanzoni]]",
+      "Medico Chirurgo",
+      "Specialista in Dermatologia e Venereologia",
+      "Iscritta all'Ordine dei Medici di [[LUOGO:Padova]] al n. [[NUMERO_ALBO:8842]]"
+    ],
+    "right": [
+      "Studio: [[INDIRIZZO:Via dei Tigli 41]]",
+      "[[CAP:35128]] [[LUOGO:Padova]]",
+      "Tel. [[TELEFONO:049 8762215]]",
+      "Cell. [[TELEFONO:+39 340 557 2190]]",
+      "[[EMAIL:studio.lanzoni@dermapd.example.it]]",
+      "P.IVA [[PARTITA_IVA:@studio]]"
+    ]
+  },
+  "footer": [
+    "Riceve su appuntamento dal lunedì al venerdì. Prestazione sanitaria esente IVA ai sensi dell'art. 10 DPR 633/72."
+  ],
+  "blocks": [
+    {"type": "spacer", "mm": 3},
+    {"type": "fields", "columns": 1, "fields": [
+      ["Paziente", "Sig.ra [[PERSONA:Chiara Pavan]]"],
+      ["Nata il", "[[DATA_NASCITA:21/05/1990]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Residente a", "[[LUOGO:Abano Terme]]"],
+      ["Data della visita", "[[DATA_VISITA:09/10/2024]]"]
+    ]},
+    {"type": "title", "text": "Visita dermatologica con dermatoscopia digitale"},
+    {"type": "paragraph", "text": "**Motivo della visita.** Controllo dei nevi per comparsa di una lesione pigmentata di recente insorgenza in sede dorsale, segnalata dal partner. Fototipo II secondo Fitzpatrick. Riferisce numerose ustioni solari in età infantile. Non familiarità nota per melanoma."},
+    {"type": "paragraph", "text": "**Esame obiettivo.** Cute chiara, numerosi nevi melanocitari (circa 60) distribuiti prevalentemente al tronco. Esaminate in dermatoscopia digitale le lesioni di maggiore interesse clinico, riportate nella tabella seguente."},
+    {"type": "table", "header": ["Lesione", "Sede", "Diametro", "Pattern dermatoscopico", "TDS"], "widths": [1.2, 2.4, 1.3, 4, 1], "zebra": false, "rows": [
+      ["L1", "regione interscapolare", "[[ESAME_VALORE:7 mm]]", "reticolo atipico, pigmentazione asimmetrica", "[[ESAME_VALORE:5,1]]"],
+      ["L2", "fianco sinistro", "[[ESAME_VALORE:4 mm]]", "reticolo regolare, globuli periferici", "[[ESAME_VALORE:3,2]]"],
+      ["L3", "coscia destra", "[[ESAME_VALORE:3 mm]]", "pattern omogeneo", "[[ESAME_VALORE:2,4]]"]
+    ]},
+    {"type": "paragraph", "text": "**Conclusioni.** La lesione L1 presenta caratteristiche di [[DIAGNOSI:nevo displastico (atipico)]] e se ne consiglia l'[[INTERVENTO:asportazione chirurgica con esame istologico]]. Le lesioni L2 e L3 hanno aspetto benigno."},
+    {"type": "paragraph", "text": "**Indicazioni.** Fotoprotezione con filtro solare SPF 50+, autoesame mensile della cute. Controllo dermatoscopico con mappatura digitale a 12 mesi, o prima in caso di modifiche."},
+    {"type": "signature", "place_date": "[[LUOGO:Padova]], [[DATA_REFERTO:09/10/2024]]", "role": "La Dermatologa", "name": "Dott.ssa [[MEDICO:Federica Lanzoni]]", "digital": false}
+  ],
+  "negatives": [{"value": "Fitzpatrick", "forbidden_categories": ["PERSONA", "MEDICO"]}]
+}

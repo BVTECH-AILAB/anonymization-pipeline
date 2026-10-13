@@ -1,0 +1,446 @@
+{
+  "id": "referto_radiologico_complessa_01",
+  "type": "referto_radiologico",
+  "difficulty": "complessa",
+  "style": {
+    "font": "helvetica",
+    "color": "#4B2C83",
+    "font_size": 8,
+    "margins_mm": 14
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Rosa",
+      "last_name": "De Santis",
+      "sex": "F",
+      "birth_date": "1981-05-23",
+      "birth_place": "Napoli"
+    }
+  },
+  "letterhead": {
+    "logo": "SCL",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:A.O. Santi Cosma e Liborio]]",
+      "[[REPARTO:UOC Medicina Nucleare e Imaging Molecolare]]",
+      "Centro PET/TC - in collaborazione con [[REPARTO:UOSD Radiologia Oncologica]]",
+      "Direttore: Prof. [[MEDICO:Vincenzo Carotenuto]]",
+      "Responsabile Centro PET: Dott.ssa [[MEDICO:Marisa Nappi]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Domenico Fontana 140]]",
+      "[[CAP:80128]] [[LUOGO:Napoli]]",
+      "Accettazione PET: [[TELEFONO:081 7462215]]",
+      "Fax [[FAX:081 7462290]]",
+      "[[EMAIL:pet.ct@aoscl.example.it]]"
+    ]
+  },
+  "running_header": "PET/TC FDG - [[PERSONA:DE SANTIS ROSA]] - C.F. [[CODICE_FISCALE:@paz]] - Acc. [[ACCESSION_NUMBER:MN26-PET-002318]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Santi Cosma e Liborio]] - Sede legale [[INDIRIZZO:Piazza Carlo di Borbone 11]], [[CAP:80137]] [[LUOGO:Napoli]] - P.IVA [[PARTITA_IVA:@ao]]",
+    "Referto n. [[NUMERO_REFERTO:MN-2026-004471]] intestato a [[PERSONA:De Santis R.]] - PEC [[PEC:medicinanucleare@pec.aoscl.example.it]]",
+    "Documento contenente dati relativi alla salute: non divulgare a soggetti non autorizzati (Reg. UE 2016/679)."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "REFERTO PET/TC CON 18F-FDG",
+      "subtitle": "Tomografia a emissione di positroni associata a TC a bassa dose - valutazione interim (PET-2)"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "title": "ANAGRAFICA ASSISTITA",
+          "columns": 1,
+          "fields": [
+            [
+              "Cognome",
+              "[[COGNOME:De Santis]]"
+            ],
+            [
+              "Nome",
+              "[[NOME:Rosa]]"
+            ],
+            [
+              "Nata a / il",
+              "[[LUOGO_NASCITA:Napoli]], [[DATA_NASCITA:23/05/1981]]"
+            ],
+            [
+              "Residenza",
+              "[[INDIRIZZO:Via Campi Flegrei 21]], [[CAP:80078]] [[LUOGO:Pozzuoli]]"
+            ],
+            [
+              "Recapito",
+              "[[TELEFONO:333 8124507]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "N. accesso",
+              "[[ACCESSION_NUMBER:MN26-PET-002318]]"
+            ],
+            [
+              "N. prenotazione",
+              "[[NUMERO_PRENOTAZIONE:PET-P-26-01977]]"
+            ],
+            [
+              "Data esame",
+              "[[DATA_VISITA:03/03/2026]]"
+            ],
+            [
+              "Data referto",
+              "[[DATA_REFERTO:04/03/2026]]"
+            ],
+            [
+              "Medico richiedente",
+              "Dott.ssa [[MEDICO:Bianca Iannaccone]]"
+            ],
+            [
+              "Reparto inviante",
+              "[[REPARTO:UOC Ematologia con Trapianto]]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "char_boxes",
+      "label": "Tessera sanitaria",
+      "value": "[[TESSERA_SANITARIA:@ts]]"
+    },
+    {
+      "type": "section",
+      "text": "Quesito clinico e anamnesi"
+    },
+    {
+      "type": "paragraph",
+      "text": "Paziente di 44 anni con [[PATOLOGIA:linfoma di Hodgkin classico, variante sclerosi nodulare]], stadio IIB secondo Ann Arbor con massa bulky mediastinica, diagnosticato su biopsia escissionale di linfonodo laterocervicale sinistro del [[DATA:18/11/2025]]. Ha eseguito [[TERAPIA:2 cicli di chemioterapia ABVD]] (ultima somministrazione il [[DATA:12 febbraio 2026]]). PET/TC di stadiazione eseguita presso il nostro Centro il [[DATA:01.12.25]]. Si richiede valutazione interim secondo i criteri di Lugano."
+    },
+    {
+      "type": "paragraph",
+      "text": "Comorbidità: [[MALATTIE_INFETTIVE:infezione da HIV]] nota dal 2014, in terapia antiretrovirale con [[FARMACO:bictegravir/emtricitabina/tenofovir alafenamide]], con viremia non rilevabile (ultima conta dei CD4 [[ESAME_VALORE:512]] cellule/µL); [[SALUTE_MENTALE:disturbo d'ansia generalizzato]] in trattamento con [[FARMACO:sertralina 50 mg]]. La sig.ra [[PERSONA:De Santis]] riferisce [[DIAGNOSI:claustrofobia]]: su indicazione del medico nucleare è stata somministrata premedicazione con [[FARMACO:lorazepam 1 mg]] per os. [[GRAVIDANZA:Esclusa gravidanza in atto]] (beta-hCG negativa del [[DATA:02/03/2026]])."
+    },
+    {
+      "type": "section",
+      "text": "Preparazione e tecnica"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "table",
+          "header": [
+            "Parametro",
+            "Valore"
+          ],
+          "widths": [
+            1.3,
+            1
+          ],
+          "font_size": 7.5,
+          "rows": [
+            [
+              "Digiuno",
+              "superiore a 6 ore"
+            ],
+            [
+              "Glicemia pre-iniezione",
+              "[[ESAME_VALORE:94]] mg/dL"
+            ],
+            [
+              "Peso / altezza",
+              "[[MISURE_ANTROPOMETRICHE:58]] kg / [[MISURE_ANTROPOMETRICHE:164]] cm"
+            ],
+            [
+              "Attività iniettata 18F-FDG",
+              "[[ESAME_VALORE:221]] MBq"
+            ],
+            [
+              "Sede e ora iniezione",
+              "v. antecubitale dx, 08:47"
+            ],
+            [
+              "Tempo di uptake",
+              "62 min"
+            ],
+            [
+              "Lotto radiofarmaco",
+              "F26-0303-B"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "paragraph",
+          "text": "Acquisizione PET 3D total-body (vertice-radice delle cosce), 2 min per lettino, con ricostruzione iterativa e correzione per l'attenuazione mediante TC a bassa dose senza mezzo di contrasto, in respiro libero."
+        },
+        {
+          "type": "paragraph",
+          "text": "Iniezione del radiofarmaco eseguita dall'inf. [[OPERATORE_SANITARIO:Assunta Pagano]]; acquisizione a cura del TSRM [[OPERATORE_SANITARIO:Ciro Amoroso]]. Controlli di qualità e stima dosimetrica: fisico medico dott. [[OPERATORE_SANITARIO:Elio Cimmino]]."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Confronto"
+    },
+    {
+      "type": "paragraph",
+      "text": "PET/TC di stadiazione del [[DATA:01.12.25]] (valori SUVmax di riferimento) e TC torace-addome con mezzo di contrasto del [[DATA:20 novembre 2025]], eseguita presso la [[STRUTTURA_SANITARIA:Casa di Cura Villa Fiorita del Vomero]]."
+    },
+    {
+      "type": "section",
+      "text": "Reperti"
+    },
+    {
+      "type": "paragraph",
+      "text": "**Collo.** Netta riduzione dimensionale e metabolica dei linfonodi laterocervicali sinistri ai livelli III-IV; anello di Waldeyer senza captazioni patologiche. **Torace.** [[DIAGNOSI:Massa residua del mediastino anteriore]] in marcata riduzione volumetrica, con [[DIAGNOSI:captazione residua disomogenea]] di intensità superiore a quella epatica, prevalente nella porzione paracardiaca sinistra. Linfonodo ilare destro di dimensioni non significative, senza captazione. Non versamento pleurico; non lesioni parenchimali polmonari. **Addome e pelvi.** Milza di normali dimensioni, a captazione omogenea. Non adenopatie sotto-diaframmatiche. **Scheletro.** Iperaccumulo midollare diffuso e omogeneo, di tipo reattivo in corso di terapia con fattori di crescita; non lesioni focali."
+    },
+    {
+      "type": "table",
+      "caption": "Stazioni di malattia: confronto semiquantitativo (SUVmax normalizzato per peso corporeo)",
+      "header": [
+        "Stazione",
+        "Reperto TC",
+        "SUVmax stadiazione",
+        "SUVmax interim",
+        "Score"
+      ],
+      "widths": [
+        2.6,
+        3.4,
+        1.5,
+        1.5,
+        1.1
+      ],
+      "font_size": 7.5,
+      "rows": [
+        [
+          "Laterocervicale sx\n(livelli III-IV)",
+          "Linfonodo maggiore [[ESAME_VALORE:9,5]] mm in asse corto\n(precedente [[ESAME_VALORE:24,5]] mm)",
+          "[[ESAME_VALORE:14,8]]",
+          "[[ESAME_VALORE:2,1]]",
+          "[[ESAME_VALORE:DS 2]]"
+        ],
+        [
+          "Mediastino anteriore\n(massa bulky)",
+          "Massa residua [[ESAME_VALORE:48 x 31]] mm\n(precedente [[ESAME_VALORE:92 x 67]] mm)",
+          "[[ESAME_VALORE:18,6]]",
+          "[[ESAME_VALORE:3,4]]",
+          "[[ESAME_VALORE:DS 4]]"
+        ],
+        [
+          "Ilare dx",
+          "Asse corto [[ESAME_VALORE:7,5]] mm",
+          "[[ESAME_VALORE:6,2]]",
+          "[[ESAME_VALORE:1,7]]",
+          "[[ESAME_VALORE:DS 1]]"
+        ],
+        [
+          "Milza",
+          "Dimensioni normali, non lesioni focali",
+          "[[ESAME_VALORE:5,1]]",
+          "[[ESAME_VALORE:1,8]]",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "size": 7,
+      "text": "Riferimenti: fegato SUVmean [[ESAME_VALORE:2,6]]; pool ematico mediastinico SUVmean [[ESAME_VALORE:1,9]]. Misure TC concordate con la Dott.ssa [[MEDICO:Lucia Nguyen]] della [[REPARTO:UOSD Radiologia Oncologica]]."
+    },
+    {
+      "type": "section",
+      "text": "Informazioni dosimetriche (D.Lgs. 101/2020)"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Componente",
+        "Parametro",
+        "Valore"
+      ],
+      "widths": [
+        2,
+        3,
+        2
+      ],
+      "font_size": 7.5,
+      "rows": [
+        [
+          "PET",
+          "Dose efficace stimata (18F-FDG)",
+          "[[ESAME_VALORE:4,2]] mSv"
+        ],
+        [
+          "TC bassa dose",
+          "CTDIvol",
+          "[[ESAME_VALORE:3,1]] mGy"
+        ],
+        [
+          "TC bassa dose",
+          "DLP",
+          "[[ESAME_VALORE:318]] mGy·cm"
+        ],
+        [
+          "TC bassa dose",
+          "Dose efficace stimata",
+          "[[ESAME_VALORE:4,8]] mSv"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Conclusioni"
+    },
+    {
+      "type": "paragraph",
+      "text": "**Rispetto alla PET/TC di stadiazione si documenta [[DIAGNOSI:risposta metabolica parziale]]: completa normalizzazione delle stazioni laterocervicali e ilari, persistenza di captazione nella massa mediastinica residua con intensità moderatamente superiore al fegato (punteggio Deauville 4), in assenza di nuove lesioni. PET-2 positiva secondo i criteri di Lugano.**\nSi suggerisce discussione al gruppo multidisciplinare linfomi per l'eventuale modifica della strategia terapeutica."
+    },
+    {
+      "type": "paragraph",
+      "text": "La paziente, accompagnata dal marito sig. [[FAMILIARE:Gennaro Esposito]], ha chiesto che l'esito sia comunicato esclusivamente all'ematologa curante, Dott.ssa [[MEDICO:Iannaccone]], e non ai familiari (vedi allegato). In caso di irreperibilità indica come contatto la sorella, sig.ra [[CONTATTO_EMERGENZA:Sole De Santis]], tel. [[TELEFONO:338 9046631]]."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Napoli]], [[DATA_REFERTO:04/03/2026]]",
+      "role": "Il Medico Nucleare",
+      "name": "Dott. [[MEDICO:Pasquale D'Avino]]",
+      "extra": [
+        "Componente TC refertata dalla Dott.ssa [[MEDICO:Lucia Nguyen]]"
+      ],
+      "digital": true,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:A.O. SS. COSMA E LIBORIO]]",
+        "MEDICINA NUCLEARE",
+        "Dott. [[MEDICO:P. D'Avino]]",
+        "Ord. Medici NA n. [[NUMERO_ALBO:31184]]"
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "Allegato - Consenso alla comunicazione degli esiti"
+    },
+    {
+      "type": "paragraph",
+      "text": "La sottoscritta [[PERSONA:Rosa De Santis]], nata a [[LUOGO_NASCITA:Napoli]] il [[DATA_NASCITA:23/05/1981]], in relazione all'esame PET/TC n. [[ACCESSION_NUMBER:MN26-PET-002318]], dichiara quanto segue in merito alla comunicazione dei risultati e dei dati relativi alla propria salute, inclusi quelli relativi all'[[MALATTIE_INFETTIVE:infezione da HIV]] (L. 135/1990):"
+    },
+    {
+      "type": "checkboxes",
+      "columns": 1,
+      "items": [
+        [
+          "Autorizzo la comunicazione dell'esito all'ematologo curante e al medico di medicina generale",
+          true
+        ],
+        [
+          "Autorizzo la comunicazione dell'esito al coniuge, sig. [[FAMILIARE:G. Esposito]]",
+          false
+        ],
+        [
+          "Autorizzo la consegna del referto a persona delegata, munita di delega scritta e documento",
+          false
+        ],
+        [
+          "Indico come contatto in caso di irreperibilità la sorella, sig.ra [[CONTATTO_EMERGENZA:Sole De Santis]]",
+          true
+        ],
+        [
+          "Richiedo che il referto sia reso disponibile sul Fascicolo Sanitario Elettronico",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Medico di medicina generale indicato dall'assistita: Dott. [[MEDICO:Raffaele Scognamiglio]], [[INDIRIZZO:Via Pergolesi 7]], [[LUOGO:Pozzuoli]]."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Napoli]], [[DATA_VISITA:03/03/2026]]",
+      "role": "Firma dell'assistita",
+      "name": "[[PERSONA:Rosa De Santis]]",
+      "extra": [
+        "Raccolto da: inf. [[OPERATORE_SANITARIO:A. Pagano]]"
+      ],
+      "digital": false
+    },
+    {
+      "type": "barcode",
+      "kind": "qr",
+      "label": "Verifica referto di [[PERSONA:R. De Santis]]",
+      "value": "https://referti.aoscl.example.it/v/[[NUMERO_REFERTO:MN-2026-004471]]",
+      "align": "left"
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Scala di Deauville a cinque punti e criteri di Lugano 2014; stadiazione secondo Ann Arbor modificata (Cotswolds).",
+        "SUVmax misurati su workstation dedicata dal TSRM [[OPERATORE_SANITARIO:C. Amoroso]] e verificati dal medico refertante.",
+        "Il presente referto sostituisce la versione preliminare trasmessa via fax al [[REPARTO:Day Hospital di Ematologia]] il [[DATA:04.03.2026]] alle ore 13:10."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Hodgkin",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Deauville",
+      "forbidden_categories": [
+        "LUOGO",
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Lugano",
+      "forbidden_categories": [
+        "LUOGO"
+      ]
+    },
+    {
+      "value": "Ann Arbor",
+      "forbidden_categories": [
+        "LUOGO",
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Waldeyer",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Cotswolds",
+      "forbidden_categories": [
+        "LUOGO"
+      ]
+    }
+  ]
+}

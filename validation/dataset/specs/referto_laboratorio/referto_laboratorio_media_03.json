@@ -1,0 +1,81 @@
+{
+  "id": "referto_laboratorio_media_03",
+  "type": "referto_laboratorio",
+  "difficulty": "media",
+  "style": {"font": "courier", "color": "#37474F", "font_size": 8.5, "margins_mm": 14},
+  "persons": {
+    "paz": {"first_name": "Giuseppe", "last_name": "Bertin", "sex": "M", "birth_date": "1944-03-22", "birth_place": "Padova"}
+  },
+  "letterhead": {
+    "logo": "UBA",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda ULSS Brenta Antica]]",
+      "[[STRUTTURA_SANITARIA:Presidio Ospedaliero Sant'Ermagora]]",
+      "[[REPARTO:UOC Medicina di Laboratorio]] - Centro TAO",
+      "Laboratorio accreditato - Sistema Qualita' ISO 15189"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Ca' Rezzonico 3]]",
+      "[[CAP:35131]] [[LUOGO:Padova]]",
+      "Tel. [[TELEFONO:049 8217750]]"
+    ]
+  },
+  "running_header": "[[PERSONA:BERTIN GIUSEPPE]] * nato il [[DATA_NASCITA:22-03-1944]] * Rich. [[NUMERO_ACCETTAZIONE:2026.ADI.009183]] * segue",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda ULSS Brenta Antica]] - C.F./P.IVA [[PARTITA_IVA:@ulss]]",
+    "Stampato dal sistema LIS il 16/10/2026 alle 11:52 - copia per il Medico di Medicina Generale"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI LABORATORIO", "subtitle": "Prelievo domiciliare - Assistenza Domiciliare Integrata (ADI)"},
+    {"type": "patient_box", "align": "full", "columns": 2, "title": "ANAGRAFICA ASSISTITO", "fields": [
+      ["Cognome Nome", "[[PERSONA:BERTIN GIUSEPPE]]"],
+      ["Cod. fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Nato il", "[[DATA_NASCITA:22/03/1944]]"],
+      ["Eta'", "[[ETA:82]] aa."],
+      ["Domicilio", "[[INDIRIZZO:Via Tiziano Aspetti 140]], [[LUOGO:Padova]]"],
+      ["Caregiver", "[[CONTATTO_EMERGENZA:Ana Popescu]]"],
+      ["Tel. caregiver", "[[TELEFONO:+39 328 774 0912]]"],
+      ["MMG richiedente", "Dott. [[MEDICO:Andrea Toffanin]]"],
+      ["Servizio", "ADI - Cure domiciliari"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Richiesta n.", "[[NUMERO_ACCETTAZIONE:2026.ADI.009183]]"],
+      ["Prelievo", "[[DATA_VISITA:15.10.26]] h 07:50"],
+      ["Validato", "[[DATA_REFERTO:15/10/2026]] h 14:22"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "ID campione", "value": "[[CODICE_CAMPIONE:ADI9183C]]", "align": "left"},
+    {"type": "paragraph", "align": "left", "text": "Prelievo venoso eseguito a domicilio dall'inf. [[OPERATORE_SANITARIO:Michela Rizzato]] alla presenza della badante, sig.ra [[CONTATTO_EMERGENZA:Popescu]]. Pz. in terapia anticoagulante orale con [[FARMACO:warfarin 5 mg]] (3/4 cp. die) per [[PATOLOGIA:fibrillazione atriale permanente]]; in terapia anche con [[FARMACO:furosemide 25 mg]] per [[PATOLOGIA:scompenso cardiaco cronico]]. Ultimo INR: [[ESAME_VALORE:2,4]] il [[DATA:1 ottobre 2026]]. Riferito episodio di [[DIAGNOSI:epistassi]] nella notte."},
+    {"type": "section", "text": "COAGULAZIONE"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Range", ""], "widths": [4, 2, 1.4, 3.2, 0.6], "flag_column": 4, "rows": [
+      ["Tempo di protrombina (PT)", "[[ESAME_VALORE:41,3]]", "sec", "9,8 - 12,6", "H"],
+      ["PT - INR", "[[ESAME_VALORE:3,8]]", "", "terapeutico 2,0 - 3,0", "H"],
+      ["aPTT ratio", "[[ESAME_VALORE:1,32]]", "", "0,80 - 1,20", "H"]
+    ]},
+    {"type": "section", "text": "CHIMICA CLINICA"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Range", ""], "widths": [4, 2, 1.4, 3.2, 0.6], "flag_column": 4, "rows": [
+      ["Creatinina", "[[ESAME_VALORE:1,64]]", "mg/dL", "0,72 - 1,18", "H"],
+      ["eGFR (CKD-EPI)", "[[ESAME_VALORE:39]]", "mL/min", "> 60", "L"],
+      ["Urea", "[[ESAME_VALORE:78]]", "mg/dL", "17 - 49", "H"],
+      ["Sodio", "[[ESAME_VALORE:134]]", "mmol/L", "136 - 145", "L"],
+      ["Potassio", "[[ESAME_VALORE:5,3]]", "mmol/L", "3,5 - 5,1", "H"],
+      ["NT-proBNP", "[[ESAME_VALORE:3.874]]", "pg/mL", "< 450", "H"],
+      ["Digossina", "[[ESAME_VALORE:1,1]]", "ng/mL", "0,5 - 0,9", "H"]
+    ]},
+    {"type": "section", "text": "EMATOLOGIA"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Range", ""], "widths": [4, 2, 1.4, 3.2, 0.6], "flag_column": 4, "rows": [
+      ["Emoglobina", "[[ESAME_VALORE:11,6]]", "g/dL", "13,0 - 17,0", "L"],
+      ["Piastrine", "[[ESAME_VALORE:172]]", "10^3/uL", "150 - 400", ""]
+    ]},
+    {"type": "page_break"},
+    {"type": "section", "text": "COMUNICAZIONE VALORI CRITICI"},
+    {"type": "table", "header": ["Data / ora", "Valore critico", "Comunicato da", "Comunicato a"], "widths": [2.2, 2.2, 3, 3.6], "rows": [
+      ["[[DATA_REFERTO:15/10/2026]] 14:30", "INR [[ESAME_VALORE:3,8]]", "Dott. [[MEDICO:Elisa Zorzi]]", "Dott. [[MEDICO:Toffanin]] (MMG)"],
+      ["[[DATA_REFERTO:15/10/2026]] 14:41", "INR [[ESAME_VALORE:3,8]]", "inf. [[OPERATORE_SANITARIO:M. Rizzato]]", "figlia [[FAMILIARE:Lucia Bertin]], tel. [[TELEFONO:347 2290 618]]"]
+    ]},
+    {"type": "paragraph", "text": "INR sopra il range terapeutico in pz. con [[DIAGNOSI:insufficienza renale cronica stadio 3b]] e recente [[DIAGNOSI:epistassi]]. Su indicazione del Centro TAO: sospendere la dose odierna e quella di domani, riprendere a 1/2 cp. die; nuovo controllo INR a domicilio il [[DATA:20-10-2026]]. Si segnala inoltre digossinemia ai limiti superiori: valutare con il curante. La figlia, sig.ra [[FAMILIARE:L. Bertin]], ha confermato di aver compreso le istruzioni."},
+    {"type": "note", "text": "PT/INR con tromboplastina ricombinante (ISI 1,0). Campioni trasportati dal domicilio in contenitore termico a 18-22 °C entro 2 ore dal prelievo. I valori critici sono comunicati secondo la procedura aziendale PA-LAB-07."},
+    {"type": "signature", "place_date": "[[LUOGO:Padova]], [[DATA_REFERTO:15 ottobre 2026]]", "role": "Il Dirigente Medico - Centro TAO", "name": "Dott.ssa [[MEDICO:Elisa Zorzi]]", "digital": true, "stamp": ["[[STRUTTURA_SANITARIA:ULSS BRENTA ANTICA]] - CENTRO TAO", "Dott.ssa [[MEDICO:Elisa Zorzi]]", "Ordine Medici PD n. [[NUMERO_ALBO:7764]]"]},
+    {"type": "barcode", "kind": "qr", "label": "Referto online", "value": "https://fse.ulss-brentaantica.example.it/ref/[[NUMERO_REFERTO:LAB26-0571132]]", "align": "left"}
+  ]
+}

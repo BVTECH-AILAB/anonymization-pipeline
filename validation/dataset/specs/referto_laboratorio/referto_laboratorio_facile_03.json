@@ -1,0 +1,57 @@
+{
+  "id": "referto_laboratorio_facile_03",
+  "type": "referto_laboratorio",
+  "difficulty": "facile",
+  "style": {"font": "dejavu", "color": "#C62828", "font_size": 9, "margins_mm": 15},
+  "persons": {
+    "paz": {"first_name": "Vito", "last_name": "Lorusso", "sex": "M", "birth_date": "1959-05-18", "birth_place": "Bari"}
+  },
+  "letterhead": {
+    "logo": "OSL",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Civile San Leucio Abate]]",
+      "[[REPARTO:U.O.C. Patologia Clinica - Settore Ematologia]]",
+      "Direttore: Dott. [[MEDICO:Nicola Lattanzio]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Unita' d'Italia 41]]",
+      "[[CAP:70125]] [[LUOGO:Bari]]",
+      "Tel. [[TELEFONO:080 5527301]]",
+      "Fax [[FAX:080 5527399]]"
+    ]
+  },
+  "footer": [
+    "Laboratorio certificato UNI EN ISO 9001:2015 - I valori di riferimento sono validi per soggetti adulti"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO ESAME EMOCROMOCITOMETRICO"},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Vito Lorusso]]"],
+      ["Data di nascita", "[[DATA_NASCITA:18/05/1959]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Sesso", "[[SESSO:M]]"],
+      ["N. accettazione", "[[NUMERO_ACCETTAZIONE:L26-118342]]"],
+      ["Provenienza", "Esterno - CUP"],
+      ["Data prelievo", "[[DATA_VISITA:06/10/2026]]"],
+      ["Data validazione", "[[DATA_REFERTO:07/10/2026]]"]
+    ]},
+    {"type": "section", "text": "Emocromo con formula leucocitaria"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento", "Flag"], "widths": [4.2, 1.8, 1.8, 3, 0.8], "flag_column": 4, "rows": [
+      ["Leucociti (WBC)", "[[ESAME_VALORE:6,42]]", "10^3/µL", "4,00 - 10,00", ""],
+      ["Eritrociti (RBC)", "[[ESAME_VALORE:4,12]]", "10^6/µL", "4,50 - 5,90", "L"],
+      ["Emoglobina (Hb)", "[[ESAME_VALORE:12,1]]", "g/dL", "13,5 - 17,5", "L"],
+      ["Ematocrito (HCT)", "[[ESAME_VALORE:37,4]]", "%", "40,0 - 52,0", "L"],
+      ["Volume corpuscolare medio (MCV)", "[[ESAME_VALORE:90,8]]", "fL", "80,0 - 99,0", ""],
+      ["RDW-CV", "[[ESAME_VALORE:15,7]]", "%", "11,5 - 14,5", "H"],
+      ["Piastrine (PLT)", "[[ESAME_VALORE:198]]", "10^3/µL", "150 - 450", ""],
+      ["Neutrofili", "[[ESAME_VALORE:61,3]]", "%", "40,0 - 75,0", ""],
+      ["Linfociti", "[[ESAME_VALORE:28,9]]", "%", "20,0 - 45,0", ""],
+      ["Monociti", "[[ESAME_VALORE:7,2]]", "%", "2,0 - 10,0", ""],
+      ["Eosinofili", "[[ESAME_VALORE:2,1]]", "%", "0,0 - 6,0", ""],
+      ["Basofili", "[[ESAME_VALORE:0,5]]", "%", "0,0 - 1,5", ""]
+    ]},
+    {"type": "note", "text": "Esame eseguito su sangue intero in K2-EDTA con analizzatore a citometria a flusso. Formula leucocitaria verificata al microscopio ottico."},
+    {"type": "signature", "place_date": "[[LUOGO:Bari]], [[DATA_REFERTO:07/10/2026]]", "role": "Il Dirigente Medico", "name": "Dott. [[MEDICO:Nicola Lattanzio]]", "digital": true}
+  ]
+}

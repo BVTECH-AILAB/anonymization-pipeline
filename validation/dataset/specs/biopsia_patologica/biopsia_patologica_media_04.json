@@ -1,0 +1,303 @@
+{
+  "id": "biopsia_patologica_media_04",
+  "type": "biopsia_patologica",
+  "difficulty": "media",
+  "style": {
+    "font": "helvetica",
+    "color": "#C2571A",
+    "font_size": 9.2,
+    "margins_mm": 19
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Gabriele",
+      "last_name": "Iannone",
+      "sex": "M",
+      "birth_date": "2016-12-02",
+      "birth_place": "Napoli"
+    }
+  },
+  "letterhead": {
+    "logo": "OPG",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Pediatrico Girasole]]",
+      "Azienda Ospedaliera di Rilievo Nazionale",
+      "[[REPARTO:UOSD Anatomia Patologica Pediatrica]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Posillipo 286]]",
+      "[[CAP:80123]] [[LUOGO:Napoli]]",
+      "Tel. [[TELEFONO:081 7690452]]",
+      "Fax [[FAX:081 7690460]]"
+    ]
+  },
+  "running_header": "Istologico [[NUMERO_REFERTO:P/25/2207]] - [[PERSONA:Iannone Gabriele]] (n. [[DATA_NASCITA:02/12/2016]]) - [[REPARTO:UOSD Anatomia Patologica Pediatrica]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale Pediatrico Girasole]] - Il referto è consegnato ai genitori o al tutore legale del minore, previo riconoscimento.",
+    "Documento contenente dati sanitari di minore: è vietata la diffusione ai sensi del Reg. UE 2016/679 e del D.Lgs. 196/2003."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "REFERTO DI ESAME ISTOLOGICO",
+      "subtitle": "Biopsie duodenali multiple in EGDS - età pediatrica"
+    },
+    {
+      "type": "patient_box",
+      "title": "DATI DEL MINORE",
+      "columns": 2,
+      "fields": [
+        [
+          "Paziente",
+          "[[PERSONA:Iannone Gabriele]]"
+        ],
+        [
+          "Data di nascita",
+          "[[DATA_NASCITA:02/12/2016]]"
+        ],
+        [
+          "Codice fiscale",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Età",
+          "[[ETA:8]] anni"
+        ],
+        [
+          "Esercente la resp. genitoriale",
+          "[[TUTORE_DELEGATO:Carmela Sorrentino]] (madre)"
+        ],
+        [
+          "Recapito",
+          "[[TELEFONO:+39 328 551 0964]]"
+        ]
+      ]
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "N. istologico",
+          "[[NUMERO_REFERTO:P/25/2207]]"
+        ],
+        [
+          "Data EGDS",
+          "[[DATA_VISITA:10/06/2025]]"
+        ],
+        [
+          "U.O. richiedente",
+          "[[REPARTO:Gastroenterologia ed Endoscopia Pediatrica]]"
+        ],
+        [
+          "Data referto",
+          "[[DATA_REFERTO:18 giugno 2025]]"
+        ],
+        [
+          "Endoscopista",
+          "Dott.ssa [[MEDICO:Raffaella Esposito]]"
+        ],
+        [
+          "Cartella clinica",
+          "[[NUMERO_CARTELLA:2025/DH/04471]]"
+        ]
+      ]
+    },
+    {
+      "type": "barcode",
+      "kind": "code128",
+      "label": "Provetta/contenitore",
+      "value": "[[CODICE_CAMPIONE:P252207-B]]",
+      "align": "right"
+    },
+    {
+      "type": "section",
+      "text": "Notizie cliniche"
+    },
+    {
+      "type": "paragraph",
+      "text": "Bambino di [[ETA:8]] aa. con [[DIAGNOSI:scarso accrescimento staturo-ponderale]] (peso [[MISURE_ANTROPOMETRICHE:22,5 kg]], altezza [[MISURE_ANTROPOMETRICHE:119 cm]]), [[DIAGNOSI:dolori addominali ricorrenti]] e [[DIAGNOSI:anemia sideropenica]]. Anticorpi anti-transglutaminasi IgA [[ESAME_VALORE:128 U/mL]] (v.n. < 7), EMA [[ESAME_VALORE:positivi]]. Tipizzazione [[DATO_GENETICO:HLA-DQ2.5 positivo]]. Dieta contenente glutine al momento dell'esame. Accompagnato dalla madre, sig.ra [[TUTORE_DELEGATO:Sorrentino]], che ha firmato il consenso all'esame il [[DATA:10.06.25]]."
+    },
+    {
+      "type": "section",
+      "text": "Materiale inviato"
+    },
+    {
+      "type": "paragraph",
+      "text": "A) Bulbo duodenale: 2 frammenti.\nB) Duodeno discendente (D2): 4 frammenti.\nI frammenti sono stati orientati su supporto in acetato di cellulosa e inclusi separatamente."
+    },
+    {
+      "type": "section",
+      "text": "Descrizione microscopica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Mucosa duodenale con marcata riduzione dell'altezza dei villi, iperplasia delle cripte e incremento dei linfociti intraepiteliali (IEL), confermato con immunoistochimica per CD3. Lamina propria con infiltrato linfoplasmacellulare di moderata densità. Assenza di parassiti e di granulomi."
+    },
+    {
+      "type": "table",
+      "header": [
+        "Campione",
+        "Villi",
+        "Rapporto villo/cripta",
+        "IEL / 100 enterociti",
+        "Marsh-Oberhuber"
+      ],
+      "widths": [
+        2.2,
+        2.6,
+        1.8,
+        1.8,
+        2.4
+      ],
+      "rows": [
+        [
+          "A - Bulbo",
+          "[[ESAME_VALORE:atrofia parziale]]",
+          "[[ESAME_VALORE:1:1]]",
+          "[[ESAME_VALORE:38]]",
+          "[[ESAME_VALORE:tipo 3a]]"
+        ],
+        [
+          "B1 - D2 prossimale",
+          "[[ESAME_VALORE:atrofia subtotale]]",
+          "[[ESAME_VALORE:1:2]]",
+          "[[ESAME_VALORE:52]]",
+          "[[ESAME_VALORE:tipo 3b]]"
+        ],
+        [
+          "B2 - D2 distale",
+          "[[ESAME_VALORE:atrofia subtotale]]",
+          "[[ESAME_VALORE:1:3]]",
+          "[[ESAME_VALORE:61]]",
+          "[[ESAME_VALORE:tipo 3b]]"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Corrispondenza tra classificazioni: Marsh-Oberhuber [[ESAME_VALORE:tipo 3b]] corrisponde a grado B1 della classificazione di Corazza-Villanacci."
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi"
+    },
+    {
+      "type": "paragraph",
+      "text": "**Mucosa duodenale (bulbo e D2): [[DIAGNOSI:enteropatia con atrofia dei villi subtotale e aumento dei linfociti intraepiteliali]], quadro istologico compatibile con [[DIAGNOSI:malattia celiaca]] (Marsh-Oberhuber 3b; Corazza-Villanacci B1)**, in accordo con la sierologia."
+    },
+    {
+      "type": "note",
+      "text": "Il referto è stato illustrato alla madre del piccolo [[PERSONA:Gabriele]] dalla Dott.ssa [[MEDICO:R. Esposito]] in data [[DATA:19/06/2025]]. Si raccomanda dieta priva di glutine e screening sierologico dei familiari di primo grado, compreso il fratello [[FAMILIARE:Lorenzo Iannone]]."
+    },
+    {
+      "type": "section",
+      "text": "Indagini ancillari"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Indagine",
+        "Blocchetto",
+        "Esito"
+      ],
+      "widths": [
+        3,
+        1.5,
+        5.5
+      ],
+      "rows": [
+        [
+          "CD3 (IIC)",
+          "B1",
+          "[[ESAME_VALORE:IEL CD3+ aumentati]], distribuzione diffusa lungo i villi"
+        ],
+        [
+          "PAS-diastasi",
+          "B1",
+          "[[ESAME_VALORE:negativo]] per microrganismi"
+        ],
+        [
+          "Ricerca Giardia",
+          "A1, B1",
+          "[[ESAME_VALORE:assente]]"
+        ]
+      ]
+    },
+    {
+      "type": "table",
+      "caption": "Ritiro del referto (a cura della segreteria)",
+      "header": [
+        "Ritirato da",
+        "Rapporto",
+        "Documento",
+        "Data ritiro"
+      ],
+      "widths": [
+        3,
+        2,
+        3,
+        2
+      ],
+      "rows": [
+        [
+          "[[TUTORE_DELEGATO:Carmela Sorrentino]]",
+          "madre",
+          "C.I. n. [[NUMERO_CARTA_IDENTITA:CA48211KM]]",
+          "[[DATA:23/06/2025]]"
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Napoli]], [[DATA_REFERTO:18/06/2025]]",
+          "role": "Il Medico Patologo",
+          "name": "Dott. [[MEDICO:Ciro Amitrano]]",
+          "digital": false,
+          "stamp": [
+            "ANATOMIA PATOLOGICA PEDIATRICA",
+            "Dott. [[MEDICO:Ciro Amitrano]]",
+            "Specialista in Anatomia Patologica"
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "signature",
+          "place_date": "Visto",
+          "role": "Il Responsabile UOSD",
+          "name": "Dott.ssa [[MEDICO:Paola Cennamo]]",
+          "digital": false
+        }
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Marsh",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Oberhuber",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Corazza-Villanacci",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

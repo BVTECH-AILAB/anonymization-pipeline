@@ -1,0 +1,61 @@
+{
+  "id": "test_genetico_facile_01",
+  "type": "test_genetico",
+  "difficulty": "facile",
+  "style": {"font": "helvetica", "color": "#00695C", "font_size": 9.5, "margins_mm": 18},
+  "persons": {
+    "paz": {"first_name": "Giancarlo", "last_name": "Zanon", "sex": "M", "birth_date": "1973-09-22", "birth_place": "Padova"}
+  },
+  "letterhead": {
+    "logo": "AOE",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Euganea]]",
+      "Servizio Sanitario Regionale",
+      "[[REPARTO:U.O.C. Genetica e Epidemiologia Clinica]]",
+      "Direttore: Prof. [[MEDICO:Alvise Tonolo]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via dei Colli Euganei 52]]",
+      "[[CAP:35128]] [[LUOGO:Padova]]",
+      "Tel. [[TELEFONO:049 8217430]]",
+      "[[EMAIL:genetica@ao-euganea.example.it]]"
+    ]
+  },
+  "footer": [
+    "Referto firmato digitalmente e conservato a norma presso l'archivio della struttura.",
+    "I dati genetici sono trattati ai sensi dell'art. 9 del Reg. UE 2016/679 e dell'Autorizzazione generale n. 8/2016."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI ANALISI GENETICA MOLECOLARE", "subtitle": "Genotipizzazione del gene HFE"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Giancarlo Zanon]]"],
+      ["Data di nascita", "[[DATA_NASCITA:22/09/1973]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Sesso", "[[SESSO:M]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["N. referto", "[[NUMERO_REFERTO:GM-2024-01187]]"],
+      ["Codice DNA", "[[CODICE_CAMPIONE:DNA24-0562]]"],
+      ["Data prelievo", "[[DATA_VISITA:14/05/2024]]"],
+      ["Data refertazione", "[[DATA_REFERTO:29/05/2024]]"],
+      ["Richiedente", "[[REPARTO:Ambulatorio di Epatologia]]"],
+      ["Campione", "Sangue periferico in EDTA"]
+    ]},
+    {"type": "section", "text": "Indicazione al test"},
+    {"type": "paragraph", "text": "Sospetta [[DIAGNOSI:emocromatosi ereditaria]] in presenza di ferritina sierica [[ESAME_VALORE:1240]] ng/mL e saturazione della transferrina [[ESAME_VALORE:68%]]."},
+    {"type": "section", "text": "Metodica"},
+    {"type": "paragraph", "text": "Estrazione automatizzata del DNA genomico. Ricerca delle varianti C282Y, H63D e S65C del gene HFE mediante PCR real-time con sonde di ibridazione e analisi delle curve di melting."},
+    {"type": "section", "text": "Risultato"},
+    {"type": "table", "header": ["Gene", "Trascritto", "Variante c.", "Variante p.", "Zigosità", "Classe ACMG"], "widths": [1.2, 2.2, 2, 2.4, 1.8, 2.2], "rows": [
+      ["HFE", "NM_000410.4", "[[DATO_GENETICO:c.845G>A]]", "[[DATO_GENETICO:p.(Cys282Tyr)]]", "[[DATO_GENETICO:Omozigote]]", "Patogenetica (5)"],
+      ["HFE", "NM_000410.4", "c.187C>G", "p.(His63Asp)", "Non rilevata", "-"],
+      ["HFE", "NM_000410.4", "c.193A>T", "p.(Ser65Cys)", "Non rilevata", "-"]
+    ]},
+    {"type": "section", "text": "Interpretazione"},
+    {"type": "paragraph", "text": "Il genotipo riscontrato ([[DATO_GENETICO:C282Y/C282Y]]) conferma la diagnosi molecolare di [[DIAGNOSI:emocromatosi ereditaria HFE-correlata di tipo 1]]. Il quadro biochimico è coerente con il genotipo. Si consiglia la presa in carico presso il centro di riferimento per l'avvio della [[TERAPIA:salassoterapia]] e la consulenza genetica, nel corso della quale verrà discusso il test dei familiari di primo grado."},
+    {"type": "note", "text": "Il test esplora esclusivamente le tre varianti indicate. Un risultato negativo non esclude forme di emocromatosi dovute ad altri geni (HJV, HAMP, TFR2, SLC40A1)."},
+    {"type": "signature", "place_date": "[[LUOGO:Padova]], [[DATA_REFERTO:29/05/2024]]", "role": "Il Dirigente Medico Genetista", "name": "Prof. [[MEDICO:Alvise Tonolo]]", "digital": true}
+  ],
+  "negatives": []
+}

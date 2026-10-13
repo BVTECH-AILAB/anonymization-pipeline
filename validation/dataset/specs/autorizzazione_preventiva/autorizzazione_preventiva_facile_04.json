@@ -1,0 +1,64 @@
+{
+  "id": "autorizzazione_preventiva_facile_04",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "facile",
+  "style": {"font": "dejavu", "color": "#B71C1C", "font_size": 9, "margins_mm": 22},
+  "persons": {
+    "paz": {"first_name": "Adele", "last_name": "Parodi", "sex": "F", "birth_date": "1946-05-30", "birth_place": "Genova"}
+  },
+  "letterhead": {
+    "logo": "AVP",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASL Val Polcevera e Levante]]",
+      "Distretto Sociosanitario 13 - Levante",
+      "[[REPARTO:Ufficio Ausili e Protesi]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Bobbio 41]]",
+      "[[CAP:16137]] [[LUOGO:Genova]]",
+      "[[EMAIL:protesi.levante@aslvpl.example.it]]"
+    ]
+  },
+  "footer": [
+    "La fornitura avviene tramite ditta iscritta all'elenco regionale dei fornitori di ausili. Collaudo obbligatorio entro 20 giorni dalla consegna."
+  ],
+  "blocks": [
+    {"type": "title", "text": "AUTORIZZAZIONE PREVENTIVA - PROTESI ACUSTICA", "subtitle": "Assistenza protesica - DPCM 12/01/2017, allegato 5, elenco 1"},
+    {"type": "section", "text": "1. Dati dell'assistito"},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Adele Parodi]]"],
+      ["Data di nascita", "[[DATA_NASCITA:30/05/1946]]"],
+      ["Indirizzo", "[[INDIRIZZO:Via Aurelia 112]]"],
+      ["Comune", "[[LUOGO:Recco]]"],
+      ["Telefono", "[[TELEFONO:0185 730412]]"],
+      ["Invalidità", "[[INVALIDITA:invalida civile 75%]]"]
+    ]},
+    {"type": "char_boxes", "label": "Codice fiscale", "value": "[[CODICE_FISCALE:@paz]]"},
+    {"type": "char_boxes", "label": "Tessera sanitaria", "value": "[[TESSERA_SANITARIA:@ts]]"},
+    {"type": "checkboxes", "label": "Richiesta", "columns": 2, "items": [
+      ["Prima fornitura", false], ["Rinnovo (tempi minimi di rinnovo trascorsi)", true],
+      ["Riparazione / sostituzione", false], ["Urgenza", false]
+    ]},
+    {"type": "section", "text": "2. Prescrizione"},
+    {"type": "paragraph", "text": "Si prescrive **apparecchio acustico retroauricolare digitale** bilaterale, con adattamento per [[DIAGNOSI:ipoacusia neurosensoriale bilaterale di grado moderato-severo]], codice nomenclatore 22.06.15. Accessori: chiocciole su misura, kit di pulizia."},
+    {"type": "table", "header": ["Frequenza (Hz)", "500", "1000", "2000", "4000", "Media PTA"], "widths": [2.4, 1, 1, 1, 1, 1.5], "rows": [
+      ["Orecchio destro (dB HL)", "[[ESAME_VALORE:45]]", "[[ESAME_VALORE:55]]", "[[ESAME_VALORE:65]]", "[[ESAME_VALORE:75]]", "[[ESAME_VALORE:60]]"],
+      ["Orecchio sinistro (dB HL)", "[[ESAME_VALORE:50]]", "[[ESAME_VALORE:60]]", "[[ESAME_VALORE:70]]", "[[ESAME_VALORE:85]]", "[[ESAME_VALORE:66]]"]
+    ], "caption": "Esame audiometrico tonale liminare"},
+    {"type": "section", "text": "3. Motivazione clinica"},
+    {"type": "paragraph", "text": "Paziente portatrice di protesi dal 2018, con peggioramento della soglia uditiva documentato rispetto all'esame precedente e riduzione della discriminazione verbale ([[ESAME_VALORE:68%]] a 80 dB). L'apparecchio in uso non consente più un guadagno adeguato. Indicata la sostituzione per evitare l'isolamento sociale."},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Medico specialista", "Dott. [[MEDICO:Enrico Cavanna]], Otorinolaringoiatra"],
+      ["Iscr. Albo", "GE [[NUMERO_ALBO:12408]]"],
+      ["Struttura", "[[STRUTTURA_SANITARIA:Ospedale Sant'Erasmo di Nervi]]"],
+      ["Data", "[[DATA_PRESCRIZIONE:22/10/2025]]"]
+    ]},
+    {"type": "signature", "place_date": "[[LUOGO:Genova]], [[DATA_PRESCRIZIONE:22/10/2025]]", "role": "Firma e timbro dello specialista", "name": "Dott. [[MEDICO:Enrico Cavanna]]", "digital": false},
+    {"type": "section", "text": "4. Parere della commissione"},
+    {"type": "paragraph", "text": "Pratica n. [[NUMERO_PROTOCOLLO:UP-25-07733]]. Verificata la congruenza tra prescrizione e preventivo della ditta fornitrice:", "align": "left"},
+    {"type": "checkboxes", "columns": 3, "items": [["Si autorizza", false], ["Non si autorizza", false], ["Sospesa per integrazioni", false]]},
+    {"type": "paragraph", "text": "Il medico autorizzatore ______________________   Data ____/____/________", "align": "left"}
+  ],
+  "negatives": []
+}

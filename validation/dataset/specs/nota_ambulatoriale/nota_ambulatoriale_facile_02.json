@@ -1,0 +1,49 @@
+{
+  "id": "nota_ambulatoriale_facile_02",
+  "type": "nota_ambulatoriale",
+  "difficulty": "facile",
+  "style": {"font": "times", "color": "#2E7D32", "font_size": 10.5, "margins_mm": 22},
+  "persons": {
+    "paz": {"first_name": "Chiara", "last_name": "Montanari", "sex": "F", "birth_date": "1990-05-14", "birth_place": "Rimini"}
+  },
+  "letterhead": {
+    "logo": "AUL",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda USL Litorale Malatestiano]]",
+      "[[STRUTTURA_SANITARIA:Poliambulatorio Distrettuale Borgo Marina]]",
+      "[[REPARTO:Ambulatorio di Dermatologia]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Regina Elena 41]]",
+      "[[CAP:47921]] [[LUOGO:Rimini]]",
+      "Tel. [[TELEFONO:0541 707312]]"
+    ]
+  },
+  "footer": [
+    "Servizio Sanitario Regionale - Distretto Sanitario di Borgo Marina",
+    "Informativa privacy disponibile presso gli sportelli e sul sito aziendale"
+  ],
+  "blocks": [
+    {"type": "title", "text": "Visita dermatologica con dermatoscopia"},
+    {"type": "fields", "columns": 1, "fields": [
+      ["Cognome e nome", "[[PERSONA:Chiara Montanari]]"],
+      ["Data di nascita", "[[DATA_NASCITA:14/05/1990]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Prenotazione CUP", "[[NUMERO_PRENOTAZIONE:2024RN0458812]]"],
+      ["Impegnativa (NRE)", "[[NUMERO_RICETTA:080A41255097632]]"],
+      ["Prestazione", "89.7 - Visita dermatologica; 89.39.2 - Dermatoscopia"],
+      ["Data della visita", "[[DATA_VISITA:05/09/2024]]"]
+    ]},
+    {"type": "section", "text": "Motivo della visita"},
+    {"type": "paragraph", "text": "Controllo dei nevi su richiesta del medico curante per comparsa di una lesione pigmentata in regione scapolare sinistra, modificata nell'ultimo anno secondo quanto riferito dalla paziente."},
+    {"type": "section", "text": "Anamnesi"},
+    {"type": "paragraph", "text": "Fototipo II. Ustioni solari ripetute in età infantile. Familiarità per [[PATOLOGIA:melanoma]] (padre). Non terapie in corso. Riferisce [[ALLERGIA:allergia al nichel]] (dermatite da contatto)."},
+    {"type": "section", "text": "Esame obiettivo e dermatoscopia"},
+    {"type": "paragraph", "text": "Presenza di numerosi nevi melanocitici (oltre 50) distribuiti prevalentemente al tronco. In sede scapolare sinistra lesione pigmentata di [[ESAME_VALORE:7 x 5 mm]], a margini irregolari, con reticolo atipico e area di regressione periferica all'esame dermatoscopico. Le restanti lesioni esaminate presentano pattern reticolare regolare."},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Nevo melanocitico atipico in sede scapolare sinistra]] in paziente con [[DIAGNOSI:nevi multipli]].\n\n**Si propone:** [[INTERVENTO:asportazione chirurgica della lesione]] con esame istologico (in lista per chirurgia dermatologica ambulatoriale, il centro contatterà la paziente).\n**Indicazioni:** fotoprotezione con filtro solare SPF 50+, autoesame della cute mensile.\n**Controllo:** mappatura dei nevi in videodermatoscopia tra 12 mesi."},
+    {"type": "signature", "place_date": "[[LUOGO:Rimini]], [[DATA_REFERTO:05/09/2024]]", "role": "Il Dermatologo", "name": "Dott. [[MEDICO:Lorenzo Casadei]]", "digital": true}
+  ],
+  "negatives": []
+}

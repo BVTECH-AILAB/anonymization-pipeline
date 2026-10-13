@@ -1,0 +1,65 @@
+{
+  "id": "autorizzazione_preventiva_facile_02",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "facile",
+  "style": {"font": "times", "color": "#6A1B9A", "font_size": 9.5, "margins_mm": 20},
+  "persons": {
+    "paz": {"first_name": "Martina", "last_name": "Guidetti", "sex": "F", "birth_date": "1996-07-03", "birth_place": "Ferrara"}
+  },
+  "letterhead": {
+    "logo": "TD",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda USL Terre del Delta]]",
+      "Dipartimento Farmaceutico",
+      "[[REPARTO:Servizio Farmaceutico Territoriale]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Cassoli 30]]",
+      "[[CAP:44121]] [[LUOGO:Ferrara]]",
+      "Orari: lun-ven 8.30-12.30"
+    ]
+  },
+  "footer": [
+    "Mod. FARM-DIA/07 - La richiesta va presentata dall'assistito o da un delegato allo sportello del Servizio Farmaceutico",
+    "Informativa sul trattamento dei dati personali disponibile presso gli sportelli aziendali (art. 13 Reg. UE 2016/679)"
+  ],
+  "blocks": [
+    {"type": "title", "text": "Autorizzazione alla fornitura di sensori glicemici", "subtitle": "Richiesta per sistemi di monitoraggio in continuo del glucosio - DGR 1408/2019"},
+    {"type": "patient_box", "title": "1. DATI DELL'ASSISTITO", "columns": 2, "fields": [
+      ["Cognome", "[[COGNOME:Guidetti]]"],
+      ["Nome", "[[NOME:Martina]]"],
+      ["Nata il", "[[DATA_NASCITA:03/07/1996]]"],
+      ["Nata a", "[[LUOGO_NASCITA:Ferrara]]"],
+      ["Residenza", "[[LUOGO:Comacchio]]"],
+      ["Esenzione ticket", "[[CODICE_ESENZIONE:013]]"]
+    ]},
+    {"type": "char_boxes", "label": "Codice fiscale", "value": "[[CODICE_FISCALE:@paz]]"},
+    {"type": "char_boxes", "label": "N. tessera sanitaria", "value": "[[TESSERA_SANITARIA:@ts]]"},
+    {"type": "section", "text": "2. PRESCRIZIONE"},
+    {"type": "checkboxes", "label": "Tipo di richiesta", "columns": 3, "items": [
+      ["Prima richiesta", false], ["Rinnovo annuale", true], ["Urgente", false]
+    ]},
+    {"type": "checkboxes", "label": "Dispositivo richiesto", "columns": 2, "items": [
+      ["Glucometro e strisce reattive", false],
+      ["Sensore FGM (flash glucose monitoring)", false],
+      ["Sensore CGM real time con allarmi", true],
+      ["Microinfusore con sistema integrato", false]
+    ]},
+    {"type": "paragraph", "text": "Quantità annua richiesta: 36 sensori (durata 10 giorni ciascuno) e 1 trasmettitore. Il dispositivo sostituisce 3 delle 5 strisce giornaliere attualmente autorizzate."},
+    {"type": "section", "text": "3. MOTIVAZIONE CLINICA"},
+    {"type": "paragraph", "text": "Paziente affetta da [[PATOLOGIA:diabete mellito di tipo 1]] dall'età pediatrica, in [[TERAPIA:terapia insulinica multiniettiva]] con [[FARMACO:insulina glargine 18 UI la sera]] e [[FARMACO:insulina lispro ai pasti]] secondo conteggio dei carboidrati. Nell'ultimo anno documentate [[DIAGNOSI:ipoglicemie notturne ricorrenti]] con un episodio di [[DIAGNOSI:ipoglicemia grave]] che ha richiesto l'intervento del 118. Ultima emoglobina glicata [[ESAME_VALORE:61]] mmol/mol. Il monitoraggio in continuo con allarmi predittivi è ritenuto indispensabile per la sicurezza della paziente, che lavora su turni notturni."},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Medico prescrittore", "Dott.ssa [[MEDICO:Federica Bonaccorsi]]"],
+      ["N. iscr. Albo", "[[NUMERO_ALBO:FE-3376]]"],
+      ["Struttura", "[[REPARTO:Servizio di Diabetologia]]"],
+      ["Data", "[[DATA_PRESCRIZIONE:14/01/2026]]"]
+    ]},
+    {"type": "signature", "place_date": "[[LUOGO:Ferrara]], [[DATA_PRESCRIZIONE:14/01/2026]]", "role": "Timbro e firma del diabetologo", "name": "Dott.ssa [[MEDICO:Federica Bonaccorsi]]", "digital": false},
+    {"type": "section", "text": "4. PARERE DELLA COMMISSIONE"},
+    {"type": "paragraph", "text": "Pratica acquisita al protocollo n. **[[NUMERO_PROTOCOLLO:FT/2026/0000812]]**", "align": "left"},
+    {"type": "checkboxes", "columns": 3, "items": [["Parere favorevole", false], ["Parere non favorevole", false], ["Richiesta integrazioni", false]]},
+    {"type": "paragraph", "text": "Motivazione / prescrizioni: _____________________________________________________________\n\nData ____/____/________          Il Farmacista Dirigente ___________________________", "align": "left"}
+  ],
+  "negatives": []
+}

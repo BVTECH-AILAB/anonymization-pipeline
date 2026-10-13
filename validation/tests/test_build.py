@@ -4,6 +4,7 @@ import pytest
 
 from anonval.build import ground_truth, rubric_problems
 from anonval.spec import Mention, Spec
+from anonymization_pipeline.pipeline_config.categories import Registry
 
 SPEC = Spec.model_validate(
     {
@@ -16,7 +17,7 @@ SPEC = Spec.model_validate(
 )
 
 
-def test_entries_pages_and_unmarked_copies() -> None:
+def test_entries_pages_and_unmarked_copies(families: Registry) -> None:
     mentions = [
         Mention("Rosa Neri", "PERSONA", "patient_box"),
         Mention("Rosa Neri", "PERSONA", "footer"),

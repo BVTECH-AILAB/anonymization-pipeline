@@ -13,6 +13,7 @@ from anonval.scoring import (
 )
 from anonval.settings import Thresholds
 from anonval.text import find
+from anonymization_pipeline.pipeline_config.categories import Registry
 
 CF = "BNCGLI78D52A944I"
 TRANSCRIPT = (
@@ -137,7 +138,7 @@ def test_precision_counts_and_negatives() -> None:
     assert score.leaked == ["Paolo Neri", "F"]
 
 
-def test_family_category_counts_as_correct() -> None:
+def test_family_category_counts_as_correct(families: Registry) -> None:
     score = score_document(_gold(), _result([("Paolo Neri", "PERSONA")]), ALL)
     neri = _by_value(score)["Paolo Neri"]
     assert neri.protected and neri.category_family and not neri.category_exact
@@ -153,7 +154,7 @@ def test_disabled_category_is_not_expected() -> None:
     assert score.tp == 2  # CF, and Parkinson inside the expected diagnosis
 
 
-def test_specific_category_falls_back_to_active_generic() -> None:
+def test_specific_category_falls_back_to_active_generic(families: Registry) -> None:
     score = score_document(_gold(), _result(TAGGED), ALL - {"MEDICO"})
     assert _by_value(score)["Paolo Neri"].expected
 

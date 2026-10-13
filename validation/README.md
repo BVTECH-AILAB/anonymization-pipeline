@@ -98,7 +98,8 @@ Un file per documento, con una voce per ogni coppia (valore, categoria):
   "sha256": "...",
   "entities": [
     {"value": "Giulia Bianchi Ferraro", "category": "PERSONA", "group": "anagrafica",
-     "family": "PERSONA", "mentions": 3, "locations": ["running_header", "patient_box"], "pages": [1, 2]}
+     "family": "PERSONA", "mentions": 3, "locations": ["running_header", "patient_box"], "pages": [1, 2],
+     "unmarked": 0}
   ],
   "negatives": [{"value": "Parkinson", "forbidden_categories": ["PERSONA"]}]
 }
@@ -108,6 +109,10 @@ Un file per documento, con una voce per ogni coppia (valore, categoria):
   pagina...). Il report calcola le metriche anche per posizione.
 - `negatives`: stringhe che sembrano dati personali ma non lo sono, come gli eponimi
   ("morbo di Parkinson"). Il servizio non deve censurarle con le categorie indicate.
+- `unmarked`: copie dello stesso testo rimaste senza marcatore. Per esempio "rosa" come colore
+  accanto a "Rosa" come nome, oppure "M" del sesso dentro altre sigle. Il generatore le conta
+  disegnando il PDF una seconda volta con i valori marcati mascherati. Lo scoring le tollera
+  nel Markdown censurato.
 
 ## Validazione
 
@@ -221,7 +226,15 @@ Stanno solo in locale (`validation/results/` è in `.gitignore`).
   docling, che può riformattare il testo; la ricerca ignora maiuscole, spazi, trattini, escape
   Markdown e, per valori di almeno 6 caratteri, anche separatori tra singoli caratteri (caselle).
 - Una stringa molto corta o molto comune (per esempio un `ESAME_VALORE` come `9`) può comparire
-  anche fuori dal punto annotato. Il prompt chiede di evitarlo, ma i numeri isolati restano meno
-  affidabili delle altre categorie.
+  anche fuori dal punto annotato. Il prompt chiede di evitarlo e la ground truth ne conta le
+  copie non marcate (`unmarked`), tollerate dallo scoring. I numeri isolati restano comunque
+  meno affidabili delle altre categorie.
+- Prima di cercare le fughe, i sostituti (tag `[CATEGORIA_n]`, simbolo di redazione, pseudonimi)
+  vengono cancellati dal Markdown censurato usando gli offset `tags` del risultato. Così un
+  valore uguale al nome di una categoria ("gravidanza") non risulta trapelato.
+- Lo scoring è verificato in due modi:
+  - simulando un servizio perfetto, che censura esattamente la ground truth sul testo dei PDF:
+    recall 100%, nessuna fuga, precision 100%;
+  - simulando un servizio che non censura nulla: recall 0%.
 - I confini dei dati sanitari (`DIAGNOSI`, `FARMACO`...) sono per natura sfumati: basta una
   sovrapposizione parziale per contarli come rilevati.

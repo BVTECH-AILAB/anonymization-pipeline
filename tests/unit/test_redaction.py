@@ -43,9 +43,9 @@ def test_longest_span_wins_and_propagation() -> None:
 
 def test_redaction_mode() -> None:
     cfg = pipeline_config(default_mode="redaction")
-    groups = group_entities([E("RSSMRA85M01H501U", "CODICE_FISCALE")])
+    groups = group_entities([E("RSSMRA85M01H501Q", "CODICE_FISCALE")])
 
-    assert redact(["CF: RSSMRA85M01H501U"], groups, cfg)[0] == ["CF: █████"]
+    assert redact(["CF: RSSMRA85M01H501Q"], groups, cfg)[0] == ["CF: █████"]
 
 
 def test_only_the_same_form_shares_a_tag() -> None:

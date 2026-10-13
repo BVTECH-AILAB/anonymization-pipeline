@@ -32,7 +32,7 @@ from anonymization_pipeline.redaction.structure import (
 )
 from tests.pipeline import pipeline_config
 
-CF = "RSSMRA85M01H501U"
+CF = "RSSMRA85M01H501Q"
 
 
 def _prov(page: int, top: float, text: str = "") -> ProvenanceItem:

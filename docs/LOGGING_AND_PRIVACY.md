@@ -103,7 +103,7 @@ dentro il testo restano mascherati.
 | Funzione | Uso |
 |---|---|
 | `hash_identifier(cf)` | SHA256 su `strip().upper()`, stessa normalizzazione di authz: valori confrontabili tra servizi. Per log e DB. |
-| `mask_identifier(cf)` | `R***U`, per log leggibili da un umano. |
+| `mask_identifier(cf)` | `R***Q`, per log leggibili da un umano. |
 | `redact_user_text(text, settings)` | Per testo utente, prompt e risposte LLM. Restituisce `<redacted>`, tranne in local e staging con `ANONPIP_EXTENDED_LOG_CONTEXT=true`: lì restituisce il testo, con i codici fiscali comunque mascherati. In prod è sempre `<redacted>`. |
 | `PiiRedactingFilter` | Installato da `setup_logging` sull'handler di stdout: maschera i codici fiscali in messaggi, argomenti e traceback, inclusi i log di uvicorn. È una rete di sicurezza, non un permesso. |
 

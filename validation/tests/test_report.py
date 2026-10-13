@@ -1,7 +1,14 @@
 """Markdown report of a run."""
 
 from anonval.report import ProfileRun, pct, render_report
-from anonval.scoring import DocScore, ValueOutcome, error_score, summarize, verdict
+from anonval.scoring import (
+    DocScore,
+    Hit,
+    ValueOutcome,
+    error_score,
+    summarize,
+    verdict,
+)
 from anonval.settings import Thresholds
 
 
@@ -42,9 +49,13 @@ def _doc(leak: bool) -> DocScore:
             "Ugo Neri", "FAMILIARE", "persone_correlate", ["paragraph"], True, False
         ),
     ]
+    doc.values[0].sources = ["labels"]
+    doc.values[0].predicted = ["PERSONA"]
+    doc.values[0].leak_pages = [1]
+    doc.values[2].pages = [3]
     doc.tp = 2
-    doc.false_positives = [("Gleason", "PERSONA")]
-    doc.negatives_violated = [("Gleason", "PERSONA")]
+    doc.false_positives = [Hit("Gleason", "PERSONA", ["detection"], 2)]
+    doc.negatives_violated = [Hit("Gleason", "PERSONA", ["detection"], 2)]
     return doc
 
 
@@ -90,8 +101,12 @@ def test_report_has_every_section() -> None:
         "### Documenti respinti o in errore",
     ):
         assert heading in text
-    assert '"Anna Riva" (PERSONA, timbro)' in text
-    assert "Via Po \\| 3" not in text or "\\|" in text
-    assert '"Ugo Neri" (FAMILIARE)' in text
+    assert (
+        '  - "Anna Riva" (PERSONA): in chiaro a pag. 1; nel layout: timbro; '
+        "censurato altrove come PERSONA da etichette"
+    ) in text
+    assert '  - "Ugo Neri" (FAMILIARE): nel PDF a pag. 3; nel layout: paragrafo' in text
+    assert '  - "Gleason" PERSONA: pag. 2, trovato da VLM' in text
+    assert '  - "Gleason" come PERSONA: pag. 2, trovato da VLM' in text
     assert "| `completo` | FAIL |" in text
     assert "x_facile_01`: ERRORE - HTTP 500" in text

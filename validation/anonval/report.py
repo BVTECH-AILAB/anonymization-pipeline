@@ -1,9 +1,10 @@
 """Markdown report of a validation run (Italian, ``it-IT`` number format)."""
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from anonval.scoring import DocScore
+from anonval.scoring import DocScore, Hit, ValueOutcome
 from anonval.settings import Thresholds
 
 LOCATIONS = {
@@ -27,6 +28,14 @@ LOCATIONS = {
     "section": "banda di sezione",
     "checkboxes": "caselle di spunta",
     "body": "corpo",
+}
+# detectors of the service (report.entities[].sources)
+SOURCES = {
+    "detection": "VLM",
+    "verification": "verifica VLM",
+    "rules": "regole",
+    "labels": "etichette",
+    "ner": "NER",
 }
 DIFFICULTIES = ("facile", "media", "complessa")
 STATUS = {
@@ -308,6 +317,64 @@ def _profile(run: ProfileRun, thresholds: Thresholds) -> str:
     return "\n".join(out)
 
 
+def _pages(pages: list[int]) -> str:
+    if not pages:
+        return "pagina n.d."
+    return ("pag. " if len(pages) == 1 else "pagg. ") + ", ".join(map(str, pages))
+
+
+def _by(sources: list[str]) -> str:
+    return ", ".join(SOURCES.get(s, s) for s in sources)
+
+
+def _layout(v: ValueOutcome) -> str:
+    return ", ".join(LOCATIONS.get(x, x) for x in v.locations)
+
+
+def _leak(v: ValueOutcome) -> str:
+    text = f'"{v.value}" ({v.category}): in chiaro a {_pages(v.leak_pages)}; nel layout: {_layout(v)}'
+    if not v.sources:
+        return f"{text}; nessun rilevatore lo ha trovato"
+    return (
+        f"{text}; censurato altrove come {', '.join(v.predicted)} da {_by(v.sources)}"
+    )
+
+
+def _lost(v: ValueOutcome) -> str:
+    return f'"{v.value}" ({v.category}): nel PDF a {_pages(v.pages)}; nel layout: {_layout(v)}'
+
+
+def _value_lines(
+    run: ProfileRun,
+    keep: Callable[[ValueOutcome], bool],
+    line: Callable[[ValueOutcome], str],
+) -> list[str]:
+    """One bullet per document, one sub-bullet per value."""
+    out = []
+    for d in run.docs:
+        values = [v for v in d.values if keep(v)]
+        if values:
+            out.append(f"- `{d.id}`")
+            out += [f"  - {line(v)}" for v in values]
+    return out
+
+
+def _hit_lines(
+    run: ProfileRun, hits: Callable[[DocScore], list[Hit]], before: str
+) -> list[str]:
+    """One bullet per document, one sub-bullet per redaction, with page and detectors."""
+    out = []
+    for d in run.docs:
+        if found := hits(d):
+            out.append(f"- `{d.id}`")
+            out += [
+                f'  - "{h.text}" {before}{h.category}: {_pages([h.page])}, '
+                f"trovato da {_by(h.sources) or 'n.d.'}"
+                for h in found
+            ]
+    return out
+
+
 def _details(run: ProfileRun) -> list[str]:
     out = ["### Dettaglio documenti", ""]
     rows = []
@@ -342,43 +409,15 @@ def _details(run: ProfileRun) -> list[str]:
         ),
         "",
     ]
-    leaks = [
-        f"- `{d.id}`: "
-        + "; ".join(
-            f'"{v.value}" ({v.category}, {", ".join(LOCATIONS.get(x, x) for x in v.locations)})'
-            for v in d.values
-            if v.expected and v.extracted and not v.protected
-        )
-        for d in run.docs
-        if d.leaked
-    ]
+    leaks = _value_lines(
+        run, lambda v: v.expected and v.extracted and not v.protected, _leak
+    )
     out += ["### Valori rimasti in chiaro", "", *(leaks or ["Nessuno."]), ""]
-    lost = [
-        f"- `{d.id}`: "
-        + "; ".join(
-            f'"{v.value}" ({v.category})'
-            for v in d.values
-            if v.expected and not v.extracted
-        )
-        for d in run.docs
-        if any(v.expected and not v.extracted for v in d.values)
-    ]
+    lost = _value_lines(run, lambda v: v.expected and not v.extracted, _lost)
     out += ["### Valori persi dall'estrazione", "", *(lost or ["Nessuno."]), ""]
-    fps = [
-        f"- `{d.id}`: "
-        + "; ".join(f'"{text}" ({category})' for text, category in d.false_positives)
-        for d in run.docs
-        if d.false_positives
-    ]
+    fps = _hit_lines(run, lambda d: d.false_positives, "")
     out += ["### Falsi positivi", "", *(fps or ["Nessuno."]), ""]
-    negatives = [
-        f"- `{d.id}`: "
-        + "; ".join(
-            f'"{text}" come {category}' for text, category in d.negatives_violated
-        )
-        for d in run.docs
-        if d.negatives_violated
-    ]
+    negatives = _hit_lines(run, lambda d: d.negatives_violated, "come ")
     out += ["### Negativi noti censurati", "", *(negatives or ["Nessuno."]), ""]
     failed = [
         f"- `{d.id}`: {STATUS.get(d.status, d.status)}"

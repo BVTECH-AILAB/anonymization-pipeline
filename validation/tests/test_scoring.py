@@ -62,19 +62,36 @@ def _gold() -> dict[str, Any]:
     }
 
 
-def _result(tagged: list[tuple[str, str]], residuals: int = 0) -> dict[str, Any]:
+def _result(
+    tagged: list[tuple[str, str]],
+    residuals: int = 0,
+    sources: dict[str, list[str]] | None = None,
+    transcript: str = TRANSCRIPT,
+) -> dict[str, Any]:
+    """Service result that redacts ``tagged``; every value found by the VLM unless ``sources``
+    says otherwise."""
     occurrences: list[dict[str, Any]] = []
-    for text, category in tagged:
-        start, end = find(TRANSCRIPT, text)[-1]
+    entities: list[dict[str, Any]] = []
+    for i, (text, category) in enumerate(tagged, start=1):
+        start, end = find(transcript, text)[-1]
+        replacement = f"[{category}_{i}]"
         occurrences.append(
             {
                 "original_start": start,
                 "original_end": end,
                 "original": text,
                 "category": category,
+                "replacement": replacement,
             }
         )
-    markdown = TRANSCRIPT
+        entities.append(
+            {
+                "replacement": replacement,
+                "category": category,
+                "sources": (sources or {}).get(text, ["detection"]),
+            }
+        )
+    markdown = transcript
     for o in sorted(occurrences, key=lambda o: -o["original_start"]):
         markdown = (
             markdown[: o["original_start"]]
@@ -86,9 +103,10 @@ def _result(tagged: list[tuple[str, str]], residuals: int = 0) -> dict[str, Any]
         "duration_s": 12.5,
         "result": {
             "markdown": markdown,
-            "transcript": TRANSCRIPT,
+            "transcript": transcript,
             "occurrences": occurrences,
             "report": {
+                "entities": entities,
                 "extraction": {"docling": [1], "vlm": []},
                 "detection": {"hallucinations_discarded": 2, "eponyms_discarded": 1},
                 "verification": {
@@ -133,8 +151,12 @@ def test_precision_counts_and_negatives() -> None:
     score = score_document(_gold(), _result(TAGGED), ALL)
     assert score.tp == 3
     assert score.tp_category == 2
-    assert score.false_positives == [("Diagnosi", "DIAGNOSI")]
-    assert score.negatives_violated == [("Parkinson", "PERSONA")]
+    assert [(h.text, h.category) for h in score.false_positives] == [
+        ("Diagnosi", "DIAGNOSI")
+    ]
+    assert [(h.text, h.category) for h in score.negatives_violated] == [
+        ("Parkinson", "PERSONA")
+    ]
     assert score.leaked == ["Paolo Neri", "F"]
 
 
@@ -269,3 +291,34 @@ def test_replacement_tags_are_not_leaks() -> None:
             gold, {"status": "completed", "result": result}, {"GRAVIDANZA"}
         )
         assert score.values[0].protected
+
+
+def test_sources_of_redactions() -> None:
+    sources = {"Giulia Bianchi": ["labels", "detection"], "Diagnosi": ["ner"]}
+    score = score_document(_gold(), _result(TAGGED, sources=sources), ALL)
+    values = _by_value(score)
+    assert values["Giulia Bianchi"].sources == ["detection", "labels"]
+    assert values["Paolo Neri"].sources == []
+    (fp,) = score.false_positives
+    assert (fp.text, fp.category, fp.sources, fp.page) == (
+        "Diagnosi",
+        "DIAGNOSI",
+        ["ner"],
+        1,
+    )
+    (negative,) = score.negatives_violated
+    assert (negative.text, negative.sources) == ("Parkinson", ["detection"])
+
+
+def test_pages_of_values_and_leaks() -> None:
+    transcript = (
+        "Paziente: Giulia Bianchi\n\n<!-- pagina 2 -->\n\nFirma: Dott. Paolo Neri"
+    )
+    score = score_document(
+        _gold(), _result([("Giulia Bianchi", "PERSONA")], transcript=transcript), ALL
+    )
+    values = _by_value(score)
+    assert values["Giulia Bianchi"].pages == [1]
+    assert values["Giulia Bianchi"].leak_pages == []
+    assert values["Paolo Neri"].pages == [2]
+    assert values["Paolo Neri"].leak_pages == [2]

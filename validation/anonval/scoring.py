@@ -30,6 +30,8 @@ DETECTED = 0.5
 SHORT = 3
 # replacements of tag mode (phases.redaction.tag_format) and of redaction mode
 TAG = re.compile(r"\[[A-Z_]+_\d+\]|\u2588+")
+# separator before pages 2 and following (output.page_separator)
+PAGE = re.compile(r"<!-- pagina (\d+) -->")
 
 
 @dataclass
@@ -45,6 +47,23 @@ class ValueOutcome:
     category_exact: bool = False
     category_family: bool = False
     predicted: list[str] = field(default_factory=list)
+    sources: list[str] = field(
+        default_factory=list
+    )  # detectors that redacted it somewhere
+    pages: list[int] = field(default_factory=list)  # pages where it is
+    leak_pages: list[int] = field(
+        default_factory=list
+    )  # pages where it is left in clear
+
+
+@dataclass
+class Hit:
+    """A redaction the ground truth does not justify (false positive, violated negative)."""
+
+    text: str
+    category: str
+    sources: list[str]
+    page: int
 
 
 @dataclass
@@ -57,9 +76,9 @@ class DocScore:
     values: list[ValueOutcome] = field(default_factory=list)
     tp: int = 0
     tp_category: int = 0
-    false_positives: list[tuple[str, str]] = field(default_factory=list)
+    false_positives: list[Hit] = field(default_factory=list)
     disabled_hits: int = 0
-    negatives_violated: list[tuple[str, str]] = field(default_factory=list)
+    negatives_violated: list[Hit] = field(default_factory=list)
     residuals: int = 0
     verification: str | None = None
     pages_docling: int = 0
@@ -127,6 +146,24 @@ def without_replacements(markdown: str, tags: list[dict[str, Any]] | None) -> st
     return "".join(chars)
 
 
+def page_of(text: str, offset: int) -> int:
+    """Page of ``offset`` in a transcript or redacted Markdown (from the page separators)."""
+    page = 1
+    for match in PAGE.finditer(text, 0, offset):
+        page = int(match.group(1))
+    return page
+
+
+def _sources(result: dict[str, Any]) -> dict[tuple[str, str], list[str]]:
+    """(replacement, category) -> detectors that found the values of that group."""
+    out: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for entity in (result.get("report") or {}).get("entities") or []:
+        out[(entity["replacement"], entity["category"])].update(
+            entity.get("sources") or []
+        )
+    return {key: sorted(found) for key, found in out.items()}
+
+
 def error_score(gold: dict[str, Any], status: str, error: str | None) -> DocScore:
     """Score of a document without a result (rejected, error, timeout)."""
     return DocScore(gold["id"], gold["type"], gold["difficulty"], status, error)
@@ -152,6 +189,10 @@ def score_document(
         if o.get("original_start") is not None
     ]
     spans = [(o["original_start"], o["original_end"]) for o in occurrences]
+    by_group = _sources(result)
+    found_by = [
+        by_group.get((o.get("replacement", ""), o["category"]), []) for o in occurrences
+    ]
     score = DocScore(
         gold["id"],
         gold["type"],
@@ -170,13 +211,19 @@ def score_document(
         )
         found = find(transcript, entity["value"])
         outcome.extracted = bool(found)
+        # where it is: transcript pages, or the PDF pages when the extraction lost it
+        outcome.pages = sorted({page_of(transcript, s) for s, _ in found}) or list(
+            entity.get("pages") or []
+        )
         coverages = [_coverage(span, spans, transcript) for span in found]
         outcome.detected = any(c >= DETECTED for c in coverages)
         if alnum_count(entity["value"]) >= SHORT:
             # copies the ground truth leaves unmarked (the same word as plain text) may stay
-            outcome.protected = outcome.extracted and len(
-                find(markdown, entity["value"])
-            ) <= entity.get("unmarked", 0)
+            clear = find(markdown, entity["value"])
+            outcome.protected = outcome.extracted and len(clear) <= entity.get(
+                "unmarked", 0
+            )
+            clear_pages = {page_of(markdown, s) for s, _ in clear}
         else:
             # short values ("F", "45") also match unrelated text ("C.F."): enough covered
             # occurrences, at most as many as the mentions in the document
@@ -184,11 +231,22 @@ def score_document(
             outcome.protected = outcome.extracted and (
                 sum(1 for c in coverages if c >= 0.99) >= needed
             )
+            clear_pages = {
+                page_of(transcript, span[0])
+                for span, c in zip(found, coverages, strict=True)
+                if c < 0.99
+            }
+        if outcome.extracted and not outcome.protected:
+            outcome.leak_pages = sorted(clear_pages)
+        sources: set[str] = set()
         for span in found:
             instances.append((span, outcome))
-            for o, o_span in zip(occurrences, spans, strict=True):
-                if _overlaps(span, o_span) and o["category"] not in outcome.predicted:
-                    outcome.predicted.append(o["category"])
+            for o, o_span, by in zip(occurrences, spans, found_by, strict=True):
+                if _overlaps(span, o_span):
+                    sources.update(by)
+                    if o["category"] not in outcome.predicted:
+                        outcome.predicted.append(o["category"])
+        outcome.sources = sorted(sources)
         outcome.category_exact = outcome.category in outcome.predicted
         outcome.category_family = any(
             reg.family(c) == reg.family(outcome.category) for c in outcome.predicted
@@ -199,11 +257,12 @@ def score_document(
         (n["value"], {reg.family(c) for c in n["forbidden_categories"]})
         for n in gold.get("negatives", [])
     ]
-    for o, o_span in zip(occurrences, spans, strict=True):
+    for o, o_span, by in zip(occurrences, spans, found_by, strict=True):
         hit = [v for span, v in instances if _overlaps(span, o_span)]
         expected = [v for v in hit if v.expected]
+        page = page_of(transcript, o_span[0])
         if not hit:
-            score.false_positives.append((o["original"], o["category"]))
+            score.false_positives.append(Hit(o["original"], o["category"], by, page))
         elif not expected:
             score.disabled_hits += 1
         else:
@@ -219,7 +278,7 @@ def score_document(
             continue
         for value, families in negatives:
             if family in families and find(o["original"], value):
-                score.negatives_violated.append((value, o["category"]))
+                score.negatives_violated.append(Hit(value, o["category"], by, page))
 
     report = result.get("report") or {}
     verification = report.get("verification") or {}
@@ -354,8 +413,8 @@ def summarize(docs: list[DocScore]) -> dict[str, Any]:
     by_category = _grouped(docs, lambda v: [v.category])
     fp_by_category: dict[str, int] = defaultdict(int)
     for d in docs:
-        for _, category in d.false_positives:
-            fp_by_category[category] += 1
+        for hit in d.false_positives:
+            fp_by_category[hit.category] += 1
     for category, n in fp_by_category.items():
         by_category.setdefault(category, value_stats([]))["falsi_positivi"] = n
     for stats in by_category.values():

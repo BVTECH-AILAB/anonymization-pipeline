@@ -147,7 +147,10 @@ async def test_run_writes_report_and_fails_on_leak(tmp_path: Path) -> None:
     (run_dir,) = (tmp_path / "out").iterdir()
     report = (run_dir / "report.md").read_text()
     assert "## Confronto tra profili" in report
-    assert '"Ugo Neri" (MEDICO, firma)' in report
+    assert (
+        '"Ugo Neri" (MEDICO): in chiaro a pag. 1; nel layout: firma; '
+        "nessun rilevatore lo ha trovato"
+    ) in report
     metrics = json.loads((run_dir / "metriche.json").read_text())
     base = metrics["profili"][0]["metriche"]["overall"]
     assert (

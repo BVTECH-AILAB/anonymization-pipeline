@@ -16,5 +16,9 @@ build/
 .idea/
 .vscode/
 
+# Validation runs and local reference documents
+validation/results/
+validation/riferimenti/
+
 # Local only, never committed
 CLAUDE.md

@@ -50,7 +50,7 @@ fix:
     uv run ruff check --fix
 
 types:
-    uv run ty check src tests
+    uv run ty check src tests validation
 
 # Fix, format and type-check: run before every commit
 lint: fix format types
@@ -59,7 +59,7 @@ lint: fix format types
 check:
     uv run ruff check
     uv run ruff format --check
-    uv run ty check src tests
+    uv run ty check src tests validation
 
 # --- Tests ---
 
@@ -78,6 +78,16 @@ test-cov:
 # Known vulnerabilities in the dependencies
 audit:
     uv run pip-audit --skip-editable
+
+# --- Validation (validation/README.md) ---
+
+# Synthetic dataset: native PDFs and ground truth from validation/dataset/specs
+validation-dataset *args:
+    PYTHONPATH=validation uv run python -m anonval.build {{args}}
+
+# Validation run against the service (`just up` first, with ANONPIP_ALLOW_TRANSCRIPT=true)
+validation *args:
+    bash validation/validate.sh {{args}}
 
 # --- Docs ---
 

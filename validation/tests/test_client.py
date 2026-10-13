@@ -76,7 +76,7 @@ async def test_completed_job_returns_result_without_heavy_fields() -> None:
     )
     assert out["status"] == "completed"
     assert out["duration_s"] == 3.2
-    assert out["result"] == {"markdown": "[PERSONA]", "transcript": "Mario"}
+    assert out["result"] == {"markdown": "[PERSONA]", "transcript": "Mario", "tags": []}
     assert seen == ["running", "completed"]
     assert service.deleted
     post = service.requests[0]

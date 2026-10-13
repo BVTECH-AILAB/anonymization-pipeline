@@ -218,3 +218,53 @@ def test_negative_inside_a_matching_gold_value_is_not_a_violation() -> None:
     ]
     score = score_document(gold, _result([("Paolo Neri", "MEDICO")]), ALL)
     assert score.negatives_violated == []
+
+
+def test_unmarked_copies_are_tolerated() -> None:
+    gold = _gold()
+    neri = next(e for e in gold["entities"] if e["value"] == "Paolo Neri")
+    neri["unmarked"] = 1
+    score = score_document(gold, _result(TAGGED), ALL)
+    assert _by_value(score)["Paolo Neri"].protected
+    neri["unmarked"] = 0
+    score = score_document(gold, _result(TAGGED), ALL)
+    assert not _by_value(score)["Paolo Neri"].protected
+
+
+def test_replacement_tags_are_not_leaks() -> None:
+    transcript = "Paziente in gravidanza alla 12a settimana"
+    gold = {
+        **_gold(),
+        "entities": [
+            {
+                "value": "gravidanza",
+                "category": "GRAVIDANZA",
+                "group": "sanitari",
+                "family": "GRAVIDANZA",
+                "mentions": 1,
+                "locations": ["paragraph"],
+                "pages": [1],
+            }
+        ],
+    }
+    start = transcript.index("gravidanza")
+    markdown = transcript.replace("gravidanza", "[GRAVIDANZA_1]")
+    occurrence = {
+        "original_start": start,
+        "original_end": start + 10,
+        "original": "gravidanza",
+        "category": "GRAVIDANZA",
+    }
+    for tags in ([{"start": start, "end": start + 14}], None):
+        result: dict[str, Any] = {
+            "markdown": markdown,
+            "transcript": transcript,
+            "occurrences": [occurrence],
+            "report": {},
+        }
+        if tags is not None:
+            result["tags"] = tags
+        score = score_document(
+            gold, {"status": "completed", "result": result}, {"GRAVIDANZA"}
+        )
+        assert score.values[0].protected

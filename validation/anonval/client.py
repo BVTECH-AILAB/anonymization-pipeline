@@ -9,7 +9,7 @@ import httpx
 
 BUSY_RETRIES = 30
 # heavy result fields the scoring does not need
-DROPPED = ("encrypted_map_b64", "layout_pdf_b64", "structure_b64", "tags")
+DROPPED = ("encrypted_map_b64", "layout_pdf_b64", "structure_b64")
 FINAL = {"completed", "rejected", "error", "cancelled"}
 
 

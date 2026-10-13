@@ -10,10 +10,12 @@ profile (an inactive specific category falls back to its generic one, as in the 
 *extracted* when it is found in the transcript; values the extraction lost are counted apart and
 left out of the detection metrics. It is *detected* when the redacted spans cover at least half of
 one of its occurrences, *protected* when no clear-text copy is left in the redacted Markdown
+beyond the copies the ground truth leaves unmarked
 (values shorter than 3 letters and digits: when as many occurrences as the ground truth mentions
 are fully covered).
 """
 
+import re
 import statistics
 from collections import defaultdict
 from collections.abc import Callable, Iterable
@@ -26,6 +28,8 @@ from anonymization_pipeline.pipeline_config.categories import registry
 
 DETECTED = 0.5
 SHORT = 3
+# replacements of tag mode (phases.redaction.tag_format) and of redaction mode
+TAG = re.compile(r"\[[A-Z_]+_\d+\]|\u2588+")
 
 
 @dataclass
@@ -111,6 +115,18 @@ def _overlaps(a: tuple[int, int], b: tuple[int, int]) -> bool:
     return a[0] < b[1] and b[0] < a[1]
 
 
+def without_replacements(markdown: str, tags: list[dict[str, Any]] | None) -> str:
+    """Redacted Markdown with the replacements blanked: a tag (``[GRAVIDANZA_1]``) or a
+    pseudonym must never count as a clear-text copy of a value."""
+    if tags is None:
+        return TAG.sub(lambda m: " " * len(m.group(0)), markdown)
+    chars = list(markdown)
+    for tag in tags:
+        for i in range(tag["start"], min(tag["end"], len(chars))):
+            chars[i] = " "
+    return "".join(chars)
+
+
 def error_score(gold: dict[str, Any], status: str, error: str | None) -> DocScore:
     """Score of a document without a result (rejected, error, timeout)."""
     return DocScore(gold["id"], gold["type"], gold["difficulty"], status, error)
@@ -129,7 +145,7 @@ def score_document(
     reg = registry()
     result = job["result"]
     transcript: str = result.get("transcript") or ""
-    markdown: str = result.get("markdown") or ""
+    markdown = without_replacements(result.get("markdown") or "", result.get("tags"))
     occurrences = [
         o
         for o in result.get("occurrences") or []
@@ -157,9 +173,10 @@ def score_document(
         coverages = [_coverage(span, spans, transcript) for span in found]
         outcome.detected = any(c >= DETECTED for c in coverages)
         if alnum_count(entity["value"]) >= SHORT:
-            outcome.protected = outcome.extracted and not find(
-                markdown, entity["value"]
-            )
+            # copies the ground truth leaves unmarked (the same word as plain text) may stay
+            outcome.protected = outcome.extracted and len(
+                find(markdown, entity["value"])
+            ) <= entity.get("unmarked", 0)
         else:
             # short values ("F", "45") also match unrelated text ("C.F."): enough covered
             # occurrences, at most as many as the mentions in the document

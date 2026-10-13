@@ -7,9 +7,11 @@ from typing import Any
 
 import httpx
 
+from anonval.pdftext import layout_pages
+
 BUSY_RETRIES = 30
 # heavy result fields the scoring does not need
-DROPPED = ("encrypted_map_b64", "layout_pdf_b64", "structure_b64")
+DROPPED = ("encrypted_map_b64", "structure_b64")
 FINAL = {"completed", "rejected", "error", "cancelled"}
 
 
@@ -112,7 +114,9 @@ async def run_job(
         }
         if job["status"] == "completed":
             result = await client.get(f"/jobs/{job_id}/result?format=json")
-            outcome["result"] = {k: v for k, v in result.items() if k not in DROPPED}
+            outcome["result"] = layout_pages(
+                {k: v for k, v in result.items() if k not in DROPPED}
+            )
         return outcome
     finally:
         try:

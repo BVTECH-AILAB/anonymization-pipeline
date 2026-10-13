@@ -127,6 +127,10 @@ class LiveRun:
                 else None,
                 "leaks": len(score.leaked),
                 "false_positives": len(score.false_positives),
+                # None: layout PDF not requested; -1: requested but not produced
+                "layout_leaks": len(score.layout_leaked)
+                if score.layout_checked
+                else (-1 if score.layout_missing else None),
                 "seconds": score.duration_s,
                 "error": score.error,
             }
@@ -218,6 +222,7 @@ def _outcomes(run_dir: Path) -> list[dict[str, Any]]:
                 "documenti": overall["documenti"],
                 "documenti_con_fughe": overall["documenti_con_fughe"],
                 "negativi_violati": overall["negativi_violati"],
+                "layout": overall.get("layout"),
                 "tempi_s": overall["tempi_s"],
                 "per_categoria": {
                     k: {

@@ -322,3 +322,70 @@ def test_pages_of_values_and_leaks() -> None:
     assert values["Giulia Bianchi"].leak_pages == []
     assert values["Paolo Neri"].pages == [2]
     assert values["Paolo Neri"].leak_pages == [2]
+
+
+def _with_layout(job: dict[str, Any], pages: list[str] | None) -> dict[str, Any]:
+    job["result"]["layout_pages"] = pages
+    return job
+
+
+def test_layout_pdf_leaks() -> None:
+    tagged = [*TAGGED, ("Paolo Neri", "MEDICO"), ("F", "SESSO")]
+    layout = [
+        "Paziente: [PERSONA_1]\nC.F. [CODICE_FISCALE_2]",
+        "Diagnosi: morbo di [PERSONA_3]. Medico: Dott. Paolo Neri. Sesso: [SESSO_5]",
+    ]
+    score = score_document(_gold(), _with_layout(_result(tagged), layout), ALL)
+    values = _by_value(score)
+    assert score.layout_checked
+    assert values["Paolo Neri"].protected  # censored in the Markdown...
+    assert (
+        values["Paolo Neri"].layout_protected is False
+    )  # ...but not in the layout PDF
+    assert values["Paolo Neri"].layout_leak_pages == [2]
+    assert values["Giulia Bianchi"].layout_protected is True
+    assert (
+        values["F"].layout_protected is None
+    )  # short values are not checked in the PDF
+    assert score.layout_leaked == ["Paolo Neri"]
+
+
+def test_layout_not_requested_or_not_produced() -> None:
+    score = score_document(_gold(), _result(TAGGED), ALL)
+    assert not score.layout_checked
+    assert all(v.layout_protected is None for v in score.values)
+    assert score.layout_leaked == []
+
+
+def test_layout_leaks_in_summary_and_verdict() -> None:
+    tagged = [*TAGGED, ("Paolo Neri", "MEDICO"), ("F", "SESSO")]
+    clean = score_document(_gold(), _result(tagged), ALL)
+    leaky = score_document(
+        _gold(), _with_layout(_result(tagged), ["Giulia Bianchi " + CF]), ALL
+    )
+    overall = summarize([clean, leaky])["overall"]
+    assert overall["layout"] == {
+        "documenti_verificati": 1,
+        "pdf_non_prodotti": 0,
+        "valori_verificati": 4,  # extracted, expected, at least 3 letters and digits
+        "fughe": 2,
+        "tasso_fuga": 0.5,
+        "documenti_con_fughe": 1,
+    }
+    checks = verdict(overall, Thresholds(tasso_fuga_max=0.0))
+    assert checks["tasso_fuga_max"] is True
+    assert checks["tasso_fuga_layout_max"] is False
+    assert (
+        verdict(summarize([clean])["overall"], Thresholds())["tasso_fuga_layout_max"]
+        is None
+    )
+
+
+def test_layout_requested_but_not_produced() -> None:
+    job = _result(TAGGED)
+    job["result"]["report"]["layout"] = "unavailable"
+    score = score_document(_gold(), job, ALL)
+    assert score.layout_missing and not score.layout_checked
+    layout = summarize([score])["overall"]["layout"]
+    assert layout["pdf_non_prodotti"] == 1
+    assert layout["tasso_fuga"] is None

@@ -135,6 +135,8 @@ profili:
 #                Una categoria specifica spenta ricade sulla sua generica se attiva (es. MEDICO
 #                spento, PERSONA attiva -> censurato come PERSONA).
 #
-#  layout        true | false  anche il PDF con il layout dell'originale (non usato dalle
-#                metriche, rallenta). Default del server: false (ANONPIP_DEFAULT_LAYOUT_OUTPUT)
+#  layout        true | false  anche il PDF censurato con il layout dell'originale: la
+#                validazione ne estrae il testo e cerca i valori rimasti in chiaro, con la stessa
+#                soglia tasso_fuga_max (rallenta). Default del server: false
+#                (ANONPIP_DEFAULT_LAYOUT_OUTPUT)
 # =============================================================================

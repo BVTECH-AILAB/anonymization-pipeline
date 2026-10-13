@@ -16,7 +16,8 @@ interface Props {
   leggiModelli: () => void;
   riprovaStato: () => void;
   titolo?: string;
-  senzaTrascrizione?: boolean; // validazione: la trascrizione la chiede sempre, non si sceglie
+  // modulo della validazione: la trascrizione la chiede sempre, il PDF con layout viene verificato
+  validazione?: boolean;
 }
 
 function Sezione({ titolo, riassunto, aperta = false, children }: { titolo: string; riassunto: string; aperta?: boolean; children: React.ReactNode }) {
@@ -73,7 +74,7 @@ function Categorie({ o, setO, cat }: { o: Options; setO: Props["setO"]; cat: Cat
   );
 }
 
-export default function OpzioniRichiesta({ o, setO, predefinite, cat, mod, stato, leggiModelli, riprovaStato, titolo = "Opzioni della richiesta", senzaTrascrizione = false }: Props) {
+export default function OpzioniRichiesta({ o, setO, predefinite, cat, mod, stato, leggiModelli, riprovaStato, titolo = "Opzioni della richiesta", validazione = false }: Props) {
   const base = predefiniti(stato);
   const attivi = o.detectors ?? base ?? [];
   const modelli = FASI_VLM.filter((f) => o.models[f]).length;
@@ -89,7 +90,7 @@ export default function OpzioniRichiesta({ o, setO, predefinite, cat, mod, stato
       </div>
 
       <Sezione titolo="Output" aperta
-               riassunto={[nomeModalita(o.mode), o.layout && "PDF con layout", !senzaTrascrizione && o.transcript && "trascrizione in chiaro"].filter(Boolean).join(" · ")}>
+               riassunto={[nomeModalita(o.mode), o.layout && "PDF con layout", !validazione && o.transcript && "trascrizione in chiaro"].filter(Boolean).join(" · ")}>
         <div className="griglia-opzioni">
           <label>
             Modalità
@@ -102,15 +103,17 @@ export default function OpzioniRichiesta({ o, setO, predefinite, cat, mod, stato
         </div>
         <label className="inline">
           <input type="checkbox" checked={o.layout} onChange={(e) => setO({ ...o, layout: e.target.checked })} />
-          Produci anche il PDF censurato con il layout dell'originale
+          {validazione
+            ? "Verifica anche il PDF censurato con il layout dell'originale (fughe nel PDF; più lento)"
+            : "Produci anche il PDF censurato con il layout dell'originale"}
         </label>
-        {!senzaTrascrizione && (
+        {!validazione && (
           <label className="inline">
             <input type="checkbox" checked={o.transcript} onChange={(e) => setO({ ...o, transcript: e.target.checked })} />
             Restituisci anche la trascrizione in chiaro (debug)
           </label>
         )}
-        {o.transcript && !senzaTrascrizione && (
+        {o.transcript && !validazione && (
           <p className="avviso-rosso">
             Il testo IN CHIARO del documento viaggia nella risposta e resta in memoria sul server fino alla scadenza del
             lavoro. Usalo solo per prove; con la modalità pseudonimo il confronto funziona anche senza, con la chiave.

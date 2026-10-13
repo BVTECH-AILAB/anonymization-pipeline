@@ -251,7 +251,7 @@ function NuovaValidazione({ iniziale, preset }: { iniziale: ConfigIniziale; pres
           </div>
           <OpzioniRichiesta o={p.o} setO={setOpzioni(p.chiave)} predefinite={profiliUI(iniziale.config, modoServizio)[0]?.o ?? p.o}
                             cat={cat} mod={mod} stato={stato} leggiModelli={leggiModelli} riprovaStato={leggiStato}
-                            titolo={`Parametri di ${p.nome || "profilo"}`} senzaTrascrizione />
+                            titolo={`Parametri di ${p.nome || "profilo"}`} validazione />
         </div>
       ))}
 
@@ -339,7 +339,7 @@ function Avanzamento({ r }: { r: Run }) {
           <summary>Documenti completati ({live.finished.length})</summary>
           <table className="tabella">
             <thead>
-              <tr><th>Profilo</th><th>Documento</th><th>Esito</th><th className="num">Recall</th><th className="num">Fughe</th><th className="num">Falsi pos.</th><th className="num">Secondi</th></tr>
+              <tr><th>Profilo</th><th>Documento</th><th>Esito</th><th className="num">Recall</th><th className="num">Fughe</th><th className="num">Fughe PDF</th><th className="num">Falsi pos.</th><th className="num">Secondi</th></tr>
             </thead>
             <tbody>
               {[...live.finished].reverse().map((d) => (
@@ -349,6 +349,9 @@ function Avanzamento({ r }: { r: Run }) {
                   <td className={d.status === "completed" ? "" : "errore"} title={d.error ?? undefined}>{DOC_STATO[d.status] ?? d.status}</td>
                   <td className="num">{pct(d.recall)}</td>
                   <td className={`num ${d.leaks ? "errore" : ""}`}>{d.leaks}</td>
+                  <td className={`num ${d.layout_leaks ? "errore" : ""}`}>
+                    {d.layout_leaks === null ? "–" : d.layout_leaks < 0 ? "non prodotto" : d.layout_leaks}
+                  </td>
                   <td className="num">{d.false_positives}</td>
                   <td className="num">{num(d.seconds)}</td>
                 </tr>
@@ -376,6 +379,12 @@ function EsitoDiProfilo({ p }: { p: EsitoProfilo }) {
         <Riquadro etichetta="Recall" valore={pct(p.recall)} classe={p.soglie.recall_min === false ? "errore" : ""} />
         <Riquadro etichetta="Tasso di fuga" valore={pct(p.tasso_fuga)} classe={p.soglie.tasso_fuga_max === false ? "errore" : ""}
                   nota={`${p.documenti_con_fughe} documenti con fughe`} />
+        {p.layout && (
+          <Riquadro etichetta="Fuga nel PDF con layout"
+                    valore={p.layout.documenti_verificati ? pct(p.layout.tasso_fuga) : "non prodotto"}
+                    classe={p.soglie.tasso_fuga_layout_max === false ? "errore" : ""}
+                    nota={`${p.layout.documenti_con_fughe} documenti con fughe${p.layout.pdf_non_prodotti ? `, ${p.layout.pdf_non_prodotti} PDF non prodotti` : ""}`} />
+        )}
         <Riquadro etichetta="Precision" valore={pct(p.precision)} classe={p.soglie.precision_min === false ? "errore" : ""} />
         <Riquadro etichetta="F1" valore={pct(p.f1)} classe={p.soglie.f1_min === false ? "errore" : ""} />
         <Riquadro etichetta="Documenti" valore={`${p.documenti.completati}/${p.documenti.totali}`}

@@ -226,6 +226,7 @@ documento.
 | F1 | media armonica di precision e recall |
 | Categoria esatta / famiglia | tra i valori rilevati, quelli con la stessa categoria della ground truth o della stessa famiglia (`generic` di `categories.yaml`) |
 | Documenti con fughe | documenti con almeno un valore rimasto in chiaro |
+| Tasso di fuga nel PDF con layout | solo con `layout: true`. Il testo del PDF censurato con il layout dell'originale, estratto pagina per pagina, è controllato come il Markdown. Si contano i valori di almeno 3 lettere o cifre ancora in chiaro, sul totale di quelli verificati. Vale la stessa soglia `tasso_fuga_max`. Il report conta anche i PDF richiesti ma non prodotti. |
 | Negativi violati | negativi noti censurati con una categoria vietata |
 | Valori persi dall'estrazione | valori assenti dalla trascrizione: problema di estrazione, esclusi da recall e fughe |
 | Verificatore | documenti con fughe segnalate e non segnalate dai residui di `verification=report`, falsi allarmi |

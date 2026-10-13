@@ -68,6 +68,15 @@ export interface EsitoProfilo {
   documenti: { totali: number; completati: number; respinti: number; errori: number };
   documenti_con_fughe: number;
   negativi_violati: number;
+  /** PDF con layout: null se nessun profilo l'ha chiesto. */
+  layout: {
+    documenti_verificati: number;
+    pdf_non_prodotti: number;
+    valori_verificati: number;
+    fughe: number;
+    tasso_fuga: number | null;
+    documenti_con_fughe: number;
+  } | null;
   tempi_s: { medio: number | null; p95: number | null; totale: number };
   per_categoria: Record<string, { attesi: number; fughe: number; tasso_fuga: number | null }>;
 }
@@ -96,6 +105,7 @@ export interface Avanzamento {
     recall: number | null;
     leaks: number;
     false_positives: number;
+    layout_leaks: number | null; // null: PDF con layout non chiesto; -1: chiesto ma non prodotto
     seconds: number | null;
     error: string | null;
   }[];

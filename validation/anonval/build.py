@@ -12,11 +12,11 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-import pypdfium2 as pdfium
 from pydantic import ValidationError
 from reportlab.platypus.doctemplate import LayoutError
 from rich.console import Console
 
+from anonval.pdftext import page_texts
 from anonval.render import render_pdf
 from anonval.spec import DIFFICULTIES, DOC_TYPES, Mention, Spec, resolve
 from anonval.text import find
@@ -35,21 +35,6 @@ IDENTIFYING = {"facile": (8, 18), "media": (15, 35), "complessa": (30, 200)}
 NOT_IDENTIFYING = {"sanitari", "particolari"}
 
 console = Console()
-
-
-def page_texts(pdf: bytes) -> list[str]:
-    """Text layer of every page, as PDFium extracts it."""
-    doc = pdfium.PdfDocument(pdf)
-    try:
-        texts = []
-        for page in doc:
-            textpage = page.get_textpage()
-            texts.append(textpage.get_text_range())
-            textpage.close()
-            page.close()
-        return texts
-    finally:
-        doc.close()
 
 
 def ground_truth(

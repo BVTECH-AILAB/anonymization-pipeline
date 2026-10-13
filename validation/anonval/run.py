@@ -104,6 +104,11 @@ def _doc_line(profile: str, score: DocScore) -> str:
     )
     leaks = len(score.leaked)
     leak_text = f"[red]fughe {leaks}[/red]" if leaks else "fughe 0"
+    if score.layout_checked:
+        n = len(score.layout_leaked)
+        leak_text += f" ([red]PDF {n}[/red])" if n else " (PDF 0)"
+    elif score.layout_missing:
+        leak_text += " ([yellow]PDF non prodotto[/yellow])"
     return (
         f"{head} recall {pct(recall)} {leak_text} falsi pos. {len(score.false_positives)} "
         f"{num(score.duration_s)} s"

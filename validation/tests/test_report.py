@@ -110,3 +110,41 @@ def test_report_has_every_section() -> None:
     assert '  - "Gleason" come PERSONA: pag. 2, trovato da VLM' in text
     assert "| `completo` | FAIL |" in text
     assert "x_facile_01`: ERRORE - HTTP 500" in text
+
+
+def test_layout_pdf_sections() -> None:
+    doc = _doc(leak=False)
+    doc.layout_checked = True
+    doc.values[0].layout_protected = False
+    doc.values[0].layout_leak_pages = [2]
+    doc.values[1].layout_protected = True
+    missing = _doc(leak=False)
+    missing.id = "referto_esterno_media_03"
+    missing.layout_missing = True
+    summary = summarize([doc, missing])
+    run = ProfileRun(
+        "con-layout",
+        "",
+        {"layout": "true"},
+        summary,
+        verdict(summary["overall"], Thresholds()),
+        [doc, missing],
+    )
+    text = render_report({}, [run], Thresholds())
+    assert "| `con-layout` | FAIL | 2/0/0 |" in text
+    assert "| Tasso di fuga nel PDF con layout | 50,0% | <= 0,0% | FAIL |" in text
+    assert "### PDF con layout" in text
+    assert "| PDF richiesti ma non prodotti | 1 |" in text
+    assert (
+        '"Anna Riva" (PERSONA): in chiaro a pag. 2 del PDF; nel layout: timbro; '
+        "censurato nel Markdown"
+    ) in text
+    assert "| referto_esterno_media_03 | OK | 100,0% | 0 | non prodotto |" in text
+
+
+def test_no_layout_section_when_not_requested() -> None:
+    text = render_report({}, [_run("completo", False)], Thresholds())
+    assert "PDF con layout" not in text.replace("Fuga PDF layout", "").replace(
+        "Fughe PDF layout", ""
+    )
+    assert "| non richiesto |" in text

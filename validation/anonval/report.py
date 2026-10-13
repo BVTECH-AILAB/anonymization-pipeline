@@ -45,12 +45,36 @@ STATUS = {
     "timeout": "TIMEOUT",
     "cancelled": "ANNULLATO",
 }
+# verdict key -> label, value in the overall metrics, operator, threshold of config.yaml
 THRESHOLD_LABELS = {
-    "recall_min": ("Recall", "recall", ">="),
-    "tasso_fuga_max": ("Tasso di fuga", "tasso_fuga", "<="),
-    "precision_min": ("Precision", "precision", ">="),
-    "f1_min": ("F1", "f1", ">="),
+    "recall_min": ("Recall", ("recall",), ">=", "recall_min"),
+    "tasso_fuga_max": ("Tasso di fuga", ("tasso_fuga",), "<=", "tasso_fuga_max"),
+    "tasso_fuga_layout_max": (
+        "Tasso di fuga nel PDF con layout",
+        ("layout", "tasso_fuga"),
+        "<=",
+        "tasso_fuga_max",
+    ),
+    "precision_min": ("Precision", ("precision",), ">=", "precision_min"),
+    "f1_min": ("F1", ("f1",), ">=", "f1_min"),
 }
+
+
+def _metric(overall: dict[str, Any], path: tuple[str, ...]) -> Any:
+    value: Any = overall
+    for key in path:
+        value = (value or {}).get(key)
+    return value
+
+
+def _layout_rate(overall: dict[str, Any]) -> str:
+    """Leak rate in the layout PDF, "non richiesto" or "non prodotto"."""
+    layout = overall.get("layout")
+    if not layout:
+        return "non richiesto"
+    if not layout["documenti_verificati"]:
+        return "non prodotto"
+    return pct(layout["tasso_fuga"])
 
 
 @dataclass
@@ -113,6 +137,7 @@ def _summary_rows(runs: list[ProfileRun]) -> list[list[Any]]:
                 f"{d['completati']}/{d['respinti']}/{d['errori']}",
                 pct(o["recall"]),
                 pct(o["tasso_fuga"]),
+                _layout_rate(o),
                 pct(o["precision"]),
                 pct(o["f1"]),
                 o["documenti_con_fughe"],
@@ -190,13 +215,15 @@ def _profile(run: ProfileRun, thresholds: Thresholds) -> str:
     o = run.summary["overall"]
 
     rows = []
-    for key, (label, metric, op) in THRESHOLD_LABELS.items():
+    for key, (label, path, op, limit) in THRESHOLD_LABELS.items():
+        if key == "tasso_fuga_layout_max" and not o.get("layout"):
+            continue  # layout PDF not requested
         rows.append(
             [
                 label,
-                pct(o[metric]),
-                f"{op} {pct(getattr(thresholds, key))}",
-                _outcome(run.verdict[key]),
+                pct(_metric(o, path)),
+                f"{op} {pct(getattr(thresholds, limit))}",
+                _outcome(run.verdict.get(key)),
             ]
         )
     out += ["### Soglie", "", table(["Metrica", "Valore", "Soglia", "Esito"], rows), ""]
@@ -239,6 +266,26 @@ def _profile(run: ProfileRun, thresholds: Thresholds) -> str:
         ),
         "",
     ]
+    if layout := o.get("layout"):
+        out += [
+            "### PDF con layout",
+            "",
+            "Testo del PDF censurato con il layout dell'originale, controllato come il Markdown "
+            "(valori di almeno 3 lettere o cifre).",
+            "",
+            table(
+                ["Misura", "Valore"],
+                [
+                    ["Documenti verificati", layout["documenti_verificati"]],
+                    ["PDF richiesti ma non prodotti", layout["pdf_non_prodotti"]],
+                    ["Valori verificati", layout["valori_verificati"]],
+                    ["Valori rimasti in chiaro nel PDF", layout["fughe"]],
+                    ["Tasso di fuga nel PDF", pct(layout["tasso_fuga"])],
+                    ["Documenti con fughe nel PDF", layout["documenti_con_fughe"]],
+                ],
+            ),
+            "",
+        ]
 
     by_difficulty = run.summary["by_difficulty"]
     if by_difficulty:
@@ -340,6 +387,20 @@ def _leak(v: ValueOutcome) -> str:
     )
 
 
+def _layout_leak(v: ValueOutcome) -> str:
+    where = "censurato nel Markdown" if v.protected else "in chiaro anche nel Markdown"
+    return (
+        f'"{v.value}" ({v.category}): in chiaro a {_pages(v.layout_leak_pages)} del PDF; '
+        f"nel layout: {_layout(v)}; {where}"
+    )
+
+
+def _layout_leaks(d: DocScore) -> str | int:
+    if d.layout_checked:
+        return len(d.layout_leaked)
+    return "non prodotto" if d.layout_missing else "–"
+
+
 def _lost(v: ValueOutcome) -> str:
     return f'"{v.value}" ({v.category}): nel PDF a {_pages(v.pages)}; nel layout: {_layout(v)}'
 
@@ -387,6 +448,7 @@ def _details(run: ProfileRun) -> list[str]:
                 STATUS.get(d.status, d.status),
                 pct(detected / len(expected) if expected else None),
                 len(d.leaked),
+                _layout_leaks(d),
                 len(d.false_positives),
                 len(d.negatives_violated),
                 d.residuals,
@@ -400,6 +462,7 @@ def _details(run: ProfileRun) -> list[str]:
                 "Esito",
                 "Recall",
                 "Fughe",
+                "Fughe PDF layout",
                 "Falsi pos.",
                 "Negativi",
                 "Residui",
@@ -413,6 +476,14 @@ def _details(run: ProfileRun) -> list[str]:
         run, lambda v: v.expected and v.extracted and not v.protected, _leak
     )
     out += ["### Valori rimasti in chiaro", "", *(leaks or ["Nessuno."]), ""]
+    if any(d.layout_checked for d in run.docs):
+        in_pdf = _value_lines(run, lambda v: v.layout_protected is False, _layout_leak)
+        out += [
+            "### Valori rimasti in chiaro nel PDF con layout",
+            "",
+            *(in_pdf or ["Nessuno."]),
+            "",
+        ]
     lost = _value_lines(run, lambda v: v.expected and not v.extracted, _lost)
     out += ["### Valori persi dall'estrazione", "", *(lost or ["Nessuno."]), ""]
     fps = _hit_lines(run, lambda d: d.false_positives, "")
@@ -459,6 +530,7 @@ def render_report(
                 "Documenti",
                 "Recall",
                 "Tasso fuga",
+                "Fuga PDF layout",
                 "Precision",
                 "F1",
                 "Doc. con fughe",

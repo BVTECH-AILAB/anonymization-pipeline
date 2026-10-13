@@ -47,13 +47,15 @@ class ValueOutcome:
     category_exact: bool = False
     category_family: bool = False
     predicted: list[str] = field(default_factory=list)
-    sources: list[str] = field(
-        default_factory=list
-    )  # detectors that redacted it somewhere
-    pages: list[int] = field(default_factory=list)  # pages where it is
-    leak_pages: list[int] = field(
-        default_factory=list
-    )  # pages where it is left in clear
+    # detectors that redacted it somewhere
+    sources: list[str] = field(default_factory=list)
+    # pages where it is
+    pages: list[int] = field(default_factory=list)
+    # pages where it is left in clear
+    leak_pages: list[int] = field(default_factory=list)
+    # censored layout PDF (layout: true): None = not checked (no PDF, value too short)
+    layout_protected: bool | None = None
+    layout_leak_pages: list[int] = field(default_factory=list)
 
 
 @dataclass
@@ -87,6 +89,10 @@ class DocScore:
     eponyms_discarded: int = 0
     duration_s: float | None = None
     pipeline_s: float | None = None
+    # the censored layout PDF was produced and checked
+    layout_checked: bool = False
+    # the layout PDF was requested but not produced or not readable
+    layout_missing: bool = False
 
     @property
     def leaked(self) -> list[str]:
@@ -95,6 +101,10 @@ class DocScore:
             for v in self.values
             if v.expected and v.extracted and not v.protected
         ]
+
+    @property
+    def layout_leaked(self) -> list[str]:
+        return [v.value for v in self.values if v.layout_protected is False]
 
 
 def active_categories(
@@ -144,6 +154,29 @@ def without_replacements(markdown: str, tags: list[dict[str, Any]] | None) -> st
         for i in range(tag["start"], min(tag["end"], len(chars))):
             chars[i] = " "
     return "".join(chars)
+
+
+def _check_layout(score: DocScore, gold: dict[str, Any], pages: list[str]) -> None:
+    """Clear-text copies in the text of the censored layout PDF (replacements already blanked).
+
+    Same rule as the Markdown for values of at least 3 letters and digits: no more copies than the
+    ground truth leaves unmarked. Shorter values ("F", "45") are not checked: without offsets
+    they cannot be told apart from unrelated text.
+    """
+    unmarked = {
+        (e["value"], e["category"]): e.get("unmarked", 0) for e in gold["entities"]
+    }
+    for v in score.values:
+        if not (v.expected and v.extracted) or alnum_count(v.value) < SHORT:
+            continue
+        found = [
+            (i + 1, n)
+            for i, page in enumerate(pages)
+            if (n := len(find(page, v.value)))
+        ]
+        v.layout_protected = sum(n for _, n in found) <= unmarked[(v.value, v.category)]
+        if not v.layout_protected:
+            v.layout_leak_pages = [page for page, _ in found]
 
 
 def page_of(text: str, offset: int) -> int:
@@ -253,6 +286,18 @@ def score_document(
         )
         score.values.append(outcome)
 
+    layout_pages = result.get("layout_pages")
+    if layout_pages is not None:
+        score.layout_checked = True
+        _check_layout(
+            score, gold, [without_replacements(p, None) for p in layout_pages]
+        )
+    elif (
+        result.get("layout_error")
+        or (result.get("report") or {}).get("layout") == "unavailable"
+    ):
+        score.layout_missing = True
+
     negatives = [
         (n["value"], {reg.family(c) for c in n["forbidden_categories"]})
         for n in gold.get("negatives", [])
@@ -358,6 +403,22 @@ def _overall(docs: list[DocScore]) -> dict[str, Any]:
         for reason in d.pages_vlm:
             vlm_reasons[reason] += 1
     durations = [d.duration_s for d in done if d.duration_s is not None]
+    checked = [d for d in done if d.layout_checked]
+    missing = sum(1 for d in done if d.layout_missing)
+    layout = None
+    if checked or missing:
+        verified = [
+            v for d in checked for v in d.values if v.layout_protected is not None
+        ]
+        leaks = sum(1 for v in verified if v.layout_protected is False)
+        layout = {
+            "documenti_verificati": len(checked),
+            "pdf_non_prodotti": missing,
+            "valori_verificati": len(verified),
+            "fughe": leaks,
+            "tasso_fuga": _ratio(leaks, len(verified)),
+            "documenti_con_fughe": sum(1 for d in checked if d.layout_leaked),
+        }
     return {
         "documenti": {
             "totali": len(docs),
@@ -379,6 +440,7 @@ def _overall(docs: list[DocScore]) -> dict[str, Any]:
         "precision_categoria": precision_category,
         "f1": _f1(precision, values["recall"]),
         "documenti_con_fughe": sum(1 for d in done if d.leaked),
+        "layout": layout,
         "negativi_violati": sum(len(d.negatives_violated) for d in done),
         "verificatore": verifier,
         "estrazione": {
@@ -467,4 +529,10 @@ def verdict(overall: dict[str, Any], thresholds: Thresholds) -> dict[str, bool |
         ),
         "precision_min": check(overall["precision"], thresholds.precision_min, True),
         "f1_min": check(overall["f1"], thresholds.f1_min, True),
+        # the leak threshold applies to the censored layout PDF too, when it was checked
+        "tasso_fuga_layout_max": check(
+            (overall.get("layout") or {}).get("tasso_fuga"),
+            thresholds.tasso_fuga_max,
+            False,
+        ),
     }

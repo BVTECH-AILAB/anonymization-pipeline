@@ -139,7 +139,7 @@ phases:
 #  categories: {groups: {organizzazioni: false}, DATORE_LAVORO: true};
 #  a category given in the same file wins over its group.
 # -----------------------------------------------------------------------------
-categories: {}
+categories: {groups: {date: false, persone_correlate: false, sanitari: false}, ETA: false, STATO_CIVILE: false, PROFESSIONE: false, SESSO: false, STATO: false}
 
 # -----------------------------------------------------------------------------
 #  Output

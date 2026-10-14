@@ -91,11 +91,17 @@ phases:
     max_tokens: 4096
     use_image: true             # besides the Markdown, the model sees the page (context: label or value)
     # One call per pass and per page. Short passes: with many categories together the models
-    # confuse similar ones and skip some. Each entry is a group or a category.
+    # confuse similar ones and skip some. Each entry is a group or a category; a category already
+    # named in an earlier pass is skipped, inactive ones are dropped, an empty pass is not called.
+    # With the default categories the three passes hold about 20 categories each, and each one
+    # carries one of the clusters the VLM finds mostly alone (persons, health codes, wards and
+    # facilities); the others are covered by the rules too. A family (categories.yaml, generic)
+    # stays in one pass, so the model chooses among its similar categories in the same call.
     passes:
-      - [anagrafica, residenza, persone_correlate, documenti]
-      - [identificativi, contatti, finanziari, veicoli, identificativi_sanitari, date, organizzazioni]
-      - [sanitari, particolari]
+      - [anagrafica, residenza, documenti, persone_correlate, date]
+      - [identificativi, identificativi_sanitari, finanziari, ID_DISPOSITIVO]
+      - [organizzazioni, particolari, contatti, veicoli]
+      - [sanitari]
     # Detectors in union, run in parallel on every page: one is enough to flag a value.
     # For the same text, between categories of different families the most reliable wins: rules,
     # labels, ner, vlm. The eponym filter applies to all of them (VLM and verification included).

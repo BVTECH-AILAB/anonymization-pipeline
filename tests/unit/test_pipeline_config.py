@@ -5,6 +5,7 @@ import yaml
 
 from anonymization_pipeline.pipeline_config import (
     PHASES,
+    PipelineConfig,
     effective,
     load_pipeline_config,
     registry,
@@ -417,3 +418,60 @@ def test_effective_configuration_hides_the_api_key() -> None:
     assert (
         effective(pipeline_config(vlm_api_key="secret"))["backend"]["api_key"] == "***"
     )
+
+
+def _pass_of(passes: list[list[str]], category: str) -> int:
+    return next(i for i, p in enumerate(passes) if category in p)
+
+
+def _production_categories() -> PipelineConfig:
+    """The packaged defaults with the production categories (the test fixture turns all on)."""
+    return pipeline_config({"categories": base()["categories"]})
+
+
+def test_default_passes_are_balanced() -> None:
+    sizes = [len(p) for p in _production_categories().passes("detection")]
+
+    assert len(sizes) == 3
+    assert max(sizes) - min(sizes) <= 4
+
+
+def test_default_passes_split_the_categories_the_vlm_finds_alone() -> None:
+    passes = _production_categories().passes("detection")
+
+    hardest = {_pass_of(passes, c) for c in ("PERSONA", "CODICE_CAMPIONE", "REPARTO")}
+
+    assert len(hardest) == 3
+
+
+def test_default_passes_keep_each_family_and_the_health_codes_together() -> None:
+    cfg = _production_categories()
+    reg = registry()
+    passes = cfg.passes("detection")
+    families: dict[str, set[int]] = {}
+    for category in cfg.active():
+        families.setdefault(reg.family(category), set()).add(_pass_of(passes, category))
+    health_codes = {
+        _pass_of(passes, c)
+        for c in reg.expand(["identificativi_sanitari"])
+        if c in cfg.active()
+    }
+
+    assert all(len(found) == 1 for found in families.values())
+    assert len(health_codes) == 1
+
+
+def test_switched_on_groups_get_a_planned_pass_not_the_catch_all() -> None:
+    cfg = pipeline_config(
+        {
+            "categories": {
+                "groups": {"date": True, "persone_correlate": True, "sanitari": True}
+            }
+        }
+    )
+    reg = registry()
+    passes = cfg.passes("detection")
+
+    assert sorted(passes[-1]) == sorted(reg.expand(["sanitari"]))
+    assert _pass_of(passes, "MEDICO") == _pass_of(passes, "PERSONA")
+    assert _pass_of(passes, "DATA_VISITA") == _pass_of(passes, "DATA_NASCITA")

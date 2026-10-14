@@ -93,6 +93,8 @@ class DocScore:
     layout_checked: bool = False
     # the layout PDF was requested but not produced or not readable
     layout_missing: bool = False
+    # visual similarity of every page of the layout PDF to the original (1 = the same)
+    layout_similarity: list[float] = field(default_factory=list)
 
     @property
     def leaked(self) -> list[str]:
@@ -289,6 +291,7 @@ def score_document(
     layout_pages = result.get("layout_pages")
     if layout_pages is not None:
         score.layout_checked = True
+        score.layout_similarity = list(result.get("layout_similarity") or [])
         _check_layout(
             score, gold, [without_replacements(p, None) for p in layout_pages]
         )
@@ -411,6 +414,7 @@ def _overall(docs: list[DocScore]) -> dict[str, Any]:
             v for d in checked for v in d.values if v.layout_protected is not None
         ]
         leaks = sum(1 for v in verified if v.layout_protected is False)
+        similarities = [s for d in checked for s in d.layout_similarity]
         layout = {
             "documenti_verificati": len(checked),
             "pdf_non_prodotti": missing,
@@ -418,6 +422,10 @@ def _overall(docs: list[DocScore]) -> dict[str, Any]:
             "fughe": leaks,
             "tasso_fuga": _ratio(leaks, len(verified)),
             "documenti_con_fughe": sum(1 for d in checked if d.layout_leaked),
+            "somiglianza_media": round(statistics.fmean(similarities), 4)
+            if similarities
+            else None,
+            "somiglianza_minima": min(similarities, default=None),
         }
     return {
         "documenti": {

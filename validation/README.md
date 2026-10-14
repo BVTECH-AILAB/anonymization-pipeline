@@ -227,6 +227,7 @@ documento.
 | Categoria esatta / famiglia | tra i valori rilevati, quelli con la stessa categoria della ground truth o della stessa famiglia (`generic` di `categories.yaml`) |
 | Documenti con fughe | documenti con almeno un valore rimasto in chiaro |
 | Tasso di fuga nel PDF con layout | solo con `layout: true`. Il testo del PDF censurato con il layout dell'originale, estratto pagina per pagina, è controllato come il Markdown. Si contano i valori di almeno 3 lettere o cifre ancora in chiaro, sul totale di quelli verificati. Vale la stessa soglia `tasso_fuga_max`. Il report conta anche i PDF richiesti ma non prodotti. |
+| Somiglianza del layout | solo con `layout: true`. Per ogni pagina, 1 meno la differenza media dei livelli di grigio fra l'originale e il PDF censurato, renderizzati a 50 dpi (1 = identiche). I tag cambiano parte della pagina, quindi non arriva mai a 1: serve a confrontare versioni del renderer. Media e pagina peggiore, senza soglia. |
 | Negativi violati | negativi noti censurati con una categoria vietata |
 | Valori persi dall'estrazione | valori assenti dalla trascrizione: problema di estrazione, esclusi da recall e fughe |
 | Verificatore | documenti con fughe segnalate e non segnalate dai residui di `verification=report`, falsi allarmi |

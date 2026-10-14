@@ -76,6 +76,9 @@ export interface EsitoProfilo {
     fughe: number;
     tasso_fuga: number | null;
     documenti_con_fughe: number;
+    /** Somiglianza visiva delle pagine all'originale (1 = identiche). */
+    somiglianza_media: number | null;
+    somiglianza_minima: number | null;
   } | null;
   tempi_s: { medio: number | null; p95: number | null; totale: number };
   per_categoria: Record<string, { attesi: number; fughe: number; tasso_fuga: number | null }>;

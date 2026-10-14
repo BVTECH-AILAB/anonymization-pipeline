@@ -371,6 +371,8 @@ def test_layout_leaks_in_summary_and_verdict() -> None:
         "fughe": 2,
         "tasso_fuga": 0.5,
         "documenti_con_fughe": 1,
+        "somiglianza_media": None,
+        "somiglianza_minima": None,
     }
     checks = verdict(overall, Thresholds(tasso_fuga_max=0.0))
     assert checks["tasso_fuga_max"] is True
@@ -389,3 +391,16 @@ def test_layout_requested_but_not_produced() -> None:
     layout = summarize([score])["overall"]["layout"]
     assert layout["pdf_non_prodotti"] == 1
     assert layout["tasso_fuga"] is None
+
+
+def test_layout_similarity_in_summary() -> None:
+    first = _with_layout(_result(TAGGED), ["", ""])
+    first["result"]["layout_similarity"] = [0.9, 0.8]
+    second = _with_layout(_result(TAGGED), [""])
+    second["result"]["layout_similarity"] = [1.0]
+
+    scores = [score_document(_gold(), job, ALL) for job in (first, second)]
+
+    assert scores[0].layout_similarity == [0.9, 0.8]
+    layout = summarize(scores)["overall"]["layout"]
+    assert layout["somiglianza_media"] == 0.9 and layout["somiglianza_minima"] == 0.8

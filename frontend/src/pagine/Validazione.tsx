@@ -385,6 +385,10 @@ function EsitoDiProfilo({ p }: { p: EsitoProfilo }) {
                     classe={p.soglie.tasso_fuga_layout_max === false ? "errore" : ""}
                     nota={`${p.layout.documenti_con_fughe} documenti con fughe${p.layout.pdf_non_prodotti ? `, ${p.layout.pdf_non_prodotti} PDF non prodotti` : ""}`} />
         )}
+        {p.layout && p.layout.somiglianza_media !== null && (
+          <Riquadro etichetta="Somiglianza del layout" valore={pct(p.layout.somiglianza_media)}
+                    nota={`pagina peggiore ${pct(p.layout.somiglianza_minima)}`} />
+        )}
         <Riquadro etichetta="Precision" valore={pct(p.precision)} classe={p.soglie.precision_min === false ? "errore" : ""} />
         <Riquadro etichetta="F1" valore={pct(p.f1)} classe={p.soglie.f1_min === false ? "errore" : ""} />
         <Riquadro etichetta="Documenti" valore={`${p.documenti.completati}/${p.documenti.totali}`}

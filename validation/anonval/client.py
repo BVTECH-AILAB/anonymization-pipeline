@@ -115,7 +115,7 @@ async def run_job(
         if job["status"] == "completed":
             result = await client.get(f"/jobs/{job_id}/result?format=json")
             outcome["result"] = layout_pages(
-                {k: v for k, v in result.items() if k not in DROPPED}
+                {k: v for k, v in result.items() if k not in DROPPED}, data
             )
         return outcome
     finally:

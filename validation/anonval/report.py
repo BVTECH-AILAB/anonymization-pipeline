@@ -74,7 +74,11 @@ def _layout_rate(overall: dict[str, Any]) -> str:
         return "non richiesto"
     if not layout["documenti_verificati"]:
         return "non prodotto"
-    return pct(layout["tasso_fuga"])
+    if layout.get("somiglianza_media") is None:
+        return pct(layout["tasso_fuga"])
+    return (
+        f"{pct(layout['tasso_fuga'])} (somiglianza {pct(layout['somiglianza_media'])})"
+    )
 
 
 @dataclass

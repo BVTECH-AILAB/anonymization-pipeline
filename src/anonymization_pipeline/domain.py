@@ -35,12 +35,17 @@ class Page:
 @dataclass
 class Document:
     """A loaded document. ``source`` keeps the original PDF bytes for docling, ``docling`` the
-    conversion of its native pages (IN CLEAR TEXT: only the layout structure is built from it)."""
+    conversion of its native pages (IN CLEAR TEXT: only the layout structure is built from it),
+    ``compacted`` per page (one-based) the areas of the rows of character boxes joined into one
+    text (left, bottom, right, top in points)."""
 
     kind: DocumentKind
     pages: list[Page] = field(default_factory=list)
     source: bytes | None = field(default=None, repr=False)
     docling: DoclingDocument | None = field(default=None, repr=False)
+    compacted: dict[int, list[tuple[float, float, float, float]]] = field(
+        default_factory=dict
+    )
 
     @property
     def visual(self) -> bool:
@@ -72,13 +77,23 @@ class Group:
 
 @dataclass(frozen=True)
 class Occurrence:
-    """A replacement in the redacted Markdown: offsets in the redacted text and original value."""
+    """A replacement in the redacted Markdown: offsets in the redacted text and original value.
+
+    A value across table cells is replaced cell by cell: every piece is an occurrence with its
+    own ``original`` and the whole value in ``whole``.
+    """
 
     start: int
     end: int
     replacement: str
     original: str
     category: str
+    whole: str | None = None
+
+    @property
+    def value(self) -> str:
+        """The whole value (what must not be left in clear text anywhere)."""
+        return self.whole or self.original
 
 
 @dataclass(frozen=True)
@@ -109,6 +124,7 @@ class Result:
         occurrences: With the transcript: positions in the clear text too, and the values.
         layout_pdf: Censored PDF with the layout of the original, the structure attached.
         structure: Censored layout structure (DoclingDocument JSON).
+        layout: Styles and positions of the censored layout PDF (``layout.model`` JSON).
     """
 
     name: str
@@ -121,6 +137,7 @@ class Result:
     occurrences: list[dict[str, Any]] | None = None
     layout_pdf: bytes | None = field(default=None, repr=False)
     structure: bytes | None = field(default=None, repr=False)
+    layout: bytes | None = field(default=None, repr=False)
 
     def output_names(self, stem: str | None = None) -> dict[str, str]:
         """File names of the outputs (unchanged from the original tool, for compatibility)."""
@@ -136,4 +153,6 @@ class Result:
             names["layout_pdf"] = f"{stem}.anon.pdf"
         if self.structure is not None:
             names["structure"] = f"{stem}.anon.docling.json"
+        if self.layout is not None:
+            names["layout"] = f"{stem}.anon.layout.json"
         return names

@@ -14,11 +14,14 @@ import functools
 import io
 import logging
 import threading
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 from docling_core.types.doc import ContentLayer, DoclingDocument
 
+from anonymization_pipeline.extraction import char_boxes
+from anonymization_pipeline.layout.pdf import Box
 from anonymization_pipeline.pipeline_config.schema import Docling, NativePdf
 
 try:
@@ -169,9 +172,17 @@ def _converter(d: Docling, models_dir: str) -> Any:
     )
 
 
-def convert(
-    data: bytes, pages: list[int], c: NativePdf
-) -> tuple[dict[int, str], DoclingDocument]:
+@dataclass
+class Conversion:
+    """Markdown of the pages (zero-based), the docling document it comes from (IN CLEAR TEXT)
+    and, per page (one-based), the areas of the rows of character boxes joined into one text."""
+
+    markdown: dict[int, str]
+    document: DoclingDocument
+    compacted: dict[int, list[Box]] = field(default_factory=dict)
+
+
+def convert(data: bytes, pages: list[int], c: NativePdf) -> Conversion:
     """Markdown of ``pages`` (zero-based) of the PDF, and the docling document it comes from.
 
     Headers and footers included unless the docling file excludes them, text that docling
@@ -200,12 +211,21 @@ def convert(
             raise DoclingUnavailable(
                 f"docling conversion failed: {type(exc).__name__}"
             ) from exc
+    return finish(result.document, data, pages, c)
+
+
+def finish(
+    document: DoclingDocument, data: bytes, pages: list[int], c: NativePdf
+) -> Conversion:
+    """The docling ``document`` of ``data`` with the rows of character boxes joined (if
+    configured), and the Markdown of ``pages`` (zero-based) from it."""
+    compacted = char_boxes.compact(document, data) if c.compact_char_boxes else {}
     layers = {ContentLayer.BODY}
     if c.docling.furniture:
         layers.add(ContentLayer.FURNITURE)
     # no escaping: "&", "<", "_" stay as in the document (values must be found in the text)
     markdown = {
-        i: result.document.export_to_markdown(
+        i: document.export_to_markdown(
             page_no=i + 1,
             included_content_layers=layers,
             image_placeholder=IMAGE_PLACEHOLDER,
@@ -214,4 +234,4 @@ def convert(
         ).strip()
         for i in pages
     }
-    return markdown, result.document
+    return Conversion(markdown, document, compacted)

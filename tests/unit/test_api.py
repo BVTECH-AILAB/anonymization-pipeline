@@ -19,6 +19,7 @@ from anonymization_pipeline.redaction.vault import generate_key
 from anonymization_pipeline.vlm import VLMError
 from anonymization_pipeline.vlm.images import encode_image
 from tests.conftest import FAKE_CF, TEST_MODEL, make_settings
+from tests.layout import convert_lines, styled_pdf
 from tests.pipeline import FIXTURES, fake_convert, models_file, pipeline_config, width
 from tests.unit.conftest import TEXT, VALUES, FakeBackend
 
@@ -255,6 +256,36 @@ def test_layout_pdf_in_the_json_result(client: TestClient) -> None:
     structure = base64.b64decode(body["structure_b64"]).decode()
     for value in VALUES:
         assert value not in structure
+
+
+def test_layout_of_a_native_pdf_in_the_zip_and_the_json(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, log_stream: io.StringIO
+) -> None:
+    monkeypatch.setattr(native_pdf, "convert", convert_lines())
+    files = {"file": ("nota.pdf", styled_pdf())}
+
+    response = client.post(
+        "/anonymize", files=files, data={"key": KEY, "layout": "true"}
+    )
+    body = client.post(
+        "/anonymize?format=json", files=files, data={"key": KEY, "layout": "true"}
+    ).json()
+
+    assert response.status_code == 200, response.text
+    archive = zipfile.ZipFile(io.BytesIO(response.content))
+    layout = archive.read("nota.anon.layout.json")
+    assert body["file_names"]["layout"] == "nota.anon.layout.json"
+    assert base64.b64decode(body["layout_b64"]) == layout
+    pdf, encrypted = archive.read("nota.anon.pdf"), archive.read("nota.mappa.enc")
+    restored = client.post(
+        "/restore/pdf",
+        files={"document": ("nota.anon.pdf", pdf), "map": ("m", encrypted)},
+        data={"key": KEY},
+    )
+    assert restored.status_code == 200, restored.text
+    logs = log_stream.getvalue()
+    for value in VALUES:
+        assert value not in layout.decode() and value not in logs
 
 
 def test_restore_rejects_non_utf8_markdown(client: TestClient) -> None:

@@ -26,6 +26,7 @@ def result_payload(result: Result) -> dict[str, Any]:
         "encrypted_map_b64": _b64(result.encrypted_map),
         "layout_pdf_b64": _b64(result.layout_pdf),
         "structure_b64": _b64(result.structure),
+        "layout_b64": _b64(result.layout),
     }
     if result.transcript is not None:  # CLEAR TEXT: only when asked for
         payload.update(transcript=result.transcript, occurrences=result.occurrences)
@@ -34,7 +35,7 @@ def result_payload(result: Result) -> dict[str, Any]:
 
 def zip_result(result: Result) -> bytes:
     """ZIP with the redacted Markdown, the report and, when present, map, metrics, transcript,
-    layout PDF and structure."""
+    layout PDF, structure and layout."""
     buffer = io.BytesIO()
     names = result.output_names()
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
@@ -55,6 +56,8 @@ def zip_result(result: Result) -> bytes:
             archive.writestr(names["layout_pdf"], result.layout_pdf)
         if result.structure is not None:
             archive.writestr(names["structure"], result.structure)
+        if result.layout is not None:
+            archive.writestr(names["layout"], result.layout)
     return buffer.getvalue()
 
 

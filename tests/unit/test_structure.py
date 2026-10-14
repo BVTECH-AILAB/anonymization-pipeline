@@ -273,3 +273,61 @@ def test_structure_keeps_the_tree_lists_headings_and_captions() -> None:
     assert structure.groups and structure.tables[0].data.table_cells[0].text == "x"
     assert structure.texts[1].parent is not None
     assert structure.texts[1].parent.cref == structure.groups[0].self_ref
+
+
+def _split_structure() -> DoclingDocument:
+    """A value split between two paragraphs, and one between two table cells."""
+    doc = DoclingDocument(name="documento")
+    doc.add_page(1, Size(width=595, height=842))
+    for text, top in (("Residenza: Via Roma 18, Bagno a", 800), ("Ripoli", 780)):
+        doc.add_text(DocItemLabel.TEXT, text, prov=_prov(1, top, text))
+    cells = [
+        TableCell(
+            text=t,
+            start_row_offset_idx=0,
+            end_row_offset_idx=1,
+            start_col_offset_idx=c,
+            end_col_offset_idx=c + 1,
+        )
+        for c, t in enumerate(
+            ["Derivazione ventricolare esterna", "frontale destra (Kocher)"]
+        )
+    ]
+    doc.add_table(
+        TableData(table_cells=cells, num_rows=1, num_cols=2), prov=_prov(1, 700)
+    )
+    doc.add_text(
+        DocItemLabel.TEXT, "Nessun valore qui", prov=_prov(1, 600, "Nessun valore qui")
+    )
+    return doc
+
+
+def test_values_across_fields_get_the_tag_in_every_field() -> None:
+    cfg = pipeline_config()
+    groups = group_entities(
+        [
+            Entity("Bagno a Ripoli", "LUOGO", 0),
+            Entity("derivazione ventricolare esterna frontale destra", "INTERVENTO", 0),
+        ]
+    )
+    markdown = (
+        "Residenza: Via Roma 18, Bagno a\n\nRipoli\n\n"
+        "| Derivazione ventricolare esterna | frontale destra (Kocher) |\n\nNessun valore qui"
+    )
+    pages, occurrences = redact([markdown], groups, cfg)
+    structure = _split_structure()
+
+    censored = censor(structure, groups, cfg)
+
+    assert [t for _, t in fields(censored.document)] == [
+        "Residenza: Via Roma 18, [LUOGO_1]",
+        "[LUOGO_1]",
+        "Nessun valore qui",
+        "[INTERVENTO_1]",
+        "[INTERVENTO_1] (Kocher)",
+    ]
+    check(censored, pages[0], occurrences[0], cfg)
+    pieces = {o.original: o.value for o in censored.occurrences}
+    assert pieces["Ripoli"] == "Bagno a Ripoli"
+    content = map_section(structure, censored)
+    assert restore(censored.document, content) == structure

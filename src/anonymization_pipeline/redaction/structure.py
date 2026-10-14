@@ -43,7 +43,7 @@ from pydantic import ValidationError
 
 from anonymization_pipeline.domain import Document, Group, Occurrence
 from anonymization_pipeline.pipeline_config import PipelineConfig
-from anonymization_pipeline.redaction import leftovers, retag
+from anonymization_pipeline.redaction import leftovers, retag_across
 
 NAME = "documento"
 ATTACHMENT = (
@@ -291,6 +291,29 @@ def fields(structure: DoclingDocument) -> Iterator[tuple[Field, str]]:
             yield (table.self_ref, i), cell.text
 
 
+def reading_order(structure: DoclingDocument) -> list[Field]:
+    """Every field of ``fields`` in reading order (cells row by row): a value split by docling
+    continues in the next field."""
+    known = {w for w, _ in fields(structure)}
+    out: list[Field] = []
+    for item, _ in structure.iterate_items(included_content_layers=set(ContentLayer)):
+        if isinstance(item, TableItem):
+            cells = sorted(
+                range(len(item.data.table_cells)),
+                key=lambda i: (
+                    item.data.table_cells[i].start_row_offset_idx,
+                    item.data.table_cells[i].start_col_offset_idx,
+                ),
+            )
+            out += [(item.self_ref, i) for i in cells]
+        elif isinstance(item, TextItem):
+            out.append((item.self_ref, None))
+    seen = set(out)
+    return [w for w in out if w in known] + [
+        w for w, _ in fields(structure) if w not in seen
+    ]
+
+
 def _set(structure: DoclingDocument, where: Field, text: str) -> None:
     ref, cell = where
     item = _resolve(structure, ref)
@@ -323,8 +346,9 @@ def censor(
 ) -> Censored:
     """Replace the values with the tags the Markdown got (``redact`` assigned ``group.tag``)."""
     out = Censored(structure.model_copy(deep=True))
-    where = [w for w, _ in fields(structure)]
-    texts, occurrences = retag([t for _, t in fields(structure)], groups, cfg)
+    texts_by_field = dict(fields(structure))
+    where = reading_order(structure)
+    texts, occurrences = retag_across([texts_by_field[w] for w in where], groups, cfg)
     for (ref, cell), text, found in zip(where, texts, occurrences, strict=True):
         _set(out.document, (ref, cell), text)
         out.texts.append(text)
@@ -388,7 +412,7 @@ def check(
     for key, value in _strings(censored.document.export_to_dict()):
         if key not in _STRUCTURAL_KEYS and not set(_WORD.findall(value)) <= allowed:
             raise StructureLeak("text not in the censored Markdown")
-    values = {(o.original, o.category) for o in [*occurrences, *censored.occurrences]}
+    values = {(o.value, o.category) for o in [*occurrences, *censored.occurrences]}
     if leftovers(censored.texts, values, cfg):
         raise StructureLeak("replaced value in clear text")
 
@@ -414,7 +438,7 @@ def load(data: bytes) -> DoclingDocument:
         raise StructureError("Struttura del documento non valida") from exc
 
 
-def _entries(elements: list[Any]) -> dict[Field, list[tuple[int, int, str, str]]]:
+def entries(elements: list[Any]) -> dict[Field, list[tuple[int, int, str, str]]]:
     """Map entries by field: start, end, tag, original value."""
     out: dict[Field, list[tuple[int, int, str, str]]] = {}
     try:
@@ -448,11 +472,11 @@ def restore(censored: DoclingDocument, content: dict[str, Any]) -> DoclingDocume
         raise StructureError("La struttura del documento è stata modificata")
     out = censored.model_copy(deep=True)
     current = dict(fields(out))
-    for where, entries in _entries(elements).items():
+    for where, found in entries(elements).items():
         if where not in current:
             raise StructureError(_MISMATCH)
         text = current[where]
-        for start, end, tag, original in sorted(entries, reverse=True):
+        for start, end, tag, original in sorted(found, reverse=True):
             if text[start:end] != tag:
                 raise StructureError(_MISMATCH)
             text = text[:start] + original + text[end:]

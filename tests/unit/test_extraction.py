@@ -29,6 +29,7 @@ from tests.pipeline import (
     width,
 )
 
+DATASET = Path(__file__).parents[2] / "validation" / "dataset" / "pdf"
 LINES = [
     "Referto cardiologico del paziente Mario Rossi",
     "Codice fiscale RSSMRA80A01H501U",
@@ -279,13 +280,28 @@ def test_real_docling() -> None:
 
     markdown = native_pdf.convert(
         (FIXTURES / "referto_pdf_nativo.pdf").read_bytes(), [0], c
-    )[0][0]
+    ).markdown[0]
 
     assert (
         "## VISITA CARDIOLOGICA" in markdown
         and "SPSFNC72M67G273V" in markdown
         and "|---" in markdown
     )
+
+
+@pytest.mark.docling
+def test_real_docling_joins_a_tax_code_in_boxes() -> None:
+    """Synthetic letter of the validation dataset: the patient's tax code is in 16 boxes."""
+    folder = os.environ.get("ANONPIP_DOCLING_MODELS_DIR", "/models/docling")
+    c = pipeline_config(docling_models_dir=folder).phases.extraction.native_pdf
+    if not native_pdf.DOCLING_INSTALLED or not native_pdf.models_present(c):
+        pytest.skip("docling or its models are missing")
+    pdf = DATASET / "lettera_dimissione" / "lettera_dimissione_complessa_01.pdf"
+
+    conversion = native_pdf.convert(pdf.read_bytes(), [0], c)
+
+    assert "DLLRSO63B48D969B" in conversion.markdown[0].split()
+    assert len(conversion.compacted[1]) == 1
 
 
 def test_engine_chosen_per_request() -> None:

@@ -1,0 +1,61 @@
+# =============================================================================
+#  Fonts of the layout PDF (layout/fonts.py). Not overridable: validated at startup.
+#
+#  The original fonts are never copied from the document: every font of a PDF is replaced by a
+#  family of this catalog, metric-compatible where one exists (same glyph widths), so lines keep
+#  their length. The files are in resources/fonts/, with their licenses (OFL, DejaVu).
+#
+#  families   the four styles of every family (file names in resources/fonts/). The keys are a
+#             contract with the layout model (layout/model.py, FontKey): change them together.
+#  aliases    normalized names (lowercase, letters and digits only, without the subset prefix,
+#             the style and the MT/PS suffixes): Arial-BoldMT -> arial
+#  generic    family of an unknown font, from the flags of the PDF font (serif, fixed pitch)
+#  glyph_fallback  family of the characters the chosen family does not have
+# =============================================================================
+
+families:
+  liberation-sans:
+    regular: LiberationSans-Regular.ttf
+    bold: LiberationSans-Bold.ttf
+    italic: LiberationSans-Italic.ttf
+    bolditalic: LiberationSans-BoldItalic.ttf
+  liberation-serif:
+    regular: LiberationSerif-Regular.ttf
+    bold: LiberationSerif-Bold.ttf
+    italic: LiberationSerif-Italic.ttf
+    bolditalic: LiberationSerif-BoldItalic.ttf
+  liberation-mono:
+    regular: LiberationMono-Regular.ttf
+    bold: LiberationMono-Bold.ttf
+    italic: LiberationMono-Italic.ttf
+    bolditalic: LiberationMono-BoldItalic.ttf
+  carlito:
+    regular: Carlito-Regular.ttf
+    bold: Carlito-Bold.ttf
+    italic: Carlito-Italic.ttf
+    bolditalic: Carlito-BoldItalic.ttf
+  caladea:
+    regular: Caladea-Regular.ttf
+    bold: Caladea-Bold.ttf
+    italic: Caladea-Italic.ttf
+    bolditalic: Caladea-BoldItalic.ttf
+  dejavu-sans:                  # no italic in the catalog: the upright style stands in
+    regular: DejaVuSans.ttf
+    bold: DejaVuSans-Bold.ttf
+    italic: DejaVuSans.ttf
+    bolditalic: DejaVuSans-Bold.ttf
+
+aliases:
+  liberation-sans: [arial, arimo, helvetica, helveticaneue, liberationsans, nimbussans, nimbussansl]
+  liberation-serif: [times, timesroman, timesnewroman, tinos, liberationserif, nimbusroman, nimbusromanno9l]
+  liberation-mono: [courier, couriernew, cousine, liberationmono, nimbusmono, nimbusmonol]
+  carlito: [calibri, carlito]
+  caladea: [cambria, caladea]
+  dejavu-sans: [dejavusans, verdana, tahoma, symbol, zapfdingbats, wingdings]
+
+generic:
+  sans: liberation-sans
+  serif: liberation-serif
+  mono: liberation-mono
+
+glyph_fallback: dejavu-sans

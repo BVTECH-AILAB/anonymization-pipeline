@@ -45,12 +45,17 @@ class Metrics:
 
     intervals: list[tuple[str, int | None, float]] = field(default_factory=list)
     calls: list[Call] = field(default_factory=list)
+    counters: dict[str, int] = field(default_factory=dict)
     cpu0: float = field(default_factory=time.process_time)
     _lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
 
     def add_interval(self, name: str, page: int | None, duration: float) -> None:
         with self._lock:  # also from threads (detectors, docling)
             self.intervals.append((name, page, duration))
+
+    def add_count(self, name: str, n: int) -> None:
+        with self._lock:
+            self.counters[name] = self.counters.get(name, 0) + n
 
 
 _CURRENT: ContextVar[Metrics | None] = ContextVar("metrics", default=None)
@@ -96,6 +101,13 @@ def on_page(index: int) -> Iterator[None]:
         yield
     finally:
         _PAGE.reset(token)
+
+
+def count(name: str, n: int = 1) -> None:
+    """Add ``n`` to the counter ``name`` of the document (counts only, never values)."""
+    collector = current()
+    if collector is not None:
+        collector.add_count(name, n)
 
 
 def record_call(call: Call) -> None:
@@ -192,6 +204,10 @@ def summarize(
             "per_page_s": distribution(list(vlm_extraction.values())),
         },
         "image_encoding_s": total("extraction.image_encoding"),
+        "char_rows": {
+            "compacted": collector.counters.get("extraction.char_rows_compacted", 0),
+            "skipped": collector.counters.get("extraction.char_rows_skipped", 0),
+        },
     }
 
     detection: dict[str, Any] = {}
@@ -282,6 +298,16 @@ def summarize(
         },
         "verification": {
             "duration_s": times.get("verification", 0.0),
+        },
+        "layout": {
+            "structure_s": total("layout.structure"),
+            "styles_s": total("layout.styles"),
+            "pdf_s": total("layout.pdf"),
+            **{
+                name.removeprefix("layout."): n
+                for name, n in sorted(collector.counters.items())
+                if name.startswith("layout.")
+            },
         },
         "vlm": vlm,
         "pages": pages,

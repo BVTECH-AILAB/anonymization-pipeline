@@ -18,6 +18,9 @@ Span = tuple[int, int]
 _TOKEN = re.compile(r"\S+")
 _PUNCTUATION = ",.;:)]}!?»\"'"
 _PLACEHOLDERS = re.compile(r"(\{category\}|\{n\})")
+# between two words of a value: spaces and Markdown emphasis, or the border of a table cell
+_BETWEEN_WORDS = r"(?:[*_]*\s+[*_]*|\s*\|\s*)"
+CELL_BORDER = re.compile(r"\s*\|\s*")
 
 
 def _normalize(s: str) -> str:
@@ -25,7 +28,7 @@ def _normalize(s: str) -> str:
 
 
 def _literal(text: str, value: str, a: Anchoring) -> list[Span]:
-    pattern = r"[*_]*\s+[*_]*".join(re.escape(word) for word in value.split())
+    pattern = _BETWEEN_WORDS.join(re.escape(word) for word in value.split())
     short = len(value) <= a.case_insensitive_over
     flags = 0 if short else re.I
     before = r"(?<!\w)(?<!\w\.)" if short else r"(?<!\w)"  # short: never inside "U.M."

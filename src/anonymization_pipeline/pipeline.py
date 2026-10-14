@@ -11,14 +11,22 @@ import logging
 import time
 from collections import Counter
 from collections.abc import Callable
-from dataclasses import asdict
+from dataclasses import asdict, dataclass, replace
 from typing import Any
+
+import pypdfium2 as pdfium
+from docling_core.types.doc import DoclingDocument
 
 from anonymization_pipeline import __version__, metrics
 from anonymization_pipeline.detection import Outcome, detect
 from anonymization_pipeline.domain import Document, Group, Occurrence, Residual, Result
 from anonymization_pipeline.extraction import extract
 from anonymization_pipeline.ingest import load
+from anonymization_pipeline.layout import censor as layout_censor
+from anonymization_pipeline.layout import model as layout_model
+from anonymization_pipeline.layout import pdf as layout_pdf
+from anonymization_pipeline.layout.align import align
+from anonymization_pipeline.layout.model import Layout
 from anonymization_pipeline.pipeline_config import PHASES, PipelineConfig
 from anonymization_pipeline.redaction import (
     group_entities,
@@ -69,9 +77,7 @@ def _join_pages(
     """Markdown of the document and occurrences with offsets in the whole document."""
     starts = _page_starts(doc, pages, cfg)
     found = [
-        Occurrence(
-            o.start + start, o.end + start, o.replacement, o.original, o.category
-        )
+        replace(o, start=o.start + start, end=o.end + start)
         for start, page_occurrences in zip(starts, occurrences, strict=True)
         for o in page_occurrences
     ]
@@ -104,9 +110,73 @@ def check_invariant(
     Raises:
         UnredactableContent: A replaced value is still in clear text.
     """
-    values = {(o.original, o.category) for found in occurrences for o in found}
+    values = {(o.value, o.category) for found in occurrences for o in found}
     if left := leftovers(pages, values, cfg):
         raise UnredactableContent("invariant", left)
+
+
+@dataclass
+class _LayoutOutput:
+    """Censored layout PDF, its structure and layout JSON, the map section; ``styled`` False when
+    the styles were asked for but could not be read."""
+
+    pdf: bytes
+    structure: bytes
+    section: dict[str, Any]
+    layout: bytes | None
+    styled: bool
+
+
+def _picture_boxes(
+    clear: DoclingDocument,
+) -> dict[int, list[tuple[float, float, float, float]]]:
+    out: dict[int, list[tuple[float, float, float, float]]] = {}
+    for picture in clear.pictures:
+        for prov in picture.prov:
+            height = clear.pages[prov.page_no].size.height
+            b = prov.bbox.to_bottom_left_origin(height)
+            out.setdefault(prov.page_no, []).append(
+                (b.l, min(b.b, b.t), b.r, max(b.b, b.t))
+            )
+    return out
+
+
+def _styles(
+    doc: Document,
+    clear: DoclingDocument,
+    censored: structure.Censored,
+    cfg: PipelineConfig,
+) -> tuple[Layout | None, bool]:
+    """Layout of the censored structure from the text layer of the docling pages, and whether it
+    was read; (None, True) when there is nothing to read.
+
+    Raises:
+        StructureLeak: The layout does not fit the censored structure.
+    """
+    fidelity = cfg.output.layout_fidelity
+    pages = {p.index + 1 for p in doc.pages if p.extracted_with == "docling"}
+    if not fidelity.style or doc.source is None or not pages:
+        return None, True
+    with metrics.measure("layout.styles"):
+        try:
+            extraction = layout_pdf.extract(
+                doc.source,
+                pages,
+                fidelity.graphics,
+                _picture_boxes(clear),
+                doc.compacted,
+            )
+        except pdfium.PdfiumError:
+            logger.warning("Layout styles not read: unreadable PDF")
+            return None, False
+        counts = extraction.counts
+        out = layout_censor.censor(
+            align(clear, extraction, counts), extraction, censored, counts
+        )
+        layout_censor.check(out, censored)
+    for name, n in counts.items():
+        metrics.count(f"layout.{name}", n)
+    return out, True
 
 
 def _layout(
@@ -115,31 +185,39 @@ def _layout(
     markdown: str,
     occurrences: list[Occurrence],
     cfg: PipelineConfig,
-) -> tuple[bytes, bytes, dict[str, Any]] | None:
-    """Censored layout PDF (structure attached), structure JSON and the map section; None (fail
-    closed) when the structure or the PDF could hold what the censored Markdown does not."""
+) -> _LayoutOutput | None:
+    """Censored layout PDF (structure and layout attached), structure and layout JSON and the map
+    section; None (fail closed) when the structure, the layout or the PDF could hold what the
+    censored Markdown does not."""
     with metrics.measure("layout.structure"):
         clear = structure.build_structure(doc, cfg)
         censored = structure.censor(clear, groups, cfg)
     try:
         structure.check(censored, markdown, occurrences, cfg)
+        styled, read = _styles(doc, clear, censored, cfg)
         with metrics.measure("layout.pdf"):
             data = structure.canonical(censored.document)
             pdf = render_pdf(
                 censored.document,
                 censored.marks,
                 highlight=cfg.phases.redaction.mode != "redaction",
+                layout=styled,
             )
             pdf = attach(pdf, structure.ATTACHMENT, data)
-        values = {
-            (o.original, o.category) for o in [*occurrences, *censored.occurrences]
-        }
+            layout_data = None
+            if styled is not None:
+                layout_data = layout_model.canonical(styled)
+                pdf = attach(pdf, layout_model.ATTACHMENT, layout_data)
+        values = {(o.value, o.category) for o in [*occurrences, *censored.occurrences]}
         if leftovers(text_of(pdf), values, cfg):
             raise structure.StructureLeak("replaced value in the PDF text")
     except structure.StructureLeak as exc:
         logger.warning("Layout PDF not produced: %s", exc)
         return None
-    return pdf, data, structure.map_section(clear, censored)
+    section = structure.map_section(clear, censored)
+    if styled is not None:
+        section["sha256_layout"] = layout_model.fingerprint(styled)
+    return _LayoutOutput(pdf, data, section, layout_data, read)
 
 
 def _occurrence_dicts(occurrences: list[Occurrence]) -> list[dict[str, Any]]:
@@ -260,6 +338,8 @@ async def anonymize(
         layout = await asyncio.to_thread(_layout, doc, groups, markdown, joined, cfg)
         if layout is None:
             warnings.append("layout_unavailable")
+        elif not layout.styled:
+            warnings.append("layout_style_unavailable")
     doc_sha = vault.sha256(data)
     encrypted_map = None
     if phases.redaction.mode == "pseudonym" and key:
@@ -268,7 +348,7 @@ async def anonymize(
             doc_sha,
             markdown,
             _occurrence_dicts(joined),
-            layout[2] if layout else None,
+            layout.section if layout else None,
         )
         encrypted_map = vault.encrypt_map(content, key, doc_sha)
     times["total"] = round(time.perf_counter() - t0, 2)
@@ -359,8 +439,9 @@ async def anonymize(
         metrics=summary,
         tags=tags,
         occurrences=positions,
-        layout_pdf=layout[0] if layout else None,
-        structure=layout[1] if layout else None,
+        layout_pdf=layout.pdf if layout else None,
+        structure=layout.structure if layout else None,
+        layout=layout.layout if layout else None,
     )
 
 
@@ -391,8 +472,8 @@ def restore_detail(
 
 
 def restore_pdf(document: bytes, encrypted_map: bytes, key: str) -> bytes:
-    """Original PDF (layout, text and tables, without images) from the censored layout PDF, or its
-    structure JSON, and the map.
+    """Original PDF (layout, styles, text and tables, without images) from the censored layout
+    PDF, or its structure JSON, and the map.
 
     Raises:
         VaultError: Wrong key, invalid or tampered map.
@@ -400,12 +481,27 @@ def restore_pdf(document: bytes, encrypted_map: bytes, key: str) -> bytes:
     """
     content = vault.decrypt_map(encrypted_map, key)
     data: bytes | None = document
+    styles: bytes | None = None
     if document.startswith(b"%PDF"):
         try:
             data = attachment(document, structure.ATTACHMENT)
+            styles = attachment(document, layout_model.ATTACHMENT)
         except ValueError as exc:
             raise structure.StructureError("PDF non leggibile") from exc
     if data is None:
         raise structure.StructureError("Il PDF non contiene la struttura del documento")
     original = structure.restore(structure.load(data), content)
-    return render_pdf(original, highlight=False)
+    layout = None
+    if styles is not None and "sha256_layout" in content:
+        try:
+            censored_layout = layout_model.load(styles)
+            if layout_model.fingerprint(censored_layout) != content["sha256_layout"]:
+                raise structure.StructureError(
+                    "Il layout del documento è stato modificato"
+                )
+            layout = layout_censor.restore(censored_layout, content["elementi"])
+        except layout_model.LayoutError as exc:
+            raise structure.StructureError(
+                "La mappa non corrisponde al layout del documento"
+            ) from exc
+    return render_pdf(original, highlight=False, layout=layout)

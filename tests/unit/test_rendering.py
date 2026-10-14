@@ -11,6 +11,15 @@ from docling_core.types.doc import (
     TableData,
 )
 
+from anonymization_pipeline.layout.model import (
+    FieldLayout,
+    Graphic,
+    Layout,
+    PageLayout,
+    Run,
+    Style,
+)
+from anonymization_pipeline.layout.pdf import extract
 from anonymization_pipeline.rendering import (
     _words,
     attach,
@@ -117,3 +126,98 @@ def test_attachment_round_trip() -> None:
     assert attachment(pdf, "altro.json") is None
     with pytest.raises(ValueError):
         attachment(b"not a pdf", "x")
+
+
+def _layout(tag_width: float = 60.0) -> Layout:
+    """Layout of ``_structure``: the text item and the second table cell, a rule on page 1."""
+    style = Style(
+        font="liberation-serif", bold=True, italic=False, size=12, color=(0, 0, 255)
+    )
+    return Layout(
+        styles=[style],
+        pages=[
+            PageLayout(
+                page_no=1,
+                source="pdf",
+                graphics=[
+                    Graphic(
+                        kind="line",
+                        x0=50,
+                        y0=650,
+                        x1=500,
+                        y1=650,
+                        stroke=(0, 0, 0),
+                        fill=None,
+                        width=1,
+                    )
+                ],
+            )
+        ],
+        fields=[
+            FieldLayout(
+                ref="#/texts/0",
+                cell=None,
+                page_no=1,
+                runs=[
+                    Run(start=0, end=9, x=60, baseline=790, width=55, style=0),
+                    Run(
+                        start=10,
+                        end=21,
+                        x=120,
+                        baseline=790,
+                        width=tag_width,
+                        style=0,
+                        tag=True,
+                    ),
+                ],
+            ),
+            FieldLayout(
+                ref="#/tables/0",
+                cell=1,
+                page_no=1,
+                runs=[
+                    Run(
+                        start=0,
+                        end=18,
+                        x=300,
+                        baseline=690,
+                        width=100,
+                        style=0,
+                        tag=True,
+                    )
+                ],
+            ),
+        ],
+    )
+
+
+def test_layout_draws_words_at_their_place_with_their_style() -> None:
+    pdf = render_pdf(_structure(), {("#/texts/0", None): [(10, 21)]}, layout=_layout())
+
+    page = extract(pdf, {1}, graphics=True)
+    glyphs = page.pages[1].glyphs
+    first = next(g for g in glyphs if g.char == "P")
+    assert (round(first.x0, 1), round(first.baseline, 1)) == (60, 790)
+    tags = sorted(round(g.x0, 1) for g in glyphs if g.char == "[")
+    assert tags == [120, 300]  # the text tag, then the cell tag
+    assert {(s.bold, s.color) for s in page.styles if s.size == 12} == {
+        (True, (0, 0, 255))
+    }
+    # the page has its own lines: the table is not drawn as a grid (the tags are grey fills)
+    strokes = [(g.kind, g.y0) for g in page.pages[1].graphics if g.stroke is not None]
+    assert strokes == [("line", 650)]
+    text = " ".join(_page_text(pdf))
+    assert (
+        "Paziente:" in text
+        and "[CODICE_FISCALE_1]" in text
+        and "Codice fiscale" in text
+    )
+
+
+def test_a_tag_shrinks_into_the_box_of_its_value() -> None:
+    pdf = render_pdf(_structure(), layout=_layout(tag_width=20))
+
+    glyphs = extract(pdf, {1}, graphics=False).pages[1].glyphs
+    tag = [g for g in glyphs if abs(g.baseline - 790) < 1 and g.x0 >= 119]
+    assert tag[0].x0 == pytest.approx(120, abs=0.1)
+    assert tag[-1].x1 <= 141

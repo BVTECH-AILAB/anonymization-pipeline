@@ -26,6 +26,7 @@ from anonymization_pipeline.errors import (
 )
 from anonymization_pipeline.extraction import native_pdf
 from anonymization_pipeline.ingest import DocumentError
+from anonymization_pipeline.layout import fonts
 from anonymization_pipeline.logging_setup import log_event
 from anonymization_pipeline.pipeline import (
     MissingKeyError,
@@ -76,6 +77,7 @@ class AnonymizationService:
         self.settings = settings
         self.config = load_pipeline_config(settings)
         load_resources()
+        fonts.catalog()
         self._client_factory = client_factory
         self._slots = slots
 

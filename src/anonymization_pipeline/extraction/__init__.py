@@ -61,14 +61,15 @@ async def _docling(
         with metrics.measure(
             "extraction.docling"
         ):  # the whole document in one conversion
-            markdown, doc.docling = await asyncio.to_thread(
+            conversion = await asyncio.to_thread(
                 native_pdf.convert, doc.source, native, settings
             )
     except native_pdf.DoclingUnavailable as exc:
         logger.warning("Native pages extracted with the VLM: %s", exc)
         return {}, ["docling_unavailable"]
+    doc.docling, doc.compacted = conversion.document, conversion.compacted
     return {
-        i: t for i, t in markdown.items() if t
+        i: t for i, t in conversion.markdown.items() if t
     }, []  # page empty for docling: the VLM redoes it
 
 

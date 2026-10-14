@@ -18,6 +18,7 @@ from docling_core.types.doc import (
 )
 from PIL import Image
 
+from anonymization_pipeline.extraction.native_pdf import Conversion
 from anonymization_pipeline.pipeline_config import (
     PHASES,
     PipelineConfig,
@@ -61,15 +62,11 @@ def models_file(
     return str(path)
 
 
-def fake_convert(
-    text: Callable[[int], str],
-) -> Callable[..., tuple[dict[int, str], DoclingDocument]]:
+def fake_convert(text: Callable[[int], str]) -> Callable[..., Conversion]:
     """Stand-in for ``native_pdf.convert``: page i -> ``text(i)``, with a docling document holding
     one text item per non-empty line, stacked from the top of an A4 page."""
 
-    def convert(
-        data: bytes, pages: list[int], c: object
-    ) -> tuple[dict[int, str], DoclingDocument]:
+    def convert(data: bytes, pages: list[int], c: object) -> Conversion:
         doc = DoclingDocument(name="fake")
         for i in pages:
             doc.add_page(i + 1, Size(width=595, height=842))
@@ -92,7 +89,7 @@ def fake_convert(
                         ),
                     )
                     top -= 20
-        return {i: text(i) for i in pages}, doc
+        return Conversion({i: text(i) for i in pages}, doc)
 
     return convert
 

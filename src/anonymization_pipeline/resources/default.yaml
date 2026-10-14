@@ -73,6 +73,11 @@ phases:
       max_unreadable: 0.02      # max fraction of undecodable characters (fonts without a Unicode map)
       max_image_fraction: 0.5   # images over this fraction of the page: scan or content to read
       min_contrast: 12          # text whose box has no contrast in the rendered page is hidden
+      # A value written one character per box (tax code, health card, IBAN in a form) becomes one
+      # paragraph or cell per character in docling, and no rule recognizes it. A row of at least 8
+      # boxes is read again from the text layer and joined into one text, only if it is an
+      # identifier the rules recognize (other rows, such as a pain scale 0-9, are left as they are)
+      compact_char_boxes: true
     # Non-text elements: how they are reported in the Markdown (they end up in the extraction prompt).
     # The text inside stamps and labels must be transcribed: it often holds names and register numbers.
     # The placeholders between [] are the ones that appear in the Markdown.
@@ -164,3 +169,10 @@ output:
   # attached (<stem>.anon.docling.json). In pseudonym mode the map can rebuild the original PDF.
   # Default from ANONPIP_DEFAULT_LAYOUT_OUTPUT; a request can choose (field layout).
   layout_pdf: false
+  # Fidelity of the layout PDF on the docling pages (read from the PDF, never copied from it):
+  # the styles and the lines go in <stem>.anon.layout.json, attached to the PDF too.
+  layout_fidelity:
+    style: true             # every word at its position, with its size, color and a catalog font
+                            # (resources/fonts.yaml) in place of the original one
+    graphics: true          # lines and rectangles of the page (no curves, barcodes, QR codes,
+                            # shapes inside pictures)

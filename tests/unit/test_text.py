@@ -24,6 +24,18 @@ def test_literal_with_spaces_and_markdown() -> None:
     assert not find("Rossini", "Rossi", a)  # never inside a word
 
 
+def test_literal_across_table_cells() -> None:
+    a = _anchoring()
+    row = "| Derivazione ventricolare esterna     | frontale destra (Kocher) | 03/03 |"
+
+    found = [row[s:e] for s, e in find(row, "ventricolare esterna frontale destra", a)]
+
+    assert found == ["ventricolare esterna     | frontale destra"]
+    assert not find(
+        "| esterna | | frontale |", "esterna frontale", a
+    )  # one cell at a time
+
+
 def test_min_length_and_hallucinations() -> None:
     a = _anchoring()
 

@@ -87,7 +87,7 @@ def test_metrics_per_phase_and_per_page() -> None:
 
     assert set(m) == {
         "version", "document", "configuration", "times_s", "throughput", "extraction",
-        "detection", "redaction", "verification", "vlm", "pages", "resources",
+        "detection", "redaction", "verification", "layout", "vlm", "pages", "resources",
     }  # fmt: skip
     assert m["times_s"] == result.report["times_s"] and m["document"]["pages"] == 2
     for phase in ("extraction", "detection", "verification"):

@@ -144,6 +144,9 @@ class NativePdf(_Section):
         ge=0, le=255
     )  # below: text not visible in the rendered page
     models_dir: str = Field(min_length=1)
+    compact_char_boxes: (
+        bool  # values written one character per box joined into one text
+    )
     docling: Docling
 
 
@@ -215,11 +218,17 @@ class Phases(_Section):
     verification: Verification
 
 
+class LayoutFidelity(_Section):
+    style: bool
+    graphics: bool
+
+
 class Output(_Section):
     page_separator: str
     save_transcript: bool
     save_metrics: bool
     layout_pdf: bool
+    layout_fidelity: LayoutFidelity
 
 
 class PipelineConfig(_Section):

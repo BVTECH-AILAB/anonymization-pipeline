@@ -1,14 +1,19 @@
 """PDF with the layout of the original, drawn from a layout structure (a DoclingDocument).
 
-Every text is drawn inside its box, shrinking the font until it fits; tables become a grid of
-cells, pictures a grey box. The font is approximate, images, logos and rules are not drawn: the
-result reproduces positions, text and tables, not the original file. Tags can be highlighted.
+With a layout (``layout.model``), the fields it covers are drawn word by word at their original
+position, with a font of the catalog that replaces the original one, its size and color, and the
+lines and rectangles of the page; a tag fills the box of the value it replaces. The other fields
+are drawn inside their box, shrinking a single font until they fit; tables without the lines of
+the page become a grid of cells. Pictures are a grey box; images and logos are not drawn: the
+result reproduces positions, text, styles and rules, not the original file. Tags can be
+highlighted.
 """
 
 import functools
 import io
 import re
 from collections.abc import Iterator
+from dataclasses import dataclass
 from importlib.resources import files
 
 import pypdfium2 as pdfium
@@ -25,6 +30,8 @@ from reportlab.pdfgen.canvas import Canvas
 
 from anonymization_pipeline.extraction.native_pdf import IMAGE_PLACEHOLDER
 from anonymization_pipeline.ingest import PDFIUM_LOCK
+from anonymization_pipeline.layout import fonts
+from anonymization_pipeline.layout.model import FieldLayout, Graphic, Layout, Run, Style
 from anonymization_pipeline.redaction.structure import Field
 
 FONT = "DejaVuSans"
@@ -35,6 +42,8 @@ LEADING = 1.2  # distance between baselines, in font sizes
 ASCENT, DESCENT = 0.76, 0.24  # of the font, in font sizes
 MIN_SQUEEZE = 0.8  # narrowest horizontal scale before the font shrinks
 PADDING = 1.5  # points between a cell border and its text
+MIN_SCALE, MAX_SCALE = 0.5, 1.5  # horizontal scale of a word to its original width
+HIGHLIGHT = 0.82
 _SPACE = re.compile(r"(\s+)")
 _DESCENDERS = re.compile(r"[gjpqyQ,;()\[\]_|]")
 
@@ -170,6 +179,101 @@ def _on_page(item: DocItem, page_no: int) -> Iterator[tuple[int, BoundingBox]]:
             yield i, prov.bbox
 
 
+def _width(parts: list[tuple[str, str]], size: float) -> float:
+    return sum(pdfmetrics.stringWidth(text, name, size) for name, text in parts)
+
+
+def _draw_parts(
+    canvas: Canvas,
+    parts: list[tuple[str, str]],
+    x: float,
+    baseline: float,
+    size: float,
+    scale: float,
+) -> None:
+    text_object = canvas.beginText(x, baseline)
+    text_object.setHorizScale(scale * 100)
+    for name, text in parts:
+        text_object.setFont(name, size)
+        text_object.textOut(text)
+    canvas.drawText(text_object)
+
+
+def _draw_run(
+    canvas: Canvas, text: str, run: Run, style: Style, highlight: bool
+) -> None:
+    """A word at its original position and width; a tag shrinks to fit the box of its value."""
+    parts = fonts.segments(text, style.font, style.bold, style.italic)
+    size = style.size
+    natural = _width(parts, size)
+    if natural <= 0:
+        return
+    if run.tag:
+        if run.width < natural * MIN_SQUEEZE:
+            size = max(MIN_SIZE, size * run.width / (natural * MIN_SQUEEZE))
+            natural = _width(parts, size)
+        scale = min(1.0, run.width / natural) if run.width > 0 else 1.0
+        if highlight:
+            canvas.setFillGray(HIGHLIGHT)
+            canvas.rect(
+                run.x,
+                run.baseline - DESCENT * style.size,
+                max(run.width, natural * scale),
+                (ASCENT + DESCENT) * style.size,
+                stroke=0,
+                fill=1,
+            )
+    else:
+        scale = min(MAX_SCALE, max(MIN_SCALE, run.width / natural))
+    canvas.setFillColorRGB(*(c / 255 for c in style.color))
+    _draw_parts(canvas, parts, run.x, run.baseline, size, scale)
+
+
+def _draw_field(
+    canvas: Canvas, text: str, field: FieldLayout, layout: Layout, highlight: bool
+) -> None:
+    for run in field.runs:
+        _draw_run(
+            canvas, text[run.start : run.end], run, layout.styles[run.style], highlight
+        )
+
+
+def _rgb(color: tuple[int, int, int]) -> tuple[float, float, float]:
+    r, g, b = color
+    return r / 255, g / 255, b / 255
+
+
+def _draw_graphics(canvas: Canvas, graphics: list[Graphic]) -> None:
+    canvas.saveState()
+    for g in graphics:
+        if g.stroke is not None:
+            canvas.setStrokeColorRGB(*_rgb(g.stroke))
+            canvas.setLineWidth(g.width)
+        if g.kind == "line":
+            canvas.line(g.x0, g.y0, g.x1, g.y1)
+        else:
+            if g.fill is not None:
+                canvas.setFillColorRGB(*_rgb(g.fill))
+            canvas.rect(
+                g.x0,
+                g.y0,
+                g.x1 - g.x0,
+                g.y1 - g.y0,
+                stroke=int(g.stroke is not None),
+                fill=int(g.fill is not None),
+            )
+    canvas.restoreState()
+
+
+@dataclass
+class _Page:
+    """What a page draws from the layout: fields by reference, and whether it has its own lines."""
+
+    fields: dict[Field, FieldLayout]
+    layout: Layout | None
+    ruled: bool
+
+
 def _draw_table(
     canvas: Canvas,
     table: TableItem,
@@ -177,12 +281,17 @@ def _draw_table(
     page_height: float,
     marks: Marks,
     highlight: bool,
+    page: _Page,
 ) -> None:
     left, bottom, right, top = _box(bbox, page_height)
     rows, cols = max(table.data.num_rows, 1), max(table.data.num_cols, 1)
     canvas.setStrokeGray(0.6)
     canvas.setLineWidth(0.4)
     for i, cell in enumerate(table.data.table_cells):
+        styled = page.fields.get((table.self_ref, i))
+        if styled is not None and page.layout is not None:
+            _draw_field(canvas, cell.text, styled, page.layout, highlight)
+            continue
         if cell.bbox is not None:
             cl, cb, cr, ct = _box(cell.bbox, page_height)
         else:  # no cell boxes: an even grid over the table box
@@ -191,7 +300,8 @@ def _draw_table(
             cr = left + cell.end_col_offset_idx * cw
             ct = top - cell.start_row_offset_idx * ch
             cb = top - cell.end_row_offset_idx * ch
-        canvas.rect(cl, cb, cr - cl, ct - cb, stroke=1, fill=0)
+        if not page.ruled:  # the page has no lines of its own: a grid
+            canvas.rect(cl, cb, cr - cl, ct - cb, stroke=1, fill=0)
         _draw_text(
             canvas,
             cell.text,
@@ -202,7 +312,10 @@ def _draw_table(
 
 
 def render_pdf(
-    structure: DoclingDocument, marks: Marks | None = None, highlight: bool = True
+    structure: DoclingDocument,
+    marks: Marks | None = None,
+    highlight: bool = True,
+    layout: Layout | None = None,
 ) -> bytes:
     """PDF of a layout structure.
 
@@ -210,8 +323,16 @@ def render_pdf(
         structure: Pages (size) and items (positions, text, tables).
         marks: Positions of the tags in each text field (censored structure).
         highlight: Grey background behind the tags.
+        layout: Styles and positions of the fields, lines and rectangles of the pages (it must
+            match ``structure``: ``layout.censor.check``).
     """
     marks = marks or {}
+    by_page: dict[int, dict[Field, FieldLayout]] = {}
+    graphics: dict[int, list[Graphic]] = {}
+    if layout is not None:
+        for f in layout.fields:
+            by_page.setdefault(f.page_no, {})[(f.ref, f.cell)] = f
+        graphics = {p.page_no: p.graphics for p in layout.pages}
     font = _font()
     buffer = io.BytesIO()
     canvas = Canvas(buffer, pageCompression=1, invariant=1)
@@ -222,6 +343,8 @@ def render_pdf(
     for page_no in sorted(structure.pages):
         size = structure.pages[page_no].size
         canvas.setPageSize((size.width, size.height))
+        page = _Page(by_page.get(page_no, {}), layout, bool(graphics.get(page_no)))
+        _draw_graphics(canvas, graphics.get(page_no, []))
         for picture in structure.pictures:
             for _, bbox in _on_page(picture, page_no):
                 left, bottom, right, top = _box(bbox, size.height)
@@ -238,9 +361,13 @@ def render_pdf(
                 )
         for table in structure.tables:
             for _, bbox in _on_page(table, page_no):
-                _draw_table(canvas, table, bbox, size.height, marks, highlight)
+                _draw_table(canvas, table, bbox, size.height, marks, highlight, page)
         for item in structure.texts:
-            _draw_item(canvas, item, page_no, size.height, marks, highlight)
+            styled = page.fields.get((item.self_ref, None))
+            if styled is not None and layout is not None:
+                _draw_field(canvas, item.text, styled, layout, highlight)
+            else:
+                _draw_item(canvas, item, page_no, size.height, marks, highlight)
         canvas.setFont(font, MIN_SIZE)
         canvas.showPage()
     canvas.save()

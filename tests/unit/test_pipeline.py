@@ -301,6 +301,19 @@ def test_invariant() -> None:
         )
 
 
+def test_invariant_sees_a_value_left_across_table_cells() -> None:
+    piece = Occurrence(
+        2, 15, "[INTERVENTO_1]", "Derivazione", "INTERVENTO", "Derivazione esterna"
+    )
+
+    with pytest.raises(UnredactableContent, match="invariant"):
+        check_invariant(
+            ["| [INTERVENTO_1] | esterna |", "| Derivazione | esterna |"],
+            [[piece], []],
+            pipeline_config(),
+        )
+
+
 def test_progress_and_tag_positions() -> None:
     phases: list[tuple[str, dict]] = []
     cfg = pipeline_config({"output": {"save_transcript": True}}, default_mode="tag")

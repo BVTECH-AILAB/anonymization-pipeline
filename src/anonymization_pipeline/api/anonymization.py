@@ -152,7 +152,7 @@ async def restore_pdf(
     key: Key = None,
     x_anon_key: KeyHeader = None,
 ) -> Response:
-    """The PDF holds layout, text and tables of the original; images are not rebuilt."""
+    """The PDF holds layout, styles, rules, text and tables of the original; images are not rebuilt."""
     secret = service.key(key, x_anon_key)
     if not secret:
         raise BadRequestError("Chiave mancante.")

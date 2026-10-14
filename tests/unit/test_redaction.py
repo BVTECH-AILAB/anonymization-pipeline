@@ -98,3 +98,24 @@ def test_initials_are_not_redacted_inside_dotted_abbreviations() -> None:
     pages, _ = redact(["Rossi M. - U.M. mg/dL"], groups, cfg)
 
     assert pages == ["Rossi [PERSONA_1] - U.M. mg/dL"]
+
+
+def test_a_value_across_table_cells_gets_the_tag_in_every_cell() -> None:
+    cfg = pipeline_config()
+    groups = group_entities(
+        [E("derivazione ventricolare esterna frontale destra", "INTERVENTO")]
+    )
+    row = "| Derivazione ventricolare esterna | frontale destra (Kocher) | 03/03 |"
+
+    pages, occurrences = redact([row], groups, cfg)
+
+    assert pages == ["| [INTERVENTO_1] | [INTERVENTO_1] (Kocher) | 03/03 |"]
+    assert [(o.original, o.value) for o in occurrences[0]] == [
+        (
+            "Derivazione ventricolare esterna",
+            "Derivazione ventricolare esterna frontale destra",
+        ),
+        ("frontale destra", "Derivazione ventricolare esterna frontale destra"),
+    ]
+    for o in occurrences[0]:
+        assert pages[0][o.start : o.end] == o.replacement

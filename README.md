@@ -28,7 +28,13 @@ file -> ingest -> estrazione -> rilevamento -> censura -> verifica -> Markdown c
    Ogni pagina PDF viene renderizzata; una pagina è "nativa" se ha testo
    leggibile e visibile (niente testo nascosto, poche immagini).
 2. **Estrazione** (`extraction/`): pagine native con docling (testo esatto,
-   tabelle), tutte le altre con il VLM, una chiamata per pagina.
+   tabelle), tutte le altre con il VLM, una chiamata per pagina. Un valore
+   scritto un carattere per casella (codice fiscale, tessera TEAM, IBAN in un
+   modulo) diventa in docling un paragrafo o una cella per carattere: le righe
+   di almeno 8 caselle vengono rilette dallo strato di testo del PDF e unite
+   in un solo testo, solo se la stringa è un identificativo riconosciuto dalle
+   regole (`native_pdf.compact_char_boxes`; metriche:
+   `extraction.char_rows`).
 3. **Rilevamento** (`detection/`, `detectors/`): rilevatori in unione, basta
    che uno segnali un valore. Ogni valore deve comparire davvero nel testo,
    altrimenti è un'allucinazione e si scarta. Un filtro comune ignora gli
@@ -38,7 +44,8 @@ file -> ingest -> estrazione -> rilevamento -> censura -> verifica -> Markdown c
 4. **Censura** (`redaction/`): i valori con la stessa forma (a meno di spazi
    e maiuscole) nella stessa famiglia di categorie hanno lo stesso tag ("Mario
    Rossi" e "MARIO ROSSI" sì, "Rossi Mario" no); la sostituzione è meccanica e
-   vale per tutto il documento. Modalità `pseudonym` (tag + mappa
+   vale per tutto il documento. Un valore che attraversa le celle di una
+   tabella riceve il tag in ogni cella. Modalità `pseudonym` (tag + mappa
    AES-256-GCM), `tag` o `redaction` (simbolo fisso).
 5. **Verifica** (`verification/`): il VLM rilegge il Markdown censurato di
    ogni pagina confrontandolo con il Markdown originale in chiaro (non
@@ -124,11 +131,30 @@ censurato ricalca l'originale a partire dagli oggetti docling (posizioni,
 testo, tabelle; le immagini diventano un riquadro `[IMMAGINE]`, le pagine
 estratte dal VLM sono testo a flusso) e ha allegata la struttura docling
 censurata (il JSON: tag al posto dei valori, senza immagini, metadati e
-nome del file). In modalità pseudonimo la mappa contiene anche dove stanno i
-valori nella struttura: `POST /restore/pdf` con PDF censurato, mappa e
-chiave restituisce il PDF originale ricostruito (stessi testi e posizioni,
-font approssimato, senza immagini). Se la struttura o il PDF potessero
-contenere testo che il Markdown censurato non contiene, i due file non
+nome del file).
+
+Sulle pagine native estratte da docling il PDF riprende anche lo stile
+dell'originale, letto dal suo strato di testo (`output.layout_fidelity`):
+ogni parola alla sua posizione, con dimensione e colore originali e un font
+del catalogo `resources/fonts.yaml` al posto di quello originale (Liberation,
+Carlito, Caladea: stesse larghezze di Arial, Times, Courier, Calibri,
+Cambria; DejaVu per i caratteri mancanti), più linee e rettangoli della
+pagina. Curve, codici a barre, QR e forme dentro le immagini non vengono
+riprodotti. Ogni tag occupa il riquadro del valore che sostituisce, sulla
+sua prima riga; un valore che docling divide fra due elementi (due paragrafi,
+due celle) ha il tag in ciascuno. Una riga di caselle unita in un solo testo
+appare come riga unica, senza le cornici delle caselle. Font e geometria stanno in `<nome>.anon.layout.json`
+(allegato anche al PDF): contiene solo numeri e nomi di famiglie del
+catalogo, mai testo né il nome dei font originali. I campi che non si
+allineano allo strato di testo restano disegnati nel loro riquadro (metriche:
+`layout.fields_fallback`); se il PDF non si legge, l'avviso
+`layout_style_unavailable`.
+
+In modalità pseudonimo la mappa contiene anche dove stanno i valori nella
+struttura e l'impronta del layout: `POST /restore/pdf` con PDF censurato,
+mappa e chiave restituisce il PDF originale ricostruito (stessi testi,
+posizioni e stili, senza immagini). Se la struttura, il layout o il PDF
+potessero contenere testo che il Markdown censurato non contiene, i file non
 vengono prodotti (avviso `layout_unavailable`, report `layout:
 unavailable`): il Markdown resta l'output di riferimento.
 
@@ -172,6 +198,9 @@ unavailable`): il Markdown resta l'output di riferimento.
   `eponyms.yaml`. Le regex hanno la stessa sintassi in tutti i file
   (frammenti `${nome}`, liste come alternative); i file vengono validati
   all'avvio e non si sovrascrivono dal file utente.
+- Font del PDF con layout: `resources/fonts.yaml` (famiglie, alias dei font
+  dei PDF, famiglie generiche, famiglia per i caratteri mancanti), file in
+  `resources/fonts/` con le licenze. Validato all'avvio, non si sovrascrive.
 
 ## Comandi
 
@@ -206,7 +235,9 @@ src/anonymization_pipeline/
   pipeline_config/    schema, caricamento a strati, registro delle categorie
   resources/          default.yaml, models.yaml, categories.yaml, prompts/, detectors/, fonts/
   ingest/ extraction/ detection/ detectors/ redaction/ verification/ vlm/
-  rendering.py        PDF con il layout dalla struttura docling (reportlab)
+  layout/             stili e geometria delle pagine native (pdfium), catalogo dei font,
+                      allineamento ai campi della struttura, censura e ripristino del layout
+  rendering.py        PDF con il layout dalla struttura docling e dal layout (reportlab)
   domain.py text.py metrics.py model_store.py
   logging_setup.py privacy.py middleware.py errors.py
 frontend/             interfaccia web React + Vite, servita da nginx

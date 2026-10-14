@@ -92,6 +92,17 @@ def test_split_address() -> None:
     }
 
 
+def test_address_parts_never_cross_a_line_break() -> None:
+    found = _found(
+        "Via Roma 1, 00185 Roma\n\nTel. 06 1234567\n\nVia\n\nTaddeo da Sessa 5"
+    )
+
+    assert ("LUOGO", "Roma") in found
+    assert not any("\n" in value for _, value in found)
+    # two words of a city on the same line are still one value
+    assert ("LUOGO", "San Donato (MI)") in _found("Via Emilia 3, 20097 San Donato (MI)")
+
+
 def test_icd10_codes() -> None:
     # with the dot anywhere; without it ("J13") only when "ICD" is in the page; never the start of "E11.9"
     table = "| Tipo | Descrizione | ICD-10 |\n| Principale | Polmonite | J13 |\n| Secondaria | Diabete | E11.9 |"

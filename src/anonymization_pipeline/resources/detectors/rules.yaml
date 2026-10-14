@@ -27,20 +27,21 @@ fragments:
   # sites of personal profiles (URL_PERSONALE)
   social: ['facebook', 'instagram', 'linkedin', 'twitter', 'x', 'tiktok', 'youtube', 'github', 't\.me', 'threads\.net']
   # Italian address: prefix, street name (up to 6 words, with the lowercase particles) and
-  # house number with an optional letter ("15 B", "15/A": the letter must not be the start of a word)
+  # house number with an optional letter ("15 B", "15/A": the letter must not be the start of a word).
+  # The parts of an address never cross a line break: "Roma\n\nTel." is a city and a new paragraph
   prefissi_via: ['via', 'viale', 'v\.le', 'piazza', 'p\.zza', 'p\.za', 'corso', 'c\.so', 'largo', 'vicolo',
                  'strada', 'contrada', 'c\.da', 'localit[aà]', 'loc\.', 'lungomare', 'piazzale', 'borgo',
                  'traversa', 'salita', 'calle']
   particelle_via: ['d[ei]', 'del', 'dell[aoe]', 'dei', 'degli', 'd''', 'e']   # "Via dei Mille"
-  via: '(?i:\b(?:${prefissi_via})\s+)'
-  nome_via: '(?:(?:[A-ZÀ-Ü0-9][\wÀ-ÿ''.]*|${particelle_via})\s+){0,5}?(?:[A-ZÀ-Ü][\wÀ-ÿ''.]*)'
-  civico: ',?\s*(?:n\.?\s*|nr\.?\s*)?\d{1,4}(?!\d)(?:\s?[A-Za-z](?![A-Za-z]))?(?:/\s?[A-Za-z0-9]+)?'
+  via: '(?i:\b(?:${prefissi_via})[^\S\n]+)'
+  nome_via: '(?:(?:[A-ZÀ-Ü0-9][\wÀ-ÿ''.]*|${particelle_via})[^\S\n]+){0,5}?(?:[A-ZÀ-Ü][\wÀ-ÿ''.]*)'
+  civico: ',?[^\S\n]*(?:n\.?[^\S\n]*|nr\.?[^\S\n]*)?\d{1,4}(?!\d)(?:[^\S\n]?[A-Za-z](?![A-Za-z]))?(?:/[^\S\n]?[A-Za-z0-9]+)?'
   # Address with what follows it. The street name, non-greedy, grows until it finds the house
   # number ("Via Carlo Porta 12"); the number is not the start of a CAP ("Via Roma, 00100 Roma")
   indirizzo_via: '(?P<via>${via}(?:${nome_via}${civico}|${nome_via}))'
-  indirizzo_cap_citta: ',?\s*(?P<cap>\d{5})\s+(?P<citta>[A-ZÀ-Ü][\wÀ-ÿ'']+(?:\s+[A-ZÀ-Ü][\wÀ-ÿ'']+)?(?:\s*\([A-Z]{2}\))?)'
+  indirizzo_cap_citta: ',?[^\S\n]*(?P<cap>\d{5})[^\S\n]+(?P<citta>[A-ZÀ-Ü][\wÀ-ÿ'']+(?:[^\S\n]+[A-ZÀ-Ü][\wÀ-ÿ'']+)?(?:[^\S\n]*\([A-Z]{2}\))?)'
   # a city without CAP, recognized only if followed by the province code
-  indirizzo_citta_provincia: '[ ,]+(?P<citta2>[A-ZÀ-Ü][\wÀ-ÿ'']+(?:\s+[A-ZÀ-Ü][\wÀ-ÿ'']+)?[ ,]+\(?[A-Z]{2}\)?)(?![A-Za-z0-9])'
+  indirizzo_citta_provincia: '[ ,]+(?P<citta2>[A-ZÀ-Ü][\wÀ-ÿ'']+(?:[^\S\n]+[A-ZÀ-Ü][\wÀ-ÿ'']+)?[ ,]+\(?[A-Z]{2}\)?)(?![A-Za-z0-9])'
 
 # -----------------------------------------------------------------------------
 # Context of a value: the text before it
@@ -237,7 +238,7 @@ patterns:
     regex: '${indirizzo_via}(?:${indirizzo_cap_citta}|${indirizzo_citta_provincia})?'
     parts: {via: INDIRIZZO, cap: CAP, citta: LUOGO, citta2: LUOGO}
   - category: LUOGO
-    regex: '${B}(?P<cap>\d{5})\s+(?P<citta>[A-ZÀ-Ü][a-zà-ÿ'']+(?:\s+[A-ZÀ-Ü][a-zà-ÿ'']+)?\s*\([A-Z]{2}\))'
+    regex: '${B}(?P<cap>\d{5})[^\S\n]+(?P<citta>[A-ZÀ-Ü][a-zà-ÿ'']+(?:[^\S\n]+[A-ZÀ-Ü][a-zà-ÿ'']+)?[^\S\n]*\([A-Z]{2}\))'
     parts: {cap: CAP, citta: LUOGO}
   # ICD-10 diagnosis codes (they reveal the diagnosis even when the description is redacted):
   # with the dot ("E11.9") anywhere; without it ("J13") only if "ICD" appears in the page

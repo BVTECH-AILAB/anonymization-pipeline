@@ -331,3 +331,61 @@ def test_values_across_fields_get_the_tag_in_every_field() -> None:
     assert pieces["Ripoli"] == "Bagno a Ripoli"
     content = map_section(structure, censored)
     assert restore(censored.document, content) == structure
+
+
+@pytest.mark.parametrize(
+    ("parts", "values", "expected"),
+    [
+        (
+            [
+                "Domicilio: c/o Centro Il Faro, Via",
+                "Taddeo da Sessa 12, Napoli",
+                "Nato a Napoli",
+            ],
+            [
+                Entity(
+                    "c/o Centro Il Faro, Via\n\nTaddeo da Sessa 12, Napoli",
+                    "INDIRIZZO",
+                    0,
+                ),
+                Entity("Napoli", "LUOGO", 0),
+            ],
+            ["Domicilio: [INDIRIZZO_1]", "[INDIRIZZO_1]", "Nato a [LUOGO_1]"],
+        ),
+        (
+            [
+                "Referto online: https://referti.esempio.exa",
+                "mple.it/r/CPED-26-0922",
+                "Referto n. CPED-26-0922",
+            ],
+            [
+                Entity(
+                    "https://referti.esempio.exa\n\nmple.it/r/CPED-26-0922",
+                    "URL_PERSONALE",
+                    0,
+                ),
+                Entity("CPED-26-0922", "NUMERO_REFERTO", 0),
+            ],
+            [
+                "Referto online: [URL_PERSONALE_1]",
+                "[URL_PERSONALE_1]",
+                "Referto n. [NUMERO_REFERTO_1]",
+            ],
+        ),
+    ],
+)
+def test_a_value_across_fields_wins_over_a_shorter_tag_inside_one(
+    parts: list[str], values: list[Entity], expected: list[str]
+) -> None:
+    cfg = pipeline_config()
+    groups = group_entities(values)
+    redact(["\n\n".join(parts)], groups, cfg)
+    doc = DoclingDocument(name="documento")
+    doc.add_page(1, Size(width=595, height=842))
+    for i, text in enumerate(parts):
+        doc.add_text(DocItemLabel.TEXT, text, prov=_prov(1, 800 - 20 * i, text))
+
+    censored = censor(doc, groups, cfg)
+
+    assert [t for _, t in fields(censored.document)] == expected
+    assert restore(censored.document, map_section(doc, censored)) == doc

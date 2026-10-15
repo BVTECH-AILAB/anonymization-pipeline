@@ -185,12 +185,14 @@ def retag_across(
     out: list[str] = []
     occurrences: list[list[Occurrence]] = []
     for k, text in enumerate(texts):
-        kept = [span for span in inside[k] if span[2] in replacements]
-        kept += [
-            span
-            for span in across[k]
-            if all(span[1] <= s2 or span[0] >= e2 for s2, e2, _ in kept)
-        ]
+        # the longest value wins, as in select_spans: a piece counts as its whole value
+        candidates = [
+            (e - s, s, e, gi) for s, e, gi in inside[k] if gi in replacements
+        ] + [(len(wholes[k][(s, e)]), s, e, gi) for s, e, gi in across[k]]
+        kept: list[Span] = []
+        for _, s, e, gi in sorted(candidates, key=lambda c: (-c[0], c[1])):
+            if all(e <= s2 or s >= e2 for s2, e2, _ in kept):
+                kept.append((s, e, gi))
         page, found = _apply(text, sorted(kept), replacements, groups, wholes[k])
         out.append(page)
         occurrences.append(found)

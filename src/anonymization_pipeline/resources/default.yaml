@@ -20,6 +20,28 @@ ingest:
   image_dpi: 200            # images without a resolution in their metadata
 
 # -----------------------------------------------------------------------------
+#  Detection, on every text layer of every page
+# -----------------------------------------------------------------------------
+detection:
+  # Detectors in union: one is enough to flag a value. For the same text, between categories of
+  # different families the first wins: rules, then labels. The eponym filter applies to all.
+  detectors:
+    rules: true               # regex + checksum (CF, IBAN, VAT, cards, phones...): detectors/rules.yaml
+    labels: true              # value after a label ("Codice paziente: ..."): detectors/labels.yaml
+    eponyms: true             # "morbo di Parkinson", "Glasgow 15", Coumadin are not people (decided
+                              # on the context of each occurrence): detectors/eponyms.yaml
+  anchoring:
+    min_length: 2             # shorter values are ignored
+    case_insensitive_over: 3  # over this length the search ignores case
+    fuzzy: 0.9                # minimum similarity when the value is not there verbatim (0 = off)
+  # Every value found is searched in every layer of the document (the redaction of a value applies
+  # to the whole document). For persons also their other forms: a surname alone ("Sig. Rossi"),
+  # with an initial ("ROSSI M."), inverted or glued ("Rossi Mario", "ROSSIMARIO").
+  propagation:
+    names: true
+    min_token: 3              # shorter name tokens are not searched alone
+
+# -----------------------------------------------------------------------------
 #  Categories to anonymize (registry, groups and descriptions in categories.yaml).
 #  Every category of the registry is on: list here only the ones off by default.
 #  Here and in the user file also by group:

@@ -14,6 +14,7 @@ from reportlab.graphics.shapes import Drawing
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
+from anonymization_pipeline.layers import TextLayer, Token
 from tests.conftest import FAKE_CF
 
 PATIENT = "Mario Rossi"
@@ -126,3 +127,13 @@ def text_pdf(
 def string_width(text: str, size: float = 10) -> float:
     """Width of ``text`` in Helvetica at ``size`` points."""
     return canvas.Canvas(io.BytesIO()).stringWidth(text, "Helvetica", size)
+
+
+def text_layer(page: int, text: str, source: str = "native") -> TextLayer:
+    """A text layer for ``text``: one token per word, one line per text line, dummy boxes."""
+    tokens = []
+    for line, row in enumerate(text.split("\n")):
+        for word in row.split():
+            box = (0.0, float(line), 1.0, float(line) + 1)
+            tokens.append(Token(word, box, [box] * len(word), line, source))
+    return TextLayer.build(page, source, tokens)

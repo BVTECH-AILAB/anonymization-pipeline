@@ -26,6 +26,33 @@ class Ingest(_Section):
     )  # images without a resolution in their metadata
 
 
+class Anchoring(_Section):
+    min_length: int = Field(ge=1)
+    case_insensitive_over: int = Field(ge=0)
+    fuzzy: float = Field(ge=0, le=1)
+
+
+class Detectors(_Section):
+    """Text detectors in union (one is enough to flag a value) and the common eponym filter."""
+
+    rules: bool
+    labels: bool
+    eponyms: bool
+
+
+class Propagation(_Section):
+    """Search of every value found in the whole document, also in its other forms."""
+
+    names: bool  # single name tokens, initials, inverted and glued full names
+    min_token: int = Field(ge=2)
+
+
+class Detection(_Section):
+    anchoring: Anchoring
+    detectors: Detectors
+    propagation: Propagation
+
+
 class Protection(_Section):
     """Groups and categories a request can never switch off."""
 
@@ -36,6 +63,7 @@ class PipelineConfig(_Section):
     """Effective, validated configuration of one pipeline run."""
 
     ingest: Ingest
+    detection: Detection
     categories: dict[str, bool]
     protection: Protection
 
@@ -50,6 +78,9 @@ class PipelineConfig(_Section):
             )
         if off := [c for c in self.protected() if not self.categories[c]]:
             raise ValueError(f"protected categories switched off: {', '.join(off)}")
+        detectors = self.detection.detectors
+        if not (detectors.rules or detectors.labels):
+            raise ValueError("detection.detectors: at least one detector must be on")
         return self
 
     def active(self) -> list[str]:

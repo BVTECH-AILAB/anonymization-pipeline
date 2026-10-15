@@ -2,10 +2,10 @@
 #   dev      - used by docker-compose (dev dependencies, editable install, --reload)
 #   runtime  - the image CI builds and pushes to Harbor (last stage = default target)
 #
-# EXTRAS selects the optional parts (pyproject.toml): "--extra ner" adds the NER libraries (torch
-# from the CPU index). Models are never in the image: they are read from the Hugging Face cache
-# (HF_HOME, a volume) filled by `python -m anonymization_pipeline.model_store`.
-ARG EXTRAS="--extra ner"
+# EXTRAS selects the optional parts (pyproject.toml): "--extra ner" the NER libraries, "--extra ocr"
+# docTR and OpenCV (torch from the CPU index). Models are never in the image: they are read from
+# the caches (HF_HOME, DOCTR_CACHE_DIR, a volume) filled by `python -m anonymization_pipeline.model_store`.
+ARG EXTRAS="--extra ner --extra ocr"
 
 FROM ghcr.io/astral-sh/uv:0.12.18 AS uv
 
@@ -49,7 +49,8 @@ ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     HF_HOME=/models/hf \
-    HF_HUB_OFFLINE=1
+    HF_HUB_OFFLINE=1 \
+    DOCTR_CACHE_DIR=/models/doctr
 USER appuser
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \

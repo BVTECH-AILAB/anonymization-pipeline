@@ -18,3 +18,10 @@ categories:
     organizzazioni: true
     sanitari: true
     particolari: true
+    visivi: true
+# no models in the unit tests: fake engines are passed explicitly where needed
+detection:
+  ner:
+    enabled: false
+ocr:
+  enabled: false

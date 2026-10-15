@@ -10,13 +10,13 @@ from anonymization_pipeline.render.pdf import Redacted
 from anonymization_pipeline.services import anonymization as service
 from anonymization_pipeline.services.anonymization import PHASES, anonymize
 from anonymization_pipeline.verify.pdf import VerificationReport
-from tests.conftest import FAKE_CF, make_settings
+from tests.conftest import DEFAULTS_FILE, FAKE_CF, make_settings
 from tests.documents import PATIENT, letter_pdf, trapped_letter
 
 
 @pytest.fixture
 def cfg() -> PipelineConfig:
-    return load_pipeline_config(make_settings(pipeline_config_file=""))
+    return load_pipeline_config(make_settings(pipeline_config_file=DEFAULTS_FILE))
 
 
 def test_letter_is_anonymized_and_verified(tmp_path: Path, cfg: PipelineConfig) -> None:

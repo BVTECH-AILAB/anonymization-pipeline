@@ -15,6 +15,7 @@ dependencies = [
     "python-multipart>=0.0.20",
     "pyyaml>=6",
     "uvicorn[standard]>=0.34",
+    "zxing-cpp>=2.3",
 ]
 
 [project.optional-dependencies]
@@ -26,6 +27,14 @@ ner = [
     "protobuf>=4",
     "torch>=2.6",
     "transformers>=4.51",
+]
+
+# OCR of scanned pages (ocr): docTR on CPU, OpenCV headless for the marks on scans.
+ocr = [
+    "opencv-python-headless>=4.10",
+    "python-doctr>=1.0",
+    "torch>=2.6",
+    "torchvision>=0.21",
 ]
 
 [dependency-groups]
@@ -77,9 +86,9 @@ testpaths = ["tests", "validation/tests"]
 pythonpath = ["validation"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
-addopts = "-m 'not ner' --strict-markers"
+addopts = "-m 'not models' --strict-markers"
 markers = [
-    "ner: needs the 'ner' extra and the NER models in the cache (`just models`, `just test-ner`)",
+    "models: needs the extras and the real models in the cache (`just models`, `just test-models`)",
 ]
 
 [tool.coverage.run]
@@ -91,6 +100,11 @@ fail_under = 80
 show_missing = true
 skip_covered = true
 
+[tool.uv]
+# python-doctr pulls opencv-python, which needs X11 libraries missing from the slim image: the
+# headless build (in the ocr extra) provides the same cv2 module.
+override-dependencies = ["opencv-python; sys_platform == 'never'"]
+
 [[tool.uv.index]]
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
@@ -98,3 +112,4 @@ explicit = true
 
 [tool.uv.sources]
 torch = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }

@@ -40,6 +40,7 @@ class Detectors(_Section):
     rules: bool
     labels: bool
     eponyms: bool
+    visual: bool  # signatures, stamps, barcodes and QR codes on the rendered page
 
 
 class Propagation(_Section):
@@ -61,6 +62,22 @@ class Ner(_Section):
         ge=10
     )  # the models read a few hundred tokens: text in windows
     overlap_words: int = Field(ge=0)
+    threads: int | None = Field(default=None, ge=1)
+
+
+class Ocr(_Section):
+    """OCR of scanned pages: docTR on CPU, loaded once at startup (``ocr`` extra)."""
+
+    enabled: bool
+    det_arch: str = Field(min_length=1)
+    reco_arch: str = Field(min_length=1)
+    dpi: int = Field(ge=100, le=600)
+    margin_pt: float = Field(
+        ge=0, le=200
+    )  # side strips read again rotated (vertical text)
+    margin_min_conf: float = Field(
+        ge=0, le=1
+    )  # words of the rotated strips below are dropped
     threads: int | None = Field(default=None, ge=1)
 
 
@@ -105,6 +122,7 @@ class PipelineConfig(_Section):
     """Effective, validated configuration of one pipeline run."""
 
     ingest: Ingest
+    ocr: Ocr
     detection: Detection
     redaction: Redaction
     verification: Verification

@@ -61,13 +61,14 @@ test *args:
 test-cov:
     uv run pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=junit.xml
 
-# NER models into the Hugging Face cache (the only step with network); names override the configured one
+# Models into the caches (the only step with network): the configured NER model and the OCR weights;
+# NER model names instead download just those
 models *names:
     uv run python -m anonymization_pipeline.model_store {{names}}
 
-# Tests with the real NER models (`just models` with the names of tests/unit/test_ner.py first)
-test-ner:
-    uv run pytest -m ner
+# Tests with the real models (`just models` first, plus the NER names of tests/unit/test_ner.py)
+test-models:
+    HF_HUB_OFFLINE=1 uv run pytest -m models
 
 # Known vulnerabilities in the dependencies
 audit:

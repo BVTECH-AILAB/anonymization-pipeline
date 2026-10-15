@@ -20,6 +20,20 @@ ingest:
   image_dpi: 200            # images without a resolution in their metadata
 
 # -----------------------------------------------------------------------------
+#  OCR of scanned pages (raster images over half of the page): docTR on CPU (image with the 'ocr'
+#  extra, weights downloaded by `just models`). When off, or enabled and not loadable, a document
+#  with scanned pages is never released: off -> blocked; not loadable -> service not ready.
+# -----------------------------------------------------------------------------
+ocr:
+  enabled: false
+  det_arch: db_resnet50
+  reco_arch: parseq
+  dpi: 300
+  margin_pt: 60             # side strips read again rotated by 90 degrees (vertical text)
+  margin_min_conf: 0.5
+  threads: 4
+
+# -----------------------------------------------------------------------------
 #  Detection, on every text layer of every page
 # -----------------------------------------------------------------------------
 detection:
@@ -30,6 +44,8 @@ detection:
     labels: true              # value after a label ("Codice paziente: ..."): detectors/labels.yaml
     eponyms: true             # "morbo di Parkinson", "Glasgow 15", Coumadin are not people (decided
                               # on the context of each occurrence): detectors/eponyms.yaml
+    visual: true              # signatures, stamps, barcodes and QR codes (group visivi): embedded images
+                              # are redacted whole except header logos; on scans, marks OCR does not read
   anchoring:
     min_length: 2             # shorter values are ignored
     case_insensitive_over: 3  # over this length the search ignores case

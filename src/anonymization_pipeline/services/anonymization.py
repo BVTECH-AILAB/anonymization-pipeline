@@ -1,9 +1,11 @@
 """Anonymization of one document: ingest -> text layers -> detection -> redaction -> verification.
 
-CPU-bound and synchronous: the job worker runs it in a thread. A document is released only when
-every check of the verification passed; otherwise it is blocked and no redacted file is kept.
-A document with scanned pages is blocked before any redaction while no OCR engine is available:
-its text would never be read, so nothing on those pages would be redacted.
+CPU-bound and synchronous: the job worker runs it in a thread. Pages are read one at a time: the
+native text layer, whether the page is a scan, a rendering for the visual detectors and, for a
+scan, the OCR words (the rendering under ``PDFIUM_LOCK``, the inference outside it). A document is
+released only when every check of the verification passed; otherwise it is blocked and no
+redacted file is kept. A document with scanned pages is blocked when OCR is off: its text would
+never be read, so nothing on those pages would be redacted.
 """
 
 import time
@@ -12,14 +14,20 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Literal
 
+import numpy as np
 import pypdfium2 as pdfium
+import pypdfium2.raw as pdfium_c
 
-from anonymization_pipeline.detection import detect
+from anonymization_pipeline import ocr as ocr_module
+from anonymization_pipeline.detection import detect, visual
+from anonymization_pipeline.detectors.base import DetectorUnavailable
 from anonymization_pipeline.detectors.ner import Engine
 from anonymization_pipeline.ingest import ingest
 from anonymization_pipeline.layers import TextLayer
 from anonymization_pipeline.layers.native import native_layer
+from anonymization_pipeline.layers.ocr import ocr_layer
 from anonymization_pipeline.pdf import PDFIUM_LOCK
+from anonymization_pipeline.pdf.geometry import Geometry, Rect
 from anonymization_pipeline.pdf.pages import is_scanned
 from anonymization_pipeline.pipeline_config import PipelineConfig
 from anonymization_pipeline.render.boxes import Box, from_outcome
@@ -51,23 +59,76 @@ class Anonymized:
     pdf: bytes | None = field(default=None, repr=False)  # only when done
 
 
+@dataclass
+class _Page:
+    layers: list[TextLayer]
+    scanned: bool
+    regions: list[Box]  # visual personal data
+
+
 def _no_progress(phase: str) -> None:
     """Default progress callback."""
 
 
-def _read(data: bytes) -> tuple[list[TextLayer], list[int]]:
+def _render(page: pdfium.PdfPage, dpi: int) -> np.ndarray:
+    bitmap = page.render(scale=dpi / 72, draw_annots=False, may_draw_forms=False)
+    try:
+        return np.asarray(bitmap.to_pil().convert("RGB"))
+    finally:
+        bitmap.close()
+
+
+def _image_bounds(page: pdfium.PdfPage, geo: Geometry) -> list[Rect]:
+    out = []
+    for obj in page.get_objects(filter=[pdfium_c.FPDF_PAGEOBJ_IMAGE], max_depth=8):
+        left, bottom, right, top = obj.get_bounds()
+        out.append(geo.to_display(left, bottom, right, top))
+    return out
+
+
+def _read_page(
+    data: bytes, index: int, cfg: PipelineConfig, ocr: ocr_module.Engine | None
+) -> _Page:
+    """Text layers and visual regions of one page."""
+    dpi = cfg.ingest.render_dpi
     with PDFIUM_LOCK:
         pdf = pdfium.PdfDocument(data)
         try:
-            layers: list[TextLayer] = []
-            scanned: list[int] = []
-            for i in range(len(pdf)):
-                page = pdf[i]
-                layers.append(native_layer(page, i))
-                if is_scanned(page):
-                    scanned.append(i)
-                page.close()
-            return layers, scanned
+            page = pdf[index]
+            geo = Geometry(page)
+            size = (geo.width, geo.height)
+            layers = [native_layer(page, index)]
+            scanned = is_scanned(page)
+            image = _render(page, dpi) if cfg.detection.detectors.visual else None
+            bounds = _image_bounds(page, geo)
+            ocr_image = (
+                _render(page, cfg.ocr.dpi) if scanned and ocr is not None else None
+            )
+            page.close()
+        finally:
+            pdf.close()
+    regions: list[Box] = []
+    scale = dpi / 72
+    if image is not None:
+        regions += visual.codes(index, image, scale)
+    words: list[ocr_module.Word] = []
+    if ocr_image is not None and ocr is not None:
+        words = ocr_module.page_words(ocr, ocr_image, size[0], cfg.ocr)
+        layers.append(ocr_layer(index, words))
+    if image is not None:
+        if scanned:
+            regions += visual.stamp_from_text(index, words)
+            regions += visual.unexplained_ink(index, image, scale, words)
+        else:
+            regions += visual.embedded_images(index, image, scale, size, bounds)
+    return _Page(layers, scanned, regions)
+
+
+def _page_count(data: bytes) -> int:
+    with PDFIUM_LOCK:
+        pdf = pdfium.PdfDocument(data)
+        try:
+            return len(pdf)
         finally:
             pdf.close()
 
@@ -77,6 +138,7 @@ def anonymize(
     cfg: PipelineConfig,
     progress: Progress = _no_progress,
     ner: Engine | None = None,
+    ocr: ocr_module.Engine | None = None,
 ) -> Anonymized:
     """Anonymize one uploaded document.
 
@@ -85,11 +147,15 @@ def anonymize(
         cfg: Configuration of the request.
         progress: Called at the start of every phase.
         ner: The NER model loaded at startup, required when NER is enabled.
+        ocr: The OCR model loaded at startup, required when OCR is enabled.
 
     Raises:
         DocumentError: Empty, unsupported, unreadable, encrypted or too large file.
-        DetectorUnavailable: NER is enabled and no model was loaded (never a silent drop).
+        DetectorUnavailable: NER or OCR is enabled and its model was not loaded (never a silent
+            drop in protection).
     """
+    if cfg.ocr.enabled and ocr is None:
+        raise DetectorUnavailable("OCR enabled but no model loaded")
     timings: dict[str, float] = {}
     t0 = t = time.perf_counter()
 
@@ -101,24 +167,35 @@ def anonymize(
 
     progress("ingest")
     source = ingest(data, cfg.ingest)
-    layers, scanned = _read(source.pdf)
+    pages = [
+        _read_page(source.pdf, i, cfg, ocr if cfg.ocr.enabled else None)
+        for i in range(_page_count(source.pdf))
+    ]
+    scanned = [i for i, p in enumerate(pages) if p.scanned]
     mark("ingest")
     result = Anonymized(
         "blocked", None, source.pages, source.kind, scanned, timings=timings
     )
-    if scanned:
+    if scanned and not cfg.ocr.enabled:
         result.reason = "ocr_unavailable"
         timings["total"] = round(time.perf_counter() - t0, 3)
         return result
 
     progress("detection")
+    layers = [layer for p in pages for layer in p.layers]
     outcome = detect(layers, cfg, ner)
     values = outcome.values(layers)
-    result.counts = dict(sorted(Counter(c for _, c in values).items()))
+    active = set(cfg.active())
+    regions = visual.dedupe(
+        [b for p in pages for b in p.regions if b.category in active]
+    )
+    counts = Counter(c for _, c in values) + Counter(b.category for b in regions)
+    result.counts = dict(sorted(counts.items()))
     mark("detection")
 
     progress("redaction")
-    redacted = redact(source.pdf, from_outcome(layers, outcome), cfg.redaction)
+    boxes = from_outcome(layers, outcome) + regions
+    redacted = redact(source.pdf, boxes, cfg.redaction, set(scanned))
     result.boxes, result.strategies = redacted.boxes, redacted.strategies
     mark("redaction")
 

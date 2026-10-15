@@ -1,14 +1,16 @@
-"""Download of the models into the Hugging Face cache: the only step that needs the network.
+"""Download of the models: the only step that needs the network.
 
 Usage: ``python -m anonymization_pipeline.model_store [MODEL ...]`` (``just models``). Without
-arguments it downloads the NER model of the service configuration; the service then loads it
-from the cache without network (``HF_HUB_OFFLINE=1``).
+arguments it downloads the NER model of the service configuration into the Hugging Face cache
+(``HF_HOME``) and the OCR weights into the docTR cache (``DOCTR_CACHE_DIR``); the service then
+loads them without network (``HF_HUB_OFFLINE=1``).
 """
 
 import argparse
 import logging
 import sys
 
+from anonymization_pipeline import ocr
 from anonymization_pipeline.config import get_settings
 from anonymization_pipeline.detectors.ner import DetectorUnavailable, download
 from anonymization_pipeline.logging_setup import setup_logging
@@ -33,6 +35,14 @@ def main(argv: list[str] | None = None) -> int:
     configured = load_pipeline_config(settings).detection.ner
     models = args.models or [configured.model]
     failed = 0
+    if not args.models:
+        try:
+            ocr.load_engine(load_pipeline_config(settings).ocr)
+        except DetectorUnavailable as exc:
+            logger.error("OCR weights not downloaded: %s", exc)
+            failed += 1
+        else:
+            logger.info("OCR weights ready in the cache")
     for model in models:
         try:
             download(configured.model_copy(update={"model": model, "revision": None}))

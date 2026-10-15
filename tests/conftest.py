@@ -20,6 +20,8 @@ from anonymization_pipeline.pipeline_config.resources import parse_yaml, read_ya
 FAKE_CF = "RSSMRA85M01H501Q"
 # pipeline overrides of the tests: every category active, whatever the packaged defaults
 PIPELINE_FILE = str(Path(__file__).parent / "fixtures" / "pipeline.yaml")
+# packaged defaults with the models switched off
+DEFAULTS_FILE = str(Path(__file__).parent / "fixtures" / "defaults.yaml")
 # category registry of the tests: generic families and partial categories always active
 CATEGORIES_FILE = Path(__file__).parent / "fixtures" / "categories.yaml"
 

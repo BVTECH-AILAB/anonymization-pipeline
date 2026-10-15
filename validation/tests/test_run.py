@@ -17,6 +17,7 @@ from anonval.scoring import DocScore, ValueOutcome
 from anonval.settings import Config, Thresholds, load_config
 from anonymization_pipeline.config import Settings
 from anonymization_pipeline.main import create_app
+from tests.conftest import DEFAULTS_FILE
 
 DOCS = ["referto_laboratorio_facile_01", "nota_ambulatoriale_media_01"]
 
@@ -30,7 +31,11 @@ def config() -> Config:
 
 def _settings() -> Settings:
     return Settings.model_validate(
-        {"environment": "local", "pipeline_config_file": "", "max_queued_jobs": 10}
+        {
+            "environment": "local",
+            "pipeline_config_file": DEFAULTS_FILE,
+            "max_queued_jobs": 10,
+        }
     )
 
 

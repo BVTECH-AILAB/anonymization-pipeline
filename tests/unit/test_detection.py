@@ -7,12 +7,12 @@ from anonymization_pipeline.pipeline_config import (
     load_pipeline_config,
     request_config,
 )
-from tests.conftest import FAKE_CF, make_settings
+from tests.conftest import DEFAULTS_FILE, FAKE_CF, make_settings
 from tests.documents import EMAIL, LETTER_LINES, PATIENT, PHONE, text_layer
 
 
 def _cfg(**detection: object) -> PipelineConfig:
-    cfg = load_pipeline_config(make_settings(pipeline_config_file=""))
+    cfg = load_pipeline_config(make_settings(pipeline_config_file=DEFAULTS_FILE))
     if not detection:
         return cfg
     data = cfg.model_dump()

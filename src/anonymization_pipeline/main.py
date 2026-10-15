@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from anonymization_pipeline import __version__
+from anonymization_pipeline import __version__, ocr
 from anonymization_pipeline.api import anonymization, catalog, health
 from anonymization_pipeline.config import Settings, get_settings
 from anonymization_pipeline.detectors import DetectorUnavailable, load_resources
@@ -45,6 +45,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.pipeline_config = cfg
     load_resources()
     app.state.ner = None
+    app.state.ocr = None
     app.state.models_ready = False
     models = asyncio.create_task(_load_models(app, cfg), name="models")
     jobs: JobRegistry | None = getattr(app.state, "jobs", None)
@@ -72,12 +73,14 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 async def _load_models(app: FastAPI, cfg: PipelineConfig) -> None:
     """Load the configured models off the event loop; the service is ready only after."""
-    if cfg.detection.ner.enabled:
-        try:
+    try:
+        if cfg.detection.ner.enabled:
             app.state.ner = await asyncio.to_thread(load_engine, cfg.detection.ner)
-        except DetectorUnavailable as exc:
-            logger.error("NER model unavailable, service not ready: %s", exc)
-            return
+        if cfg.ocr.enabled:
+            app.state.ocr = await asyncio.to_thread(ocr.load_engine, cfg.ocr)
+    except DetectorUnavailable as exc:
+        logger.error("Model unavailable, service not ready: %s", exc)
+        return
     app.state.models_ready = True
 
 
@@ -85,7 +88,7 @@ def _runner(app: FastAPI) -> Runner:
     """The anonymization of a job, with the models loaded at startup."""
 
     def run(data: bytes, cfg: PipelineConfig, progress: Progress) -> Anonymized:
-        return anonymize(data, cfg, progress, app.state.ner)
+        return anonymize(data, cfg, progress, app.state.ner, app.state.ocr)
 
     return run
 

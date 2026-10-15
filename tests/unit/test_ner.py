@@ -27,14 +27,15 @@ from anonymization_pipeline.pipeline_config import PipelineConfig, load_pipeline
 from anonymization_pipeline.pipeline_config.resources import read_yaml
 from anonymization_pipeline.pipeline_config.schema import Ner
 from anonymization_pipeline.services.anonymization import anonymize
-from tests.conftest import make_settings
+from tests.conftest import DEFAULTS_FILE, make_settings
 from tests.documents import letter_pdf, text_layer
 
 
 def _cfg(**ner_cfg: Any) -> PipelineConfig:
-    cfg = load_pipeline_config(make_settings(pipeline_config_file=""))
+    """Defaults without models; the fake engine speaks token classification unless told."""
+    cfg = load_pipeline_config(make_settings(pipeline_config_file=DEFAULTS_FILE))
     data = cfg.model_dump()
-    data["detection"]["ner"].update(ner_cfg)
+    data["detection"]["ner"].update({"engine": "token_classification", **ner_cfg})
     return PipelineConfig.model_validate(data)
 
 
@@ -157,7 +158,9 @@ def test_vocabulary_is_validated(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_overlapping_windows_and_deduplication() -> None:
     text = " ".join(f"parola{i}" for i in range(700)) + " Mario Rossi"
     engine = FakeEngine({"Mario Rossi": "NOME"})
-    detector = NerDetector(_ner(enabled=True), engine)
+    detector = NerDetector(
+        _ner(enabled=True, window_words=300, overlap_words=50), engine
+    )
 
     assert len(windows(text, 300, 50)) == 3
     assert [p.value for p in detector.detect(text)] == ["Mario Rossi"]
@@ -242,7 +245,7 @@ def test_service_is_not_ready_and_refuses_documents_without_its_model(
         assert status["error"].startswith("Servizio non ancora pronto")
 
 
-@pytest.mark.ner
+@pytest.mark.models
 @pytest.mark.parametrize(
     ("engine", "model"),
     [

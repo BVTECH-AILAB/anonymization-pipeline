@@ -1,0 +1,7 @@
+# The packaged defaults without the models (tests run without weights or network): every test
+# that needs the defaults of resources/default.yaml and runs a detection reads this file.
+detection:
+  ner:
+    enabled: false
+ocr:
+  enabled: false

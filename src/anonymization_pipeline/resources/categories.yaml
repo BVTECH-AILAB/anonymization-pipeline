@@ -129,6 +129,11 @@ groups:
     ETNIA:                 "racial or ethnic origin"
     DATI_GIUDIZIARI:       "criminal convictions, proceedings, detention status"
     DATO_BIOMETRICO:       "biometric data used to identify a person"
+  visivi:
+    FIRMA:          "handwritten or graphic signature (redacted as an image area)"
+    TIMBRO:         "stamp, often with the physician's name and register number (redacted as an image area)"
+    CODICE_A_BARRE: "barcode (it may encode an identifier)"
+    QR_CODE:        "QR code or other 2D code (it may encode an identifier or a link)"
 
 # partial: categories that hold only a part of an entity. The tag of a group takes the most
 # informative category: specific (MEDICO) > generic (PERSONA) > partial (COGNOME). It only

@@ -10,6 +10,7 @@ import pypdfium2.raw as pdfium_c
 import pytest
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import DictionaryObject
+from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
 from anonymization_pipeline.detection import Outcome, detect
@@ -20,7 +21,7 @@ from anonymization_pipeline.pipeline_config import PipelineConfig, load_pipeline
 from anonymization_pipeline.render.boxes import Box, from_outcome, prepare
 from anonymization_pipeline.render.pdf import Redacted, redact
 from anonymization_pipeline.verify.pdf import strong_values, verify
-from tests.conftest import FAKE_CF, make_settings
+from tests.conftest import DEFAULTS_FILE, FAKE_CF, make_settings
 from tests.documents import (
     HEADER_COLOUR,
     HEIGHT,
@@ -54,7 +55,7 @@ def _layers(data: bytes) -> list[TextLayer]:
 
 
 def _cfg(**redaction: object) -> PipelineConfig:
-    cfg = load_pipeline_config(make_settings(pipeline_config_file=""))
+    cfg = load_pipeline_config(make_settings(pipeline_config_file=DEFAULTS_FILE))
     return cfg.model_copy(
         update={"redaction": cfg.redaction.model_copy(update=redaction)}
     )
@@ -301,3 +302,69 @@ def test_boxes_are_shaped_by_source_and_merged() -> None:
     assert out[0].rect == pytest.approx((9.7, 11.2, 52.3, 19.8))
     assert out[1].rect == (98.5, 98.5, 121.5, 111.5)
     assert out[2].rect[2] < 0
+
+
+def _scan_pdf(tmp_path: Path, hidden_text: str | None = None, rotate: int = 0) -> bytes:
+    """The letter rendered at 150 dpi and stored as a one-image PDF, optionally with a hidden
+    OCR layer (render mode 3) and a rotation."""
+    pdf = pdfium.PdfDocument(letter_pdf(tmp_path / "in.pdf"))
+    try:
+        image = pdf[0].render(scale=150 / 72).to_pil().convert("RGB")
+    finally:
+        pdf.close()
+    path = tmp_path / "scan.pdf"
+    cv = canvas.Canvas(str(path), pagesize=(WIDTH, HEIGHT))
+    buf = io.BytesIO()
+    image.save(buf, "JPEG", quality=90)
+    cv.drawImage(ImageReader(buf), 0, 0, width=WIDTH, height=HEIGHT)
+    if hidden_text:
+        text = cv.beginText(113, HEIGHT - 188)
+        text.setTextRenderMode(3)
+        text.setFont("Helvetica", 10)
+        text.textOut(hidden_text)
+        cv.drawText(text)
+    cv.save()
+    if rotate:
+        writer = PdfWriter(clone_from=path)
+        writer.pages[0].rotate(rotate)
+        writer.write(path)
+    return path.read_bytes()
+
+
+def _cf_box() -> Box:
+    return Box(0, (110.0, 178.0, 216.0, 192.0), "CODICE_FISCALE", "ocr")
+
+
+def test_scan_is_redacted_in_its_own_image(tmp_path: Path) -> None:
+    src = _scan_pdf(tmp_path, hidden_text=FAKE_CF)
+
+    redacted = redact(src, [_cf_box()], _cfg().redaction, scanned={0})
+
+    assert redacted.strategies == {0: "scan"}
+    assert FAKE_CF not in _layers(redacted.pdf)[0].text  # hidden OCR layer dropped
+    before, after = _render(src, dpi=72), _render(redacted.pdf, dpi=72)
+    x0, y0, x1, y1 = (int(v) for v in redacted.boxes[0].rect)
+    assert after[y0 + 1 : y1 - 1, x0 + 1 : x1 - 1].max() < 30
+    outside = np.ones(before.shape[:2], bool)
+    outside[y0 - 4 : y1 + 4, x0 - 4 : x1 + 4] = False
+    assert (np.abs(before - after).max(axis=2)[outside] > 40).mean() < 2e-4
+    report = verify(src, redacted, {(FAKE_CF, "CODICE_FISCALE")}, _cfg())
+    assert report.ok, report.failures
+
+
+def test_rotated_scan_falls_back_to_flatten(tmp_path: Path) -> None:
+    src = _scan_pdf(tmp_path, rotate=90)
+
+    redacted = redact(src, [_cf_box()], _cfg().redaction, scanned={0})
+
+    assert redacted.strategies == {0: "flatten"}
+
+
+def test_scan_with_visible_text_falls_back_to_flatten(tmp_path: Path) -> None:
+    path = tmp_path / "mixed.pdf"
+    path.write_bytes(_scan_pdf(tmp_path))
+    overlay(path, lambda cv: cv.drawString(40, 40, "Visibile"))
+
+    redacted = redact(path.read_bytes(), [_cf_box()], _cfg().redaction, scanned={0})
+
+    assert redacted.strategies == {0: "flatten"}

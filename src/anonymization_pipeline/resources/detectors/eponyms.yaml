@@ -1,0 +1,194 @@
+# =============================================================================
+#  Eponyms, scales and drug names that look like person names (anonymization_pipeline/detectors/eponyms.py)
+#
+#  "Morbo di Parkinson", "segno di Giordano", "Glasgow 15", "Coumadin": proper names or brand names
+#  that are not personal data. Parkinson or Giordano can also be the surname of a patient, so the
+#  decision is taken on each occurrence of a value proposed by any detector (VLM included) in a
+#  person category (PERSONA family: NOME, COGNOME, MEDICO, FAMILIARE...):
+#    eponyms       discarded only in a medical context (see 'context'), or inside a compound of
+#                  the list ("Wolff-Parkinson-White"); elsewhere ("Sig. Giordano") redacted
+#    scales        as eponyms, and also when followed by a score ("Glasgow 15", "Killip I")
+#    nouns         names used as common nouns, never surnames in practice: always discarded
+#    drugs         brand names: always discarded (names of people are left out on purpose)
+#    common_words  discarded only when written in lowercase ("globuli rossi"): with a capital
+#                  initial they remain possible surnames
+#  A value proposed as FARMACO is discarded when it is an eponym, a scale or a noun ("manovra di
+#  Valsalva" is not a drug). The comparison ignores case (except common_words) and extra spaces.
+#  An entry in two lists, an unknown key or an invalid regex stops startup.
+#  Regex syntax as rules.yaml and labels.yaml (detectors/patterns.py).
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Context of an occurrence, on its own line (case-insensitive except 'score')
+# -----------------------------------------------------------------------------
+fragments:
+  # clinical terms that introduce an eponym, also without "di" ("manovra Valsalva")
+  clinical: [
+    morbo, malattia, sindrome, segno, segni, manovra, test, prova, riflesso, fenomeno, scala, score,
+    punteggio, indice, classificazione, criteri, criterio, stadio, stadiazione, grado, cisti, tendine,
+    legamento, cavo, dotto, ampolla, canale, fascio, poligono, 'ghiandol[ae]', tumore, linfoma, frattura,
+    ernia, diverticolo, ulcera, membrana, 'cellul[ae]', 'corp[io]', catetere, sonda, filo, chiodo,
+    intervento, tecnica, colorazione, reazione, triade, tetralogia, posizione, incisione, maschera,
+    respiro, polso, soffio, valvola, forame]
+  # abbreviations: only followed by a connector ("M. di Crohn"), "M." alone is an initial
+  abbreviations: ['m\.', 'sdr\.?', 's\.']
+  connector: [di, del, della, dello, dei, degli, delle, 'd''', 'd’', secondo, 'sec\.']
+  # an outcome followed by what it refers to is the result of a person, not of a sign
+  not_a_result: '(?!\s+(?:al|alla|allo|ai|agli|alle|per|in)\b)'
+
+context:
+  window: 40              # characters observed before and after the occurrence
+  # what must end right before the occurrence
+  before:
+    - '\b(?:${clinical})(?:\s+(?:${connector}))?'
+    - '\b(?:${abbreviations})\s*(?:${connector})'
+  # what must start right after the occurrence: an outcome of a sign ("Giordano negativo",
+  # "Murphy pos.", "Lasègue + a destra"), never the result of a person ("Giordano negativo al
+  # tampone"); a sign only at the end of the item, never the " - " separator of a name
+  after:
+    - '(?:(?:debolmente|lievemente)\s+)?(?:positiv|negativ)\w*\b${not_a_result}'
+    - '(?:pos|neg)\b\.?+${not_a_result}'
+    - 'dubbi[oa]\b${not_a_result}'
+    - '[+−-](?=\s*(?:[,;.)]|$))'
+  # score after a scale ("Glasgow 15", "Gleason 3+4", "Apgar 9/10", "Killip I"); never an age or
+  # a date ("Clark 45 anni", "Clark 12/03/1980")
+  score: '(?:\d{1,3}(?:[.,]\d)?(?:\s*[+/]\s*\d{1,2})?|[IVX]{1,4}[ab]?(?![A-Za-z]))(?!\s*(?:anni|anno|aa)\b)(?![\d/\-])(?!\.\d)'
+
+# -----------------------------------------------------------------------------
+# Lists. Accented names are also listed without accents (OCR and keyboards drop them); compounds
+# are written in full. The first entries come from the expected false positives of the synthetic
+# corpus of the anonimizzatore project, the others are the eponyms, scales and drugs most common
+# in Italian medical reports.
+# -----------------------------------------------------------------------------
+eponyms: [
+  # cardiology and vessels
+  Adams-Stokes, Austin Flint, Bachmann, Barlow, Beck, Bentall, Bezold-Jarisch, Blalock-Taussig,
+  Brugada, Buerger, Cheyne-Stokes, Corrigan, Dressler, Duroziez, Ebstein, Eisenmenger, Fallot,
+  Fontan, Frank-Starling, Holt-Oram, Homans, Janeway, Jatene, Kawasaki, Keith-Flack, Kent, Kerley,
+  Korotkoff, Kussmaul, Leriche, Libman-Sacks, Lown-Ganong-Levine, Mobitz, Mustard, Norwood,
+  Osler, Prinzmetal, Quincke, Rastelli, Riva-Rocci, Romano-Ward, Roth, Senning, Stokes-Adams,
+  Takayasu, Tawara, Traube, Valsalva, Virchow, Wenckebach, Wolff-Parkinson-White,
+
+  # neurology and psychiatry
+  Alzheimer, Argyll Robertson, Arnold-Chiari, Asperger, Babinski, Barré, Barre, Bell,
+  Bielschowsky, Binswanger, Broca, Brown-Séquard, Brown-Sequard, Brudzinski, Charcot,
+  Charcot-Marie-Tooth, Chiari, Creutzfeldt-Jakob, Dandy-Walker, Devic, Dix-Hallpike, Duchenne,
+  Epley, Erb, Friedreich, Galeno, Gerstmann, Gilles de la Tourette, Guillain, Guillain-Barré,
+  Guillain-Barre, Hallpike, Hoffmann, Horner, Huntington, Kayser-Fleischer, Kearns-Sayre, Kernig,
+  Korsakoff, Kugelberg-Welander, Lambert-Eaton, Leigh, Lennox-Gastaut, Lewy, Lhermitte, Luschka,
+  Magendie, Marcus Gunn, Ménière, Meniere, Mingazzini, Möbius, Moebius, Monro, Parkinson, Pick,
+  Purkinje, Ramsay Hunt, Ranvier, Rett, Rinne, Rolando, Romberg, Schwann, Semont, Silvio,
+  Sydenham, Todd, Tolosa-Hunt, Tourette, Unverricht-Lundborg, Wallenberg, Weber, Werdnig-Hoffmann,
+  Wernicke, Wernicke-Korsakoff, West, Willis,
+
+  # gastroenterology and liver
+  Auerbach, Barrett, Billroth, Blumberg, Boerhaave, Budd-Chiari, Calot, Caroli, Courvoisier,
+  Crigler-Najjar, Crohn, Cullen, Dubin-Johnson, Gardner, Gilbert, Glisson, Grey Turner,
+  Hirschsprung, Kehr, Kerckring, Klatskin, Kupffer, Lanz, Lynch, Mallory, Mallory-Weiss,
+  McBurney, Meckel, Meissner, Ménétrier, Menetrier, Mirizzi, Morison, Murphy, Oddi,
+  Peutz-Jeghers, Peyer, Plummer-Vinson, Rovsing, Santorini, Schatzki, Sengstaken-Blakemore,
+  Treitz, Turcot, Vater, Whipple, Wilson, Wirsung, Zenker, Zollinger-Ellison,
+
+  # endocrinology, metabolism and kidney
+  Addison, Alport, Bartter, Basedow, Bellini, Bence Jones, Berger, Bertin, Bowman, Chvostek,
+  Conn, Cushing, De Quervain, Fabry, Fanconi, Gaucher, Giordano, Gitelman, Goodpasture, Graves,
+  Hashimoto, Henle, Kallmann, Kimmelstiel-Wilson, Klinefelter, Liddle, Malpighi, Nelson,
+  Niemann-Pick, Plummer, Pompe, Riedel, Sheehan, Tamm-Horsfall, Trousseau, Turner,
+
+  # orthopaedics, rheumatology and physical examination
+  Achille, Adson, Allen, Apley, Baastrup, Baker, Bankart, Barton, Bechterew, Behçet, Behcet,
+  Bennett, Bouchard, Bristow-Latarjet, Colles, Dupuytren, Finkelstein, Forestier, Freiberg,
+  Froment, Gaenslen, Galeazzi, Gerdy, Haglund, Harrington, Hawkins, Heberden, Hill-Sachs, Hoffa,
+  Humphrey, Ilizarov, Jobe, Jones, Kienböck, Kienbock, Kirschner, Köhler, Kohler, Küntscher,
+  Kuntscher, Lachman, Lasègue, Lasegue, Latarjet, Legg-Calvé-Perthes, Legg-Calve-Perthes,
+  Maisonneuve, McMurray, Monteggia, Morton, Neer, O'Brien, Ober, Ortolani, Osgood-Schlatter,
+  Paget, Patrick, Perthes, Phalen, Pott, Reiter, Scheuermann, Schmorl, Segond, Sever,
+  Sinding-Larsen, Sjögren, Sjogren, Smith, Speed, Spurling, Steinmann, Stener, Still, Sudeck,
+  Thomas, Tietze, Tinel, Trendelenburg, Volkmann, Wassermann, Wrisberg, Yergason,
+
+  # gynaecology, obstetrics and urology
+  Asherman, Bartolini, Braxton Hicks, Bricker, Couvelaire, Cowper, Credé, Crede, Douglas,
+  Falloppio, Fournier, Graaf, Hegar, Kegel, Kristeller, Krukenberg, Leopold, Meigs,
+  Mitrofanoff, Montgomery, Müller, Muller, Naegele, Nuck, Papanicolaou, Peyronie, Pfannenstiel,
+  Rokitansky, Skene, Stein-Leventhal,
+
+  # paediatrics and genetics
+  Alagille, Angelman, Apert, Beckwith-Wiedemann, Bourneville, Bruton, Cornelia de Lange,
+  Crouzon, Diamond-Blackfan, DiGeorge, Di George, Down, Edwards, Ehlers-Danlos, Goldenhar,
+  Guthrie, Hunter, Hurler, Kasabach-Merritt, Koplik, Kostmann, Lesch-Nyhan, Li-Fraumeni, Marfan,
+  Noonan, Patau, Pierre Robin, Prader-Willi, Reye, Rubinstein-Taybi, Silver-Russell,
+  Smith-Lemli-Opitz, Sotos, Sturge-Weber, Tay-Sachs, Treacher Collins, Von Hippel-Lindau,
+  Von Recklinghausen, Von Willebrand, Wilms, Williams-Beuren, Wiskott-Aldrich, Wolf-Hirschhorn,
+  Zellweger,
+
+  # haematology, oncology, pathology and laboratory
+  Aschoff, Auer, Bowen, Brenner, Burkitt, Call-Exner, Castleman, Charcot-Leyden, Cooley, Coombs,
+  Councilman, Cowden, Curschmann, Döhle, Dohle, Ewing, Giemsa, Glanzmann, Grocott, Heinz,
+  Hodgkin, Howell-Jolly, Hürthle, Hurthle, Ishihara, Kahler, Kaposi, Langerhans, Langhans,
+  Leydig, Masson, May-Grünwald, May-Grunwald, Merkel, Negri, Paul-Bunnell, Pelger-Huët,
+  Pelger-Huet, Perls, Reed-Sternberg, Romanowsky, Russell, Schiller-Duval, Schilling, Schirmer,
+  Sertoli, Sézary, Sezary, Snellen, Spitz, Waldenström, Waldenstrom, Warthin, Weil-Felix,
+  Westergren, Widal, Wintrobe, Wright, Ziehl-Neelsen,
+
+  # anatomy
+  Alcock, Bochdalek, Botallo, Camper, Cooper, Corti, Denonvilliers, Eustachio, Gerota,
+  Gimbernat, Golgi, Hesselbach, Highmore, His, Kiesselbach, Larrey, Little, Morgagni, Pacini,
+  Petit, Poupart, Reissner, Retzius, Rosenmüller, Rosenmuller, Ruffini, Scarpa, Spigelio,
+  Stenone, Waldeyer, Wharton, Winslow,
+
+  # surgery, procedures and devices
+  Allis, Babcock, Bakri, Bassini, Brandt-Daroff, Dor, Fogarty, Foley, Fowler, Groshong, Guedel,
+  Hartmann, Heimlich, Heller, Hickman, Judkins, Kelly, Kocher, Lichtenstein, Macintosh, Magill,
+  Malecot, Mayo, Mikulicz, Miles, Miller, Nelaton, Nissen, Péan, Pean, Pezzer, Roux, Roux-en-Y,
+  Seldinger, Sellick, Shouldice, Swan-Ganz, Tiemann, Toupet, Venturi, Yankauer]
+
+scales: [
+  Agatston, Apgar, Ashworth, Barthel, Bishop, Borrmann, Braden, Breslow, Child-Pugh, Clark,
+  Cormack-Lehane, Dukes, Fazekas, Ficat, Fisher, Fontaine, Forrest, Garden, Gleason, Glasgow,
+  Gustilo, Hinchey, Hoehn-Yahr, Hunt-Hess, Karnofsky, Kellgren-Lawrence, Killip, Levine,
+  Leriche-Fontaine, Lown, Lund-Browder, Mallampati, Norton, Outerbridge, Rankin, Ranson,
+  Salter-Harris, Savary-Miller, Spetzler-Martin, Tanner, Tönnis, Tonnis, Wells]
+
+nouns: [Doppler, Gram, Holter, Pap]
+
+# Brand names always discarded, so names of people are left out on purpose (Foster: a surname).
+drugs: [
+  # first entries from the corpus
+  Augmentin, Cardioaspirin, Coumadin, Eutirox, Lasix, Moment, Oki, Tachipirina, Tavor, Xanax,
+  # pain, inflammation and steroids
+  Aulin, Bentelan, Brufen, Contramal, Deltacortene, Efferalgan, Lyrica, Medrol, Neurontin,
+  Oxycontin, Tachidol, Targin, Toradol, Voltaren,
+  # stomach, bowel and liver
+  Antra, Buscopan, Dissenten, Duphalac, Enterogermina, Imodium, Lansox, Lucen, Motilium,
+  Movicol, Nexium, Pantorc, Peridon, Plasil,
+  # heart and vessels
+  Adalat, Aldactone, Almarytm, Brilique, Cardicor, Cardura, Clexane, Congescor, Cordarone,
+  Coversyl, Crestor, Eliquis, Fragmin, Lanoxin, Lixiana, Lobivon, Luvion, Norvasc, Olmetec,
+  Plavix, Pradaxa, Rytmonorm, Seleparina, Seloken, Sintrom, Tenormin, Torvast, Totalip, Triatec,
+  Xarelto, Zocor,
+  # diabetes and endocrinology
+  Glucophage, Humalog, Januvia, Lantus, Levemir, Metforal, Novorapid, Ozempic, Tapazole,
+  Tirosint, Tresiba, Trulicity,
+  # lungs and allergy
+  Aerius, Bisolvon, Clenil, Flixotide, Fluimucil, Mucosolvan, Seretide, Singulair, Spiriva,
+  Symbicort, Ventolin, Xyzal, Zyrtec,
+  # nervous system and psychiatry
+  Abilify, Akineton, Aricept, Azilect, Cipralex, Cymbalta, Depakin, Ebixa, Efexor, Elopram,
+  Entact, Exelon, Halcion, Haldol, Keppra, Laroxyl, Leponex, Lexotan, Madopar, Minias,
+  Mirapexin, Reminyl, Remeron, Requip, Risperdal, Rivotril, Serenase, Seroquel, Sereupin,
+  Sinemet, Stilnox, Tegretol, Trittico, Valium, Zoloft, Zyprexa,
+  # infections
+  Bactrim, Bactroban, Canesten, Ciproxin, Diflucan, Flagyl, Fucidin, Gentalyn, Klacid,
+  Levoxacin, Monuril, Mycostatin, Rocefin, Tamiflu, Valtrex, Velamox, Zimox, Zitromax, Zovirax,
+  # urology, blood and supplements
+  Avodart, Cialis, Dibase, Ferrograd, Folina, Levitra, Omnic, Proscar, Viagra, Xatral,
+  # oncology and immunology
+  Arimidex, Aromasin, Asacol, Avastin, Casodex, Cellcept, Enbrel, Femara, Glivec, Herceptin,
+  Humira, Imurel, Keytruda, Mabthera, Nolvadex, Opdivo, Pentasa, Plaquenil, Prograf, Remicade,
+  Salazopyrin, Sandimmun, Stelara, Xtandi, Zytiga]
+
+# Words of medical reports that are also surnames ("globuli rossi", "vena porta", "sala
+# operatoria"): discarded only in lowercase, with a capital initial they remain surnames.
+common_words: [
+  alto, basso, bianchi, bianco, bocca, bruni, bruno, canale, corona, costa, ferro, grande, grasso,
+  neri, nero, palma, piccolo, porta, rame, rossi, rosso, sala, seno, sordi, spina, testa, vita]

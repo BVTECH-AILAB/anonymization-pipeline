@@ -1,0 +1,250 @@
+# =============================================================================
+#  Rule-based detector (anonymization_pipeline/detectors/rules): regular expressions for the
+#  identifiers, validated with the checksum where possible, and contexts that confirm them or
+#  change their category. Ported from the anonimizzatore project.
+#
+#  Expressions are written in single quotes: backslashes are literal and a single quote is
+#  written doubled (''). ${name} is replaced with the fragment 'name' of the 'fragments'
+#  section (also nested); an expression or a fragment written as a list is an alternation
+#  (items joined with "|", in the given order). The same syntax as labels.yaml
+#  (detectors/patterns.py).
+#  Every section is required; an error (invalid regex, unknown key, nonexistent category,
+#  context or validator) stops startup with a message that names the place.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Fragments reused in the expressions
+# -----------------------------------------------------------------------------
+fragments:
+  # value boundaries: not preceded / not followed by a letter or a digit
+  B: '(?<![A-Za-z0-9])'
+  E: '(?![A-Za-z0-9])'
+  mesi: ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre',
+         'ottobre', 'novembre', 'dicembre',
+         'gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic']
+  # domains of the PEC mailboxes
+  domini_pec: ['pec', 'legalmail', 'postacert', 'cert', 'arubapec', 'pecmail', 'sicurezzapostale']
+  # sites of personal profiles (URL_PERSONALE)
+  social: ['facebook', 'instagram', 'linkedin', 'twitter', 'x', 'tiktok', 'youtube', 'github', 't\.me', 'threads\.net']
+  # Italian address: prefix, street name (up to 6 words, with the lowercase particles) and
+  # house number with an optional letter ("15 B", "15/A": the letter must not be the start of a word).
+  # The postal code may start a new line after the street; the street name and the city never
+  # cross a line break: "Roma\n\nTel." is a city and a new paragraph
+  prefissi_via: ['via', 'viale', 'v\.le', 'piazza', 'p\.zza', 'p\.za', 'corso', 'c\.so', 'largo', 'vicolo',
+                 'strada', 'contrada', 'c\.da', 'localit[aà]', 'loc\.', 'lungomare', 'piazzale', 'borgo',
+                 'traversa', 'salita', 'calle']
+  particelle_via: ['d[ei]', 'del', 'dell[aoe]', 'dei', 'degli', 'd''', 'e']   # "Via dei Mille"
+  via: '(?i:\b(?:${prefissi_via})[^\S\n]+)'
+  nome_via: '(?:(?:[A-ZÀ-Ü0-9][\wÀ-ÿ''.]*|${particelle_via})[^\S\n]+){0,5}?(?:[A-ZÀ-Ü][\wÀ-ÿ''.]*)'
+  civico: ',?[^\S\n]*(?:n\.?[^\S\n]*|nr\.?[^\S\n]*)?\d{1,4}(?!\d)(?:[^\S\n]?[A-Za-z](?![A-Za-z]))?(?:/[^\S\n]?[A-Za-z0-9]+)?'
+  # Address with what follows it. The street name, non-greedy, grows until it finds the house
+  # number ("Via Carlo Porta 12"); the number is not the start of a CAP ("Via Roma, 00100 Roma")
+  indirizzo_via: '(?P<via>${via}(?:${nome_via}${civico}|${nome_via}))'
+  indirizzo_cap_citta: ',?\s*(?P<cap>\d{5})[^\S\n]+(?P<citta>[A-ZÀ-Ü][\wÀ-ÿ'']+(?:[^\S\n]+[A-ZÀ-Ü][\wÀ-ÿ'']+)?(?:[^\S\n]*\([A-Z]{2}\))?)'
+  # a city without CAP, recognized only if followed by the province code
+  indirizzo_citta_provincia: '[ ,]+(?P<citta2>[A-ZÀ-Ü][\wÀ-ÿ'']+(?:[^\S\n]+[A-ZÀ-Ü][\wÀ-ÿ'']+)?[ ,]+\(?[A-Z]{2}\)?)(?![A-Za-z0-9])'
+
+# -----------------------------------------------------------------------------
+# Context of a value: the text before it
+# -----------------------------------------------------------------------------
+context:
+  window: 60                  # characters before the value in which contexts and keywords are searched
+  keyword_distance: 40        # a keyword counts if it is at most this far from the value, on the same line
+
+# Contexts: text preceding the value (case-insensitive).
+# 'birth' turns a date into a date of birth: the first group is the keyword
+# ("date of birth": bilingual label of CIE and passport)
+contexts:
+  birth: '(nat[oaie]\b|nascita|date of birth|data\s+di\s+n\.)[^\n]{0,40}\n?[^\n]{0,12}$'
+  piva: '(p\.?\s?iva|partita\s+iva|c\.?f\.?\s*/\s*p\.?\s?iva)[^\n]{0,15}$'
+  carta: '(carta|visa|mastercard|amex|pagamento)[^\n]{0,30}$'
+  documento: '(document|carta\s+d.?identit|c\.?\s?i\.?|passaport|passport|patente|licen[cs]e|n\.?\s*doc)[^\n]{0,40}$'
+  ricetta: '(\bnre\b|ricetta|prescrizione|piano\s+terapeutico)[^\n]{0,30}$'
+  imei: '(imei|dispositivo)[^\n]{0,20}$'
+  cap: '(\bc\.?a\.?p\.?|codice\s+postale)[^\n]{0,8}$'
+  vin: '(telaio|\bvin\b)[^\n]{0,20}$'
+  # ICD codes in the page (header of a diagnosis table): searched in the whole page
+  icd: '\bicd(?:[-\s]?(?:9|10)(?:[-\s]?cm)?)?(?![A-Za-z0-9])'
+
+# Keywords that make the category of a value more specific (see 'context_categories' in the patterns);
+# the one closest to the value wins. The English forms of the documents are printed on Italian
+# ones too ("CARTA DI IDENTITA' / IDENTITY CARD"). Case-insensitive.
+keywords:
+  carta_identita: 'carta\s+d.?identit|identity\s+card|\bc\.?\s?i\.?\b'
+  passaporto: 'passaport|passport'
+  patente: 'patente|driving\s+licen[cs]e'
+  soggiorno: 'soggiorno|residence\s+permit'
+  fax: '\bfax\b'
+  tel: '\btel\b|telefono|\bcell\b|cellulare'
+
+# -----------------------------------------------------------------------------
+# Refinements of a value already found
+# -----------------------------------------------------------------------------
+refinements:
+  # Contexts that make a date specific (the closest one wins; the English forms are those of
+  # CIE and passport). The date of birth uses the 'birth' context.
+  dates:
+    - {regex: 'decedut[oaie]|decesso|\bmort[eoa]\b', category: DATA_DECESSO}
+    - {regex: 'ricover[oaie]|ricovero|dimess[oaie]|dimission[ei]', category: DATA_RICOVERO}
+    - {regex: 'referto|refertat[oa]', category: DATA_REFERTO}
+    - {regex: 'prescrizion[ei]|prescritt[oa]|ricetta', category: DATA_PRESCRIZIONE}
+    - {regex: 'visita|prestazione|esame\s+eseguito', category: DATA_VISITA}
+    - {regex: 'rilasciat[oa]|rilascio|date\s+of\s+issue', category: DATA_RILASCIO}
+    - {regex: 'scadenza|scade|valid[oa]\s+fino|date\s+of\s+expiry|expir', category: DATA_SCADENZA}
+
+  # an EMAIL with this domain becomes PEC (case-insensitive)
+  pec: '@(?:[\w.\-]*\.)?(?:${domini_pec})\.'
+
+  # province code after an address: "TORINO TO", "Torino (TO)", "Milano, MI" (case-sensitive)
+  province: '[ ,]*\(?[A-Z]{2}\)?(?![A-Za-z0-9])'
+
+# -----------------------------------------------------------------------------
+# Typical OCR errors
+# -----------------------------------------------------------------------------
+ocr:
+  # codice fiscale: digit read in place of a letter and vice versa
+  cf_letters: {'0': 'O', '1': 'I', '5': 'S', '8': 'B', '2': 'Z', '6': 'G', '4': 'A'}
+  cf_digits: {'O': '0', 'D': '0', 'I': '1', 'L': '1', 'S': '5', 'B': '8', 'Z': '2', 'G': '6', 'A': '4'}
+  cf_digit_positions: [6, 7, 9, 10, 12, 13, 14]   # positions (0-based) of the digits
+  cf_omocodia: 'LMNPQRSTUV'                        # letters allowed in place of the digits (omocodia)
+  # misread dates ("05/0V/1974")
+  date: {'O': '0', 'I': '1', 'l': '1', 'V': '1', 'S': '5', 'B': '8'}
+
+# -----------------------------------------------------------------------------
+# Patterns, tried in order. Keys:
+#   category              category name (resources/categories.yaml)
+#   regex                 expression (string or list of alternatives)
+#   flags                 're' flags (e.g. [IGNORECASE])
+#   validator             check on the value, by name (see VALIDATORS in detectors/rules/__init__.py)
+#   page                  name in 'contexts' that must appear anywhere in the page
+#   context               name in 'contexts' (text preceding the value)
+#   context_required      without the context the value is discarded
+#   context_categories    {keyword: category}: the keyword closest to the value wins;
+#                         include the base category's keyword too, so "Fax ... tel 333..." stays a TELEFONO
+#   parts                 {named group: category}: the groups become separate entities (addresses)
+# Patterns of category DATA are refined with 'refinements.dates' and 'contexts.birth'.
+# -----------------------------------------------------------------------------
+patterns:
+  - category: EMAIL
+    regex: '${B}[A-Za-z0-9._%+\-]+ ?@ ?[A-Za-z0-9.\-]+\.[A-Za-z]{2,}${E}'
+  # social handle ("@mario.rossi"): not part of an email (no word character before it)
+  - category: USERNAME_SOCIAL
+    regex: '(?<![\w.@])@[A-Za-z0-9_](?:[A-Za-z0-9_.]{1,28}[A-Za-z0-9_])?(?![\w@])'
+  - category: URL_PERSONALE
+    regex: '(?i:\b(?:https?://)?(?:www\.)?(?:${social})(?:\.com)?/[^\s)>\]\"'']+)'
+  - category: CODICE_STP_ENI
+    regex: '${B}(?:STP|ENI)[ ]?\d{3}[ ]?\d{3}[ ]?\d{7}${E}'
+  # VIN: the check digit is mandatory only in North America; without it, the label is required
+  - category: TELAIO
+    regex: '${B}[A-HJ-NPR-Z0-9]{17}${E}'
+    validator: vin
+  - category: TELAIO
+    regex: '${B}[A-HJ-NPR-Z0-9]{17}${E}'
+    validator: digits_and_letters
+    context: vin
+    context_required: true
+  - category: ID_DISPOSITIVO
+    regex: '${B}[0-9A-Fa-f]{2}(?:([:\-])[0-9A-Fa-f]{2})(?:\1[0-9A-Fa-f]{2}){4}${E}'
+  # IMEI: with the context it wins over the credit card (the IMEI passes Luhn too)
+  - category: ID_DISPOSITIVO
+    regex: '${B}\d{15}${E}'
+    validator: luhn
+    context: imei
+    context_required: true
+  # NRE: 3 region digits, 2 characters, 10 digits
+  - category: NUMERO_RICETTA
+    regex: '${B}\d{3}[0-9A-Z]{2}[ ]?\d{10}${E}'
+    context: ricetta
+    context_required: true
+  - category: CAP
+    regex: '${B}\d{5}${E}'
+    context: cap
+    context_required: true
+  - category: IBAN
+    regex: '${B}[A-Z]{2}\d{2}(?:[ ]?[A-Z0-9]{4}){2,7}(?:[ ]?[A-Z0-9]{1,4})?${E}'
+    validator: iban
+  # codice fiscale, also with correctable OCR errors (see ocr)
+  - category: CODICE_FISCALE
+    regex: '${B}[A-Za-z0-9]{16}${E}'
+    validator: cf_ocr
+  - category: TESSERA_SANITARIA
+    regex: '${B}8038\d(?:[ ]?\d){15}${E}'
+    validator: twenty_digits
+  - category: CARTA_CREDITO
+    regex: '${B}(?:\d[ \-]?){12,18}\d${E}'
+    validator: card
+    context: carta
+  - category: PARTITA_IVA
+    regex: '${B}(?:IT[ ]?)?\d{11}${E}'
+    validator: vat
+    context: piva
+    context_required: true
+  - category: PARTITA_IVA
+    regex: '${B}IT[ ]?\d{11}${E}'
+    validator: vat_it
+  - category: INDIRIZZO_IP
+    regex: '${B}(?:\d{1,3}\.){3}\d{1,3}${E}'
+    validator: ipv4
+  - category: INDIRIZZO_IP
+    regex: '${B}(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}${E}'
+  # Phones: Italian (mobile and landline) and international with country code
+  - category: TELEFONO
+    regex: '(?<![\w+])(?:(?:\+|00)39[ .\-]?)?3\d{2}[ .\-]?\d{3}[ .\-]?\d{3,4}${E}'
+    context_categories: {fax: FAX, tel: TELEFONO}
+  # landlines: the number after the area code can reach 10 digits ("02 3435456656"); with a lower
+  # limit the pattern fails and only the part taken as a mobile number stays covered, not the area code
+  - category: TELEFONO
+    regex: '(?<![\w+])(?:(?:\+|00)39[ .\-]?)?0\d{1,3}[ .\-/]?\d{4,10}${E}'
+    validator: landline
+    context_categories: {fax: FAX, tel: TELEFONO}
+  - category: TELEFONO
+    regex: '(?<![\w])\+(?!39)\d{1,3}[ .\-]?\(?\d{1,4}\)?(?:[ .\-]?\d{2,4}){2,4}${E}'
+    context_categories: {fax: FAX, tel: TELEFONO}
+  # Italian licence plates (format since 1994): AA 123 BB
+  - category: TARGA
+    regex: '${B}[A-HJ-NPR-TV-Z]{2}[ ]?\d{3}[ ]?[A-HJ-NPR-TV-Z]{2}${E}'
+  # Documents: CIE (CA12345AB), paper ID card/passport (AA1234567), driving licence (U1...)
+  - category: NUMERO_CARTA_IDENTITA
+    regex: '${B}C[A-Z]\d{5}[A-Z]{2}${E}'
+  # CIE read with OCR errors (spurious spaces, last letter mistaken for ")" "]" "|" or a digit)
+  - category: NUMERO_CARTA_IDENTITA
+    regex: '${B}C[A-Z] ?(?:\d ?){5}[A-Z][A-Z0-9)\]|]${E}'
+    validator: nine_chars
+  # same format for passport, paper ID card and residence permit: the context decides
+  - category: NUMERO_CARTA_IDENTITA
+    regex: '${B}[A-Z]{2}\d{7}${E}'
+    context: documento
+    context_categories: {carta_identita: NUMERO_CARTA_IDENTITA, passaporto: NUMERO_PASSAPORTO,
+                    soggiorno: NUMERO_PERMESSO_SOGGIORNO, patente: NUMERO_PATENTE}
+  - category: NUMERO_PATENTE
+    regex: '${B}U1[A-Z0-9]{8}${E}'
+    context: documento
+    context_required: true
+  # Numeric and textual dates
+  - category: DATA
+    regex: '${B}(?:0?[1-9]|[12]\d|3[01])[/.\-](?:0?[1-9]|1[0-2])[/.\-](?:19|20)\d{2}${E}'
+  - category: DATA
+    regex: '${B}(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])${E}'
+  # date misread by OCR (typical of handwriting: "05/0V/1974"), only near "nato/a", "nascita"
+  - category: DATA
+    regex: '${B}[0-3OIl]?[0-9OIlVSB]\s?[/.\-]\s?[0-1OIl]?[0-9OIlVSB]\s?[/.\-]\s?(?:19|20)[0-9OIlSB]{2}${E}'
+    validator: ocr_date
+    context: birth
+    context_required: true
+  - category: DATA
+    regex: '${B}(?:0?[1-9]|[12]\d|3[01])\s+(?:${mesi})\.?\s+(?:19|20)\d{2}${E}'
+    flags: [IGNORECASE]
+  # Addresses: street and house number, then CAP and city or city and province (see the fragments)
+  - category: INDIRIZZO
+    regex: '${indirizzo_via}(?:${indirizzo_cap_citta}|${indirizzo_citta_provincia})?'
+    parts: {via: INDIRIZZO, cap: CAP, citta: LUOGO, citta2: LUOGO}
+  - category: LUOGO
+    regex: '${B}(?P<cap>\d{5})[^\S\n]+(?P<citta>[A-ZÀ-Ü][a-zà-ÿ'']+(?:[^\S\n]+[A-ZÀ-Ü][a-zà-ÿ'']+)?[^\S\n]*\([A-Z]{2}\))'
+    parts: {cap: CAP, citta: LUOGO}
+  # ICD-10 diagnosis codes (they reveal the diagnosis even when the description is redacted):
+  # with the dot ("E11.9") anywhere; without it ("J13") only if "ICD" appears in the page
+  - category: DIAGNOSI
+    regex: '${B}[A-TV-Z]\d{2}\.[0-9A-Z]{1,2}${E}'
+  - category: DIAGNOSI
+    regex: '${B}[A-TV-Z]\d{2}(?![A-Za-z0-9]|\.\d)'   # not the leading part of "E11.9"
+    page: icd

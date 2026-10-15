@@ -159,3 +159,16 @@ def test_registry_families_and_ranks() -> None:
 def test_invalid_registry_is_rejected(data: dict, message: str) -> None:
     with pytest.raises(ValueError, match=message):
         _build(data)
+
+
+def test_invalid_detector_file_stops_the_startup(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def broken() -> None:
+        raise ValueError("detectors/rules.yaml: invalid regex")
+
+    monkeypatch.setattr("anonymization_pipeline.main.load_resources", broken)
+    app = create_app(make_settings())
+
+    with pytest.raises(ValueError, match="rules.yaml"), TestClient(app):
+        pass

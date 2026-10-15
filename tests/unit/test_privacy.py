@@ -2,6 +2,7 @@ import logging
 
 import pytest
 
+from anonymization_pipeline.detectors.rules.validators import valid_cf
 from anonymization_pipeline.privacy import (
     REDACTED,
     PiiRedactingFilter,
@@ -78,3 +79,8 @@ def test_filter_redacts_args_and_exceptions() -> None:
     assert FAKE_CF not in record.getMessage()
     assert record.exc_text is not None
     assert FAKE_CF not in record.exc_text
+
+
+def test_fake_cf_has_a_valid_check_character() -> None:
+    # the rules detector validates the checksum: an invalid test value is never detected by it
+    assert valid_cf(FAKE_CF)

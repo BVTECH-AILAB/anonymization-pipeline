@@ -1,0 +1,45 @@
+# =============================================================================
+#  Configurazione della validazione (validation/README.md)
+#
+#  Ogni profilo e' un insieme di parametri di POST /anonymizations. Ogni profilo viene eseguito
+#  su tutto il dataset filtrato e il report li confronta. `comune` vale per tutti i profili; un
+#  profilo lo sovrascrive campo per campo. Un campo assente lascia il default del server.
+# =============================================================================
+
+server:
+  base_url: http://localhost:8000
+  poll_interval_s: 1
+  timeout_documento_s: 1800     # oltre: il job viene annullato e il documento conta come errore
+
+dataset:
+  percorso: dataset             # relativo a questo file
+  tipi: []                      # vuoto = tutti; es. [referto_laboratorio, test_genetico]
+  difficolta: []                # vuoto = tutte; facile | media | complessa
+  documenti: []                 # id specifici; es. [referto_radiologico_complessa_02]
+
+# Esito PASS/FAIL di ogni profilo nel report. Valori provvisori: le soglie di accettazione
+# sono ancora un punto aperto (PA-15).
+soglie:
+  recall_min: 0.95              # valori rilevati / valori attesi
+  tasso_fuga_max: 0.05          # valori rimasti visibili / valori attesi
+  precision_min: 0.80           # riquadri corretti / (riquadri corretti + falsi positivi)
+
+comune: {}
+
+profili:
+  # Configurazione di default del servizio
+  - nome: default
+    descrizione: Configurazione di default del servizio
+
+  # Da attivare per confrontare: anche date, persone correlate e dati sanitari
+  # - nome: tutto
+  #   descrizione: Tutte le categorie attive
+  #   enable: [date, persone_correlate, sanitari]
+
+# =============================================================================
+#  Parametri di un profilo (tutti opzionali; anche in `comune`)
+#
+#  enable    gruppi o categorie da attivare (resources/categories.yaml)
+#  disable   gruppi o categorie da disattivare; le categorie protette non si possono
+#            disattivare (il servizio risponde 400)
+# =============================================================================

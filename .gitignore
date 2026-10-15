@@ -18,3 +18,4 @@ build/
 
 # Local only, never committed
 CLAUDE.md
+validation/results/

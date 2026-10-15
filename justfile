@@ -74,3 +74,7 @@ licences:
 # Synthetic dataset: native PDFs and ground truth from validation/dataset/specs
 validation-dataset *args:
     PYTHONPATH=validation uv run python -m anonval.build {{args}}
+
+# Validation run against the service (`just up` or `just dev` first)
+validation *args:
+    PYTHONPATH=validation uv run python -m anonval.run {{args}}

@@ -19,5 +19,6 @@ def families(monkeypatch: pytest.MonkeyPatch) -> Registry:
             "FAMILIARE": "PERSONA",
         },
     )
-    monkeypatch.setattr("anonval.build.registry", lambda: reg)
+    for module in ("anonval.scoring", "anonval.build"):
+        monkeypatch.setattr(f"{module}.registry", lambda: reg)
     return reg

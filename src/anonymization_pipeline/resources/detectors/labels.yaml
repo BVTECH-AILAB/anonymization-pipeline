@@ -134,7 +134,7 @@ labels:
       stop: '[\n,;:()]'
     - category: PERSONA
       kind: name
-      regex: ['firmato', 'a\s+cura\s+di']
+      regex: ['firmato', 'a\s+cura\s+di', 'stampato\s+da', 'redatto\s+da', 'compilato\s+da']
     - category: PATERNITA_MATERNITA
       kind: name
       regex: ['padre', 'madre', 'paternit[aà]', 'maternit[aà]', 'figli[oa]\s+di']
@@ -169,6 +169,11 @@ labels:
     - category: LUOGO
       kind: place
       regex: ['comune\s+di\s+residenza', 'residente\s+a', 'comune\s+di\s+domicilio', 'domiciliat[oa]\s+a']
+    # form fields ("CITTA': LECCE", "PROV: LE"): generic words, only with ":" or the value below
+    - category: LUOGO
+      kind: place
+      regex: ['citt[aà]''?', 'comune', 'prov(?:incia)?\.?']
+      need_sep: true
     - category: CITTADINANZA
       kind: place
       regex: ['cittadinanza', 'nationality', 'nazionalit[aà]']
@@ -329,7 +334,8 @@ labels:
     - category: NUMERO_ALBO
       kind: id
       regex: ['iscrizione\s+(?:all.)?albo(?:\s+n\.?)?', 'n\.?\s*albo', 'albo(?:\s+dei\s+medici)?${n}',
-              'ordine\s+dei\s+medici(?:\s+(?:di|della\s+provincia\s+di)\s+[A-Za-zÀ-ÿ]+)?${n}', 'matricola']
+              'ordine\s+dei\s+medici(?:\s+(?:di|della\s+provincia\s+di)\s+[A-Za-zÀ-ÿ]+)?${n}', 'matricola',
+              'omceo(?:\s+[A-Za-z]{2})?${n}', 'cod(?:ice|\.)?\s+regionale${n}']
 
   date:
     - category: DATA_VISITA

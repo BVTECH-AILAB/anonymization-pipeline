@@ -63,6 +63,7 @@ contexts:
   imei: '(imei|dispositivo)[^\n]{0,20}$'
   cap: '(\bc\.?a\.?p\.?|codice\s+postale)[^\n]{0,8}$'
   vin: '(telaio|\bvin\b)[^\n]{0,20}$'
+  eta: '(\bdi\s+anni|\bet[aà]|\banni[ \t]*:)[ \t]*[:.]?[ \t]*$'
   # ICD codes in the page (header of a diagnosis table): searched in the whole page
   icd: '\bicd(?:[-\s]?(?:9|10)(?:[-\s]?cm)?)?(?![A-Za-z0-9])'
 
@@ -132,6 +133,10 @@ patterns:
     regex: '(?<![\w.@])@[A-Za-z0-9_](?:[A-Za-z0-9_.]{1,28}[A-Za-z0-9_])?(?![\w@])'
   - category: URL_PERSONALE
     regex: '(?i:\b(?:https?://)?(?:www\.)?(?:${social})(?:\.com)?/[^\s)>\]\"'']+)'
+  # links that carry an identifier (a report, a patient): a number of 4 or more digits or a code in
+  # the query string or the path. Before the email, the tax code and the phones: one span
+  - category: URL_PERSONALE
+    regex: '(?i:\bhttps?://[^\s<>\"'']*?(?:[?&#][\w.\-]+=[^\s&#<>\"'']*?\d{4}|/[A-Za-z0-9_\-]*\d{6})[^\s<>\"'']*?)(?=[.,;:)\]]?(?:\s|$))'
   - category: CODICE_STP_ENI
     regex: '${B}(?:STP|ENI)[ ]?\d{3}[ ]?\d{3}[ ]?\d{7}${E}'
   # VIN: the check digit is mandatory only in North America; without it, the label is required
@@ -219,6 +224,11 @@ patterns:
   - category: NUMERO_PATENTE
     regex: '${B}U1[A-Z0-9]{8}${E}'
     context: documento
+    context_required: true
+  # age in years, only after "di anni", "età", "anni:" ("da 10 anni" is a duration)
+  - category: ETA
+    regex: '${B}\d{1,3}${E}'
+    context: eta
     context_required: true
   # Numeric and textual dates
   - category: DATA

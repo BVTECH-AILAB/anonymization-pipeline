@@ -149,3 +149,54 @@ def test_outcome_values_and_counters() -> None:
 
     assert (PATIENT, "PERSONA") in outcome.values(layers)
     assert outcome.hallucinations_discarded == 0
+
+
+# Formats of the rules of feat/surgical-anonymization (tests/unit/test_rules.py there)
+@pytest.mark.parametrize(
+    ("text", "value", "category"),
+    [
+        ("di anni 64", "64", "ETA"),
+        ("OMCeO MI n. 15959", "15959", "NUMERO_ALBO"),
+        ("Cod. regionale 314474", "314474", "NUMERO_ALBO"),
+        (
+            "referti: https://referti.example.it/r?id=2026123456.",
+            "https://referti.example.it/r?id=2026123456",
+            "URL_PERSONALE",
+        ),
+        ("CITTA': LECCE\nPROV: LE", "LE", "LUOGO"),
+        ("Stampato da Rosario Majorana il 23/09/2026", "Rosario Majorana", "PERSONA"),
+        (
+            "Tessera sanitaria 80380000000000000001",
+            "80380000000000000001",
+            "TESSERA_SANITARIA",
+        ),
+        ("NRE 0300A123456789", "0300A123456789", "NUMERO_RICETTA"),
+        ("documento n. CA12345AB", "CA12345AB", "NUMERO_CARTA_IDENTITA"),
+        ("Nato il 01/08/1985 a Roma", "01/08/1985", "DATA_NASCITA"),
+    ],
+)
+def test_italian_formats(text: str, value: str, category: str) -> None:
+    layers = [text_layer(0, text)]
+    cfg = request_config(_cfg(), enable=("ETA", "persone_correlate"))
+
+    found = {
+        (layers[0].text[f.start : f.end], f.category) for f in detect(layers, cfg).found
+    }
+
+    assert (value, category) in found
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Creatinina 1,90 mg/dL (0,70 - 1,20); eGFR 34 mL/min",
+        "www.ospedale.it",
+        "https://www.ospedale.it/reparti/cardiologia",
+        "da 10 anni soffre di cefalea",
+    ],
+)
+def test_clinical_text_is_not_personal_data(text: str) -> None:
+    layers = [text_layer(0, text)]
+    cfg = request_config(_cfg(), enable=("ETA", "persone_correlate"))
+
+    assert detect(layers, cfg).found == []

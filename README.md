@@ -14,6 +14,84 @@ Generated from `agenas-python-template`: same stack, logging and privacy rules
 How the algorithm works, the API, the PII taxonomy, the synthetic dataset and
 the evaluation results: **[docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)**.
 
+## How the algorithm works
+
+```mermaid
+flowchart TD
+    IN["Uploaded document<br/>native PDF · scanned PDF · JPG/PNG/TIFF"] --> CONV["Convert to PDF<br/>images: EXIF rotation applied"]
+    CONV --> PAGE{"For each page:<br/>image covers &gt; 50% of the page?"}
+
+    PAGE -- "no: native page" --> NAT["Native text layer<br/>words + per-character boxes<br/>(including invisible / white text)"]
+    PAGE -- "yes: scanned page" --> OCR["docTR OCR<br/>words + boxes"]
+    OCR --> ROT["OCR of margins rotated 90°<br/>(vertical text)"]
+    PAGE -- "yes, with hidden OCR text" --> NAT
+
+    NAT --> LAYERS[("Text layers<br/>text ↔ character boxes")]
+    ROT --> LAYERS
+
+    subgraph DET["PII detection (on text)"]
+        RULES["Italian rules<br/>tax code with checksum, health card, phones,<br/>email, IBAN, NRE, record numbers, addresses, dates, places"]
+        NER["GLiNER NER<br/>persons, places, addresses, organizations"]
+        NAMES["Contextual name rules<br/>Sig.ra X, Dott. X Y, Paziente: X"]
+        ALLOW["Contextual allowlist<br/>eponyms (morbo di Crohn), drugs, saints"]
+        PROP["Document-wide propagation<br/>every name / ID found is searched everywhere:<br/>ROSSI M., Sig. Rossi, ROSSIMARIO"]
+        MERGE["Merge overlapping spans<br/>most specific label wins"]
+        RULES --> ALLOW
+        NER --> ALLOW
+        NAMES --> ALLOW
+        ALLOW --> PROP --> MERGE
+    end
+    LAYERS --> DET
+
+    subgraph VIS["Visual detection (on pixels)"]
+        CODES["Barcodes and QR codes<br/>zxing"]
+        IMGS["Embedded images<br/>signature / stamp (logos excluded)"]
+        INK["Ink not explained by OCR<br/>signatures on scans"]
+        STAMP["Stamps: framed or coloured ink,<br/>or OMCeO / Medico Chirurgo text"]
+    end
+    PAGE --> VIS
+
+    MERGE --> BOXES["Boxes to redact<br/>one per line · policy per label<br/>(clinical dates, age, facilities: kept)"]
+    VIS --> BOXES
+    BOXES --> EDIT["User edits (UI)<br/>draw area · un-redact box · search and redact"]
+    EDIT --> RED
+
+    subgraph RED["Surgical redaction (PyMuPDF)"]
+        R1["Under each box:<br/>glyphs removed from the content stream,<br/>pixels blanked, covered vector art removed"]
+        R2["Black box"]
+        R3["Scrub: metadata, XMP, annotations,<br/>links, attachments, JavaScript"]
+        R4["Full clean rewrite<br/>(no incremental history)"]
+        R1 --> R2 --> R3 --> R4
+    end
+
+    RED --> VER{"Fail-closed verification<br/>· no text left under boxes<br/>· no value in text, bytes, metadata<br/>· pixels identical outside boxes"}
+    VER -- passed --> OUT["Anonymized PDF (identical layout)<br/>+ Word with the text"]
+    VER -- failed --> BLOCK["Document BLOCKED<br/>not downloadable, reasons shown"]
+    BLOCK -.-> EDIT
+```
+
+1. **Text layers.** Every page becomes text in which each character keeps its
+   box on the page: from the PDF text layer on native pages (invisible text
+   included), from docTR OCR on scanned pages (side margins read again rotated
+   by 90 degrees for vertical text).
+2. **Detection on the text.** Italian rules (codice fiscale with checksum,
+   tessera sanitaria, phones, emails, IDs, addresses, dates, places), GLiNER
+   NER and contextual name rules; an allowlist keeps eponyms, drugs and saints
+   ("morbo di Crohn" stays, "Sig. Corti" goes); every name and identifier found
+   is searched across the whole document in all its forms.
+3. **Detection on the pixels.** Barcodes and QR codes, signatures and stamps
+   (embedded images, ink that OCR does not explain, framed or coloured stamps).
+4. **Boxes.** One box per line of every finding; quasi-identifiers (clinical
+   dates, age, facilities) are detected but kept by default. In the web page
+   the user can add an area, un-redact a box or search and redact a text.
+5. **Surgical redaction.** Inside the original PDF: glyphs under each box are
+   removed from the content stream, image pixels blanked, covered vector art
+   removed, a black box drawn; then metadata, annotations, links and
+   attachments are scrubbed and the file is rewritten from scratch.
+6. **Fail-closed verification.** Nothing readable under the boxes, no redacted
+   value anywhere in the text, file bytes or metadata, pixels identical outside
+   the boxes. Otherwise the document is blocked and cannot be downloaded.
+
 ## Quick start
 
 Requirements: `uv`, `just`. A GPU is optional (about 2 s per scanned page on a

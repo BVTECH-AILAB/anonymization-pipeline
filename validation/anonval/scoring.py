@@ -95,6 +95,9 @@ class DocScore:
         default_factory=list
     )  # expected values readable in it
     pipeline_s: float | None = None
+    strategies: dict[str, int] = field(
+        default_factory=dict
+    )  # strategy -> redacted pages
 
     @property
     def released(self) -> bool:
@@ -195,6 +198,8 @@ def score_document(
     )
     result = status.get("result") or {}
     score.pipeline_s = (result.get("timings") or {}).get("total")
+    for strategy in (result.get("strategies") or {}).values():
+        score.strategies[strategy] = score.strategies.get(strategy, 0) + 1
     if not score.released:
         return score
     boxes = boxes_of(status)

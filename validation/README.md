@@ -188,10 +188,16 @@ Profilo `default`, 96 documenti, servizio in processo su CPU (24 core, torch a 4
 | + NER `DeepMount00/Italian_NER_XXL_v2` | 86,9% | 17,4% | 87,9% | 72 | 1,60 |
 | + NER `knowledgator/gliner-pii-base-v1.0` | 82,3% | 22,1% | 89,6% | 31 | 2,18 |
 | + NER `urchade/gliner_multi_pii-v1` | 87,1% | 16,1% | 88,5% | 11 | 2,86 |
-| default attuale: GLiNER multi PII + rilevamento visivo | 87,7% | 15,8% | 88,2% | 11 | 2,44 |
+| GLiNER multi PII + rilevamento visivo, censura `flatten` | 87,7% | 15,8% | 88,2% | 11 | 2,44 |
+| default attuale: come sopra, censura `surgical` | 87,8% | 15,7% | 88,1% | 11 | 4,75 |
 
 In nessuna configurazione restano valori nel testo dei PDF rilasciati e nessun documento viene
-bloccato. Le fughe residue vengono soprattutto da strutture sanitarie e reparti (categorie attive di
+bloccato. Con la censura `surgical` 189 delle 197 pagine con riquadri restano native (testo
+selezionabile fuori dai riquadri); le altre 8 (4 documenti) passano a `flatten` perché la
+verifica trova nel testo un valore non coperto: la propagazione tollerante (`anchoring.fuzzy`)
+ha associato un numero rilevato a un numero simile ma diverso di un'altra pagina, e quella variante
+non è stata cercata nelle pagine restanti. Censura e verifica costano circa 0,4 s per documento:
+il resto dell'aumento del tempo medio rispetto alla riga precedente non è ancora spiegato. Le fughe residue vengono soprattutto da strutture sanitarie e reparti (categorie attive di
 default: PA-14), codici di laboratorio (`CODICE_CAMPIONE`, `ACCESSION_NUMBER`) e numeri di referto e
 prenotazione. I negativi violati da `Italian_NER_XXL_v2` sono eponimi di classificazioni
 istopatologiche (Ishak, Masson, Marsh, Oberhuber) non ancora in `eponyms.yaml`.

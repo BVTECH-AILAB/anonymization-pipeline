@@ -84,6 +84,7 @@ def render_report(runs: list[ProfileRun], config: Config) -> str:
             f"{s.disabled_boxes}, falsi positivi {s.false_positives}).",
             f"- Negativi violati: {s.negatives_violated}; valori nel testo dei PDF "
             f"rilasciati: {s.text_leaks}.",
+            f"- Pagine redatte per strategia: {dict(s.strategies) or '-'}.",
             f"- Markdown: {s.markdown_documents} documenti, {s.markdown_leaked} valori ancora "
             f"leggibili su {s.markdown_expected} attesi.",
             f"- Bloccati: {dict(s.blocked) or 0}; non elaborati: {s.failed}.",

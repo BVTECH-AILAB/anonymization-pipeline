@@ -51,6 +51,9 @@ class Summary:
     negatives_violated: int = 0
     text_leaks: int = 0
     markdown_documents: int = 0
+    strategies: Counter[str] = field(
+        default_factory=Counter
+    )  # redacted pages per strategy
     markdown_expected: int = 0
     markdown_leaked: int = 0
     by_category: dict[str, Counts] = field(default_factory=lambda: defaultdict(Counts))
@@ -96,6 +99,7 @@ def summarize(scores: list[DocScore]) -> Summary:
         s.false_positives += len(doc.false_positives)
         s.negatives_violated += len(doc.negatives_violated)
         s.text_leaks += len(doc.text_leaks)
+        s.strategies.update(doc.strategies)
         if doc.markdown:
             s.markdown_documents += 1
             s.markdown_expected += sum(
@@ -152,6 +156,7 @@ def as_dict(s: Summary, t: Thresholds) -> dict[str, Any]:
         "precisione": s.precision,
         "negativi_violati": s.negatives_violated,
         "valori_nel_testo_rilasciato": s.text_leaks,
+        "pagine_per_strategia": dict(s.strategies),
         "markdown": {
             "documenti": s.markdown_documents,
             "attesi": s.markdown_expected,

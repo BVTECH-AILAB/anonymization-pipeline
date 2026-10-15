@@ -10,6 +10,16 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
+#  Ingest: PDF and images (an image becomes a PDF with one page per frame, without recompression)
+# -----------------------------------------------------------------------------
+ingest:
+  max_pages: 50
+  max_pixels: 120000000     # per page at render_dpi, per image frame: larger ones are rejected
+                            # before decoding (decompression bomb)
+  render_dpi: 200           # resolution of page renderings (previews, visual checks)
+  image_dpi: 200            # images without a resolution in their metadata
+
+# -----------------------------------------------------------------------------
 #  Categories to anonymize (registry, groups and descriptions in categories.yaml).
 #  Every category of the registry is on: list here only the ones off by default.
 #  Here and in the user file also by group:

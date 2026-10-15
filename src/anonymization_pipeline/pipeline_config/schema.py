@@ -13,6 +13,19 @@ class _Section(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+class Ingest(_Section):
+    """Limits and conversion of the uploaded file."""
+
+    max_pages: int = Field(ge=1, le=1000)
+    max_pixels: int = Field(
+        ge=1
+    )  # per page or image, at render_dpi: decompression bombs
+    render_dpi: int = Field(ge=50, le=600)
+    image_dpi: int = Field(
+        ge=50, le=1200
+    )  # images without a resolution in their metadata
+
+
 class Protection(_Section):
     """Groups and categories a request can never switch off."""
 
@@ -22,6 +35,7 @@ class Protection(_Section):
 class PipelineConfig(_Section):
     """Effective, validated configuration of one pipeline run."""
 
+    ingest: Ingest
     categories: dict[str, bool]
     protection: Protection
 

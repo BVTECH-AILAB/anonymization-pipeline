@@ -27,6 +27,7 @@ source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
     { name = "httpx" },
+    { name = "pillow" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "pypdfium2" },
@@ -37,7 +38,6 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "numpy" },
-    { name = "pillow" },
     { name = "pip-audit" },
     { name = "pip-licenses" },
     { name = "pre-commit" },
@@ -54,6 +54,7 @@ dev = [
 requires-dist = [
     { name = "fastapi", specifier = ">=0.115" },
     { name = "httpx", specifier = ">=0.28" },
+    { name = "pillow", specifier = ">=11" },
     { name = "pydantic", specifier = ">=2.10" },
     { name = "pydantic-settings", specifier = ">=2.7" },
     { name = "pypdfium2", specifier = ">=4.30,<6" },
@@ -64,7 +65,6 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "numpy", specifier = ">=2" },
-    { name = "pillow", specifier = ">=11" },
     { name = "pip-audit", specifier = ">=2.7" },
     { name = "pip-licenses", specifier = ">=5" },
     { name = "pre-commit", specifier = ">=4.0" },

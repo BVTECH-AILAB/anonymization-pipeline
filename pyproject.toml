@@ -8,18 +8,23 @@ dependencies = [
     "httpx>=0.28",
     "pydantic>=2.10",
     "pydantic-settings>=2.7",
+    "pypdfium2>=4.30,<6",
     "pyyaml>=6",
     "uvicorn[standard]>=0.34",
 ]
 
 [dependency-groups]
 dev = [
+    "numpy>=2",
+    "pillow>=11",
     "pip-audit>=2.7",
     "pip-licenses>=5",
     "pre-commit>=4.0",
+    "pypdf>=5",
     "pytest>=8.3",
     "pytest-asyncio>=0.25",
     "pytest-cov>=6.0",
+    "reportlab>=4.2",
     "ruff>=0.15",
     "ty>=0.0.1a0",
 ]

@@ -25,7 +25,7 @@ servizio -> stdout (testo) -> Grafana Alloy -> Loki -> Grafana / KPI-dashboard
 ## Formato
 
 ```
-2026-10-06 10:00:00,123 INFO my_service.api.items [3f2a9c...]: item_created {"item_id": 42, "description_chars": 120}
+2026-10-06 10:00:00,123 INFO anonmyzation_pipeline.services.jobs [3f2a9c...]: anonymization_job_created {"job_id": "9ab85d97...", "pages": 2, "size_kb": 248, "source_format": "pdf"}
 ```
 
 `%(asctime)s %(levelname)s %(name)s [%(request_id)s]: %(message)s`
@@ -40,7 +40,7 @@ servizio -> stdout (testo) -> Grafana Alloy -> Loki -> Grafana / KPI-dashboard
 | Livello | Quando | Esempio corretto | Esempio sbagliato |
 |---|---|---|---|
 | DEBUG | Dettaglio diagnostico. Solo local e staging: in prod è forzato a INFO | `"Prompt: %s", redact_user_text(prompt, settings)` | `"Prompt: %s", prompt` |
-| INFO | Avvio e arresto, eventi di business senza contenuto | `log_event(logger, "item_created", {"item_id": 42})` | `"Utente %s ha scritto %s"` |
+| INFO | Avvio e arresto, eventi di business senza contenuto | `log_event(logger, "anonymization_completed", {"job_id": job_id, "pages": 2})` | `"Utente %s ha scritto %s"` |
 | WARNING | Degradazione gestita: retry, fallback, dipendenza giù | `"NER unavailable, request refused (attempt %d)"` | logger.warning per ogni richiesta valida |
 | ERROR | La richiesta è fallita. Passa `exc_info=` per avere il traceback | `logger.error("Unhandled %s on %s", type(exc).__name__, path, exc_info=exc)` | `logger.error(str(exc))` con il body della richiesta |
 
@@ -105,6 +105,9 @@ righe. Esempi dei formati esistenti:
 | rag-system | `inference_latency {json}` con `client_ttft_ms` | Latenza |
 | rag-system | `Hallucination detection: level=...` | Allucinazioni |
 | rag-system | access log uvicorn `"POST /chat/stream HTTP/1.1" 200` | Success rate, uptime |
+| anonmyzation-pipeline | `anonymization_job_created {json}` (`job_id`, `pages`, `size_kb`, `source_format`) | Documenti caricati |
+| anonmyzation-pipeline | `anonymization_completed {json}` (`job_id`, `pages`, `scanned_pages`, `boxes`, `values_by_label`, `verified`, `edits`, `seconds_total`, `timings`) | Volumi, dati oscurati per tipo, verifiche, tempi |
+| anonmyzation-pipeline | `anonymization_edited {json}`, `anonymization_failed {json}`, `anonymization_cancelled {json}`, `anonymization_job_deleted {json}` | Correzioni manuali, errori, cancellazioni |
 
 Inventario completo: `KPI-dashboard/documentation/loki-query-inventory.md`.
 
@@ -117,6 +120,10 @@ Regole per i nuovi eventi:
 4. Rinominare un evento o una chiave rompe le dashboard senza errori
    visibili. Ogni evento ha un test che ne verifica nome e chiavi, e una
    modifica va concordata con chi mantiene KPI-dashboard.
+
+Nel servizio di anonimizzazione nessuna riga contiene testo del documento,
+valori rilevati o nomi dei file: solo id del job, contatori e tempi (vedi
+`docs/ANONYMIZATION.md`, test in `tests/unit/test_logging.py`).
 
 ## Test di non-leak
 

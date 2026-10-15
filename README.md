@@ -1,197 +1,117 @@
-# agenas-python-template
+# anonmyzation-pipeline
 
-Punto di partenza per i nuovi servizi Python della piattaforma MIA (AGENAS).
-Contiene:
+MIA platform service (AGENAS) for the **surgical anonymization of clinical
+documents** (evolution C1). A doctor uploads a referto, a discharge letter or a
+prescription (native PDF, scanned PDF, photo); the service finds the personal
+data and removes it inside the original file: header, colours, tables and
+layout stay identical, only the personal data is replaced by black boxes.
+Every output is verified before it can be downloaded (fail-closed). All models
+run on-prem.
 
-- `CLAUDE.md`: il contesto per Claude Code (architettura, stack, test,
-  logging, privacy, git, deploy). È valido anche come guida per le persone.
-- Un microservizio FastAPI funzionante con Postgres 17, già conforme alle
-  regole: logging con redazione dei dati personali, health/readiness,
-  migrazioni Alembic, errori in italiano, test unitari e di integrazione.
-- `docs/`: logging e privacy, scheda di deploy, guida per sviluppare dentro ai-platform e `docs/ai-platform/CLAUDE.md`, il CLAUDE.md da usare quando si lavora su ai-platform.
+Generated from `agenas-python-template`: same stack, logging and privacy rules
+(see `CLAUDE.md` and `docs/`). The service is stateless: no database.
 
-## Creare un nuovo servizio
+How the algorithm works, the API, the PII taxonomy, the synthetic dataset and
+the evaluation results: **[docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)**.
 
-```bash
-cp -r agenas-python-template ../mio-servizio
-cd ../mio-servizio
-bash scripts/init_project.sh mio-servizio MIOSVC
-```
+## Quick start
 
-Lo script rinomina pacchetto (`mio_servizio`), immagine, chiave Sonar e
-prefisso delle variabili (`MIOSVC_DATABASE_URL`...), rigenera `uv.lock` e
-aggiunge `CLAUDE.md` al `.gitignore`.
-
-> `CLAUDE.md` è versionato **solo in questo template**, perché è ciò che
-> distribuiamo. Nei repository dei servizi resta locale e non si committa
-> mai, come in tutti i repository AGENAS.
-
-Se l'evolutiva va sviluppata dentro ai-platform, non serve creare un
-servizio: leggi `docs/AI_PLATFORM_INTEGRATION.md` e copia `docs/ai-platform/CLAUDE.md`
-nella root del tuo clone di ai-platform.
-
-## Primo avvio
-
-Requisiti: `uv`, `just`, Docker con compose.
+Requirements: `uv`, `just`. A GPU is optional (about 2 s per scanned page on a
+laptop RTX 5070, slower on CPU).
 
 ```bash
 cp .env.example .env
-uv sync
-just test                 # unit test
-docker compose up --build # servizio + Postgres 17, migrazioni applicate all'avvio
-curl localhost:8000/readyz
-just test-int             # integration test sul Postgres del compose
+just start          # deps, synthetic dataset, API + web UI on the first free port, browser
 ```
 
-OpenAPI su `http://localhost:8000/docs` (disattivata in prod).
+`just start` downloads the OCR and NER weights on the first run, generates
+`dataset/` if it is missing, and opens `http://127.0.0.1:8000` (or the next
+free port) once `/readyz` is ready. OpenAPI on `/docs` (off in prod).
 
-## Comandi
+With Docker: `just up` (weights cached in the `models` volume; uncomment the
+GPU block in `docker-compose.yml` to use an NVIDIA GPU).
 
-| Comando | Cosa fa |
+## Commands
+
+| Command | What it does |
 |---|---|
-| `just up` / `just down` / `just logs` | Stack compose |
-| `just dev` | API sull'host, DB nel compose |
-| `just lint` | ruff fix + format + ty: prima di ogni commit |
-| `just check` | Come la CI: nessuna correzione automatica |
-| `just test` / `just test-cov` | Unit test / con coverage (minimo 80%) |
-| `just test-int` | Integration test su Postgres |
-| `just revision "msg"` / `just migrate` | Nuova migrazione / applica |
-| `just audit` | Vulnerabilità nelle dipendenze |
+| `just start` | Local demo: API + web UI, dataset if missing, browser |
+| `just dev` | API on the host with reload |
+| `just up` / `just down` / `just logs` | Compose stack |
+| `just models` | Download the OCR and NER weights (before an offline start) |
+| `just lint` | ruff fix + format + ty: before every commit |
+| `just check` | Same checks without fixes (what CI runs) |
+| `just test` / `just test-cov` | Unit tests / with coverage (at least 80%) |
+| `just dataset [--n 7 --append]` | Synthetic dataset with ground truth -> `dataset/` |
+| `just evaluate` | Recall, leaks, over-redaction, verification, time -> `reports/evaluation.md` |
+| `just bench-ocr --engines doctr,lighton` | OCR comparison on the scanned dataset |
+| `just audit` | Vulnerabilities in the dependencies |
 
-## Struttura
+Developer tools are also available directly: `uv run python -m tools --help`
+(`generate`, `anonymize`, `evaluate`, `bench-ocr`, `preview`).
+
+## Layout
 
 ```
 src/anonmyzation_pipeline/
-  main.py           create_app(), lifespan, entry point
-  config.py         Settings (pydantic-settings, prefisso ANONPIP_)
-  logging_setup.py  setup_logging, log_event, request id
-  privacy.py        hash/mask del codice fiscale, redazione testo utente, filtro di log
-  middleware.py     X-Request-ID
-  errors.py         errori di dominio, handler, messaggi in italiano
-  api/              router (health + esempio items)
-  services/         logica di business
-  db/               engine, sessioni, modelli
-migrations/         Alembic (lock advisory per repliche multiple)
-tests/unit          senza DB
-tests/integration   con Postgres (marker integration)
+  main.py                 create_app(), lifespan (pipeline and job manager on app.state)
+  config.py               Settings (pydantic-settings, prefix ANONPIP_)
+  errors.py               domain errors, Italian messages
+  logging_setup.py        setup_logging, log_event, request id
+  privacy.py              hashing/masking, user-text redaction, log filter
+  api/health.py           /healthz, /readyz (models loaded), /version
+  api/anonymization.py    upload, SSE progress, edits, previews, downloads
+  api/web.py              demo web page (ANONPIP_UI_ENABLED)
+  services/jobs.py        job lifecycle: worker, SSE, edits, expiry, KPI events
+  services/anonymization/ engine: layers, ocr, detect/ (rules, ner, allowlist,
+                          ensemble, visual), pipeline, redact, verify, export_docx
+  web/static/index.html   the page
+tools/                    dev only: dataset/ generator, evaluate.py, bench_ocr.py
+tests/unit/               no network, no model weights (fake OCR and NER)
+docs/                     ANONYMIZATION.md, logging and privacy, deploy handover
 ```
 
-L'esempio `items` serve solo a mostrare i pattern: sostituiscilo con il
-tuo dominio (modello, migrazione, router, service, test).
+## Results
 
-## Casi frequenti
+`just evaluate` on the synthetic dataset (`just dataset`: 21 documents of 7
+types, each as native PDF, scan and scan with a hidden OCR layer, 27 pages per
+variant; laptop RTX 5070):
 
-### Non mi serve il database
+| | native | scan | scan + OCR layer |
+|---|---|---|---|
+| **Recall** (box, required PII) | 0.998 | 0.937 | 0.986 |
+| **Precision** (box) | 0.949 | 0.961 | 0.903 |
+| **F1** (box) | 0.973 | 0.949 | 0.943 |
+| Precision / recall / F1 (word) | 0.925 / 0.990 / 0.956 | 0.888 / 0.920 / 0.903 | 0.860 / 0.983 / 0.917 |
+| **Accuracy** (word) | 0.987 | 0.973 | 0.976 |
+| **AP@0.5** (PII, label-agnostic) | 0.951 | 0.756 | 0.522 |
+| **mAP@0.5** (mean over PII types) | 0.954 | 0.776 | 0.781 |
+| Hidden PII leaked (white text, metadata, deleted notes) | 0/98 | 0/98 | 0/98 |
+| Eponyms wrongly redacted | 0/36 | 0/36 | 0/36 |
+| Documents passing verification | 21/21 | 21/21 | 21/21 |
+| Seconds per page | 0.35 | 1.8 | 1.9 |
 
-Va benissimo: molti servizi sono stateless. Togli la parte DB invece di
-lasciarla inutilizzata:
+- **Box level** (scikit-learn): every required ground-truth box is found when
+  redaction covers at least 60% of it; every redaction box touching no ground
+  truth is a false positive; boxes on quasi-identifiers only are ignored.
+- **Word level** (scikit-learn): every word of the page, PII or not, redacted
+  or not; the only level with true negatives, hence the only meaningful accuracy.
+- **AP / mAP@0.5** (torchmetrics, COCO protocol): detections ranked by
+  confidence, IoU 0.5, quasi-identifiers and invisible text as ignore regions,
+  duplicates collapsed by NMS (torchvision). AP is lower than recall on scans
+  because it also scores localisation: the misaligned boxes of a scanner's
+  hidden OCR layer count as duplicates, signatures are covered by an ink box
+  smaller than the ground-truth image box, and address, CAP and city are
+  annotated separately but detected as one box.
 
-1. Elimina `src/anonmyzation_pipeline/db/`, `migrations/`, `alembic.ini`,
-   `scripts/db-init/` e `tests/integration/`.
-2. Elimina l'esempio `items` (`api/items.py`, `services/items.py`, i relativi test).
-3. In `pyproject.toml` rimuovi `sqlalchemy`, `asyncpg` e `alembic`, poi `uv lock`.
-4. In `config.py` rimuovi i campi `database_url` e `db_*`. In `main.py` togli
-   engine e sessionmaker dal `lifespan`.
-5. `/readyz`: fallo controllare le dipendenze che usi davvero (es. llm-gateway),
-   oppure fallo rispondere come `/healthz`. L'endpoint deve restare, perché
-   le probe Kubernetes lo usano.
-6. In `docker-compose.yml` togli il servizio `db` e il `depends_on`.
-   In `Dockerfile` togli le `COPY` di `alembic.ini` e `migrations`.
-   In `scripts/entrypoint.sh` togli il blocco delle migrazioni.
-7. In `.gitlab-ci.yml` togli il job `integration-tests`, e nel `justfile` le
-   ricette `db-shell`, `migrate`, `revision`, `downgrade` e `test-int`.
-8. In `docs/DEPLOY_HANDOVER.md` segna "Serve un database? no": il team
-   piattaforma non creerà il cluster Postgres.
+Recall is the safety metric (a missed value is a leak). Definitions, per-type
+results and the analysis are in [docs/ANONYMIZATION.md](docs/ANONYMIZATION.md);
+every miss is listed in `reports/evaluation.md`.
 
-Se più avanti il DB serve, ripristina questi file dal template.
+## Notes
 
-### Mi servono gli LLM
-
-Non si chiamano mai direttamente i provider (OpenAI, Gemini, Bedrock...).
-Si passa sempre da **llm-gateway**, che gestisce instradamento, fallback,
-residenza dei dati in UE e tracciamento dei costi per applicazione.
-
-llm-gateway espone un'API **compatibile OpenAI** (`POST /chat/completions`,
-`POST /responses`), quindi si usa il client `openai` puntato sul gateway,
-come fa ai-platform in `src/adapters/llm/openai.py`:
-
-```python
-from openai import AsyncOpenAI
-
-client = AsyncOpenAI(
-    base_url=settings.llm_gateway_base_url,
-    api_key=settings.llm_gateway_api_key,
-)
-response = await client.chat.completions.create(
-    model=settings.llm_gateway_model,  # alias del gateway, non il nome del provider
-    messages=[{"role": "user", "content": testo_anonimizzato}],
-)
-```
-
-Cosa aggiungere:
-
-- **Dipendenza**: `uv add openai`.
-- **Settings**, con le stesse regole delle altre variabili (`config.py`,
-  `.env.example`, `docker-compose.yml`):
-
-  | Variabile | Default in `config.py` | Note |
-  |---|---|---|
-  | `ANONPIP_LLM_GATEWAY_BASE_URL` | `""` | In cluster: `http://llm-gateway-app.llm-gateway.svc.cluster.local:8000` |
-  | `ANONPIP_LLM_GATEWAY_API_KEY` | `""` | Credenziale: nessun default. Arriva da Vault |
-  | `ANONPIP_LLM_GATEWAY_MODEL` | `fast-production` | Alias del gateway: `fast-production` o `strong-production` |
-
-- **Il client** si crea nel `lifespan` e si salva su `app.state`, come
-  l'engine del DB. Non va creato a ogni richiesta.
-- **La chiave API (token) per llm-gateway** è per applicazione. Per
-  ottenerla scrivi a **Pasqualino**, con **Maurizio Di Pierro** in cc,
-  indicando il nome del servizio e l'ambiente (staging, prod). La chiave di
-  prod viene messa in Vault e non passa dagli sviluppatori. Per lo sviluppo
-  locale ricevi una chiave di staging da tenere solo nel tuo `.env`: non va
-  condivisa, né incollata in chat o ticket, né committata.
-- **In locale** punta `ANONPIP_LLM_GATEWAY_BASE_URL` al gateway di staging,
-  raggiungibile dalla rete interna AGENAS.
-- **Nei test** non si chiama mai il gateway vero: sostituisci il client con
-  un fake tramite `app.dependency_overrides` o `monkeypatch`.
-- **`/readyz`** può includere un controllo leggero sul gateway (`GET /health`).
-- **Errori**: se il gateway non risponde, solleva `ServiceUnavailableError`
-  (503) con un messaggio in italiano. Non inventare una risposta di ripiego.
-
-### Il testo dell'utente arriva all'LLM
-
-Se un testo scritto da un medico (domanda, nota, messaggio) finisce in un
-prompt, prima deve passare da **ner-anonymizer**, che individua i dati
-personali. Il comportamento è **fail-closed**: se il servizio NER non
-risponde, la richiesta si rifiuta (503) e non si inoltra all'LLM. Il
-riferimento è l'implementazione di ai-platform, descritta in
-`docs/AI_PLATFORM_INTEGRATION.md`, sezione "Gate PII".
-
-Prompt e risposte si possono loggare solo per il debug in staging, tramite
-`redact_user_text()` (vedi `docs/LOGGING_AND_PRIVACY.md`).
-
-### Mi serve una cache, una coda, un bucket o un altro servizio
-
-Non aggiungerli da solo ai manifest né ai repo Flux. Usali in locale nel
-`docker-compose.yml` per sviluppare, poi segnalali nella scheda
-`docs/DEPLOY_HANDOVER.md`: il provisioning in staging e prod lo fa il team
-piattaforma.
-
-### Mi serve sapere chi è l'utente
-
-L'identità arriva già validata a monte da WSO2 API Manager e da authz. Non
-implementare la validazione dei JWT né una tabella utenti tua. Concorda col
-team quali informazioni ti servono (regione, ASL, ruoli) e come arrivano
-(header inoltrati, chiamata ad authz). Se devi salvare un identificativo,
-usa `hash_identifier()` e mai il codice fiscale in chiaro.
-
-### L'evolutiva va dentro ai-platform
-
-Allora non serve un nuovo servizio: leggi `docs/AI_PLATFORM_INTEGRATION.md`
-e copia `docs/ai-platform/CLAUDE.md` nella root del tuo clone di ai-platform.
-Quel file dà a Claude Code il contesto di ai-platform.
-
-## CI/CD
-
-`.gitlab-ci.yml` segue lo schema degli altri servizi AGENAS: lint, tipi,
-unit e integration test bloccanti, Sonar, build su Harbor
-(`YYYY.MM.DD-test.<epoch>` da `test`, `YYYY.MM.DD` da `main`) e report CVE.
-Il rilascio in staging e prod è gestito da Flux: vedi `docs/DEPLOY_HANDOVER.md`.
+- The web page is for local testing and demos (Italian UI, it follows the MIA
+  mockups); in the platform the doctor-facing frontend is `fe`.
+- PyMuPDF is AGPL: production use needs an Artifex commercial licence or AGPL compliance.
+- Deploy: `docs/DEPLOY_HANDOVER.md` lists image, variables, resources and the
+  model weights the platform team has to provide (the cluster has no internet access).

@@ -9,6 +9,8 @@ data:
   ANONPIP_ENVIRONMENT: "staging"
   ANONPIP_LOG_LEVEL: "DEBUG"
   ANONPIP_EXTENDED_LOG_CONTEXT: "false"
+  ANONPIP_UI_ENABLED: "true"
+  ANONPIP_WORK_DIR: "/work"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -19,7 +21,8 @@ metadata:
   labels:
     app: anonmyzation-pipeline
 spec:
-  replicas: 2
+  # Jobs live in memory: one replica, or session affinity on the ingress.
+  replicas: 1
   selector:
     matchLabels:
       app: anonmyzation-pipeline
@@ -45,12 +48,11 @@ spec:
         envFrom:
         - configMapRef:
             name: anonmyzation-pipeline-config-env
-        env:
-        - name: ANONPIP_DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: postgres-anonmyzation-pipeline-app
-              key: uri
+        volumeMounts:
+        - name: models          # docTR and GLiNER weights (HF_HOME, DOCTR_CACHE_DIR)
+          mountPath: /models
+        - name: work            # documents, deleted after ANONPIP_JOB_TTL_MINUTES
+          mountPath: /work
         ports:
         - containerPort: 8000
           name: web
@@ -58,7 +60,7 @@ spec:
           httpGet:
             path: /readyz
             port: web
-          initialDelaySeconds: 5
+          initialDelaySeconds: 30   # 503 until the models are loaded
           periodSeconds: 10
         livenessProbe:
           httpGet:
@@ -68,11 +70,19 @@ spec:
           periodSeconds: 20
         resources:
           requests:
-            cpu: 100m
-            memory: 256Mi
+            cpu: "1"
+            memory: 4Gi
           limits:
-            cpu: 500m
-            memory: 512Mi
+            cpu: "4"
+            memory: 8Gi
+            nvidia.com/gpu: 1
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: anonmyzation-pipeline-models
+      - name: work
+        emptyDir:
+          sizeLimit: 2Gi
 ---
 apiVersion: v1
 kind: Service

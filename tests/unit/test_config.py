@@ -34,3 +34,16 @@ def test_staging_may_enable_user_text() -> None:
 
 def test_invalid_log_level_falls_back_to_info() -> None:
     assert make_settings(log_level="verbose").log_level == "INFO"
+
+
+def test_make_settings_ignores_environment_and_dotenv(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / ".env").write_text("ANONPIP_LOG_MASK_PREFIX=4\n")
+    monkeypatch.setenv("ANONPIP_EXTENDED_LOG_CONTEXT", "true")
+
+    settings = make_settings()
+
+    assert settings.extended_log_context is False
+    assert settings.log_mask_prefix == Settings.model_fields["log_mask_prefix"].default

@@ -9,6 +9,7 @@ from collections.abc import Iterator
 from typing import Any
 
 import pytest
+from pydantic_settings import BaseSettings, PydanticBaseSettingsSource
 
 from anonymization_pipeline.config import Settings
 from anonymization_pipeline.logging_setup import setup_logging
@@ -16,13 +17,28 @@ from anonymization_pipeline.logging_setup import setup_logging
 FAKE_CF = "RSSMRA85M01H501U"
 
 
+class _ExplicitSettings(Settings):
+    """Settings that read only the values passed to the constructor."""
+
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
+        return (init_settings,)
+
+
 def make_settings(**overrides: Any) -> Settings:
     """Settings built only from explicit values.
 
-    ``model_validate`` skips the settings sources, so neither ``.env`` nor
-    the developer's environment can change the outcome of a test.
+    Neither ``.env`` nor the developer's environment can change the outcome of
+    a test: pydantic-settings reads them even through ``model_validate``.
     """
-    return Settings.model_validate(
+    return _ExplicitSettings.model_validate(
         {"environment": "local", "log_level": "DEBUG", **overrides}
     )
 

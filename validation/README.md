@@ -178,18 +178,28 @@ validation/results/<YYYYmmdd-HHMMSS>/
 
 `validation/results/` è in `.gitignore`.
 
-### Prima misura (15/10/2026)
+### Misure (15/10/2026)
 
-Profilo `default`, 96 documenti, rilevatori `rules` e `labels` con propagazione, senza NER, OCR
-e VLM: recall 74,5%, tasso di fuga 30,7%, precisione 91,6%, nessun valore nel testo rilasciato,
-0,42 s per documento. Le fughe vengono soprattutto da strutture sanitarie e reparti (categorie
-attive di default, quasi non coperte dalle regole: PA-14), operatori sanitari e codici di
-laboratorio.
+Profilo `default`, 96 documenti, servizio in processo su CPU (24 core, torch a 4 thread).
+
+| Configurazione | Recall | Fuga | Precisione | Negativi violati | s/documento |
+|---|---:|---:|---:|---:|---:|
+| `rules` + `labels` + propagazione | 74,5% | 30,7% | 91,6% | 11 | 0,42 |
+| + NER `DeepMount00/Italian_NER_XXL_v2` | 86,9% | 17,4% | 87,9% | 72 | 1,60 |
+| + NER `knowledgator/gliner-pii-base-v1.0` | 82,3% | 22,1% | 89,6% | 31 | 2,18 |
+| + NER `urchade/gliner_multi_pii-v1` | 87,1% | 16,1% | 88,5% | 11 | 2,86 |
+| default attuale: GLiNER multi PII + rilevamento visivo | 87,7% | 15,8% | 88,2% | 11 | 2,44 |
+
+In nessuna configurazione restano valori nel testo dei PDF rilasciati e nessun documento viene
+bloccato. Le fughe residue vengono soprattutto da strutture sanitarie e reparti (categorie attive di
+default: PA-14), codici di laboratorio (`CODICE_CAMPIONE`, `ACCESSION_NUMBER`) e numeri di referto e
+prenotazione. I negativi violati da `Italian_NER_XXL_v2` sono eponimi di classificazioni
+istopatologiche (Ishak, Masson, Marsh, Oberhuber) non ancora in `eponyms.yaml`.
 
 ### Limiti noti
 
-- I dati sono solo PDF nativi: le scansioni (bloccate finché manca l'OCR) non sono ancora nel
-  dataset.
+- I dati sono solo PDF nativi: il dataset non ha ancora varianti scansionate, quindi OCR e
+  `ScanRedactor` sono coperti dai test ma non misurati qui.
 - Un valore corto o comune può comparire anche fuori dal punto annotato; la ground truth ne
   conta le copie non marcate, tollerate.
 - I confini dei dati sanitari (`DIAGNOSI`, `FARMACO`...) sono sfumati: basta metà di

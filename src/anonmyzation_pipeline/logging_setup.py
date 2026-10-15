@@ -3,7 +3,7 @@
 Plain-text lines on stdout. In the cluster Grafana Alloy ships them to Loki,
 where KPI-dashboard parses some of them, so the format is a contract:
 
-    2026-10-06 10:00:00,123 INFO anonmyzation_pipeline.api.items [3f2a...]: item_created {"item_id": 1}
+    2026-10-06 10:00:00,123 INFO anonmyzation_pipeline.services.jobs [3f2a...]: anonymization_job_created {"job_id": "9ab8...", "pages": 2}
 
 Events that a dashboard must read are emitted with ``log_event`` as
 ``<event_name> {json}``. Renaming an event or one of its keys breaks the

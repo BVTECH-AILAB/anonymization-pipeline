@@ -33,6 +33,66 @@ class ServiceUnavailableError(ServiceError):
     user_message = "Servizio temporaneamente non disponibile. Riprova più tardi."
 
 
+class UnsupportedFormatError(ServiceError):
+    status_code = 415
+    code = "UNSUPPORTED_FORMAT"
+    user_message = "Formato non supportato. Carica un PDF (anche scansionato) o un'immagine JPG, PNG o TIFF."
+
+
+class FileTooLargeError(ServiceError):
+    status_code = 413
+    code = "FILE_TOO_LARGE"
+    user_message = "Il file supera la dimensione massima consentita."
+
+
+class TooManyPagesError(ServiceError):
+    status_code = 413
+    code = "TOO_MANY_PAGES"
+    user_message = "Il documento supera il numero massimo di pagine consentito."
+
+
+class UnreadableDocumentError(ServiceError):
+    status_code = 422
+    code = "UNREADABLE_DOCUMENT"
+    user_message = (
+        "Impossibile leggere il documento: il file non è valido o è danneggiato."
+    )
+
+
+class PasswordProtectedError(ServiceError):
+    status_code = 422
+    code = "PASSWORD_PROTECTED"
+    user_message = (
+        "Il documento è protetto da password: rimuovi la password e caricalo di nuovo."
+    )
+
+
+class TooManyJobsError(ServiceError):
+    status_code = 429
+    code = "TOO_MANY_JOBS"
+    user_message = "Troppi documenti in elaborazione. Riprova tra qualche minuto."
+
+
+class JobNotFoundError(ServiceError):
+    status_code = 404
+    code = "JOB_NOT_FOUND"
+    user_message = "Documento non trovato o scaduto."
+
+
+class JobNotReadyError(ServiceError):
+    status_code = 409
+    code = "JOB_NOT_READY"
+    user_message = "Il documento non è ancora pronto."
+
+
+class VerificationFailedError(ServiceError):
+    status_code = 409
+    code = "VERIFICATION_FAILED"
+    user_message = (
+        "Verifica non superata: il documento anonimizzato non viene rilasciato."
+    )
+
+
 async def _service_error_handler(request: Request, exc: Exception) -> JSONResponse:
     error = exc if isinstance(exc, ServiceError) else ServiceError()
     logger.warning("%s on %s %s", error.code, request.method, request.url.path)

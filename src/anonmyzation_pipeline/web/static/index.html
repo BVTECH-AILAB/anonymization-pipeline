@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIA · Anonimizza</title>
+<style>
+  :root {
+    --navy: #0e1f4f; --ink: #16234a; --muted: #5c6787; --blue: #1a5fd8; --blue-h: #2b6ee6; --blue-soft: #dbe7fb;
+    --line: #dfe5f0; --panel: #ffffff; --bg-right: #f3f5f9; --dark: #4a4d55; --dark-2: #3c3f46;
+    --hl: #fde3bf; --hl-b: #f0a04b; --ok: #1f8a4c; --bad: #c43a31; --bad-soft: #fff5f4;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { font-family: "Fira Sans", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; color: var(--ink);
+         display: grid; grid-template-columns: 236px 1fr; background: #fff; }
+  button { font-family: inherit; }
+  .hidden { display: none !important; }
+  svg.i { width: 18px; height: 18px; flex: none; }
+
+  /* ---------------- sidebar ---------------- */
+  aside { background: linear-gradient(180deg, #0c1a47 0%, #13328f 45%, #1d55d2 100%); color: #fff; padding: 18px 12px 14px;
+          display: flex; flex-direction: column; gap: 10px; height: 100vh; position: sticky; top: 0; }
+  .logo { display: flex; align-items: center; gap: 8px; margin: 2px 6px 16px; }
+  .logo .dots { display: grid; grid-template-columns: 9px 9px; gap: 2px; }
+  .logo .dots i { width: 9px; height: 9px; border-radius: 50%; background: #fff; }
+  .logo b { font-size: 24px; letter-spacing: .3px; }
+  .logo small { font-size: 8px; line-height: 1.05; font-weight: 600; }
+  .nav { border: 1.5px solid rgba(255,255,255,.85); border-radius: 11px; padding: 12px 14px; font-weight: 600; font-size: 14px;
+         display: flex; justify-content: space-between; align-items: center; color: #fff; cursor: default; }
+  .nav.active { background: #dce8ff; color: var(--navy); border-color: #dce8ff; }
+  .nav .chat { color: #f2b544; }
+  .section { font-size: 12px; opacity: .9; margin: 12px 4px 0; }
+  .grow { flex: 1; }
+  .user { display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: #6d7280; }
+
+  /* ---------------- main ---------------- */
+  main { min-width: 0; height: 100vh; display: flex; flex-direction: column; }
+  .split { flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+  .center { background: linear-gradient(180deg, #bcd3f6 0%, #dfe8f6 55%, #efeeea 100%); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; padding: 30px; text-align: center; overflow: auto; }
+  .center h1 { font-size: 29px; margin: 0 0 14px; color: var(--navy); }
+  .center p.lead { color: #4a5677; max-width: 430px; line-height: 1.55; margin: 0 0 20px; font-size: 14.5px; }
+  .card { width: min(410px, 100%); background: rgba(255,255,255,.95); border-radius: 14px; box-shadow: 0 6px 24px rgba(30,60,120,.12); }
+  .drop { border: 2px dashed #9fb5dc; padding: 30px 22px 22px; background: rgba(255,255,255,.75); box-shadow: none; }
+  .drop.over { border-color: var(--blue); background: #fff; }
+  .drop .big { width: 34px; height: 34px; color: var(--blue); }
+  .drop h3 { margin: 12px 0 10px; font-size: 16px; }
+  .muted { color: var(--muted); font-size: 12.5px; }
+  .btn { background: var(--blue); color: #fff; border: 0; border-radius: 8px; padding: 10px 20px; font-weight: 600; font-size: 14px;
+         cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+  .btn:hover { background: var(--blue-h); }
+  .btn.outline { background: #fff; color: var(--blue); border: 1.5px solid var(--blue); }
+  .btn.soft { background: #eef2f8; color: #6b7590; }
+  .btn.small { padding: 7px 12px; font-size: 13px; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .note { font-size: 12.5px; color: #4f5a78; margin-top: 18px; max-width: 400px; line-height: 1.5; }
+
+  /* right preview column */
+  .right { display: flex; flex-direction: column; min-width: 0; background: var(--bg-right); }
+  .rhead { background: #fff; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); min-height: 66px; }
+  .rhead small { display: block; color: var(--muted); font-size: 12px; }
+  .rhead b { font-size: 16.5px; }
+  .dlbtns { display: flex; gap: 8px; }
+  .dl { border: 1.5px solid #c8d3e6; background: #fff; color: #8a95ad; border-radius: 9px; width: 52px; height: 42px; display: flex;
+        flex-direction: column; align-items: center; justify-content: center; font-size: 12px; text-decoration: none; gap: 1px; }
+  .dl.on { border-color: var(--blue); color: var(--blue); cursor: pointer; }
+  .dl svg { width: 13px; height: 13px; }
+  .empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+  .empty svg { width: 40px; height: 48px; color: #9aaccc; margin-bottom: 14px; }
+  .empty h3 { color: var(--ink); margin: 0 0 8px; font-size: 15px; }
+
+  /* progress */
+  .prog { padding: 18px 18px 16px; text-align: left; }
+  .fileline { display: flex; align-items: center; gap: 12px; }
+  .ficon { width: 36px; height: 36px; border-radius: 8px; background: #e9f0fc; display: grid; place-items: center; color: var(--blue); }
+  .fileline b { font-size: 14px; display: block; word-break: break-all; }
+  .pct { margin-left: auto; color: var(--blue); font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; }
+  .bar { height: 7px; background: #e3e9f3; border-radius: 4px; margin: 14px 0 12px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #1a5fd8, #4b8af0); border-radius: 4px; transition: width .35s; }
+  .steps { list-style: none; padding: 0; margin: 0 0 6px; }
+  .steps li { display: flex; gap: 10px; align-items: center; padding: 5px 0; font-size: 13.5px; color: #8a93a8; }
+  .steps li .dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid #c3cad8; flex: none; display: grid; place-items: center; }
+  .steps li.done { color: var(--ink); } .steps li.done .dot { background: var(--ok); border-color: var(--ok); color: #fff; font-size: 10px; }
+  .steps li.active { color: var(--ink); font-weight: 600; }
+  .steps li.active .dot { border-color: #c9d6ef; border-top-color: var(--blue); animation: spin .9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .clock { font-variant-numeric: tabular-nums; }
+  .actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+  .darkbody { flex: 1; background: var(--dark); display: flex; align-items: flex-start; justify-content: center; padding: 26px; overflow: auto; }
+  .skeleton { width: min(360px, 90%); background: #fff; padding: 26px 26px 30px; aspect-ratio: 0.75; }
+  .skeleton i { display: block; height: 10px; background: #e8edf4; border-radius: 3px; margin: 9px 0; animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .45; } }
+
+  /* error */
+  .errcard { border: 2px solid var(--bad); text-align: left; padding: 18px 20px; background: var(--bad-soft); }
+  .errcard .t { display: flex; gap: 10px; align-items: flex-start; }
+  .errcard .bang { width: 22px; height: 22px; border-radius: 50%; background: var(--bad); color: #fff; display: grid; place-items: center; font-weight: 700; flex: none; }
+  .errcard b { color: var(--bad); font-size: 15px; }
+  .errcard p { margin: 4px 0 0; font-size: 13.5px; color: #3b4462; }
+  .errcard ul { margin: 12px 0 4px; padding-left: 20px; font-size: 13px; color: #3b4462; line-height: 1.6; }
+
+  /* results */
+  #results { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .banner { background: linear-gradient(90deg, #c4d7f6, #e2eaf8); padding: 12px 18px; display: flex; align-items: center; gap: 10px; }
+  .banner .title { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 18px; margin-right: 6px; }
+  .okb { width: 22px; height: 22px; border-radius: 50%; background: var(--ok); color: #fff; display: grid; place-items: center; font-size: 13px; }
+  .badb { background: var(--bad); }
+  .chip { background: #fff; border-radius: 999px; padding: 5px 12px; font-size: 13px; }
+  .chip b { color: var(--blue); margin-right: 5px; }
+  .banner .sp { flex: 1; }
+  .pill { background: #fff; color: var(--navy); border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; position: relative;
+          font-variant-numeric: tabular-nums; border: 1px solid #c9d6ef; }
+  .breakdown { position: absolute; right: 0; top: 36px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px;
+               box-shadow: 0 10px 28px rgba(0,0,0,.16); z-index: 15; min-width: 270px; cursor: default; text-align: left; }
+  .breakdown div { display: flex; justify-content: space-between; gap: 16px; padding: 2px 0; font-size: 12.5px; }
+  .breakdown .b { height: 5px; background: #e3e9f3; border-radius: 3px; margin: 1px 0 5px; padding: 0; }
+  .breakdown .b i { display: block; height: 100%; background: var(--blue); border-radius: 3px; }
+  .issues { background: #fdecea; color: var(--bad); padding: 9px 18px; font-size: 13px; }
+  .panes { flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+  .pane { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+  .pane + .pane { border-left: 1px solid #2d3036; }
+  .phead { padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; min-height: 66px; gap: 10px; }
+  .pane.orig .phead { background: #e8eef9; }
+  .pane.anon .phead { background: #fff; }
+  .phead small { display: block; color: var(--muted); font-size: 12px; }
+  .phead b { font-size: 16.5px; word-break: break-all; }
+  .legend { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .legend .sw { background: var(--hl); border-bottom: 2px solid var(--hl-b); padding: 0 4px; color: var(--ink); }
+  .toolbar { background: var(--dark-2); color: #e9ecf3; display: flex; gap: 14px; align-items: center; padding: 9px 18px; font-size: 13.5px; }
+  .toolbar button { background: transparent; border: 0; color: #cfd5e2; cursor: pointer; font-size: 15px; padding: 0 4px; }
+  .toolbar button:disabled { opacity: .3; cursor: default; }
+  .toolbar .tsp { flex: 1; }
+  .viewer { flex: 1; overflow: auto; background: var(--dark); padding: 24px; min-height: 0; position: relative; }
+  .page { position: relative; margin: 0 auto; background: #fff; box-shadow: 0 3px 16px rgba(0,0,0,.4); user-select: none; }
+  .page img { display: block; width: 100%; height: auto; pointer-events: none; }
+  .box { position: absolute; background: rgba(253,214,160,.55); border-bottom: 2px solid var(--hl-b); cursor: help; }
+  .box.visual { border: 2px solid var(--hl-b); background: rgba(253,214,160,.3); }
+  .box.keep { background: transparent; border: 1.5px dashed #8c96a8; }
+  .box.removed { background: repeating-linear-gradient(45deg, rgba(150,150,150,.25) 0 4px, transparent 4px 8px); border: 1.5px dashed #777; }
+  .box.added { background: rgba(196,58,49,.18); border: 2px dashed var(--bad); }
+  .hide-boxes .box { display: none; }
+  .editing .page { cursor: crosshair; }
+  .editing .box { cursor: pointer; }
+  .editbar { background: #fff7e8; border-bottom: 1px solid #f0dfb8; padding: 9px 14px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 12.5px; }
+  .editbar input { border: 1px solid #cfd6e4; border-radius: 7px; padding: 6px 9px; font-size: 13px; min-width: 180px; flex: 1; }
+  .editbar .hint { width: 100%; color: #6a5a30; }
+  .footer-warn { background: #fbf6e7; color: #5c5232; padding: 11px 18px; font-size: 13px; border-top: 1px solid #efe4c2; }
+  .working { position: absolute; inset: 0; background: rgba(40,44,52,.55); display: grid; place-items: center; color: #fff; z-index: 5; font-size: 14px; }
+  .tip { position: fixed; pointer-events: none; background: var(--navy); color: #fff; font-size: 12.5px; padding: 7px 10px; border-radius: 8px; z-index: 30; max-width: 340px; }
+  .tip small { color: #b4c2e4; display: block; margin-top: 2px; }
+  .toast { position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; padding: 9px 16px; border-radius: 9px; font-size: 13px; z-index: 40; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="doc" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z M14 3v5h5"/></symbol>
+  <symbol id="down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+  <symbol id="up" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 16V5M7 10l5-5 5 5M5 20h14"/></symbol>
+</svg>
+
+<aside>
+  <div class="logo"><span class="dots"><i></i><i></i><i></i><i></i></span><b>MIA</b><small>Medicina<br>&amp; Intelligenza<br>Artificiale</small></div>
+  <div class="nav">Chatta con MIA <svg class="i chat" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M4 5h16v11H9l-5 4z M8 10.5h.01M12 10.5h.01M16 10.5h.01"/></svg></div>
+  <div class="section">Strumenti</div>
+  <div class="nav">Crea documenti <svg class="i"><use href="#doc"/></svg></div>
+  <div class="nav active">Anonimizza <svg class="i" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z M9 12l2 2 4-4"/></svg></div>
+  <div class="grow"></div>
+  <div class="section">Piattaforma di e-learning</div>
+  <div class="nav">Accedi a MIAlab</div>
+  <div class="nav">Assistenza <svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/></svg></div>
+  <div class="nav"><span class="user"><span class="avatar"></span>Utente</span><span>•••</span></div>
+</aside>
+
+<main>
+  <!-- ============ upload / progress / error share the split layout ============ -->
+  <section class="split" id="split">
+    <div class="center">
+      <!-- upload -->
+      <div id="vUpload">
+        <h1>Anonimizza un documento</h1>
+        <p class="lead" style="margin-left:auto;margin-right:auto">Carica un referto, una lettera o un verbale: individuerò nomi, date, codici fiscali,
+          indirizzi, recapiti, firme e timbri e li oscurerò. A destra vedrai il documento anonimizzato.</p>
+        <div class="card drop" id="drop">
+          <svg class="big"><use href="#doc"/></svg>
+          <h3>Trascina qui il documento</h3>
+          <div class="muted" style="margin-bottom:12px">oppure</div>
+          <button class="btn" id="pick"><svg class="i"><use href="#up"/></svg>Carica documento</button>
+          <input type="file" id="file" accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff" hidden>
+          <div class="muted" style="margin-top:14px">PDF (anche scansionati), JPG, PNG, TIFF · max 30 MB</div>
+        </div>
+        <div class="note" style="margin-left:auto;margin-right:auto">Controlla sempre il risultato prima di condividerlo: l'anonimizzazione automatica può non riconoscere tutti i dati.</div>
+      </div>
+      <!-- progress -->
+      <div id="vProgress" class="hidden">
+        <h1>Anonimizzazione in corso</h1>
+        <p class="lead" style="margin-left:auto;margin-right:auto">Sto analizzando il documento. Puoi restare su questa pagina: l'anteprima comparirà a destra appena pronta.</p>
+        <div class="card prog">
+          <div class="fileline"><span class="ficon"><svg class="i"><use href="#doc"/></svg></span>
+            <div><b id="pName"></b><span class="muted" id="pMeta"></span></div><span class="pct" id="pPct">0%</span></div>
+          <div class="bar"><i id="pBar"></i></div>
+          <ul class="steps" id="pSteps">
+            <li data-s="read"><span class="dot"></span>Lettura del documento</li>
+            <li data-s="detect"><span class="dot"></span>Riconoscimento dei dati personali</li>
+            <li data-s="redact"><span class="dot"></span>Oscuramento dei dati</li>
+            <li data-s="preview"><span class="dot"></span>Verifica e generazione dell'anteprima</li>
+          </ul>
+          <div class="actions"><span class="muted clock" id="pClock" style="margin-right:auto;align-self:center"></span>
+            <button class="btn outline" id="cancel">Annulla</button></div>
+        </div>
+      </div>
+      <!-- error -->
+      <div id="vError" class="hidden">
+        <h1>Anonimizza un documento</h1>
+        <div class="card errcard">
+          <div class="t"><span class="bang">!</span><div><b id="eTitle"></b><p id="eMsg"></p></div></div>
+          <ul id="eHints"></ul>
+          <div class="actions"><button class="btn outline" id="eCancel">Annulla</button>
+            <button class="btn" id="eRetry"><svg class="i"><use href="#up"/></svg>Carica un altro file</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="rhead"><div><small>Anteprima</small><b>Documento anonimizzato</b></div>
+        <div class="dlbtns"><span class="dl"><svg><use href="#down"/></svg>PDF</span><span class="dl"><svg><use href="#down"/></svg>Word</span></div></div>
+      <div class="empty" id="rEmpty"><svg><use href="#doc"/></svg><h3>Nessun documento caricato</h3>
+        <div>L'anteprima del documento anonimizzato<br>comparirà qui, pronta da scaricare.</div></div>
+      <div class="empty hidden" id="rNone"><svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z M14 3v5h5 M9.5 12.5l5 5M14.5 12.5l-5 5"/></svg>
+        <h3>Nessuna anteprima disponibile</h3><div>Carica un documento leggibile per vedere qui la<br>versione anonimizzata.</div></div>
+      <div class="darkbody hidden" id="rSkel"><div style="text-align:center;width:100%">
+        <div class="skeleton" style="margin:0 auto"><i style="width:55%;height:14px;margin-bottom:22px"></i><i style="width:40%"></i><i style="width:36%"></i><i style="width:45%"></i><i style="width:30%"></i>
+          <i style="width:35%;margin-top:22px"></i><i></i><i style="width:92%"></i><i style="width:80%"></i><i style="width:35%;margin-top:22px"></i><i></i><i style="width:88%"></i><i style="width:60%"></i>
+          <div class="muted" style="margin-top:28px">Preparazione dell'anteprima…</div></div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ results ============ -->
+  <section id="results" class="hidden">
+    <div class="banner">
+      <div class="title"><span class="okb" id="vBadge">✓</span><span id="total"></span></div>
+      <div id="chips" style="display:flex;flex-wrap:wrap;gap:8px;flex:1;min-width:0"></div>
+      <span class="pill" id="timepill"></span>
+      <button class="btn" id="again"><svg class="i"><use href="#up"/></svg>Nuovo documento</button>
+    </div>
+    <div class="issues hidden" id="issues"></div>
+    <div class="panes">
+      <div class="pane orig">
+        <div class="phead">
+          <div><small>Originale</small><b id="fname"></b></div>
+          <div class="legend"><span class="sw">Testo</span> dato rilevato
+            <label style="margin-left:6px"><input type="checkbox" id="showboxes" checked> evidenzia</label>
+            <button class="btn small outline" id="editbtn">✎ Modifica</button></div>
+        </div>
+        <div class="editbar hidden" id="editbar">
+          <span class="hint">Trascina sull'originale per <b>oscurare un'area</b> · clic su un riquadro per <b>annullare</b> (o ripristinare) l'oscuramento · oppure cerca un testo da oscurare ovunque.</span>
+          <input id="search" placeholder="Cerca e oscura (es. un cognome, un codice)">
+          <span id="pending" class="muted"></span>
+          <button class="btn small outline" id="discard">Annulla modifiche</button>
+          <button class="btn small" id="apply">Applica</button>
+        </div>
+        <div class="toolbar"><span>Originale</span><button class="prev">‹</button><span class="pageno"></span><button class="next">›</button>
+          <span class="zoomv"></span><span class="tsp"></span><button class="zout">−</button><button class="zin">+</button></div>
+        <div class="viewer" id="vOrig"><div class="page" id="pOrig"><img alt="originale"></div></div>
+      </div>
+      <div class="pane anon">
+        <div class="phead">
+          <div><small>Anteprima</small><b>Documento anonimizzato</b></div>
+          <div class="dlbtns"><a class="dl on" id="dlPdf"><svg><use href="#down"/></svg>PDF</a><a class="dl on" id="dlDocx"><svg><use href="#down"/></svg>Word</a></div>
+        </div>
+        <div class="toolbar"><span>Anonimizzato</span><button class="prev">‹</button><span class="pageno"></span><button class="next">›</button>
+          <span class="zoomv"></span><span class="tsp"></span><button class="zout">−</button><button class="zin">+</button></div>
+        <div class="viewer" id="vAnon"><div class="page" id="pAnon"><img alt="anonimizzato"></div></div>
+      </div>
+    </div>
+    <div class="footer-warn">Rileggi il documento anonimizzato prima di condividerlo: l'anonimizzazione automatica può non riconoscere tutti i dati identificativi.</div>
+  </section>
+</main>
+<div class="tip hidden" id="tip"></div>
+
+<script>
+const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
+const fmt = (x, d = 1) => Number(x).toLocaleString("it-IT", { minimumFractionDigits: d, maximumFractionDigits: d });
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const kb = n => n > 1048576 ? fmt(n / 1048576) + " MB" : Math.round(n / 1024) + " KB";
+let LABELS = {}, job = null, R = null, page = 0, zoom = 1, poll = null, clock = null, lastFile = null;
+let edit = { on: false, add: [], remove: new Set(), restore: new Set() };
+fetch("/anonymizations/labels").then(r => r.json()).then(j => LABELS = j);
+
+// chip groups as in the mockup
+const GROUPS = [["Nomi", ["PERSON"]], ["Luoghi e indirizzi", ["LOCATION", "ADDRESS"]], ["Data di nascita", ["DATE_OF_BIRTH"]],
+  ["Codice fiscale", ["FISCAL_CODE"]], ["Telefono", ["PHONE"]], ["Email", ["EMAIL"]], ["Tessera sanitaria", ["HEALTH_CARD"]],
+  ["ID sanitari", ["MEDICAL_RECORD", "PRESCRIPTION_ID"]], ["ID professionali", ["PROFESSIONAL_ID"]], ["Documenti", ["ID_DOCUMENT"]],
+  ["Firme", ["SIGNATURE"]], ["Timbri", ["STAMP"]], ["Codici a barre e QR", ["BARCODE", "QRCODE"]], ["Altro", ["URL", "IBAN", "FACE", "HANDWRITING", "AGE", "DATE", "ORGANIZATION"]]];
+
+// ---------------- views ----------------
+function view(v) {
+  $("#split").classList.toggle("hidden", v === "results");
+  $("#results").classList.toggle("hidden", v !== "results");
+  $("#vUpload").classList.toggle("hidden", v !== "upload");
+  $("#vProgress").classList.toggle("hidden", v !== "progress");
+  $("#vError").classList.toggle("hidden", v !== "error");
+  $("#rEmpty").classList.toggle("hidden", v !== "upload");
+  $("#rNone").classList.toggle("hidden", v !== "error");
+  $("#rSkel").classList.toggle("hidden", v !== "progress");
+}
+function reset() {
+  if (job) fetch(`/anonymizations/${job.id}`, { method: "DELETE" });
+  job = R = null; poll?.close?.(); clearInterval(clock); $("#file").value = ""; setEdit(false); view("upload");
+}
+
+// ---------------- upload ----------------
+const drop = $("#drop");
+$("#pick").onclick = () => $("#file").click();
+$("#eRetry").onclick = () => { view("upload"); $("#file").click(); };
+$("#eCancel").onclick = reset;
+$("#again").onclick = reset;
+$("#file").onchange = () => $("#file").files[0] && start($("#file").files[0]);
+["dragenter", "dragover"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", ev => ev.dataTransfer.files[0] && start(ev.dataTransfer.files[0]));
+
+// title and hints per service error code; the message is the service's Italian "detail"
+const HINTS = ["Verifica che il file non sia protetto da password o danneggiato", "Formati supportati: PDF (anche scansionati), JPG, PNG, TIFF"];
+const ERRORS = {
+  UNSUPPORTED_FORMAT: ["Formato non supportato", HINTS.slice(1)],
+  FILE_TOO_LARGE: ["File troppo grande", HINTS.slice(1)],
+  TOO_MANY_PAGES: ["Documento troppo lungo", []],
+  UNREADABLE_DOCUMENT: ["Impossibile leggere il documento", HINTS],
+  PASSWORD_PROTECTED: ["Impossibile leggere il documento", ["Rimuovi la password e caricalo di nuovo"]],
+  TOO_MANY_JOBS: ["Servizio occupato", []],
+  PROCESSING_FAILED: ["Elaborazione non riuscita", HINTS],
+  SERVICE_UNAVAILABLE: ["Servizio non disponibile", ["I modelli si stanno caricando: riprova tra qualche istante"]],
+};
+function showApiError(j) {
+  const [title, hints] = ERRORS[j.code] || ["Errore", []];
+  showError(title, esc(j.detail || "Si è verificato un errore. Riprova più tardi."), hints);
+}
+function showError(title, message, hints = []) {
+  $("#eTitle").textContent = title; $("#eMsg").innerHTML = message;
+  $("#eHints").innerHTML = hints.map(h => `<li>${esc(h)}</li>`).join(""); view("error");
+}
+
+async function start(file) {
+  lastFile = file;
+  $("#pName").textContent = file.name; $("#pMeta").textContent = kb(file.size);
+  $("#pPct").textContent = "0%"; $("#pBar").style.width = "0"; stepState("read");
+  view("progress");
+  const t0 = performance.now();
+  clock = setInterval(() => $("#pClock").textContent = "Tempo trascorso: " + fmt((performance.now() - t0) / 1000) + " s", 100);
+  const fd = new FormData(); fd.append("file", file);
+  let r, j;
+  try { r = await fetch("/anonymizations", { method: "POST", body: fd }); j = await r.json(); }
+  catch (e) { clearInterval(clock); return showError("Errore di connessione", "Il server non risponde.", []); }
+  if (!r.ok) { clearInterval(clock); return showApiError(j); }
+  job = j;
+  $("#pMeta").textContent = `${j.pages} ${j.pages === 1 ? "pagina" : "pagine"} · ${kb(j.size)}`;
+  // progress pushed by the server (Server-Sent Events)
+  const es = new EventSource(`/anonymizations/${job.id}/events`);
+  poll = es;
+  es.onmessage = m => {
+    const s = JSON.parse(m.data);
+    $("#pPct").textContent = s.percent + "%"; $("#pBar").style.width = s.percent + "%"; stepState(s.step);
+    if (s.status === "done") { es.close(); clearInterval(clock); s.result.client_seconds = (performance.now() - t0) / 1000; show(s.result); }
+    else if (s.status === "error") { es.close(); clearInterval(clock); showApiError({ code: s.error_code }); }
+    else if (s.status === "cancelled") { es.close(); clearInterval(clock); job = null; view("upload"); }
+  };
+  es.onerror = () => { if (es.readyState === EventSource.CLOSED) { clearInterval(clock); showError("Connessione interrotta", "Il server non risponde.", []); } };
+}
+function stepState(cur) {
+  const order = ["read", "detect", "redact", "preview"], k = order.indexOf(cur);
+  $$("#pSteps li").forEach((li, i) => { li.className = i < k ? "done" : i === k ? "active" : ""; li.querySelector(".dot").textContent = i < k ? "✓" : ""; });
+}
+$("#cancel").onclick = () => job && fetch(`/anonymizations/${job.id}/cancel`, { method: "POST" });
+
+// ---------------- results ----------------
+const STEP_NAMES = { text_layers: "Lettura testo / OCR", detection: "Rilevamento dati", visual: "Firme, timbri, codici",
+  redaction: "Oscuramento", verification: "Verifica" };
+function show(res) {
+  const keepClient = R?.client_seconds;
+  R = res; R.client_seconds ??= keepClient;
+  view("results");
+  $("#fname").textContent = R.filename;
+  const n = Object.values(R.counts).reduce((a, b) => a + b, 0);
+  $("#vBadge").className = "okb" + (R.verified ? "" : " badb"); $("#vBadge").textContent = R.verified ? "✓" : "!";
+  $("#total").textContent = R.verified ? `${n} dati personali oscurati` : `Bloccato: verifica non superata`;
+  $("#chips").innerHTML = GROUPS.map(([name, codes]) => [name, codes.reduce((a, c) => a + (R.counts[c] || 0), 0)])
+    .filter(([, v]) => v).map(([k, v]) => `<span class="chip"><b>${v}</b>${k}</span>`).join("");
+  // timings
+  const tp = $("#timepill"), max = Math.max(...Object.values(R.timings), .01);
+  tp.innerHTML = `<svg class="i" style="width:14px;height:14px;vertical-align:-2px" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v4l2.5 2M9 2h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> ${fmt(R.seconds_total)} s · ${fmt(R.seconds_per_page)} s/pag` + (R.edits ? ` · ${R.edits} modifiche` : "");
+  const bd = document.createElement("div"); bd.className = "breakdown hidden";
+  bd.innerHTML = `<b style="font-size:13px">Tempi di elaborazione · ${R.n_pages} ${R.n_pages === 1 ? "pagina" : "pagine"}</b>`
+    + Object.entries(R.timings).map(([k, v]) => `<div><span>${STEP_NAMES[k] || k}</span><span>${fmt(v, 2)} s</span></div><div class="b"><i style="width:${100 * v / max}%"></i></div>`).join("")
+    + `<div style="border-top:1px solid var(--line);margin-top:4px;padding-top:6px"><b>Totale elaborazione</b><b>${fmt(R.seconds_total, 2)} s</b></div>`
+    + (R.client_seconds ? `<div><span>Totale incluso caricamento</span><span>${fmt(R.client_seconds, 2)} s</span></div>` : "")
+    + (R.edit_seconds ? `<div><span>Ultima modifica applicata in</span><span>${fmt(R.edit_seconds, 2)} s</span></div>` : "");
+  tp.appendChild(bd); tp.onclick = e => { if (e.target === tp) bd.classList.toggle("hidden"); };
+  $("#issues").classList.toggle("hidden", R.verified);
+  $("#issues").innerHTML = R.verified ? "" : "<b>Il documento non viene rilasciato finché la verifica non è superata.</b>" + R.issues.map(x => `<div>• ${esc(x)}</div>`).join("");
+  for (const [id, f] of [["#dlPdf", "pdf"], ["#dlDocx", "docx"]]) {
+    $(id).classList.toggle("on", R.verified); $(id).href = R.verified ? `/anonymizations/${R.id}/download/${f}` : "javascript:void 0";
+  }
+  page = Math.min(page, R.n_pages - 1); render();
+}
+
+function render() {
+  const p = R.pages[page];
+  $$(".pageno").forEach(e => e.textContent = `${page + 1} / ${R.n_pages}`);
+  $$(".prev").forEach(b => b.disabled = page === 0);
+  $$(".next").forEach(b => b.disabled = page >= R.n_pages - 1);
+  const v = R.edits || 0;
+  for (const [pid, which] of [["#pOrig", "original"], ["#pAnon", "anonymized"]]) {
+    const el = $(pid);
+    el.style.width = `${zoom * 92}%`; el.style.maxWidth = `${zoom * 820}px`;
+    el.querySelector("img").src = `/anonymizations/${R.id}/pages/${which}/${page}?dpi=${zoom > 1.2 ? 170 : 110}&v=${v}`;
+    el.querySelectorAll(".box").forEach(b => b.remove());
+  }
+  requestAnimationFrame(() => { const w = $("#pOrig").clientWidth; $$(".zoomv").forEach(e => e.textContent = Math.round(100 * w / (p.width * 96 / 72)) + "%"); });
+  const el = $("#pOrig");
+  const place = (d, [x0, y0, x1, y1]) => Object.assign(d.style, { left: `${100 * x0 / p.width}%`, top: `${100 * y0 / p.height}%`,
+    width: `${100 * (x1 - x0) / p.width}%`, height: `${100 * (y1 - y0) / p.height}%` });
+  for (const b of R.boxes.filter(b => b.page === page)) {
+    const d = document.createElement("div");
+    const removed = edit.remove.has(b.id), restored = edit.restore.has(b.id);
+    const red = (b.redact && !removed) || restored;
+    d.className = "box" + (b.layer === "visual" ? " visual" : "") + (red ? "" : (b.redact || removed ? " removed" : " keep"));
+    if (!red && b.sources.includes("removed-by-user")) d.className = "box removed";
+    place(d, b.rect); d.dataset.id = b.id;
+    d.dataset.tip = `<b>${esc(LABELS[b.label]?.it || b.label)}</b>${red ? "" : " · non oscurato"}<br>${esc(b.text).slice(0, 120)}`
+      + `<small>${esc(b.sources.join(", "))} · ${b.layer} · score ${fmt(b.score, 2)}</small>`;
+    el.appendChild(d);
+  }
+  for (const a of edit.add.filter(a => a.page === page)) {
+    const d = document.createElement("div"); d.className = "box added"; place(d, a.rect);
+    d.dataset.tip = "<b>Nuova area da oscurare</b><small>clic per eliminarla</small>"; d.dataset.added = edit.add.indexOf(a); el.appendChild(d);
+  }
+}
+$$(".prev").forEach(b => b.onclick = () => { page = Math.max(0, page - 1); render(); });
+$$(".next").forEach(b => b.onclick = () => { page = Math.min(R.n_pages - 1, page + 1); render(); });
+$$(".zin").forEach(b => b.onclick = () => { zoom = Math.min(2.5, zoom + 0.25); render(); });
+$$(".zout").forEach(b => b.onclick = () => { zoom = Math.max(0.5, zoom - 0.25); render(); });
+$("#showboxes").onchange = e => $("#pOrig").classList.toggle("hide-boxes", !e.target.checked);
+let syncing = false;
+for (const [a, b] of [["#vOrig", "#vAnon"], ["#vAnon", "#vOrig"]])
+  $(a).addEventListener("scroll", () => { if (syncing) return; syncing = true; $(b).scrollTop = $(a).scrollTop; $(b).scrollLeft = $(a).scrollLeft; requestAnimationFrame(() => syncing = false); });
+
+// ---------------- editing ----------------
+function setEdit(on) {
+  edit = { on, add: [], remove: new Set(), restore: new Set() };
+  $("#editbar").classList.toggle("hidden", !on); $(".pane.orig").classList.toggle("editing", on);
+  $("#editbtn").textContent = on ? "Chiudi modifica" : "✎ Modifica"; $("#search").value = "";
+  if (on) { $("#showboxes").checked = true; $("#pOrig").classList.remove("hide-boxes"); }
+  pending(); if (R) render();
+}
+function pending() {
+  const n = edit.add.length + edit.remove.size + edit.restore.size + ($("#search").value.trim() ? 1 : 0);
+  $("#pending").textContent = n ? `${n} modifiche in sospeso` : ""; $("#apply").disabled = !n;
+}
+$("#editbtn").onclick = () => setEdit(!edit.on);
+$("#discard").onclick = () => setEdit(true);
+$("#search").oninput = pending;
+$("#search").onkeydown = e => { if (e.key === "Enter") $("#apply").click(); };
+const pg = $("#pOrig"); let drag = null;
+pg.addEventListener("mousedown", e => {
+  if (!edit.on || e.button !== 0) return;
+  const t = e.target.closest(".box");
+  if (t) {
+    if (t.dataset.added !== undefined) edit.add.splice(+t.dataset.added, 1);
+    else {
+      const id = +t.dataset.id, b = R.boxes[id];
+      if (b.redact) edit.remove.has(id) ? edit.remove.delete(id) : edit.remove.add(id);
+      else edit.restore.has(id) ? edit.restore.delete(id) : edit.restore.add(id);
+    }
+    pending(); render(); return;
+  }
+  const r = pg.getBoundingClientRect();
+  drag = { x: e.clientX - r.left, y: e.clientY - r.top, el: document.createElement("div") };
+  drag.el.className = "box added"; pg.appendChild(drag.el); e.preventDefault();
+});
+window.addEventListener("mousemove", e => {
+  if (!drag) return;
+  const r = pg.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+  Object.assign(drag.el.style, { left: Math.min(x, drag.x) + "px", top: Math.min(y, drag.y) + "px", width: Math.abs(x - drag.x) + "px", height: Math.abs(y - drag.y) + "px" });
+});
+window.addEventListener("mouseup", e => {
+  if (!drag) return;
+  const r = pg.getBoundingClientRect(), p = R.pages[page], k = p.width / r.width;
+  const x = e.clientX - r.left, y = e.clientY - r.top;
+  if (Math.abs(x - drag.x) > 4 && Math.abs(y - drag.y) > 4)
+    edit.add.push({ page, rect: [Math.min(x, drag.x) * k, Math.min(y, drag.y) * k, Math.max(x, drag.x) * k, Math.max(y, drag.y) * k] });
+  drag.el.remove(); drag = null; pending(); render();
+});
+$("#apply").onclick = async () => {
+  const body = { add: edit.add, remove: [...edit.remove], restore: [...edit.restore], search: $("#search").value.trim() };
+  const w = document.createElement("div"); w.className = "working"; w.textContent = "Applico le modifiche…";
+  document.querySelector(".panes").style.position = "relative"; document.querySelector(".panes").appendChild(w);
+  try {
+    const r = await fetch(`/anonymizations/${R.id}/edits`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const res = await r.json(); if (!r.ok) throw new Error(res.detail || "Errore");
+    const hits = res.search_hits;
+    setEdit(true); show(res);
+    toast(`Modifiche applicate in ${fmt(res.edit_seconds, 2)} s` + (body.search ? ` · «${body.search}»: ${hits} occorrenze oscurate` : ""));
+  } catch (e) { toast("Errore: " + e.message); }
+  finally { w.remove(); }
+};
+function toast(msg) { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 4000); }
+
+// tooltip
+const tip = $("#tip");
+document.addEventListener("mousemove", e => {
+  const t = e.target.closest?.(".box");
+  if (!t || drag) { tip.classList.add("hidden"); return; }
+  tip.innerHTML = t.dataset.tip; tip.classList.remove("hidden");
+  tip.style.left = Math.min(e.clientX + 14, innerWidth - 360) + "px"; tip.style.top = e.clientY + 14 + "px";
+});
+view("upload");
+</script>
+</body>
+</html>

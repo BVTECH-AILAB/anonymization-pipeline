@@ -1,33 +1,88 @@
 """Application factory and ASGI entry point (``anonmyzation_pipeline.main:app``)."""
 
+import asyncio
+import contextlib
 import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 
 from anonmyzation_pipeline import __version__
-from anonmyzation_pipeline.api import health, items
+from anonmyzation_pipeline.api import anonymization, health, web
 from anonmyzation_pipeline.config import Settings, get_settings
-from anonmyzation_pipeline.db.engine import build_engine, build_sessionmaker
 from anonmyzation_pipeline.errors import register_exception_handlers
 from anonmyzation_pipeline.logging_setup import setup_logging
 from anonmyzation_pipeline.middleware import RequestIdMiddleware
+from anonmyzation_pipeline.services.anonymization.detect.ner import GlinerNER
+from anonmyzation_pipeline.services.anonymization.ocr import DoctrOCR
+from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
+from anonmyzation_pipeline.services.jobs import JobManager
 
 logger = logging.getLogger(__name__)
+
+PURGE_INTERVAL_SECONDS = 60
+
+
+def build_pipeline(settings: Settings) -> Pipeline:
+    """OCR and NER engines from the settings. No weights are loaded here."""
+    ocr = DoctrOCR(
+        det_arch=settings.ocr_det_arch,
+        reco_arch=settings.ocr_reco_arch,
+        dpi=settings.ocr_dpi,
+        margin_pt=settings.ocr_margin_pt,
+        device=settings.device,
+    )
+    ner = (
+        GlinerNER(model_id=settings.ner_model, device=settings.device)
+        if settings.ner_enabled
+        else None
+    )
+    return Pipeline(
+        ocr,
+        ner,
+        policy=settings.redaction_policy,
+        ner_threshold=settings.ner_threshold,
+        person_threshold=settings.ner_person_threshold,
+    )
+
+
+def load_models(pipeline: Pipeline) -> None:
+    """Load the model weights. A failure leaves /readyz at 503 (fail-closed)."""
+    try:
+        pipeline.ocr.load()
+        if pipeline.ner is not None:
+            pipeline.ner.load()
+    except Exception as exc:
+        logger.error("Model loading failed: %s", type(exc).__name__)
+
+
+async def _purge_loop(jobs: JobManager) -> None:
+    """Delete expired documents periodically."""
+    while True:
+        await asyncio.sleep(PURGE_INTERVAL_SECONDS)
+        jobs.purge_expired()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Create shared resources on startup and release them on shutdown.
 
-    Clients (DB engine, httpx clients ...) live on ``app.state``, never in
-    module-level globals.
+    The pipeline and the job manager live on ``app.state``, never in
+    module-level globals. Models load in the background: the API answers
+    the probes at once and ``/readyz`` turns ready when the weights are loaded.
     """
     settings: Settings = app.state.settings
-    engine = build_engine(settings)
-    app.state.engine = engine
-    app.state.sessionmaker = build_sessionmaker(engine)
+    pipeline = build_pipeline(settings)
+    jobs = JobManager(
+        pipeline, settings, Path(settings.work_dir) if settings.work_dir else None
+    )
+    app.state.pipeline = pipeline
+    app.state.jobs = jobs
+    tasks = [asyncio.create_task(_purge_loop(jobs))]
+    if settings.preload_models:
+        tasks.append(asyncio.create_task(asyncio.to_thread(load_models, pipeline)))
     logger.info(
         "Service started: name=%s version=%s environment=%s",
         settings.app_name,
@@ -37,8 +92,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     try:
         yield
     finally:
-        if engine is not None:
-            await engine.dispose()
+        for task in tasks:
+            task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await task
+        jobs.shutdown()
         logger.info("Service stopped")
 
 
@@ -66,7 +124,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     register_exception_handlers(app)
 
     app.include_router(health.router)
-    app.include_router(items.router)
+    app.include_router(anonymization.router)
+    app.include_router(web.router)
     return app
 
 

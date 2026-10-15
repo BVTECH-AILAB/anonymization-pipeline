@@ -42,6 +42,26 @@ detection:
     min_token: 3              # shorter name tokens are not searched alone
 
 # -----------------------------------------------------------------------------
+#  Redaction of the PDF
+#  A page with boxes is rasterised with the boxes painted in (nothing of the original page
+#  content survives on it); pages without boxes are kept as they are. Then the whole file is
+#  rewritten without metadata, annotations, attachments, scripts, bookmarks and history.
+# -----------------------------------------------------------------------------
+redaction:
+  style: black              # black | label (light box with the category)
+  flatten_dpi: 200
+  jpeg_quality: 90          # scanned pages; native pages are stored losslessly
+
+# -----------------------------------------------------------------------------
+#  Verification (fail-closed): a failed check blocks the download
+# -----------------------------------------------------------------------------
+verification:
+  pixel_dpi: 72             # resolution of the comparison outside the boxes (rasterised pages:
+                            # flatten_dpi, where they match the original pixel for pixel)
+  pixel_threshold: 40       # channel difference that counts as a changed pixel
+  pixel_tolerance: 0.0002   # max fraction of changed pixels outside the boxes
+
+# -----------------------------------------------------------------------------
 #  Categories to anonymize (registry, groups and descriptions in categories.yaml).
 #  Every category of the registry is on: list here only the ones off by default.
 #  Here and in the user file also by group:

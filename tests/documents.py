@@ -5,9 +5,12 @@ Everything here is invented. The only codice fiscale is the textbook ``FAKE_CF``
 
 import io
 import math
+from collections.abc import Callable
 from pathlib import Path
 
 from PIL import Image, ImageDraw
+from pypdf import PdfReader, PdfWriter
+from pypdf.annotations import Text
 from reportlab.graphics import renderPDF
 from reportlab.graphics.barcode.qr import QrCodeWidget
 from reportlab.graphics.shapes import Drawing
@@ -137,3 +140,38 @@ def text_layer(page: int, text: str, source: str = "native") -> TextLayer:
             box = (0.0, float(line), 1.0, float(line) + 1)
             tokens.append(Token(word, box, [box] * len(word), line, source))
     return TextLayer.build(page, source, tokens)
+
+
+def overlay(path: Path, draw: Callable[[canvas.Canvas], None], page: int = 0) -> Path:
+    """Draw on one page of ``path`` (reportlab coordinates, from the bottom) and save it in full."""
+    buf = io.BytesIO()
+    cv = canvas.Canvas(buf, pagesize=(WIDTH, HEIGHT))
+    draw(cv)
+    cv.save()
+    writer = PdfWriter(clone_from=path)
+    writer.pages[page].merge_page(PdfReader(io.BytesIO(buf.getvalue())).pages[0])
+    writer.write(path)
+    return path
+
+
+def trapped_letter(path: Path) -> Path:
+    """The letter with a QR code, a signature and the traps a redaction must not miss.
+
+    Invisible white text with the codice fiscale, a note annotation with the patient's name added
+    as an incremental update (the previous revision stays in the file) and metadata with personal
+    data.
+    """
+    letter_pdf(path, qr_text="https://x.example.it/r?id=2026123456", signature=True)
+
+    def white_text(cv: canvas.Canvas) -> None:
+        cv.setFillColorRGB(1, 1, 1)
+        cv.setFont("Helvetica", 3)
+        cv.drawString(300, 12, f"REF {FAKE_CF}")
+
+    overlay(path, white_text)
+    writer = PdfWriter(path, incremental=True)
+    writer.add_annotation(
+        0, Text(rect=(500, 700, 520, 720), text=f"Richiamare {PATIENT}")
+    )
+    writer.write(path)
+    return path

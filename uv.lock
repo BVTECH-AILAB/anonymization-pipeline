@@ -27,9 +27,11 @@ source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
     { name = "httpx" },
+    { name = "numpy" },
     { name = "pillow" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
+    { name = "pypdf" },
     { name = "pypdfium2" },
     { name = "pyyaml" },
     { name = "uvicorn", extra = ["standard"] },
@@ -37,11 +39,9 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
-    { name = "numpy" },
     { name = "pip-audit" },
     { name = "pip-licenses" },
     { name = "pre-commit" },
-    { name = "pypdf" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
@@ -54,9 +54,11 @@ dev = [
 requires-dist = [
     { name = "fastapi", specifier = ">=0.115" },
     { name = "httpx", specifier = ">=0.28" },
+    { name = "numpy", specifier = ">=2" },
     { name = "pillow", specifier = ">=11" },
     { name = "pydantic", specifier = ">=2.10" },
     { name = "pydantic-settings", specifier = ">=2.7" },
+    { name = "pypdf", specifier = ">=6" },
     { name = "pypdfium2", specifier = ">=4.30,<6" },
     { name = "pyyaml", specifier = ">=6" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34" },
@@ -64,11 +66,9 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "numpy", specifier = ">=2" },
     { name = "pip-audit", specifier = ">=2.7" },
     { name = "pip-licenses", specifier = ">=5" },
     { name = "pre-commit", specifier = ">=4.0" },
-    { name = "pypdf", specifier = ">=5" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "pytest-asyncio", specifier = ">=0.25" },
     { name = "pytest-cov", specifier = ">=6.0" },

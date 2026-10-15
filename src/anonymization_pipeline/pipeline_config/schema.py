@@ -4,6 +4,8 @@ Every section rejects unknown keys (``extra="forbid"``): a typo in the user file
 not an ignored value.
 """
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from anonymization_pipeline.pipeline_config.categories import registry
@@ -53,6 +55,30 @@ class Detection(_Section):
     propagation: Propagation
 
 
+class Redaction(_Section):
+    """How the boxes are applied to the PDF."""
+
+    style: Literal["black", "label"]
+    flatten_dpi: int = Field(
+        ge=100, le=600
+    )  # resolution of a page rasterised with its boxes
+    jpeg_quality: int = Field(
+        ge=50, le=100
+    )  # scanned pages; native pages are stored losslessly
+
+
+class Verification(_Section):
+    """Fail-closed checks of the redacted PDF."""
+
+    pixel_dpi: int = Field(ge=36, le=300)
+    pixel_threshold: int = Field(
+        ge=1, le=255
+    )  # channel difference that counts as changed
+    pixel_tolerance: float = Field(
+        ge=0, le=0.05
+    )  # fraction of changed pixels outside the boxes
+
+
 class Protection(_Section):
     """Groups and categories a request can never switch off."""
 
@@ -64,6 +90,8 @@ class PipelineConfig(_Section):
 
     ingest: Ingest
     detection: Detection
+    redaction: Redaction
+    verification: Verification
     categories: dict[str, bool]
     protection: Protection
 

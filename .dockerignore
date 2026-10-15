@@ -16,3 +16,7 @@ build
 .vscode
 docs
 CLAUDE.md
+tools
+dataset
+dataset_*
+reports

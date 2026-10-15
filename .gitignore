@@ -16,5 +16,10 @@ build/
 .idea/
 .vscode/
 
+# Synthetic dataset and evaluation output (regenerate with `just dataset` / `just evaluate`)
+dataset/
+dataset_*/
+reports/
+
 # Local only, never committed
 CLAUDE.md

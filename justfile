@@ -1,12 +1,12 @@
 # Task runner. `just` lists the recipes.
 
-# Reads POSTGRES_* from .env: no credentials in this file.
+# Reads ANONPIP_* from .env: no credentials in this file.
 set dotenv-load := true
 
 default:
     @just --list
 
-# --- Compose (service + Postgres) ---
+# --- Compose (service) ---
 
 # Build and start the stack in the background
 up:
@@ -22,29 +22,36 @@ down-v:
 logs:
     docker compose logs -f app
 
-db-shell:
-    docker compose exec db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
-
-# --- Database migrations (run inside the app container) ---
-
-migrate:
-    docker compose exec app alembic upgrade head
-
-# Autogenerate a migration from the model changes
-revision msg:
-    docker compose exec app alembic revision --autogenerate -m "{{msg}}"
-
-downgrade rev="-1":
-    docker compose exec app alembic downgrade {{rev}}
-
 # --- Local (uv) ---
 
 sync:
     uv sync
 
-# Run the API on the host against the compose Postgres (`docker compose up -d db` first)
+# Run the API on the host
 dev:
     uv run uvicorn anonmyzation_pipeline.main:app --reload --port 8000
+
+# Everything for a local demo: deps, synthetic dataset if missing, API + web UI on the first free port, browser
+start:
+    bash scripts/start.sh
+
+# Download the OCR and NER weights into the local caches (run once, before an offline start)
+models:
+    uv run python -c "from anonmyzation_pipeline.config import get_settings; from anonmyzation_pipeline.main import build_pipeline, load_models; load_models(build_pipeline(get_settings()))"
+
+# --- Synthetic dataset and evaluation (tools/, dev only) ---
+
+# Synthetic dataset: `just dataset` or `just dataset --n 7 --append`
+dataset *args:
+    uv run python -m tools generate {{args}}
+
+# Score the pipeline against the ground truth -> reports/evaluation.md
+evaluate *args:
+    uv run python -m tools evaluate {{args}}
+
+# Compare OCR engines on the scanned dataset (lighton needs a GPU and is slow)
+bench-ocr *args:
+    uv run python -m tools bench-ocr {{args}}
 
 # --- Quality ---
 
@@ -68,13 +75,9 @@ check:
 
 # --- Tests ---
 
-# Unit tests (no database, no network)
+# Unit tests (no network, no model weights)
 test *args:
     uv run pytest {{args}}
-
-# Integration tests against the compose Postgres (database app_test)
-test-int *args:
-    docker compose run --rm -e ANONPIP_DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/app_test" app pytest -m integration {{args}}
 
 # Unit tests with coverage (fails under 80%), writes coverage.xml and junit.xml for Sonar
 test-cov:

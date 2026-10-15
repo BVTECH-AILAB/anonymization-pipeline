@@ -83,6 +83,20 @@ redaction:
   style: black              # black | label (light box with the category)
   flatten_dpi: 200
   jpeg_quality: 90          # scanned pages; native pages are stored losslessly
+  # Markdown: tag ([PERSONA_1], no map) | pseudonym (tags + map encrypted with a key, restorable)
+  # | redaction (a fixed symbol). A pseudonymized document is still personal data (PA-13): tag until
+  # the DPO decides. Requests may choose the mode; pseudonym needs a key (request or ANONPIP_VAULT_KEY).
+  mode: tag
+  tag_format: "[{category}_{n}]"
+  redaction_symbol: "█████"
+
+# -----------------------------------------------------------------------------
+#  Markdown of the document, anonymized with the same values as the PDF (for indexing, RAG)
+# -----------------------------------------------------------------------------
+markdown:
+  enabled: true
+  engine: layers            # the text layers of the pages: native text, OCR on scans
+  page_separator: "\n\n<!-- pagina {n} -->\n\n"
 
 # -----------------------------------------------------------------------------
 #  Verification (fail-closed): a failed check blocks the download

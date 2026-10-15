@@ -6,7 +6,7 @@ not an ignored value.
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from anonymization_pipeline.pipeline_config.categories import registry
 
@@ -89,15 +89,34 @@ class Detection(_Section):
 
 
 class Redaction(_Section):
-    """How the boxes are applied to the PDF."""
+    """How the values are removed: boxes on the PDF, replacements in the Markdown."""
 
     style: Literal["black", "label"]
-    flatten_dpi: int = Field(
-        ge=100, le=600
-    )  # resolution of a page rasterised with its boxes
-    jpeg_quality: int = Field(
-        ge=50, le=100
-    )  # scanned pages; native pages are stored losslessly
+    flatten_dpi: int = Field(ge=100, le=600)  # resolution of a rasterised page
+    jpeg_quality: int = Field(ge=50, le=100)  # scanned pages; native ones are lossless
+    # Markdown: tag ([PERSONA_1]), pseudonym (tags + encrypted map), redaction (one symbol)
+    mode: Literal["tag", "pseudonym", "redaction"]
+    tag_format: str
+    redaction_symbol: str = Field(min_length=1)
+
+    @field_validator("tag_format")
+    @classmethod
+    def _tag(cls, value: str) -> str:
+        if "{category}" not in value or "{n}" not in value:
+            raise ValueError("tag_format must contain {category} and {n}")
+        try:
+            value.format(category="X", n=1)
+        except (KeyError, IndexError, ValueError) as exc:
+            raise ValueError(f"invalid tag_format: {exc}") from exc
+        return value
+
+
+class Markdown(_Section):
+    """The anonymized Markdown of the document, next to the PDF."""
+
+    enabled: bool
+    engine: Literal["layers"]  # the text layers of the pages (native, or OCR on scans)
+    page_separator: str  # before every page after the first; {n} = page number
 
 
 class Verification(_Section):
@@ -125,6 +144,7 @@ class PipelineConfig(_Section):
     ocr: Ocr
     detection: Detection
     redaction: Redaction
+    markdown: Markdown
     verification: Verification
     categories: dict[str, bool]
     protection: Protection

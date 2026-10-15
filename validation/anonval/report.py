@@ -57,8 +57,9 @@ def render_report(runs: list[ProfileRun], config: Config) -> str:
         f"Soglie: recall almeno {pct(t.recall_min)}, tasso di fuga al massimo "
         f"{pct(t.tasso_fuga_max)}, precisione almeno {pct(t.precision_min)}.",
         "",
-        "| Profilo | Esito | Documenti | Rilasciati | Bloccati | Recall | Fuga | Precisione |",
-        "|---|---|---:|---:|---:|---:|---:|---:|",
+        "| Profilo | Esito | Documenti | Rilasciati | Bloccati | Recall | Fuga PDF "
+        "| Fuga Markdown | Precisione |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for run in runs:
         s = run.summary
@@ -66,7 +67,7 @@ def render_report(runs: list[ProfileRun], config: Config) -> str:
         lines.append(
             f"| {run.profile.nome} | {'FAIL' if failed else 'PASS'} | {s.documents} | "
             f"{s.released} | {sum(s.blocked.values())} | {pct(s.recall)} | "
-            f"{pct(s.leak_rate)} | {pct(s.precision)} |"
+            f"{pct(s.leak_rate)} | {pct(s.markdown_leak_rate)} | {pct(s.precision)} |"
         )
     lines.append("")
     for run in runs:
@@ -83,6 +84,8 @@ def render_report(runs: list[ProfileRun], config: Config) -> str:
             f"{s.disabled_boxes}, falsi positivi {s.false_positives}).",
             f"- Negativi violati: {s.negatives_violated}; valori nel testo dei PDF "
             f"rilasciati: {s.text_leaks}.",
+            f"- Markdown: {s.markdown_documents} documenti, {s.markdown_leaked} valori ancora "
+            f"leggibili su {s.markdown_expected} attesi.",
             f"- Bloccati: {dict(s.blocked) or 0}; non elaborati: {s.failed}.",
             "",
         ]

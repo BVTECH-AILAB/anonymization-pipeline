@@ -59,7 +59,11 @@ class Gate:
         self.started = threading.Event()
 
     def __call__(
-        self, data: bytes, cfg: PipelineConfig, progress: Callable[[str], None]
+        self,
+        data: bytes,
+        cfg: PipelineConfig,
+        progress: Callable[[str], None],
+        key: str | None,
     ) -> Anonymized:
         self.started.set()
         self.open.wait(10)

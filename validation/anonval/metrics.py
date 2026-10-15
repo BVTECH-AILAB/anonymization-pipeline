@@ -50,6 +50,9 @@ class Summary:
     false_positives: int = 0
     negatives_violated: int = 0
     text_leaks: int = 0
+    markdown_documents: int = 0
+    markdown_expected: int = 0
+    markdown_leaked: int = 0
     by_category: dict[str, Counts] = field(default_factory=lambda: defaultdict(Counts))
     by_difficulty: dict[str, Counts] = field(
         default_factory=lambda: defaultdict(Counts)
@@ -64,6 +67,10 @@ class Summary:
     @property
     def leak_rate(self) -> float | None:
         return ratio(self.values.leaked, self.values.expected)
+
+    @property
+    def markdown_leak_rate(self) -> float | None:
+        return ratio(self.markdown_leaked, self.markdown_expected)
 
     @property
     def precision(self) -> float | None:
@@ -89,6 +96,12 @@ def summarize(scores: list[DocScore]) -> Summary:
         s.false_positives += len(doc.false_positives)
         s.negatives_violated += len(doc.negatives_violated)
         s.text_leaks += len(doc.text_leaks)
+        if doc.markdown:
+            s.markdown_documents += 1
+            s.markdown_expected += sum(
+                1 for v in doc.values if v.expected and v.located
+            )
+            s.markdown_leaked += len(doc.markdown_leaks)
         for v in doc.values:
             if not v.expected:
                 continue
@@ -115,6 +128,8 @@ def verdict(s: Summary, t: Thresholds) -> list[str]:
         out.append("tasso di fuga sopra la soglia")
     if s.precision is not None and s.precision < t.precision_min:
         out.append("precisione sotto la soglia")
+    if s.markdown_leak_rate is not None and s.markdown_leak_rate > t.tasso_fuga_max:
+        out.append("tasso di fuga nel Markdown sopra la soglia")
     if s.text_leaks:
         out.append("valori nel testo dei PDF rilasciati")
     return out
@@ -137,6 +152,12 @@ def as_dict(s: Summary, t: Thresholds) -> dict[str, Any]:
         "precisione": s.precision,
         "negativi_violati": s.negatives_violated,
         "valori_nel_testo_rilasciato": s.text_leaks,
+        "markdown": {
+            "documenti": s.markdown_documents,
+            "attesi": s.markdown_expected,
+            "sfuggiti": s.markdown_leaked,
+            "tasso_fuga": s.markdown_leak_rate,
+        },
         "per_categoria": {k: v.as_dict() for k, v in sorted(s.by_category.items())},
         "per_difficolta": {k: v.as_dict() for k, v in sorted(s.by_difficulty.items())},
         "per_tipo": {k: v.as_dict() for k, v in sorted(s.by_type.items())},

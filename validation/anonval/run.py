@@ -78,7 +78,7 @@ def run_profile(
         else:
             released = page_texts(result.pdf) if result.pdf else None
             score = score_document(
-                gold, page_texts(pdf), result.status, active, released
+                gold, page_texts(pdf), result.status, active, released, result.markdown
             )
             if raw is not None:
                 raw.mkdir(parents=True, exist_ok=True)

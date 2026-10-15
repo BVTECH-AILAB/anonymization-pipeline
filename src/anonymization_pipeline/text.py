@@ -10,7 +10,7 @@ A value that is not found is a hallucination and is discarded.
 import re
 from difflib import SequenceMatcher
 
-from anonymization_pipeline.pipeline_config.schema import Anchoring
+from anonymization_pipeline.pipeline_config.schema import Anchoring, Redaction
 
 Span = tuple[int, int]
 
@@ -83,3 +83,36 @@ def find(
             (s, e) for s, e in spans if all(e <= s2 or s >= e2 for s2, e2 in exclude)
         ]
     return spans
+
+
+_PLACEHOLDERS = re.compile(r"(\{category\}|\{n\})")
+
+
+def replacement_regex(redaction: Redaction) -> re.Pattern[str]:
+    """Matches the tags ([PERSONA_1]) and the redaction blocks (█████) of a redacted text."""
+    parts = _PLACEHOLDERS.split(redaction.tag_format)
+    tag = "".join(
+        "[A-Z0-9_]+" if p == "{category}" else r"\d+" if p == "{n}" else re.escape(p)
+        for p in parts
+    )
+    return re.compile(f"{tag}|(?:{re.escape(redaction.redaction_symbol)})+")
+
+
+def tag_category(replacement: str, redaction: Redaction) -> str | None:
+    """Category of a tag (``[PERSONA_1]`` -> ``PERSONA``); None for redaction blocks."""
+    parts = _PLACEHOLDERS.split(redaction.tag_format)
+    pattern = "".join(
+        "(?P<category>[A-Z0-9_]+)"
+        if p == "{category}"
+        else r"\d+"
+        if p == "{n}"
+        else re.escape(p)
+        for p in parts
+    )
+    match = re.fullmatch(pattern, replacement)
+    return match.group("category") if match else None
+
+
+def replacement_spans(text: str, redaction: Redaction) -> list[Span]:
+    """Where the tags and redaction blocks are in a redacted text."""
+    return [m.span() for m in replacement_regex(redaction).finditer(text)]

@@ -52,6 +52,10 @@ class Settings(BaseSettings):
         default=1800, ge=60, le=86400
     )  # a finished job is then deleted
 
+    # Key of the pseudonym map when a request gives none (credential: no default; empty = a
+    # pseudonym request without its own key is refused).
+    vault_key: str = ""
+
     @field_validator("log_level")
     @classmethod
     def _normalize_log_level(cls, value: str) -> str:

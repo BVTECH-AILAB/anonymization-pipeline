@@ -19,6 +19,8 @@ services:
       ANONPIP_MAX_QUEUED_JOBS: ${ANONPIP_MAX_QUEUED_JOBS:-20}
       ANONPIP_MAX_KEPT_JOBS: ${ANONPIP_MAX_KEPT_JOBS:-50}
       ANONPIP_JOB_TTL_S: ${ANONPIP_JOB_TTL_S:-1800}
+      # optional credential (only mode=pseudonym): empty means no service key, never a default key
+      ANONPIP_VAULT_KEY: ${ANONPIP_VAULT_KEY:-}
     ports:
       - "127.0.0.1:${APP_PORT:-8000}:8000"
     volumes:

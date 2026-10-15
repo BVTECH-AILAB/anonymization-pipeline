@@ -40,6 +40,7 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_MAX_QUEUED_JOBS` | `20` | | | no |
 | `ANONPIP_MAX_KEPT_JOBS` | `50` | | | no |
 | `ANONPIP_JOB_TTL_S` | `1800` | | | no |
+| `ANONPIP_VAULT_KEY` | nessuno (credenziale) | Vault, solo se si usa `mode=pseudonym` | Vault, solo se si usa `mode=pseudonym` | **sì** |
 
 `ANONPIP_PIPELINE_CONFIG_FILE` punta a un YAML montato da ConfigMap con le
 sole chiavi da cambiare di `resources/default.yaml`. Un file non valido

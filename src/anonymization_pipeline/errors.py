@@ -37,6 +37,12 @@ class BadRequestError(ServiceError):
     user_message = "Richiesta non valida."
 
 
+class RestoreFailedError(ServiceError):
+    status_code = 403
+    code = "RESTORE_FAILED"
+    user_message = "Ripristino non riuscito."
+
+
 class NotFoundError(ServiceError):
     status_code = 404
     code = "NOT_FOUND"

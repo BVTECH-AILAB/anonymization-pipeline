@@ -27,7 +27,8 @@ from anonymization_pipeline.detectors import DetectorUnavailable
 from anonymization_pipeline.ingest import DocumentError
 from anonymization_pipeline.logging_setup import log_event
 from anonymization_pipeline.pipeline_config import PipelineConfig
-from anonymization_pipeline.services.anonymization import Anonymized, anonymize
+from anonymization_pipeline.render.vault import VaultError
+from anonymization_pipeline.services.anonymization import Anonymized
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +51,9 @@ class Job:
     id: str
     cfg: PipelineConfig = field(repr=False)
     data: bytes | None = field(default=None, repr=False)
+    key: str | None = field(
+        default=None, repr=False
+    )  # pseudonym map, released with the bytes
     created: float = field(default_factory=time.time)
     status: JobStatus = "queued"
     phase: str | None = None
@@ -75,7 +79,9 @@ class Job:
         self.changed = asyncio.Event()
 
 
-Runner = Callable[[bytes, PipelineConfig, Callable[[str], None]], Anonymized]
+Runner = Callable[
+    [bytes, PipelineConfig, Callable[[str], None], str | None], Anonymized
+]
 
 
 class JobRegistry:
@@ -83,10 +89,11 @@ class JobRegistry:
 
     Args:
         settings: Limits and time to live of the jobs.
-        run: The anonymization of one document (tests replace it).
+        run: The anonymization of one document, with the models of the service (tests pass a
+            fake one).
     """
 
-    def __init__(self, settings: Settings, run: Runner = anonymize) -> None:
+    def __init__(self, settings: Settings, run: Runner) -> None:
         self._run = run
         self._max_queued = settings.max_queued_jobs
         self._max_kept = settings.max_kept_jobs
@@ -106,12 +113,12 @@ class JobRegistry:
             self._worker = None
         for job in self._jobs.values():
             job.cancel_requested.set()
-            job.data, job.result = None, None
+            job.data, job.key, job.result = None, None, None
         self._jobs.clear()
 
     # --- used by the API -----------------------------------------------------------------------
 
-    def add(self, data: bytes, cfg: PipelineConfig) -> Job:
+    def add(self, data: bytes, cfg: PipelineConfig, key: str | None = None) -> Job:
         """Queue a document.
 
         Raises:
@@ -121,7 +128,7 @@ class JobRegistry:
         active = sum(1 for j in self._jobs.values() if j.status not in TERMINAL)
         if active >= self._max_queued:
             raise QueueFull("too many jobs waiting or running")
-        job = Job(id=secrets.token_urlsafe(16), cfg=cfg, data=data)
+        job = Job(id=secrets.token_urlsafe(16), cfg=cfg, data=data, key=key)
         self._jobs[job.id] = job
         self._queue.put_nowait(job.id)
         log_event(
@@ -155,7 +162,7 @@ class JobRegistry:
         job.cancel_requested.set()
         if job.status not in TERMINAL:
             job.status = "cancelled"
-        job.data, job.result = None, None
+        job.data, job.key, job.result = None, None, None
         job.touch()
         log_event(logger, "job_deleted", {"job": job.short, "reason": reason})
         return True
@@ -186,7 +193,7 @@ class JobRegistry:
 
     def _finish(self, job: Job, status: JobStatus) -> None:
         job.status = status
-        job.data = None
+        job.data = job.key = None
         job.finished = time.time()
         job.expires = job.finished + self._ttl
         job.touch()
@@ -215,14 +222,17 @@ class JobRegistry:
                 raise Cancelled
             loop.call_soon_threadsafe(self._phase, job, phase)
 
-        data = job.data or b""
+        data, key = job.data or b"", job.key
         try:
-            result = await asyncio.to_thread(self._run, data, job.cfg, progress)
+            result = await asyncio.to_thread(self._run, data, job.cfg, progress, key)
         except Cancelled:
             self._finish(job, "cancelled")
             log_event(logger, "job_cancelled", {"job": job.short})
             return
-        except DocumentError as exc:  # Italian message without document content
+        except (
+            DocumentError,
+            VaultError,
+        ) as exc:  # Italian message, no document content
             job.error = str(exc)
             self._finish(job, "failed")
             return

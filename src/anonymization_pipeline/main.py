@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from anonymization_pipeline import __version__, ocr
-from anonymization_pipeline.api import anonymization, catalog, health
+from anonymization_pipeline.api import anonymization, catalog, health, restore
 from anonymization_pipeline.config import Settings, get_settings
 from anonymization_pipeline.detectors import DetectorUnavailable, load_resources
 from anonymization_pipeline.detectors.ner import load_engine
@@ -87,8 +87,10 @@ async def _load_models(app: FastAPI, cfg: PipelineConfig) -> None:
 def _runner(app: FastAPI) -> Runner:
     """The anonymization of a job, with the models loaded at startup."""
 
-    def run(data: bytes, cfg: PipelineConfig, progress: Progress) -> Anonymized:
-        return anonymize(data, cfg, progress, app.state.ner, app.state.ocr)
+    def run(
+        data: bytes, cfg: PipelineConfig, progress: Progress, key: str | None
+    ) -> Anonymized:
+        return anonymize(data, cfg, progress, app.state.ner, app.state.ocr, key)
 
     return run
 
@@ -130,6 +132,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(health.router)
     app.include_router(catalog.router)
     app.include_router(anonymization.router)
+    app.include_router(restore.router)
     return app
 
 

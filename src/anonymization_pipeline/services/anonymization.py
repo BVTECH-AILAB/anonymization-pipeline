@@ -30,7 +30,9 @@ from anonymization_pipeline.pdf import PDFIUM_LOCK
 from anonymization_pipeline.pdf.geometry import Geometry, Rect
 from anonymization_pipeline.pdf.pages import is_scanned
 from anonymization_pipeline.pipeline_config import PipelineConfig
+from anonymization_pipeline.render import vault
 from anonymization_pipeline.render.boxes import Box, from_outcome
+from anonymization_pipeline.render.markdown import Rendered, render
 from anonymization_pipeline.render.pdf import redact
 from anonymization_pipeline.verify.pdf import Failure, verify
 
@@ -45,7 +47,9 @@ class Anonymized:
     """Outcome of one document: counters, never values."""
 
     status: Status
-    reason: str | None  # blocked: ocr_unavailable | verification_failed
+    reason: (
+        str | None
+    )  # blocked: ocr_unavailable | verification_failed (PDF or Markdown)
     pages: int
     kind: str  # pdf | image
     scanned_pages: list[int] = field(default_factory=list)
@@ -57,6 +61,10 @@ class Anonymized:
     failures: list[Failure] = field(default_factory=list)
     timings: dict[str, float] = field(default_factory=dict)
     pdf: bytes | None = field(default=None, repr=False)  # only when done
+    markdown: str | None = field(default=None, repr=False)  # only when done and enabled
+    encrypted_map: bytes | None = field(default=None, repr=False)  # pseudonym mode
+    mode: str | None = None  # of the Markdown
+    replacements: int = 0  # replacements in the Markdown
 
 
 @dataclass
@@ -133,12 +141,39 @@ def _page_count(data: bytes) -> int:
             pdf.close()
 
 
+def _markdown_texts(pages: list[_Page]) -> list[str]:
+    """Text of every page for the Markdown: OCR on scans, otherwise the native text layer."""
+    out = []
+    for page in pages:
+        by_source = {layer.source: layer for layer in page.layers}
+        layer = by_source.get("ocr") if page.scanned else None
+        out.append((layer or by_source["native"]).text)
+    return out
+
+
+def _map(source: bytes, rendered: Rendered, key: str) -> bytes:
+    """The encrypted map of the pseudonym mode (it holds the original values)."""
+    doc_sha = vault.sha256(source)
+    occurrences = [
+        {
+            "start": o.start,
+            "end": o.end,
+            "replacement": o.replacement,
+            "original": o.original,
+        }
+        for o in rendered.occurrences
+    ]
+    content = vault.map_content("documento", doc_sha, rendered.markdown, occurrences)
+    return vault.encrypt_map(content, key, doc_sha)
+
+
 def anonymize(
     data: bytes,
     cfg: PipelineConfig,
     progress: Progress = _no_progress,
     ner: Engine | None = None,
     ocr: ocr_module.Engine | None = None,
+    key: str | None = None,
 ) -> Anonymized:
     """Anonymize one uploaded document.
 
@@ -148,14 +183,18 @@ def anonymize(
         progress: Called at the start of every phase.
         ner: The NER model loaded at startup, required when NER is enabled.
         ocr: The OCR model loaded at startup, required when OCR is enabled.
+        key: Key of the pseudonym map (pseudonym mode).
 
     Raises:
         DocumentError: Empty, unsupported, unreadable, encrypted or too large file.
         DetectorUnavailable: NER or OCR is enabled and its model was not loaded (never a silent
             drop in protection).
+        VaultError: Pseudonym mode without a key.
     """
     if cfg.ocr.enabled and ocr is None:
         raise DetectorUnavailable("OCR enabled but no model loaded")
+    if cfg.markdown.enabled and cfg.redaction.mode == "pseudonym" and not key:
+        raise vault.VaultError("Modalità pseudonimo: serve una chiave per la mappa")
     timings: dict[str, float] = {}
     t0 = t = time.perf_counter()
 
@@ -197,15 +236,25 @@ def anonymize(
     boxes = from_outcome(layers, outcome) + regions
     redacted = redact(source.pdf, boxes, cfg.redaction, set(scanned))
     result.boxes, result.strategies = redacted.boxes, redacted.strategies
+    rendered, left = None, []
+    if cfg.markdown.enabled:
+        rendered, left = render(_markdown_texts(pages), values, cfg)
     mark("redaction")
 
     progress("verification")
     report = verify(source.pdf, redacted, values, cfg, ner)
+    for leftover in left:  # the Markdown: no replaced value left in clear text
+        report.fail("markdown_leftover", leftover.page - 1, leftover.category)
     mark("verification")
     timings["total"] = round(time.perf_counter() - t0, 3)
     result.failures = report.failures
-    if report.ok:
-        result.status, result.pdf = "done", redacted.pdf
-    else:
+    if not report.ok:
         result.reason = "verification_failed"
+        return result
+    result.status, result.pdf = "done", redacted.pdf
+    if rendered is not None:
+        result.markdown, result.mode = rendered.markdown, cfg.redaction.mode
+        result.replacements = len(rendered.occurrences)
+        if cfg.redaction.mode == "pseudonym" and key:
+            result.encrypted_map = _map(source.pdf, rendered, key)
     return result

@@ -17,9 +17,12 @@ from anonval.scoring import DocScore, ValueOutcome
 from anonval.settings import Config, Thresholds, load_config
 from anonymization_pipeline.config import Settings
 from anonymization_pipeline.main import create_app
-from tests.conftest import DEFAULTS_FILE
 
 DOCS = ["referto_laboratorio_facile_01", "nota_ambulatoriale_media_01"]
+# the packaged defaults without the models (tests/fixtures/defaults.yaml of the service tests)
+DEFAULTS_FILE = str(
+    Path(__file__).resolve().parents[2] / "tests" / "fixtures" / "defaults.yaml"
+)
 
 
 @pytest.fixture

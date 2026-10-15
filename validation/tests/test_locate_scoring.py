@@ -223,3 +223,25 @@ def test_a_perfect_service_scores_full_marks_and_an_idle_one_zero(doc_id: str) -
     assert best.false_positives == [] and best.correct_boxes == len(perfect)
     assert not any(v.detected for v in idle.values)
     assert sum(v.leaked for v in idle.values) == len(idle.values)
+
+
+def test_values_readable_in_the_markdown_are_leaks(pages: list[PageText]) -> None:
+    gold = _gold(
+        [
+            {"value": "Mario Rossi", "category": "PERSONA"},
+            {"value": "Rosa", "category": "NOME", "unmarked": 1},
+            {"value": "Ospedale Maggiore", "category": "STRUTTURA_SANITARIA"},
+        ]
+    )
+    markdown = "Paziente: [PERSONA_1]\nSindrome di Apgar, colorito rosa\n[NOME_1] Neri\nOspedale Maggiore"
+
+    score = score_document(
+        gold, pages, _status([]), {"PERSONA", "NOME"}, markdown=markdown
+    )
+
+    # the colour is an unmarked copy; the hospital is not expected (its category is off)
+    assert score.markdown and score.markdown_leaks == []
+    leaky = score_document(
+        gold, pages, _status([]), {"PERSONA"}, markdown="Mario Rossi"
+    )
+    assert leaky.markdown_leaks == ["Mario Rossi"]

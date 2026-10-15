@@ -16,10 +16,11 @@ class ApiError(RuntimeError):
 
 @dataclass
 class JobResult:
-    """Final status of a job, and the redacted PDF when it was released."""
+    """Final status of a job, and the redacted PDF and Markdown when they were released."""
 
     status: dict[str, Any]
     pdf: bytes | None
+    markdown: str | None = None
 
 
 class ServiceClient:
@@ -92,11 +93,15 @@ class ServiceClient:
         job_id = self.submit(name, pdf, form)
         try:
             status = self.wait(job_id)
-            data = None
+            data, markdown = None, None
             if status["status"] == "done":
                 data = self._check(
                     self.http.get(f"/anonymizations/{job_id}/download")
                 ).content
-            return JobResult(status, data)
+                if (status.get("result") or {}).get("markdown"):
+                    markdown = self._check(
+                        self.http.get(f"/anonymizations/{job_id}/markdown")
+                    ).text
+            return JobResult(status, data, markdown)
         finally:
             self.http.delete(f"/anonymizations/{job_id}")

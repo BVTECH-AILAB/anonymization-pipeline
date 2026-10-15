@@ -85,12 +85,17 @@ def _split(entries: Iterable[str]) -> list[str]:
     return [v.strip() for entry in entries for v in entry.split(",") if v.strip()]
 
 
+MODES = ("tag", "pseudonym", "redaction")
+
+
 def request_config(
     service: PipelineConfig,
     enable: Iterable[str] = (),
     disable: Iterable[str] = (),
+    mode: str | None = None,
 ) -> PipelineConfig:
-    """Configuration of a single request: the service one with categories switched on or off.
+    """Configuration of a single request: the service one with categories switched on or off and
+    the replacement mode of the Markdown.
 
     A request can switch on any category and switch off only those outside the protection floor;
     ``disable`` wins over ``enable`` for the same category.
@@ -99,11 +104,14 @@ def request_config(
         service: Service configuration (``load_pipeline_config``).
         enable: Groups or categories to switch on (comma separated values allowed).
         disable: Groups or categories to switch off.
+        mode: ``tag``, ``pseudonym`` or ``redaction``; None keeps the service one.
 
     Raises:
         ProtectedCategoryError: A protected category is in ``disable``.
-        ValueError: On an unknown group or category (the message reaches API users).
+        ValueError: On an unknown group, category or mode (the message reaches API users).
     """
+    if mode is not None and mode not in MODES:
+        raise ValueError(f"Modalità sconosciuta: {mode} (ammesse: {', '.join(MODES)})")
     reg = registry()
     on = reg.expand(_split(enable))
     off = reg.expand(_split(disable))
@@ -116,6 +124,7 @@ def request_config(
         **dict.fromkeys(on, True),
         **dict.fromkeys(off, False),
     }
-    return PipelineConfig.model_validate(
-        {**service.model_dump(), "categories": categories}
-    )
+    data = {**service.model_dump(), "categories": categories}
+    if mode is not None:
+        data["redaction"] = {**data["redaction"], "mode": mode}
+    return PipelineConfig.model_validate(data)

@@ -15,6 +15,7 @@ occurrence of every ground truth value in the original PDF (``locate``).
   forbidden family and is not part of a value of that family ("Neri" in the surname of a relative).
 """
 
+import re
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import Any
@@ -87,9 +88,12 @@ class DocScore:
     disabled_boxes: int = 0
     false_positives: list[Hit] = field(default_factory=list)
     negatives_violated: list[Hit] = field(default_factory=list)
-    text_leaks: list[str] = field(
+    # values in the text of the released PDF
+    text_leaks: list[str] = field(default_factory=list)
+    markdown: bool = False  # a Markdown was released and scored
+    markdown_leaks: list[str] = field(
         default_factory=list
-    )  # values in the text of the released PDF
+    )  # expected values readable in it
     pipeline_s: float | None = None
 
     @property
@@ -145,12 +149,30 @@ def _strong(value: str, family: str) -> bool:
     return alnum_count(value) >= STRONG_MIN
 
 
+# tags ([PERSONA_1]) and redaction blocks of an anonymized Markdown
+_REPLACEMENT = re.compile(r"\[[A-Z0-9_]+_\d+\]|█+")
+
+
+def markdown_leaks(values: list[ValueOutcome], markdown: str) -> list[str]:
+    """Expected values still readable in the Markdown, beyond their unmarked copies.
+
+    Replacements are blanked first: a value equal to a category name ("gravidanza") is not a leak.
+    """
+    text = _REPLACEMENT.sub(" ", markdown)
+    return [
+        v.value
+        for v in values
+        if v.expected and v.located and len(find(text, v.value)) > v.unmarked
+    ]
+
+
 def score_document(
     gold: dict[str, Any],
     pages: list[PageText],
     status: dict[str, Any],
     active: set[str],
     released: list[PageText] | None = None,
+    markdown: str | None = None,
 ) -> DocScore:
     """Score one document.
 
@@ -160,6 +182,7 @@ def score_document(
         status: Final status of the job (``GET /anonymizations/{id}``).
         active: Active categories of the profile.
         released: Text of the released PDF, when there is one.
+        markdown: The released Markdown, when there is one.
     """
     reg = registry()
     score = DocScore(
@@ -226,6 +249,9 @@ def score_document(
                 Hit(occurrence.page + 1, forbidden[0].category, negative["value"])
             )
 
+    if markdown is not None:
+        score.markdown = True
+        score.markdown_leaks = markdown_leaks(score.values, markdown)
     if released is not None:
         text = "\n".join(p.text for p in released)
         score.text_leaks = [

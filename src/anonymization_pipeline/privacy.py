@@ -37,6 +37,18 @@ CF_PATTERN = re.compile(
 )
 
 
+# The id of an anonymization job is the only key to its document: in a path (access logs, error
+# logs) only its first 8 characters are kept, the same short form the log events use.
+JOB_PATH_PATTERN = re.compile(
+    r"(/anonymizations/)([A-Za-z0-9_-]{8})[A-Za-z0-9_-]{14}(?![A-Za-z0-9_-])"
+)
+
+
+def redact_job_ids(text: str) -> str:
+    """Shorten every anonymization job id that appears in a path."""
+    return JOB_PATH_PATTERN.sub(r"\1\2***", text)
+
+
 def hash_identifier(value: str) -> str:
     """Pseudonymise an identifier with SHA256.
 
@@ -88,7 +100,7 @@ def redact_user_text(text: str, settings: Settings) -> str:
 
 
 class PiiRedactingFilter(logging.Filter):
-    """Mask codici fiscali in a log record, in place.
+    """Mask codici fiscali and job ids in a log record, in place.
 
     Installed on the root handler by ``setup_logging``. A filter on a
     *handler* sees every record that reaches it, including the ones
@@ -104,9 +116,9 @@ class PiiRedactingFilter(logging.Filter):
 
     def _redact(self, value: Any) -> Any:
         if isinstance(value, str):
-            return redact_cf(value, self._prefix, self._suffix)
+            return redact_job_ids(redact_cf(value, self._prefix, self._suffix))
         if isinstance(value, BaseException):
-            return redact_cf(str(value), self._prefix, self._suffix)
+            return redact_job_ids(redact_cf(str(value), self._prefix, self._suffix))
         if isinstance(value, tuple):
             return tuple(self._redact(item) for item in value)
         if isinstance(value, list):
@@ -116,9 +128,13 @@ class PiiRedactingFilter(logging.Filter):
         return value
 
     def filter(self, record: logging.LogRecord) -> bool:
-        record.msg = self._redact(record.msg)
-        if record.args:
-            record.args = self._redact(record.args)
+        # the formatted message: arguments of any type (URLs, exceptions, objects) are covered
+        try:
+            message = record.getMessage()
+        except (TypeError, ValueError):
+            message = str(record.msg)
+        record.msg = self._redact(message)
+        record.args = None
         if record.exc_info and not record.exc_text:
             record.exc_text = self._exc_formatter.formatException(record.exc_info)
         if record.exc_text:

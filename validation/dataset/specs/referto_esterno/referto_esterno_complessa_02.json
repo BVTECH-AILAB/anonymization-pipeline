@@ -1,0 +1,404 @@
+{
+  "id": "referto_esterno_complessa_02",
+  "type": "referto_esterno",
+  "difficulty": "complessa",
+  "style": {
+    "font": "times",
+    "color": "#22313F",
+    "font_size": 8.5,
+    "margins_mm": 15
+  },
+  "persons": {},
+  "letterhead": {
+    "logo": "ASLJ",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Sanitaria Locale Jonica Sud]]",
+      "[[STRUTTURA_SANITARIA:Ospedale Civile Madonna delle Gravine]]",
+      "[[REPARTO:U.O.C. Malattie Infettive e Tropicali]] - Day Hospital",
+      "Direttore: Dott.ssa [[MEDICO:Mariangela Lo Russo]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Mar Piccolo 140]]",
+      "[[CAP:74121]] [[LUOGO:Taranto]]",
+      "DH [[TELEFONO:099 4581722]]",
+      "Fax [[FAX:099 4581730]]",
+      "[[EMAIL:dh.infettivi@asljonicasud.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:OKAFOR C.]] - [[CODICE_STP_ENI:STP1601130004517]] - DH n. [[NUMERO_ACCETTAZIONE:DH-MI-2024-0911]] - Riservato: dati sanitari protetti",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASL Jonica Sud]] - Sede legale [[INDIRIZZO:Viale Virgilio 31]], [[LUOGO:Taranto]] - P.IVA [[PARTITA_IVA:@asl]]",
+    "Relazione redatta con l'ausilio della mediatrice linguistico-culturale [[OPERATORE_SANITARIO:N. Adeyemi]] e consegnata in copia all'interessato, sig. [[PERSONA:Okafor]].",
+    "Dati soggetti a particolari tutele (L. 135/1990 e Reg. UE 2016/679): la comunicazione a terzi richiede il consenso espresso dell'interessato."
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "lines": [
+        "Al Responsabile dell'[[REPARTO:Ambulatorio STP]]",
+        "[[STRUTTURA_SANITARIA:Centro Salute Globale Ghirlandina]]",
+        "[[INDIRIZZO:Via Emilia Est 455]], [[CAP:41122]] [[LUOGO:Modena]]",
+        "c.a. Dott. [[MEDICO:Stefano Guidetti Serra]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "RELAZIONE DI CONSULENZA INFETTIVOLOGICA",
+      "subtitle": "e lettera di trasferimento della presa in carico (paziente straniero temporaneamente presente)"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "columns": 1,
+          "title": "ASSISTITO",
+          "fields": [
+            [
+              "Cognome e nome",
+              "[[PERSONA:Okafor Chukwuemeka]] (detto [[PERSONA:Emeka]])"
+            ],
+            [
+              "Nato a",
+              "[[LUOGO_NASCITA:Enugu (Nigeria)]]"
+            ],
+            [
+              "Data di nascita",
+              "[[DATA_NASCITA:14/02/1994]] (dichiarata)"
+            ],
+            [
+              "Cittadinanza",
+              "[[CITTADINANZA:nigeriana]]"
+            ],
+            [
+              "Sesso",
+              "[[SESSO:M]]"
+            ],
+            [
+              "Domicilio",
+              "c/o [[ORGANIZZAZIONE:CAS Il Ponte]], [[INDIRIZZO:Via per Statte km 3]], [[LUOGO:Taranto]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Codice STP",
+              "[[CODICE_STP_ENI:STP1601130004517]]"
+            ],
+            [
+              "Rilasciato il",
+              "[[DATA_RILASCIO:02/05/2024]]"
+            ],
+            [
+              "Scadenza STP",
+              "[[DATA_SCADENZA:01/11/2024]]"
+            ],
+            [
+              "Passaporto",
+              "[[NUMERO_PASSAPORTO:A09817264]]"
+            ],
+            [
+              "Cartella DH",
+              "[[NUMERO_CARTELLA:MI/24/0911]]"
+            ],
+            [
+              "Recapito",
+              "[[TELEFONO:+39 351 708 2264]]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice STP",
+      "value": "[[CODICE_STP_ENI:STP1601130004517]]"
+    },
+    {
+      "type": "section",
+      "text": "Motivo della consulenza"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il sig. [[PERSONA:Chukwuemeka Okafor]], di [[ETA:30]] anni, giunto in Italia nel novembre 2023 e ospite di un centro di accoglienza straordinaria, è stato inviato dal medico del centro, Dott. [[MEDICO:Vito Semeraro]], per [[DIAGNOSI:calo ponderale di circa 7 kg]], [[DIAGNOSI:linfoadenopatia laterocervicale]] e [[DIAGNOSI:febbricola serotina]]. Lo screening proposto all'arrivo ha evidenziato positività del test HIV di IV generazione, confermata con Western Blot il [[DATA:21/05/2024]]. Il colloquio di comunicazione della diagnosi si è svolto in lingua igbo con la mediatrice [[OPERATORE_SANITARIO:Ngozi Adeyemi]] e alla presenza della psicologa Dott.ssa [[OPERATORE_SANITARIO:Rosaria Cassano]]. Il paziente riferisce rapporti [[ORIENTAMENTO_SESSUALE:eterosessuali]] non protetti; dichiara di non aver mai fatto uso di sostanze per via endovenosa."
+    },
+    {
+      "type": "section",
+      "text": "Accertamenti eseguiti"
+    },
+    {
+      "type": "table",
+      "font_size": 7.5,
+      "header": [
+        "Data",
+        "Esame",
+        "Risultato",
+        "Commento"
+      ],
+      "widths": [
+        1.4,
+        3,
+        2.6,
+        3.6
+      ],
+      "rows": [
+        [
+          "[[DATA:21/05/2024]]",
+          "HIV-1/2 Ag/Ab\nWestern Blot",
+          "[[ESAME_VALORE:reattivo]]\n[[ESAME_VALORE:positivo HIV-1]]",
+          "test di conferma eseguito presso il laboratorio di riferimento regionale"
+        ],
+        [
+          "[[DATA:28/05/2024]]",
+          "Linfociti T CD4+",
+          "[[ESAME_VALORE:212 cell/µL]] ([[ESAME_VALORE:14,8%]])",
+          "rapporto CD4/CD8 [[ESAME_VALORE:0,21]]"
+        ],
+        [
+          "[[DATA:28/05/2024]]",
+          "HIV-RNA plasmatico",
+          "[[ESAME_VALORE:184.000 copie/mL]]",
+          "test genotipico di resistenza: nessuna mutazione maggiore"
+        ],
+        [
+          "[[DATA:28/05/2024]]",
+          "HBsAg\nHBV-DNA",
+          "[[ESAME_VALORE:positivo]]\n[[ESAME_VALORE:3.400 UI/mL]]",
+          "HBeAg [[ESAME_VALORE:negativo]]; elastometria epatica [[ESAME_VALORE:6,1 kPa]]"
+        ],
+        [
+          "[[DATA:04/06/2024]]",
+          "QuantiFERON-TB Plus\nRX torace",
+          "[[ESAME_VALORE:positivo]]\n[[ESAME_VALORE:negativo per lesioni attive]]",
+          "espettorato indotto x3: ricerca BAAR (Ziehl-Neelsen) e PCR negative"
+        ],
+        [
+          "[[DATA:04/06/2024]]",
+          "TPHA / VDRL",
+          "[[ESAME_VALORE:positivo / 1:16]]",
+          "sifilide latente di durata indeterminata"
+        ],
+        [
+          "[[DATA:04/06/2024]]",
+          "HLA-B*57:01",
+          "[[ESAME_VALORE:negativo]]",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Esame obiettivo: peso [[MISURE_ANTROPOMETRICHE:61 kg]], altezza [[MISURE_ANTROPOMETRICHE:178 cm]]. Linfonodi laterocervicali bilaterali di circa 1,5 cm, mobili, non dolenti. Mughetto orale. Non lesioni cutanee riferibili a sarcoma di Kaposi. Obiettività toracica e addominale negativa. Pregressa vaccinazione con BCG (cicatrice al deltoide sinistro); intradermoreazione di Mantoux non eseguita."
+    },
+    {
+      "type": "section",
+      "text": "Conclusioni diagnostiche"
+    },
+    {
+      "type": "paragraph",
+      "text": "1. **[[MALATTIE_INFETTIVE:Infezione da HIV-1, stadio CDC B2]]**, di recente diagnosi, con [[DIAGNOSI:candidosi orofaringea]].\n2. **[[MALATTIE_INFETTIVE:Epatite cronica B HBeAg-negativa]]**, coinfezione HIV/HBV.\n3. **[[MALATTIE_INFETTIVE:Infezione tubercolare latente]]** (QuantiFERON [[ESAME_VALORE:positivo]], esclusa tubercolosi attiva).\n4. **[[MALATTIE_INFETTIVE:Sifilide latente di durata indeterminata]]**, trattata."
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "Terapia impostata"
+    },
+    {
+      "type": "table",
+      "font_size": 7.5,
+      "header": [
+        "Farmaco",
+        "Posologia",
+        "Inizio",
+        "Note"
+      ],
+      "widths": [
+        3.6,
+        2,
+        1.4,
+        3.6
+      ],
+      "rows": [
+        [
+          "[[FARMACO:Bictegravir/emtricitabina/tenofovir alafenamide 50/200/25 mg]]",
+          "1 cp/die a stomaco pieno",
+          "[[DATA:11/06/2024]]",
+          "regime attivo anche su HBV; non sospendere senza parere specialistico"
+        ],
+        [
+          "[[FARMACO:Isoniazide 300 mg]] +\n[[FARMACO:piridossina 25 mg]]",
+          "1 cp/die al mattino",
+          "[[DATA:25/06/2024]]",
+          "per 9 mesi; transaminasi mensili"
+        ],
+        [
+          "[[FARMACO:Fluconazolo 150 mg]]",
+          "1 cp/die",
+          "[[DATA:11/06/2024]]",
+          "per 14 giorni (completato)"
+        ],
+        [
+          "[[FARMACO:Benzatina benzilpenicillina 2,4 MUI i.m.]]",
+          "settimanale x 3",
+          "[[DATA:12/06/2024]]",
+          "somministrazioni eseguite in DH dall'inf. [[OPERATORE_SANITARIO:Cosimo Petraroli]]"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Decorso e aspetti sociali"
+    },
+    {
+      "type": "paragraph",
+      "text": "La terapia antiretrovirale è stata ben tollerata. Al controllo del [[DATA_VISITA:10 settembre 2024]] HIV-RNA [[ESAME_VALORE:62 copie/mL]] e CD4 [[ESAME_VALORE:318 cell/µL]]; transaminasi nella norma. Il sig. [[PERSONA:Okafor]] ha espresso la volontà di trasferirsi a [[LUOGO:Modena]], presso il cugino [[CONTATTO_EMERGENZA:Ikenna Okafor]] ([[INDIRIZZO:Via Canaletto Sud 71]], tel. [[TELEFONO:+39 329 551 0846]]), che ha dato disponibilità all'ospitalità ed è indicato dal paziente quale persona da contattare in caso di necessità. Con il supporto dell'assistente sociale [[OPERATORE_SANITARIO:Anna Maria Leone]] è stata avviata la richiesta di protezione internazionale presso la Questura (ricevuta n. [[NUMERO_PERMESSO_SOGGIORNO:TA-2024-PI-00871]])."
+    },
+    {
+      "type": "paragraph",
+      "text": "In accordo con il paziente è stata proposta la notifica al partner: la compagna, sig.ra [[FAMILIARE:Blessing Eze]], attualmente domiciliata a [[LUOGO:Castel Volturno]], è stata invitata con il suo consenso all'esecuzione del test presso il centro di riferimento della propria zona; il paziente ha chiesto che nessun altro familiare sia informato della diagnosi."
+    },
+    {
+      "type": "section",
+      "text": "Calendario dei controlli già prenotati o da prenotare"
+    },
+    {
+      "type": "table",
+      "font_size": 7.5,
+      "header": [
+        "Data",
+        "Prestazione",
+        "Sede",
+        "Stato"
+      ],
+      "widths": [
+        1.5,
+        3.4,
+        3.4,
+        2.2
+      ],
+      "rows": [
+        [
+          "[[DATA_VISITA:08/10/2024]]",
+          "Visita infettivologica di passaggio in cura\nprelievo HIV-RNA, CD4, HBV-DNA",
+          "[[REPARTO:Ambulatorio STP]] - [[STRUTTURA_SANITARIA:Centro Salute Globale Ghirlandina]]",
+          "prenotato\n(n. [[NUMERO_PRENOTAZIONE:MO-STP-24-3317]])"
+        ],
+        [
+          "[[DATA:ottobre 2024]]",
+          "Transaminasi di controllo in corso di isoniazide",
+          "presso la nuova sede di presa in carico",
+          "da prenotare"
+        ],
+        [
+          "[[DATA:dicembre 2024]]",
+          "VDRL quantitativa a 6 mesi\nvaccinazione anti-pneumococcica",
+          "servizio vaccinale dell'area di residenza",
+          "da prenotare"
+        ],
+        [
+          "[[DATA:marzo 2025]]",
+          "Elastometria epatica e ecografia addome\n(sorveglianza HBV)",
+          "centro epatologico di riferimento",
+          "da prenotare"
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Indicazioni per la presa in carico"
+        },
+        {
+          "type": "paragraph",
+          "text": "- Proseguire la terapia antiretrovirale senza interruzioni (fornitura consegnata fino al [[DATA:15/11/2024]]).\n- Controllo HIV-RNA, CD4, funzionalità renale ed epatica a 3 mesi.\n- VDRL di controllo a 6 e 12 mesi.\n- Vaccinazioni: anti-pneumococcica, anti-HPV, anti-meningococcica.\n- Rinnovo del codice STP alla scadenza o iscrizione al SSR."
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Contatti"
+        },
+        {
+          "type": "paragraph",
+          "text": "Per il passaggio di consegne è disponibile la Dott.ssa [[MEDICO:Federica Nardelli]], tel. [[TELEFONO:099 4581745]], [[EMAIL:f.nardelli@asljonicasud.example.it]].\nMediazione culturale a [[LUOGO:Modena]]: si consiglia interprete di lingua igbo o inglese."
+        },
+        {
+          "type": "barcode",
+          "kind": "qr",
+          "label": "Fascicolo DH, utente",
+          "value": "[[ID_PAZIENTE:MI-24-0911-OK]]"
+        }
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Taranto]], [[DATA_REFERTO:12.09.2024]]",
+      "role": "Il Dirigente Medico",
+      "name": "Dott.ssa [[MEDICO:Federica Nardelli]]",
+      "digital": false,
+      "stamp": [
+        "[[REPARTO:U.O.C. MALATTIE INFETTIVE]]",
+        "Dott.ssa [[MEDICO:F. NARDELLI]]",
+        "Ord. Medici TA n. [[NUMERO_ALBO:3318]]"
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "Visto",
+      "role": "Il Direttore della U.O.C.",
+      "name": "Dott.ssa [[MEDICO:Mariangela Lo Russo]]",
+      "digital": false,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:OSPEDALE CIVILE MADONNA DELLE GRAVINE]]",
+        "Il Direttore - Dott.ssa [[MEDICO:M. LO RUSSO]]",
+        "matr. [[NUMERO_ALBO:TA-002147]]"
+      ]
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Stadiazione secondo la classificazione CDC 1993; la conta dei CD4 inferiore a 350 cell/µL al nadir rende consigliabile la profilassi vaccinale prioritaria.",
+        "Il consenso informato alla trasmissione della presente relazione all'[[REPARTO:Ambulatorio STP]] di [[LUOGO:Modena]] è stato firmato dal sig. [[PERSONA:C. Okafor]] il [[DATA:12/09/2024]] alla presenza della mediatrice [[OPERATORE_SANITARIO:Ngozi Adeyemi]].",
+        "Per l'invio dei campioni di controllo citare il codice laboratorio [[CODICE_CAMPIONE:VIR-24-118802]]."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Kaposi",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Mantoux",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Ziehl-Neelsen",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Western Blot",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    }
+  ]
+}

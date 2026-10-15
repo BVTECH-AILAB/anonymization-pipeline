@@ -1,0 +1,54 @@
+{
+  "id": "referto_radiologico_facile_04",
+  "type": "referto_radiologico",
+  "difficulty": "facile",
+  "style": {"font": "helvetica", "color": "#8E3B76", "font_size": 9, "margins_mm": 15},
+  "persons": {
+    "paz": {"first_name": "Elona", "last_name": "Hoxha", "sex": "F", "birth_date": "1973-11-02", "birth_place": "Albania"}
+  },
+  "letterhead": {
+    "logo": "UP",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda ULSS Pianalto]]",
+      "[[STRUTTURA_SANITARIA:Ospedale Sant'Anselmo]]",
+      "[[REPARTO:UOS Senologia Diagnostica]]",
+      "Responsabile: Dott.ssa [[MEDICO:Michela Zanin]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via dei Colli Bassi 9]]",
+      "[[CAP:35132]] [[LUOGO:Padova]]",
+      "Tel. [[TELEFONO:049 8217604]]"
+    ]
+  },
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda ULSS Pianalto]] - P.IVA [[PARTITA_IVA:@ulss]] - Referto redatto secondo le raccomandazioni nazionali di senologia diagnostica"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO SENOLOGICO", "subtitle": "Mammografia bilaterale ed ecografia mammaria"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Elona Hoxha]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Data di nascita", "[[DATA_NASCITA:02/11/1973]]"],
+      ["Luogo di nascita", "[[LUOGO_NASCITA:Albania]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Accession", "[[ACCESSION_NUMBER:SEN2500418]]"],
+      ["Data esame", "[[DATA_VISITA:18/11/2025]]"],
+      ["Tipo accesso", "Clinico, non screening"]
+    ]},
+    {"type": "paragraph", "text": "**Motivo dell'esame:** [[DIAGNOSI:nodulo palpabile al quadrante supero-esterno della mammella sinistra]], riferito dalla paziente da circa un mese. Anamnesi: [[PATOLOGIA:ipotiroidismo]] in terapia con [[FARMACO:levotiroxina 75 mcg]]. Ultima mammografia eseguita quattro anni fa, negativa."},
+    {"type": "section", "text": "Mammografia"},
+    {"type": "paragraph", "text": "Proiezioni cranio-caudali e medio-laterali oblique bilaterali, in tecnica digitale con tomosintesi. Mammelle a composizione fibroghiandolare eterogenea (densità ACR C). A sinistra, al quadrante supero-esterno, in corrispondenza del reperto palpabile, opacità ovalare a margini circoscritti con grossolana calcificazione a popcorn, compatibile con [[DIAGNOSI:fibroadenoma calcifico]]. Non distorsioni architetturali né microcalcificazioni sospette bilateralmente. Cavi ascellari liberi."},
+    {"type": "section", "text": "Ecografia mammaria"},
+    {"type": "paragraph", "text": "Al QSE sinistro conferma di formazione solida ipoecogena ovalare, parallela alla cute, a margini netti, di [[ESAME_VALORE:14 x 9]] mm, con spot iperecogeno posteriore. In mammella destra, ore 10, [[DIAGNOSI:cisti semplice]] di [[ESAME_VALORE:6,5]] mm. Linfonodi ascellari di aspetto reattivo."},
+    {"type": "table", "header": ["Lato", "Densità", "Reperto principale", "BI-RADS"], "widths": [1.4, 1.4, 5, 1.6], "rows": [
+      ["Destro", "C", "[[DIAGNOSI:Cisti semplice]], ore 10", "[[ESAME_VALORE:2 - benigno]]"],
+      ["Sinistro", "C", "[[DIAGNOSI:Fibroadenoma calcifico]] al QSE", "[[ESAME_VALORE:2 - benigno]]"]
+    ]},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "**Reperti benigni bilaterali (BI-RADS complessivo 2).** Il nodulo palpabile corrisponde a un [[DIAGNOSI:fibroadenoma calcifico]]. Si consiglia di proseguire i controlli secondo il programma di screening regionale per fascia di età."},
+    {"type": "signature", "place_date": "[[LUOGO:Padova]], [[DATA_REFERTO:19/11/2025]]", "role": "Il Medico Radiologo", "name": "Dott. [[MEDICO:Alvise Fontanive]]", "digital": true}
+  ],
+  "negatives": []
+}

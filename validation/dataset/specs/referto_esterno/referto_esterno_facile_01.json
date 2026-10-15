@@ -1,0 +1,60 @@
+{
+  "id": "referto_esterno_facile_01",
+  "type": "referto_esterno",
+  "difficulty": "facile",
+  "style": {"font": "helvetica", "color": "#00707A", "font_size": 9.5, "margins_mm": 18},
+  "persons": {
+    "paz": {"first_name": "Renato", "last_name": "Castellani", "sex": "M", "birth_date": "1966-09-14", "birth_place": "Verona"}
+  },
+  "letterhead": {
+    "logo": "PBN",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Poliambulatorio Medico Borgo Nuovo]]",
+      "Struttura sanitaria privata autorizzata",
+      "[[REPARTO:Ambulatorio di Cardiologia]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via dei Mughetti 22]]",
+      "[[CAP:37138]] [[LUOGO:Verona]]",
+      "Tel. [[TELEFONO:045 8123407]]",
+      "[[EMAIL:segreteria@borgonuovo-medica.example.it]]"
+    ]
+  },
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Poliambulatorio Medico Borgo Nuovo]] S.r.l. - P.IVA [[PARTITA_IVA:@pol]] - Autorizzazione sanitaria regionale n. 118/2019",
+    "Documento rilasciato in regime privato. I dati sono trattati ai sensi del Regolamento UE 2016/679."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI VISITA CARDIOLOGICA", "subtitle": "con elettrocardiogramma a riposo"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Renato Castellani]]"],
+      ["Nato il", "[[DATA_NASCITA:14/09/1966]]"],
+      ["C.F.", "[[CODICE_FISCALE:@paz]]"],
+      ["Residenza", "[[LUOGO:San Giovanni Lupatoto]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Data visita", "[[DATA_VISITA:18/03/2024]]"],
+      ["N. referto", "[[NUMERO_REFERTO:CAR-2024-00871]]"]
+    ]},
+    {"type": "heading", "text": "Motivo della visita"},
+    {"type": "paragraph", "text": "Controllo cardiologico richiesto dal paziente per [[DIAGNOSI:cardiopalmo occasionale]] da circa due mesi, prevalentemente serale. Nega dolore toracico e dispnea da sforzo."},
+    {"type": "heading", "text": "Anamnesi"},
+    {"type": "paragraph", "text": "Familiarità per cardiopatia ischemica. [[PATOLOGIA:Ipertensione arteriosa]] nota da circa 6 anni, in terapia con [[FARMACO:ramipril 5 mg]] una compressa al mattino. [[PATOLOGIA:Dislipidemia]] in trattamento dietetico. Ex fumatore."},
+    {"type": "heading", "text": "Esame obiettivo"},
+    {"type": "paragraph", "text": "Toni cardiaci validi, ritmici, pause libere. Non soffi. Murmure vescicolare normotrasmesso. Polsi periferici presenti e simmetrici. PA [[MISURE_ANTROPOMETRICHE:142/88 mmHg]], peso [[MISURE_ANTROPOMETRICHE:84 kg]], altezza [[MISURE_ANTROPOMETRICHE:176 cm]]."},
+    {"type": "heading", "text": "Elettrocardiogramma"},
+    {"type": "table", "header": ["Parametro", "Valore rilevato", "Riferimento"], "widths": [3, 2, 2], "rows": [
+      ["Ritmo", "[[ESAME_VALORE:sinusale]]", "-"],
+      ["Frequenza cardiaca", "[[ESAME_VALORE:72]] bpm", "60 - 100 bpm"],
+      ["Intervallo PR", "[[ESAME_VALORE:168]] ms", "120 - 200 ms"],
+      ["Durata QRS", "[[ESAME_VALORE:94]] ms", "< 120 ms"],
+      ["QTc (Bazett)", "[[ESAME_VALORE:418]] ms", "< 450 ms"]
+    ]},
+    {"type": "paragraph", "text": "Non alterazioni della ripolarizzazione. Rare [[DIAGNOSI:extrasistoli sopraventricolari isolate]]."},
+    {"type": "heading", "text": "Conclusioni e indicazioni"},
+    {"type": "paragraph", "text": "Quadro compatibile con [[DIAGNOSI:extrasistolia sopraventricolare benigna]] in paziente iperteso non a target. Si consiglia di aumentare [[FARMACO:ramipril a 10 mg/die]], ridurre caffè e alcolici e eseguire [[TERAPIA:ECG Holter delle 24 ore]] ed ecocardiogramma. Controllo cardiologico tra 3 mesi con i referti."},
+    {"type": "signature", "place_date": "[[LUOGO:Verona]], [[DATA_REFERTO:18/03/2024]]", "role": "Il Medico Cardiologo", "name": "Dott. [[MEDICO:Paolo Venturini]]", "extra": ["Ordine dei Medici di [[LUOGO:Verona]] n. [[NUMERO_ALBO:5172]]"], "digital": false}
+  ],
+  "negatives": [{"value": "Bazett", "forbidden_categories": ["PERSONA", "MEDICO"]}]
+}

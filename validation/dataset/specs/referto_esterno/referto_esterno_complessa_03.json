@@ -1,0 +1,483 @@
+{
+  "id": "referto_esterno_complessa_03",
+  "type": "referto_esterno",
+  "difficulty": "complessa",
+  "style": {
+    "font": "courier",
+    "color": "#8E1B1B",
+    "font_size": 7.8,
+    "margins_mm": 12,
+    "fax_line": "[[DATA:07/03/2025]] 15:18  DA: [[FAX:0445 389120]]  [[STRUTTURA_SANITARIA:CDC S.GERMANO AL COLLE]] ORTOPEDIA  A: [[FAX:0444 712093]]"
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Gemma",
+      "last_name": "Dal Bosco",
+      "sex": "F",
+      "birth_date": "1944-01-19",
+      "birth_place": "Vicenza"
+    }
+  },
+  "letterhead": {
+    "logo": "SGC",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Casa di Cura San Germano al Colle]]",
+      "Ospedale privato accreditato - polispecialistico",
+      "[[REPARTO:U.O. Ortopedia e Traumatologia]]",
+      "Responsabile: Dott. [[MEDICO:Matteo Zordan]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Pasubio 212]]",
+      "[[CAP:36015]] [[LUOGO:Schio]] (VI)",
+      "Tel. [[TELEFONO:0445 389100]]",
+      "Fax [[FAX:0445 389120]]",
+      "[[EMAIL:ortopedia@sangermano.example.it]]"
+    ]
+  },
+  "running_header": "Sig.ra [[PERSONA:DAL BOSCO GEMMA]] - n. [[DATA_NASCITA:19/01/1944]] - Nosologico [[NUMERO_CARTELLA:2025/001874]] - [[RELIGIONE:Testimone di Geova]]: NO EMOTRASFUSIONI",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:San Germano al Colle]] S.p.A. - P.IVA [[PARTITA_IVA:@cdc]] - [[INDIRIZZO:Via Pasubio 212]], [[LUOGO:Schio]]",
+    "Referente per la famiglia: sig. [[TUTORE_DELEGATO:Alberto Dal Bosco]] (figlio, fiduciario DAT) - tel. [[TELEFONO:+39 335 610 4482]]",
+    "Il presente documento contiene dati sanitari e dati sulle convinzioni religiose dell'interessata (art. 9 Reg. UE 2016/679)."
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "lines": [
+        "Egr. Dott. [[MEDICO:Lorenzo Cazzola]], MMG - [[LUOGO:Malo]]",
+        "Spett. [[STRUTTURA_SANITARIA:Centro di Riabilitazione Monte Summano]]",
+        "Alla c.a. Dott.ssa [[MEDICO:Chiara Busato]] - fax [[FAX:0444 712093]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "RELAZIONE CLINICA DI DIMISSIONE E TRASFERIMENTO",
+      "subtitle": "Chirurgia ortopedica senza trasfusione di sangue (percorso bloodless)"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "columns": 1,
+          "fields": [
+            [
+              "Paziente",
+              "[[PERSONA:Gemma Dal Bosco]]"
+            ],
+            [
+              "Nata a / il",
+              "[[LUOGO_NASCITA:Vicenza]], [[DATA_NASCITA:19/01/1944]]"
+            ],
+            [
+              "Residenza",
+              "[[INDIRIZZO:Contrà San Bernardino 6]], [[CAP:36034]] [[LUOGO:Malo]]"
+            ],
+            [
+              "Stato civile",
+              "[[STATO_CIVILE:vedova]]"
+            ],
+            [
+              "Assicurazione",
+              "[[ORGANIZZAZIONE:Previdenza Veneta Assicurazioni]], polizza n. [[NUMERO_POLIZZA:PVA-77-3381042]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Ricovero",
+              "[[DATA_RICOVERO:24/02/2025]] (da PS)"
+            ],
+            [
+              "Dimissione",
+              "[[DATA_RICOVERO:07/03/2025]]"
+            ],
+            [
+              "Nosologico",
+              "[[NUMERO_CARTELLA:2025/001874]]"
+            ],
+            [
+              "Esenzione",
+              "[[CODICE_ESENZIONE:C03]]"
+            ],
+            [
+              "Assistente familiare",
+              "[[CONTATTO_EMERGENZA:Oksana Kovalenko]], tel. [[TELEFONO:+39 380 225 9714]]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "C.F.",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "char_boxes",
+      "label": "Tessera sanitaria",
+      "value": "[[TESSERA_SANITARIA:@ts]]"
+    },
+    {
+      "type": "section",
+      "text": "Volontà della paziente in materia di trattamenti con sangue"
+    },
+    {
+      "type": "note",
+      "text": "La paziente, [[RELIGIONE:Testimone di Geova]], capace di intendere e di volere all'ingresso, ha confermato per iscritto il rifiuto di trasfusioni di sangue intero, emazie, plasma e piastrine, anche in pericolo di vita, come già espresso nelle Disposizioni Anticipate di Trattamento depositate il [[DATA:12/05/2021]] presso il Comune di [[LUOGO:Malo]]. Fiduciario nominato nelle DAT: il figlio, sig. [[TUTORE_DELEGATO:Alberto Dal Bosco]]. Dichiarazione raccolta dal Dott. [[MEDICO:Matteo Zordan]] alla presenza dell'inf. [[OPERATORE_SANITARIO:Sole Marchetto]] il [[DATA:24.02.25]]."
+    },
+    {
+      "type": "checkboxes",
+      "label": "Trattamenti accettati dalla paziente",
+      "columns": 3,
+      "items": [
+        [
+          "Emazie / sangue intero",
+          false
+        ],
+        [
+          "Plasma / piastrine",
+          false
+        ],
+        [
+          "Albumina e frazioni",
+          true
+        ],
+        [
+          "Recupero intraoperatorio",
+          true
+        ],
+        [
+          "Eritropoietina",
+          true
+        ],
+        [
+          "Acido tranexamico",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Anamnesi e motivo del ricovero"
+    },
+    {
+      "type": "paragraph",
+      "text": "Paziente di [[ETA:81]] anni, vive a domicilio con l'assistente familiare sig.ra [[CONTATTO_EMERGENZA:Kovalenko]], autonoma nella deambulazione con bastone. Comorbilità: [[PATOLOGIA:fibrillazione atriale permanente]] in terapia con [[FARMACO:edoxaban 30 mg]], [[PATOLOGIA:malattia renale cronica stadio 3b]], [[PATOLOGIA:diabete mellito tipo 2]], [[PATOLOGIA:decadimento cognitivo lieve]] (MMSE di Folstein [[ESAME_VALORE:23/30]] nel 2024). Il [[DATA:23 febbraio 2025]], in serata, caduta accidentale in cucina con impossibilità alla stazione eretta; soccorsa dalla sig.ra [[CONTATTO_EMERGENZA:Oksana]] e condotta in PS, dove è stata posta diagnosi di **[[DIAGNOSI:frattura sottocapitata del collo femorale sinistro, tipo Garden III]]**."
+    },
+    {
+      "type": "section",
+      "text": "Intervento chirurgico"
+    },
+    {
+      "type": "table",
+      "font_size": 7.2,
+      "header": [
+        "Data / tipo",
+        "Équipe",
+        "Note intraoperatorie"
+      ],
+      "widths": [
+        2.6,
+        3.4,
+        4.6
+      ],
+      "rows": [
+        [
+          "[[DATA:26/02/2025]]\n[[INTERVENTO:endoprotesi biarticolare cementata d'anca sinistra]]",
+          "1° op. Dott. [[MEDICO:Matteo Zordan]]\n2° op. Dott.ssa [[MEDICO:Ilaria Sartori De Marchi]]\nAnest. Dott. [[MEDICO:Pierluigi D'Ambrosio]]\nStrum. [[OPERATORE_SANITARIO:Davide Peruzzo]]",
+          "anestesia spinale; acido tranexamico 1 g e.v. pre-incisione e a fine intervento; recupero intraoperatorio in circuito chiuso continuo, reinfusi [[ESAME_VALORE:210 mL]]; perdite stimate [[ESAME_VALORE:450 mL]]"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "La strategia di risparmio ematico era stata impostata con l'ematologo consulente, Dott. [[MEDICO:Thomas Oberhofer]]: sospensione di edoxaban all'ingresso, [[FARMACO:ferro carbossimaltosio 1000 mg e.v.]] il [[DATA:24/02/2025]], [[FARMACO:epoetina alfa 40.000 UI s.c.]] in prima e in quarta giornata, riduzione al minimo dei prelievi (provette pediatriche)."
+    },
+    {
+      "type": "section",
+      "text": "Andamento dell'emoglobina"
+    },
+    {
+      "type": "table",
+      "font_size": 7.2,
+      "header": [
+        "Data",
+        "Hb (g/dL)",
+        "Ht (%)",
+        "Commento"
+      ],
+      "widths": [
+        1.6,
+        1.4,
+        1.4,
+        6.2
+      ],
+      "rows": [
+        [
+          "[[DATA:24/02/2025]]",
+          "[[ESAME_VALORE:11,2]]",
+          "[[ESAME_VALORE:34,1]]",
+          "ingresso"
+        ],
+        [
+          "[[DATA:27/02/2025]]",
+          "[[ESAME_VALORE:8,3]]",
+          "[[ESAME_VALORE:25,6]]",
+          "nadir in I giornata post-operatoria; paziente asintomatica, emodinamicamente stabile;\nrinnovato colloquio con la paziente e con il figlio: confermato il rifiuto trasfusionale"
+        ],
+        [
+          "[[DATA:03/03/2025]]",
+          "[[ESAME_VALORE:9,1]]",
+          "[[ESAME_VALORE:28,2]]",
+          "reticolociti in aumento"
+        ],
+        [
+          "[[DATA:06/03/2025]]",
+          "[[ESAME_VALORE:9,8]]",
+          "[[ESAME_VALORE:30,0]]",
+          "alla dimissione"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Decorso post-operatorio"
+    },
+    {
+      "type": "paragraph",
+      "text": "In seconda giornata comparsa di [[DIAGNOSI:delirium ipoattivo]], valutato dalla geriatra Dott.ssa [[MEDICO:Nadia Bortoli]] e trattato con misure non farmacologiche (riorientamento, presenza della sig.ra [[CONTATTO_EMERGENZA:O. Kovalenko]] e del figlio durante il giorno) e [[FARMACO:quetiapina 25 mg]] la sera per 4 giorni, con risoluzione. Ripresa di [[FARMACO:edoxaban 30 mg]] dal [[DATA:01/03/2025]] dopo valutazione del rischio emorragico. Mobilizzazione con deambulatore dalla terza giornata con la fisioterapista [[OPERATORE_SANITARIO:Viola Tessari]]; carico completo concesso. Ferita chirurgica in ordine; Harris Hip Score alla dimissione [[ESAME_VALORE:52]]. La sig.ra [[PERSONA:Dal Bosco]] ha ricevuto in reparto la visita di un ministro di culto della propria congregazione, su sua richiesta."
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi di dimissione"
+    },
+    {
+      "type": "paragraph",
+      "text": "**[[DIAGNOSI:Frattura sottocapitata del collo del femore sinistro (Garden III)]] trattata con [[INTERVENTO:endoprotesi biarticolare cementata]]** in regime bloodless. [[DIAGNOSI:Anemia post-operatoria]] gestita senza emotrasfusione. [[DIAGNOSI:Delirium post-operatorio]] risolto."
+    },
+    {
+      "type": "section",
+      "text": "Terapia alla dimissione"
+    },
+    {
+      "type": "table",
+      "font_size": 7.2,
+      "header": [
+        "Farmaco",
+        "Schema",
+        "Note"
+      ],
+      "widths": [
+        3.6,
+        2.8,
+        4.2
+      ],
+      "rows": [
+        [
+          "[[FARMACO:Edoxaban 30 mg]]",
+          "1 cp ore 18",
+          "funzione renale da ricontrollare a 2 settimane"
+        ],
+        [
+          "[[FARMACO:Metformina 500 mg]]",
+          "1 cp a pranzo e a cena",
+          "invariata"
+        ],
+        [
+          "[[FARMACO:Paracetamolo 1 g]]",
+          "1 cp fino a 3 volte/die",
+          "al bisogno per dolore"
+        ],
+        [
+          "[[FARMACO:Colecalciferolo 25.000 UI]]",
+          "1 flacone ogni 15 giorni",
+          "prevenzione secondaria fratture;\nvalutare terapia anti-osteoporotica"
+        ],
+        [
+          "[[FARMACO:Ferro solfato 80 mg]]",
+          "1 cp/die",
+          "per 2 mesi;\ncontrollo emocromo e ferritina a 30 giorni"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Informazioni amministrative"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "paragraph",
+          "text": "Prestazione erogata in convenzione SSN con integrazione alberghiera (camera singola) a carico della polizza [[NUMERO_POLIZZA:PVA-77-3381042]]; pratica di rimborso n. [[NUMERO_POLIZZA:SX-25-004417]] aperta con [[ORGANIZZAZIONE:Previdenza Veneta Assicurazioni]]."
+        }
+      ],
+      "right": [
+        {
+          "type": "paragraph",
+          "text": "Il deposito cauzionale versato all'ingresso verrà restituito con bonifico sul conto intestato al figlio [[TUTORE_DELEGATO:Alberto Dal Bosco]], IBAN [[IBAN:@figlio]], come da modulo firmato il [[DATA:07/03/2025]]."
+        }
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Schio]], [[DATA_REFERTO:07/03/2025]]",
+      "role": "Il Medico Responsabile dell'U.O.",
+      "name": "Dott. [[MEDICO:Matteo Zordan]]",
+      "digital": false,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:CASA DI CURA SAN GERMANO]]",
+        "Ortopedia - Dott. [[MEDICO:M. ZORDAN]]",
+        "OMCeO VI n. [[NUMERO_ALBO:4418]]"
+      ]
+    },
+    {
+      "type": "stamp",
+      "angle": -12,
+      "align": "left",
+      "lines": [
+        "RICEVUTO",
+        "[[STRUTTURA_SANITARIA:CENTRO RIAB. MONTE SUMMANO]]",
+        "il [[DATA:07/03/2025]] ore 16:05",
+        "firma [[OPERATORE_SANITARIO:R. Pellizzari]]"
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "Allegato - Scheda infermieristica di trasferimento"
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "Indice di Braden",
+          "[[ESAME_VALORE:14]] (rischio moderato)"
+        ],
+        [
+          "Scala di Conley",
+          "[[ESAME_VALORE:6]] (rischio cadute)"
+        ],
+        [
+          "Barthel alla dimissione",
+          "[[ESAME_VALORE:45/100]]"
+        ],
+        [
+          "Catetere vescicale",
+          "rimosso il [[DATA:01/03/2025]]"
+        ],
+        [
+          "Ultima evacuazione",
+          "[[DATA:06/03/2025]]"
+        ],
+        [
+          "Allergie",
+          "[[ALLERGIA:cerotti in tessuto acrilico]]"
+        ]
+      ]
+    },
+    {
+      "type": "table",
+      "font_size": 7.2,
+      "header": [
+        "Ambito",
+        "Situazione alla dimissione",
+        "Indicazioni per il centro ricevente"
+      ],
+      "widths": [
+        2,
+        4.2,
+        4.4
+      ],
+      "rows": [
+        [
+          "Ferita chirurgica",
+          "medicazione in ordine, agrafes in sede",
+          "rimozione agrafes in [[DATA:12/03/2025]] (XIV giornata)"
+        ],
+        [
+          "Mobilità",
+          "deambulatore, carico completo, trasferimenti con assistenza minima",
+          "evitare adduzione e rotazione interna dell'arto operato;\ncuscino abduttore a letto"
+        ],
+        [
+          "Alimentazione",
+          "dieta per diabetici, disfagia assente",
+          "glicemia capillare prima dei pasti principali"
+        ],
+        [
+          "Aspetti relazionali",
+          "paziente orientata; preferisce la presenza dell'assistente familiare [[CONTATTO_EMERGENZA:Oksana Kovalenko]] nelle ore serali",
+          "orari di visita concordati con il figlio [[TUTORE_DELEGATO:Alberto Dal Bosco]]"
+        ],
+        [
+          "Volontà espresse",
+          "rifiuto di emotrasfusione (vedi pag. 1)",
+          "conservare la tessera DAT della paziente insieme alla documentazione clinica"
+        ]
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "Compilata il [[DATA:07.03.25]]",
+      "role": "La Coordinatrice infermieristica",
+      "name": "[[OPERATORE_SANITARIO:Sole Marchetto]]",
+      "digital": false
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Il rifiuto di emocomponenti è stato rinnovato dalla paziente, capace, in data [[DATA:27/02/2025]] alla presenza del figlio [[TUTORE_DELEGATO:A. Dal Bosco]] e dell'anestesista Dott. [[MEDICO:P. D'Ambrosio]]; copia della dichiarazione è allegata in cartella.",
+        "Si raccomanda al centro di riabilitazione di mantenere il percorso bloodless e di contattare, per ogni decisione, il fiduciario indicato.",
+        "Valori di Hb inferiori a 7 g/dL o segni di instabilità emodinamica vanno segnalati al reparto inviante, tel. [[TELEFONO:0445 389142]] (medico di guardia)."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Garden",
+      "forbidden_categories": [
+        "PERSONA",
+        "LUOGO"
+      ]
+    },
+    {
+      "value": "Folstein",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Harris",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Barthel",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Braden",
+      "forbidden_categories": [
+        "PERSONA"
+      ]
+    }
+  ]
+}

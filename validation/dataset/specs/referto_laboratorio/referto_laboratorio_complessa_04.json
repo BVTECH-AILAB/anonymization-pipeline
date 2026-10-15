@@ -1,0 +1,198 @@
+{
+  "id": "referto_laboratorio_complessa_04",
+  "type": "referto_laboratorio",
+  "difficulty": "complessa",
+  "style": {"font": "courier", "color": "#3949AB", "font_size": 7.6, "margins_mm": 11},
+  "persons": {
+    "paz": {"first_name": "Maricel", "last_name": "Dela Cruz", "sex": "F", "birth_date": "1994-08-09", "birth_place": "Filippine"},
+    "partner": {"first_name": "Rodel", "last_name": "Bautista", "sex": "M", "birth_date": "1990-02-14", "birth_place": "Filippine"}
+  },
+  "letterhead": {
+    "logo": "UVB",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda USL Val di Bisenzio]]",
+      "[[STRUTTURA_SANITARIA:Ospedale San Lucchese del Bisenzio]]",
+      "[[REPARTO:U.O.C. Laboratorio Analisi e Microbiologia]]",
+      "[[REPARTO:Centro per la Diagnosi delle Emoglobinopatie]]",
+      "Direttore: Dott. [[MEDICO:Niccolò Magherini]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via del Mandorlo 18]]",
+      "[[CAP:59100]] [[LUOGO:Prato]]",
+      "Accettazione [[TELEFONO:0574 802 310]]",
+      "Fax [[FAX:0574 802 399]]",
+      "[[EMAIL:laboratorio@uslbisenzio.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:DELA CRUZ MARICEL]] - n. [[DATA_NASCITA:09/08/1994]] - Acc. [[NUMERO_ACCETTAZIONE:PR-26-1018442]] - [[GRAVIDANZA:gravidanza 11+3 sett.]] - Esenzione [[CODICE_ESENZIONE:M11]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda USL Val di Bisenzio]] - Sede legale [[INDIRIZZO:Piazza del Mercatale 31]], [[CAP:59100]] [[LUOGO:Prato]] - P.IVA [[PARTITA_IVA:@usl]] - PEC [[PEC:protocollo@pec.uslbisenzio.example.it]]",
+    "Referto con dati genetici e relativi a infezione da HBV: consegna alla sola interessata o al delegato [[FAMILIARE:R. Bautista]] (delega prot. [[NUMERO_PROTOCOLLO:DEL-26-0912]]).",
+    "Laboratorio accreditato - Programmi VEQ regionali. Il referto originale è firmato digitalmente e conservato a norma."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI LABORATORIO - SCREENING DEL PRIMO TRIMESTRE", "subtitle": "Percorso nascita: esami della gravidanza (DPCM 12/01/2017) e screening emoglobinopatie di coppia"},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "patient_box", "columns": 1, "fields": [
+        ["Cognome / Nome", "[[COGNOME:DELA CRUZ]] [[NOME:MARICEL]]"],
+        ["Nata il / a", "[[DATA_NASCITA:09/08/1994]], [[LUOGO_NASCITA:Quezon City (Filippine)]]"],
+        ["Età / sesso", "[[ETA:32]] anni / [[SESSO:F]]"],
+        ["Cittadinanza", "[[CITTADINANZA:filippina]]"],
+        ["Residenza", "[[INDIRIZZO:Via Pistoiese 211]], [[CAP:59100]] [[LUOGO:Prato]]"],
+        ["Telefono / e-mail", "[[TELEFONO:+39 351 447 2086]]\n[[EMAIL:maricel.dc94@mail.example.it]]"],
+        ["Professione", "[[PROFESSIONE:assistente familiare]]"],
+        ["Documento", "permesso di soggiorno n. [[NUMERO_PERMESSO_SOGGIORNO:I09482215]]"],
+        ["Medico richiedente", "Dott. [[MEDICO:Lapo Guarducci]] - [[STRUTTURA_SANITARIA:Consultorio Familiare Prato Est]]"],
+        ["MMG", "Dott. [[MEDICO:Alessandro Biagini]]"]
+      ]}
+    ], "right": [
+      {"type": "fields", "columns": 1, "fields": [
+        ["N. accettazione", "[[NUMERO_ACCETTAZIONE:PR-26-1018442]]"],
+        ["Cod. anagrafico", "[[ID_PAZIENTE:AN0429931]]"],
+        ["NRE", "[[NUMERO_RICETTA:090A41003318472]]"],
+        ["Prescrizione del", "[[DATA_PRESCRIZIONE:29/09/2026]]"],
+        ["Prelievo", "[[DATA_VISITA:06/10/2026]] ore 7:52"],
+        ["Prelevatore", "inf. [[OPERATORE_SANITARIO:Elisa Cecchi]]"],
+        ["Ultima mestruazione", "[[DATA:18/07/2026]]"],
+        ["Referto parziale", "[[DATA:09/10/2026]]"],
+        ["Referto definitivo", "[[DATA_REFERTO:12/10/2026]]"]
+      ]},
+      {"type": "barcode", "kind": "code128", "label": "Provetta tappo viola (K2-EDTA)", "value": "[[CODICE_CAMPIONE:1018442-01]]", "align": "left"}
+    ]},
+    {"type": "char_boxes", "label": "Codice fiscale", "value": "[[CODICE_FISCALE:@paz]]"},
+    {"type": "char_boxes", "label": "Tessera sanitaria", "value": "[[TESSERA_SANITARIA:@ts]]"},
+    {"type": "section", "text": "EMATOLOGIA"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento", ""], "widths": [4.6, 2.2, 1.8, 3.4, 0.6], "flag_column": 4, "rows": [
+      ["Globuli rossi (RBC)", "[[ESAME_VALORE:5,28]]", "10^6/µL", "3,80 - 5,00", "H"],
+      ["Emoglobina", "[[ESAME_VALORE:10,4]]", "g/dL", "11,0 - 14,0 (gravidanza)", "L"],
+      ["Ematocrito", "[[ESAME_VALORE:33,6]]", "%", "33,0 - 42,0", ""],
+      ["MCV", "[[ESAME_VALORE:63,7]]", "fL", "80,0 - 98,0", "L"],
+      ["MCH", "[[ESAME_VALORE:19,7]]", "pg", "27,0 - 33,0", "L"],
+      ["RDW-CV", "[[ESAME_VALORE:14,9]]", "%", "11,5 - 14,5", "H"],
+      ["Globuli bianchi (WBC)", "[[ESAME_VALORE:8,94]]", "10^3/µL", "4,00 - 11,00", ""],
+      ["Piastrine", "[[ESAME_VALORE:238]]", "10^3/µL", "150 - 400", ""],
+      ["VES (metodo Westergren mod.)", "[[ESAME_VALORE:36]]", "mm/h", "< 25 (gravidanza < 40)", ""]
+    ], "caption": "Morfologia eritrocitaria allo striscio ([[OPERATORE_SANITARIO:Irene Becagli]], TSLB): microcitosi, ipocromia, rari target cells; non schistociti."},
+    {"type": "section", "text": "IMMUNOEMATOLOGIA"},
+    {"type": "table", "header": ["Esame", "Risultato", "Metodo", "Note"], "widths": [3.6, 3.4, 2.8, 4.8], "rows": [
+      ["Gruppo AB0 e fattore Rh(D)", "[[GRUPPO_SANGUIGNO:B Rh(D) positivo]]", "microcolonna", "doppia determinazione su due campioni"],
+      ["Test di Coombs indiretto", "[[ESAME_VALORE:negativo, assenza di alloanticorpi]]", "microcolonna LISS", "da ripetere alla 28a settimana"],
+      ["Antigene Kell", "[[ESAME_VALORE:K negativo]]", "microcolonna", "-"]
+    ]},
+    {"type": "section", "text": "CHIMICA CLINICA ED ENDOCRINOLOGIA"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento", ""], "widths": [4.6, 2.2, 1.8, 3.4, 0.6], "flag_column": 4, "rows": [
+      ["Glucosio (a digiuno)", "[[ESAME_VALORE:84]]", "mg/dL", "60 - 91 (gravidanza)", ""],
+      ["Creatinina", "[[ESAME_VALORE:0,52]]", "mg/dL", "0,45 - 0,90", ""],
+      ["ALT", "[[ESAME_VALORE:23]]", "U/L", "< 35", ""],
+      ["Ferritina", "[[ESAME_VALORE:48]]", "ng/mL", "15 - 150", ""],
+      ["TSH reflex", "[[ESAME_VALORE:2,86]]", "mUI/L", "0,10 - 2,50 (I trim.)", "H"],
+      ["FT4", "[[ESAME_VALORE:11,2]]", "pg/mL", "9,0 - 17,0", ""],
+      ["Anticorpi anti-tireoperossidasi", "[[ESAME_VALORE:156]]", "UI/mL", "< 34", "H"]
+    ], "caption": "TSH superiore al limite del primo trimestre con anti-TPO positivi: quadro di [[DIAGNOSI:autoimmunità tiroidea tipo Hashimoto]], segnalato al curante (vedi nota 3)."},
+    {"type": "section", "text": "SIEROLOGIA INFETTIVA"},
+    {"type": "table", "header": ["Esame", "Risultato", "Cut-off / unità", "Interpretazione"], "widths": [4.2, 3, 2.8, 4.6], "font_size": 7.2, "rows": [
+      ["Toxoplasma IgG\nToxoplasma IgM", "[[ESAME_VALORE:0,8]]\n[[ESAME_VALORE:0,21]]", "< 1,6 UI/mL\n< 0,55 index", "[[ESAME_VALORE:non immune (suscettibile)]]: ripetere ogni 30-40 giorni"],
+      ["Rosolia IgG", "[[ESAME_VALORE:42,7]]", "> 10 UI/mL", "[[ESAME_VALORE:immune (protetta)]]"],
+      ["Citomegalovirus IgG\nCitomegalovirus IgM", "[[ESAME_VALORE:118]]\n[[ESAME_VALORE:0,30]]", "> 14 UA/mL\n< 0,70 index", "[[ESAME_VALORE:pregressa infezione]]; avidità non necessaria"],
+      ["HIV 1-2 Ag/Ab combo", "[[ESAME_VALORE:non reattivo (0,19)]]", "S/CO < 1,00", "-"],
+      ["Treponema pallidum Ab totali (CLIA)", "[[ESAME_VALORE:negativo (0,06)]]", "S/CO < 1,00", "VDRL non eseguita"],
+      ["Anti-HCV", "[[ESAME_VALORE:non reattivo (0,11)]]", "S/CO < 1,00", "-"],
+      ["**HBsAg (CMIA)**", "**[[ESAME_VALORE:REATTIVO 4.812]]**", "S/CO < 1,00", "confermato con test di neutralizzazione"],
+      ["HBeAg / anti-HBe", "[[ESAME_VALORE:negativo / positivo]]", "-", "[[MALATTIE_INFETTIVE:infezione cronica da HBV HBeAg-negativa]]"],
+      ["Anti-HBc totali / IgM", "[[ESAME_VALORE:positivo / negativo]]", "-", "esclusa infezione acuta"],
+      ["Anti-HDV", "[[ESAME_VALORE:negativo (0,31)]]", "-", "eseguito su richiesta del laboratorio"]
+    ], "caption": "Siero tappo giallo [[CODICE_CAMPIONE:1018442-02]]; test di conferma eseguiti dal TSLB [[OPERATORE_SANITARIO:Marco Ciampolini]]."},
+    {"type": "section", "text": "VIROLOGIA MOLECOLARE"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Limite di rilevazione", "Note"], "widths": [3.6, 2.6, 1.6, 2.6, 4.2], "rows": [
+      ["HBV DNA quantitativo (real-time PCR)", "[[ESAME_VALORE:1.420]]", "UI/mL", "10 UI/mL", "[[ESAME_VALORE:log 3,15]]; carica bassa"]
+    ]},
+    {"type": "note", "text": "COMUNICAZIONE URGENTE - Positività HBsAg in gravidanza. Il risultato è stato comunicato telefonicamente il [[DATA:09/10/2026]] alle ore 11:20 dalla Dott.ssa [[MEDICO:Serena Fantappiè]] all'ostetrica [[OPERATORE_SANITARIO:Benedetta Nesti]] del [[STRUTTURA_SANITARIA:Consultorio Familiare Prato Est]], che ha convocato la sig.ra [[PERSONA:Dela Cruz]]. Al parto il neonato dovrà ricevere immunoglobuline specifiche e prima dose di vaccino anti-epatite B entro 12 ore (segnalazione al Punto Nascita, prot. [[NUMERO_PROTOCOLLO:PN-2026-118204]])."},
+    {"type": "section", "text": "URINE"},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "table", "header": ["Esame urine", "Risultato", "Rif."], "widths": [2.6, 2, 2], "font_size": 7, "rows": [
+        ["Peso specifico", "[[ESAME_VALORE:1.021]]", "1.005-1.030"],
+        ["pH", "[[ESAME_VALORE:6,0]]", "5,0-8,0"],
+        ["Proteine", "[[ESAME_VALORE:< 10 mg/dL]]", "assenti"],
+        ["Glucosio", "[[ESAME_VALORE:tracce]]", "assente"],
+        ["Leucociti esterasi", "[[ESAME_VALORE:75 leu/µL]]", "neg."],
+        ["Nitriti", "[[ESAME_VALORE:negativi]]", "neg."],
+        ["Sedimento", "[[ESAME_VALORE:6-8 leucociti/campo]]", "0-5"]
+      ]}
+    ], "right": [
+      {"type": "paragraph", "align": "left", "text": "**Urinocoltura** (campione [[CODICE_CAMPIONE:1018442-05]], mitto intermedio): [[ESAME_VALORE:Streptococcus agalactiae (gruppo B) 50.000 UFC/mL]]. Colorazione di Gram: cocchi gram-positivi in catenelle. [[DIAGNOSI:Batteriuria da streptococco di gruppo B]]: indicazione a profilassi antibiotica intrapartum, indipendentemente dal tampone vagino-rettale."},
+      {"type": "table", "header": ["Antibiotico", "MIC (mg/L)", "Interpr."], "widths": [2.8, 1.8, 1.4], "font_size": 7, "rows": [
+        ["Penicillina", "[[ESAME_VALORE:0,064]]", "S"],
+        ["Ampicillina", "[[ESAME_VALORE:0,125]]", "S"],
+        ["Eritromicina", "[[ESAME_VALORE:> 4]]", "R"],
+        ["Clindamicina", "[[ESAME_VALORE:> 1]]", "R"],
+        ["Vancomicina", "[[ESAME_VALORE:0,5]]", "S"]
+      ]}
+    ]},
+    {"type": "page_break"},
+    {"type": "section", "text": "SCREENING PRENATALE COMBINATO (TEST BITEST)"},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Ecografia NT del", "[[DATA:08/10/2026]]"],
+      ["Ecografista", "Dott. [[MEDICO:Lapo Guarducci]]"],
+      ["Certificazione FMF", "n. [[NUMERO_ALBO:FMF-208817]]"],
+      ["CRL", "[[ESAME_VALORE:48,6 mm]]"],
+      ["Translucenza nucale", "[[ESAME_VALORE:1,4 mm]]"],
+      ["Peso materno", "[[MISURE_ANTROPOMETRICHE:57 kg]]"]
+    ]},
+    {"type": "table", "header": ["Parametro", "Valore", "MoM", "Rischio a priori (età)", "Rischio combinato"], "widths": [3.6, 2.2, 1.6, 3.2, 3.6], "rows": [
+      ["PAPP-A", "[[ESAME_VALORE:2,91 mUI/mL]]", "[[ESAME_VALORE:1,12]]", "-", "-"],
+      ["free beta-hCG", "[[ESAME_VALORE:38,4 ng/mL]]", "[[ESAME_VALORE:0,86]]", "-", "-"],
+      ["Trisomia 21 (sindrome di Down)", "-", "-", "1:420", "**[[ESAME_VALORE:1:6.800]]** basso rischio"],
+      ["Trisomie 18 e 13", "-", "-", "1:1.050", "[[ESAME_VALORE:1:> 20.000]] basso rischio"]
+    ], "caption": "Cut-off di rischio aumentato 1:300. Calcolo con software certificato; età gestazionale da CRL [[GRAVIDANZA:11 settimane + 5 giorni]] alla data dell'ecografia."},
+    {"type": "section", "text": "EMOGLOBINOPATIE - SCREENING DI COPPIA"},
+    {"type": "paragraph", "text": "In presenza di microcitosi con ferritina normale e HbA2 non aumentata è stata eseguita, su richiesta del Dott. [[MEDICO:L. Guarducci]], l'analisi molecolare dei geni alfa-globinici sulla gestante e, contestualmente, lo screening del partner, sig. [[FAMILIARE:Rodel Bautista]], nato a [[LUOGO_NASCITA:Cebu (Filippine)]] il [[DATA_NASCITA:14/02/1990]], C.F. [[CODICE_FISCALE:@partner]], prelevato il [[DATA:07/10/2026]] (acc. [[NUMERO_ACCETTAZIONE:PR-26-1018795]], NRE [[NUMERO_RICETTA:090A41003318520]])."},
+    {"type": "table", "header": ["Esame", "[[PERSONA:M. Dela Cruz]]", "[[FAMILIARE:R. Bautista]]", "Valori di riferimento"], "widths": [4, 3.4, 3.4, 3.4], "rows": [
+      ["Emoglobina (g/dL)", "[[ESAME_VALORE:10,4]]", "[[ESAME_VALORE:13,9]]", "F 11,0 - 14,0; M 13,5 - 17,5"],
+      ["MCV (fL)", "[[ESAME_VALORE:63,7]]", "[[ESAME_VALORE:72,4]]", "80,0 - 98,0"],
+      ["MCH (pg)", "[[ESAME_VALORE:19,7]]", "[[ESAME_VALORE:23,1]]", "27,0 - 33,0"],
+      ["HbA2 (HPLC)", "[[ESAME_VALORE:2,0 %]]", "[[ESAME_VALORE:2,3 %]]", "2,4 - 3,4 %"],
+      ["HbF (HPLC)", "[[ESAME_VALORE:0,6 %]]", "[[ESAME_VALORE:0,4 %]]", "< 1,0 %"],
+      ["Corpi inclusi HbH", "[[ESAME_VALORE:rari (1/1.000 GR)]]", "[[ESAME_VALORE:non rilevati]]", "assenti"],
+      ["Ferritina (ng/mL)", "[[ESAME_VALORE:48]]", "[[ESAME_VALORE:112]]", "15 - 300"],
+      ["Geni alfa-globinici\n(gap-PCR, MLPA)", "[[DATO_GENETICO:--SEA/alfa alfa]]\n(delezione SEA in eterozigosi)", "[[DATO_GENETICO:-alfa3.7/alfa alfa]]\n(delezione 3.7 kb in eterozigosi)", "alfa alfa/alfa alfa"]
+    ], "caption": "Analisi molecolare n. [[ACCESSION_NUMBER:EMG-26-0331]] e [[ACCESSION_NUMBER:EMG-26-0332]], eseguita dalla Dott.ssa [[MEDICO:Ilaria Baldanzi]]; DNA conservato con codice [[CODICE_CAMPIONE:DNA-EMG-26-0331]]."},
+    {"type": "heading", "text": "Interpretazione"},
+    {"type": "paragraph", "text": "La gestante è [[DATO_GENETICO:portatrice di alfa-talassemia di tipo alfa-zero (--SEA)]]; il partner è [[DATO_GENETICO:portatore di alfa-talassemia di tipo alfa-più (-alfa3.7)]]. La coppia presenta un rischio riproduttivo del 25% per ogni gravidanza di un feto con [[DATO_GENETICO:malattia da HbH (--SEA/-alfa3.7)]], forma di talassemia intermedia di gravità variabile. La combinazione a rischio di idrope fetale da Hb Bart's (--/--) non è possibile con i genotipi riscontrati. Si raccomanda consulenza genetica urgente presso la [[REPARTO:SOD Genetica Medica]] (Dott. [[MEDICO:Bernardo Lastrucci]]), già prenotata per il [[DATA:15 ottobre 2026]], per la discussione della diagnosi prenatale su villi coriali. Si suggerisce lo studio del primo figlio della coppia, [[FAMILIARE:Angel Bautista]] (nato il [[DATA_NASCITA:21/05/2021]]), sia per lo stato di portatore sia per HBsAg e anti-HBs."},
+    {"type": "section", "text": "COMUNICAZIONI E PRESA IN CARICO"},
+    {"type": "table", "header": ["Data", "Destinatario", "Contenuto", "Operatore"], "widths": [2, 4.2, 4.6, 3.6], "font_size": 7, "rows": [
+      ["[[DATA:09/10/2026]]", "Ost. [[OPERATORE_SANITARIO:B. Nesti]], [[STRUTTURA_SANITARIA:Consultorio Prato Est]]", "HBsAg reattivo, telefonata", "Dott.ssa [[MEDICO:S. Fantappiè]]"],
+      ["[[DATA:10/10/2026]]", "[[REPARTO:Ambulatorio di Epatologia]], Dott.ssa [[MEDICO:Ludovica Pecchioli]]", "invio per stadiazione HBV (elastografia, HBV DNA a 3 mesi)", "Dott. [[MEDICO:Duccio Bencini]]"],
+      ["[[DATA:11/10/2026]]", "[[REPARTO:SOD Genetica Medica]], Dott. [[MEDICO:B. Lastrucci]]", "esito screening di coppia emoglobinopatie", "Dott.ssa [[MEDICO:I. Baldanzi]]"],
+      ["[[DATA_REFERTO:12/10/2026]]", "[[REPARTO:U.O. Ostetricia - Punto Nascita]]", "profilassi neonatale HBV; GBS positivo", "Dott.ssa [[MEDICO:S. Fantappiè]]"]
+    ]},
+    {"type": "paragraph", "text": "La sig.ra [[PERSONA:Maricel Dela Cruz]] ha ritirato il referto parziale accompagnata dal compagno, sig. [[FAMILIARE:Bautista]], e da una mediatrice linguistico-culturale per la lingua tagalog. La paziente ha dichiarato di non aver mai eseguito test per l'epatite B nel Paese di origine e di non essere a conoscenza dello stato vaccinale del compagno, al quale è stato consigliato il dosaggio di HBsAg, anti-HBc e anti-HBs presso il medico curante."},
+    {"type": "note", "text": "Note metodologiche - Emocromo: analizzatore a citometria a flusso. HbA2/HbF: HPLC a scambio cationico; in presenza di carenza marziale l'HbA2 può risultare falsamente ridotta (esclusa in questo caso). Sierologia: immunodosaggi in chemiluminescenza; HBsAg reattivi confermati con neutralizzazione. HBV DNA: real-time PCR, intervallo lineare 10 - 1.000.000.000 UI/mL. Rischio combinato calcolato secondo l'algoritmo della Fetal Medicine Foundation."},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "signature", "place_date": "[[LUOGO:Prato]], [[DATA_REFERTO:12/10/2026]]", "role": "Il Dirigente Biologo (chimica clinica, ematologia, sierologia)", "name": "Dott.ssa [[MEDICO:Serena Fantappiè]]", "digital": true}
+    ], "right": [
+      {"type": "signature", "role": "Il Dirigente Medico (microbiologia e virologia)", "name": "Dott. [[MEDICO:Duccio Bencini]]", "extra": ["Emoglobinopatie: Dott.ssa [[MEDICO:Ilaria Baldanzi]]"], "digital": true}
+    ]},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "barcode", "kind": "qr", "label": "Verifica online - [[PERSONA:Dela Cruz M.]] - codice ritiro [[NUMERO_REFERTO:LAB-26-0418772]]", "value": "https://referti.uslbisenzio.example.it/v/[[NUMERO_REFERTO:LAB-26-0418772]]", "align": "left"}
+    ], "right": [
+      {"type": "stamp", "lines": ["[[STRUTTURA_SANITARIA:AUSL VAL DI BISENZIO]]", "[[REPARTO:LABORATORIO ANALISI]]", "Dott. [[MEDICO:Niccolò Magherini]]", "Ord. Biologi n. [[NUMERO_ALBO:AA_061842]]", "Visto per la trasmissione"], "angle": -9, "align": "center"}
+    ]},
+    {"type": "footnotes", "items": [
+      "Gruppo sanguigno: la conferma su secondo campione è stata eseguita il [[DATA:09.10.26]] dalla TSLB [[OPERATORE_SANITARIO:I. Becagli]].",
+      "La paziente [[PERSONA:Dela Cruz]] è suscettibile alla toxoplasmosi: consegnate le norme igienico-alimentari; prossimo controllo prenotato con codice [[NUMERO_PRENOTAZIONE:CUP-PO-26-551803]].",
+      "TSH e anti-TPO: si suggerisce valutazione endocrinologica entro 2 settimane per l'eventuale avvio di [[FARMACO:levotiroxina]] (comunicato al Dott. [[MEDICO:A. Biagini]]).",
+      "Il compagno, sig. [[FAMILIARE:R. Bautista]], è raggiungibile al [[TELEFONO:+39 328 905 1174]] ed è indicato dalla paziente come persona da contattare."
+    ]}
+  ],
+  "negatives": [
+    {"value": "Coombs", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]},
+    {"value": "Down", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Hashimoto", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]},
+    {"value": "Westergren", "forbidden_categories": ["PERSONA", "COGNOME", "MEDICO"]},
+    {"value": "Gram", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Kell", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Bart's", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "viola", "forbidden_categories": ["NOME", "PERSONA"]}
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "id": "referto_radiologico_media_03",
+  "type": "referto_radiologico",
+  "difficulty": "media",
+  "style": {"font": "dejavu", "color": "#2F6B4F", "font_size": 8.5, "margins_mm": 18},
+  "persons": {
+    "paz": {"first_name": "Addolorata", "last_name": "Di Giacomo", "sex": "F", "birth_date": "1941-12-08", "birth_place": "Pescara"}
+  },
+  "letterhead": {
+    "logo": "ASLM",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASL di Montecalvello]]",
+      "[[STRUTTURA_SANITARIA:Presidio Ospedaliero Santa Gemma]]",
+      "[[REPARTO:UOC Radiologia - Ecografia Vascolare]]",
+      "Direttore: Dott. [[MEDICO:Domenico Iezzi]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via del Circuito 92]]",
+      "[[CAP:65121]] [[LUOGO:Pescara]]",
+      "Tel. [[TELEFONO:085 4290318]]",
+      "Fax [[FAX:085 4290355]]"
+    ]
+  },
+  "running_header": "Paziente: [[PERSONA:Di Giacomo Addolorata]] - nata il [[DATA_NASCITA:08/12/1941]] - Rif. [[ACCESSION_NUMBER:US-2026-00775]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASL di Montecalvello]] - P.IVA [[PARTITA_IVA:@asl]] - Il referto è valido senza firma autografa se firmato digitalmente",
+    "Per informazioni sul trattamento dei dati personali rivolgersi all'Ufficio Relazioni con il Pubblico del presidio."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO ECOGRAFICO", "subtitle": "Eco-color-Doppler dei tronchi sovraortici - Ecografia tiroidea"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Di Giacomo Addolorata]]"],
+      ["Data di nascita", "[[DATA_NASCITA:08/12/1941]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Residenza", "[[INDIRIZZO:Via Tiburtina Valeria 377]], [[LUOGO:Pescara]]"],
+      ["Caregiver", "sig.ra [[CONTATTO_EMERGENZA:Oksana Melnyk]]"],
+      ["Recapito caregiver", "[[TELEFONO:+39 348 551 2093]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Rif. esame", "[[ACCESSION_NUMBER:US-2026-00775]]"],
+      ["N. prenotazione", "[[NUMERO_PRENOTAZIONE:CUP26-0098417]]"],
+      ["Data esame", "[[DATA_VISITA:26/01/2026]]"],
+      ["Richiedente", "Dott.ssa [[MEDICO:Teresa Mancini]]"],
+      ["Reparto", "[[REPARTO:UOC Neurologia]]"],
+      ["Priorità", "U (urgente)"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Rif.", "value": "[[ACCESSION_NUMBER:US-2026-00775]]", "align": "right"},
+    {"type": "section", "text": "Notizie anamnestiche"},
+    {"type": "paragraph", "text": "Pz. di 84 aa., in [[PATOLOGIA:fibrillazione atriale permanente]] in terapia con [[FARMACO:apixaban 2,5 mg]] due volte al giorno, [[PATOLOGIA:ipertensione arteriosa]] e [[PATOLOGIA:decadimento cognitivo lieve]]. Il [[DATA:19-01-2026]] [[DIAGNOSI:episodio di amaurosi fugace all'occhio sinistro]] della durata di alcuni minuti, per cui è stata valutata in Pronto Soccorso e inviata dalla u.o. di Neurologia.\nL'anamnesi è raccolta con l'aiuto della badante, sig.ra [[CONTATTO_EMERGENZA:Oksana Melnyk]], che assiste la sig.ra [[PERSONA:Di Giacomo]] a domicilio. Precedente eco-color-Doppler dei TSA del [[DATA:17-02-2024]] con placca bulbare sinistra non emodinamicamente significativa."},
+    {"type": "section", "text": "Eco-color-Doppler TSA (cod. 88.73.5)"},
+    {"type": "paragraph", "text": "Esame eseguito con sonda lineare 4-9 MHz, campionamento Doppler con angolo di insonazione inferiore a 60 gradi. Paziente collaborante, finestra acustica discreta."},
+    {"type": "table", "header": ["Vaso", "PSV (cm/s)", "EDV (cm/s)", "Placca", "Stenosi (NASCET)"], "widths": [1.6, 1.5, 1.5, 4.2, 2.2], "rows": [
+      ["ACC dx", "[[ESAME_VALORE:68]]", "[[ESAME_VALORE:16]]", "Ispessimento medio-intimale diffuso", "-"],
+      ["ACI dx", "[[ESAME_VALORE:112]]", "[[ESAME_VALORE:31]]", "[[DIAGNOSI:Placca fibrocalcifica del bulbo]], superficie regolare", "[[ESAME_VALORE:50-69%]]"],
+      ["ACC sx", "[[ESAME_VALORE:74]]", "[[ESAME_VALORE:21]]", "Ispessimento medio-intimale diffuso", "-"],
+      ["ACI sx", "[[ESAME_VALORE:236]]", "[[ESAME_VALORE:89]]", "[[DIAGNOSI:Placca ipoecogena a superficie irregolare]], con sospetta ulcerazione, estesa all'origine dell'ACI", "[[ESAME_VALORE:70-79%]]"],
+      ["AV dx", "[[ESAME_VALORE:42]]", "[[ESAME_VALORE:11]]", "Flusso anterogrado", "-"],
+      ["AV sx", "[[ESAME_VALORE:38]]", "[[ESAME_VALORE:10]]", "Flusso anterogrado", "-"]
+    ]},
+    {"type": "paragraph", "text": "Rapporto PSV ACI/ACC a sinistra [[ESAME_VALORE:3,2]]. Arterie carotidi esterne pervie. Arterie succlavie con flusso trifasico bilateralmente."},
+    {"type": "section", "text": "Ecografia tiroidea (cod. 88.71.4)"},
+    {"type": "paragraph", "text": "Tiroide in sede, aumentata di volume per la presenza di multipli noduli, quadro compatibile con [[DIAGNOSI:gozzo multinodulare]]. Il nodulo dominante, al terzo medio del lobo destro, è isoecogeno, solido, a margini regolari, senza microcalcificazioni, di [[ESAME_VALORE:18 x 12 x 14]] mm (EU-TIRADS 3). Al lobo sinistro piccoli noduli misti, il maggiore di [[ESAME_VALORE:7,5]] mm. Non linfonodi laterocervicali sospetti."},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Stenosi dell'arteria carotide interna sinistra del 70-79%]] da placca ipoecogena irregolare, in progressione rispetto al controllo del [[DATA:17-02-2024]] e compatibile con la sintomatologia riferita. [[DIAGNOSI:Stenosi moderata della carotide interna destra]].**\nSi consiglia completamento con angio-TC dei TSA e valutazione chirurgico-vascolare urgente.\n[[DIAGNOSI:Gozzo multinodulare]] con nodulo dominante destro a basso rischio: controllo ecografico a 12 mesi."},
+    {"type": "paragraph", "text": "Il risultato è stato comunicato telefonicamente al figlio della paziente, sig. [[FAMILIARE:Nicola Di Giacomo]], al numero [[TELEFONO:085 4471209]], e al neurologo richiedente."},
+    {"type": "signature", "place_date": "[[LUOGO:Pescara]], [[DATA_REFERTO:27 gennaio 2026]]", "role": "I Medici Radiologi", "name": "Dott. [[MEDICO:Antonio Zuccarini]]", "extra": ["Ecografia tiroidea: Dott.ssa [[MEDICO:Lucia Di Febo]]"], "digital": true, "stamp": ["[[STRUTTURA_SANITARIA:P.O. SANTA GEMMA]] - RADIOLOGIA", "Dott. [[MEDICO:A. Zuccarini]]"]}
+  ],
+  "negatives": []
+}

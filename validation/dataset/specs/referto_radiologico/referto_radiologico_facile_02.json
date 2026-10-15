@@ -1,0 +1,59 @@
+{
+  "id": "referto_radiologico_facile_02",
+  "type": "referto_radiologico",
+  "difficulty": "facile",
+  "style": {"font": "times", "color": "#2E6B3A", "font_size": 10.5, "margins_mm": 20},
+  "persons": {
+    "paz": {"first_name": "Annalisa", "last_name": "Caputo", "sex": "F", "birth_date": "1980-09-07", "birth_place": "Bari"}
+  },
+  "letterhead": {
+    "logo": "CDG",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Centro Diagnostico Le Gavine]]",
+      "Struttura privata accreditata con il SSR",
+      "Diagnostica per Immagini - Ecografia - TC - RM",
+      "Direttore Sanitario: Dott. [[MEDICO:Vito Lorusso]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Giulio Petroni 118]]",
+      "[[CAP:70124]] [[LUOGO:Bari]]",
+      "Tel. [[TELEFONO:080 5523914]]",
+      "[[EMAIL:info@legavine.example.it]]"
+    ]
+  },
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Centro Diagnostico Le Gavine]] s.r.l. - Autorizzazione sanitaria regionale n. 412/2019 - P.IVA [[PARTITA_IVA:@centro]]"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO ECOGRAFICO", "subtitle": "Ecografia dell'addome completo"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome", "[[COGNOME:Caputo]]"],
+      ["Nome", "[[NOME:Annalisa]]"],
+      ["Nata il", "[[DATA_NASCITA:07/09/1980]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["N. prenotazione", "[[NUMERO_PRENOTAZIONE:250381145]]"],
+      ["Ricetta NRE", "[[NUMERO_RICETTA:1600A4123908872]]"],
+      ["Data esame", "[[DATA_VISITA:22/09/2025]]"],
+      ["Priorità", "D (differibile)"]
+    ]},
+    {"type": "paragraph", "text": "**Quesito clinico:** [[DIAGNOSI:dolore ricorrente in ipocondrio destro]] dopo i pasti; lieve rialzo delle transaminasi agli esami recenti."},
+    {"type": "paragraph", "text": "**Tecnica:** esame eseguito a digiuno con sonda convex multifrequenza 1-5 MHz, scansioni sottocostali, intercostali e sovrapubiche. Paziente collaborante, condizioni di visualizzazione buone."},
+    {"type": "table", "header": ["Organo", "Reperto", "Misure"], "widths": [2.2, 6, 2], "rows": [
+      ["Fegato", "Dimensioni lievemente aumentate, ecostruttura iperecogena diffusa con attenuazione del fascio posteriore. Non lesioni focali.", "DL [[ESAME_VALORE:16,4]] cm"],
+      ["Colecisti", "Normodistesa, pareti sottili. Nel lume immagine iperecogena con cono d'ombra posteriore, mobile con i decubiti.", "calcolo [[ESAME_VALORE:1,8]] cm"],
+      ["Vie biliari", "Non dilatate le vie biliari intra ed extraepatiche.", "VBP [[ESAME_VALORE:4,3]] mm"],
+      ["Pancreas", "Visualizzato nei tratti cefalo-corporei, nei limiti.", "-"],
+      ["Milza", "Omogenea, di dimensioni nella norma.", "DL [[ESAME_VALORE:10,6]] cm"],
+      ["Reni", "In sede, di normali dimensioni e spessore parenchimale. Non idronefrosi, non litiasi.", "-"],
+      ["Vescica", "Normodistesa, a pareti regolari.", "-"]
+    ]},
+    {"type": "paragraph", "text": "Non versamento libero in addome. Aorta addominale di calibro regolare."},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Colelitiasi]] non complicata. [[DIAGNOSI:Steatosi epatica di grado moderato]] con lieve epatomegalia.**\nSi consiglia valutazione chirurgica per il calcolo colecistico sintomatico e controllo degli indici di funzionalità epatica."},
+    {"type": "signature", "place_date": "[[LUOGO:Bari]], [[DATA_REFERTO:22/09/2025]]", "role": "Il Medico Ecografista", "name": "Dott.ssa [[MEDICO:Grazia Mastrolonardo]]", "digital": true}
+  ],
+  "negatives": []
+}

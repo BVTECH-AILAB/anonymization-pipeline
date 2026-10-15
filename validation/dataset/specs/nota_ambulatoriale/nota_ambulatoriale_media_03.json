@@ -1,0 +1,73 @@
+{
+  "id": "nota_ambulatoriale_media_03",
+  "type": "nota_ambulatoriale",
+  "difficulty": "media",
+  "style": {"font": "dejavu", "color": "#0277BD", "font_size": 8.8, "margins_mm": 14},
+  "persons": {
+    "paz": {"first_name": "Arben", "last_name": "Kola", "sex": "M", "birth_date": "1975-08-02", "birth_place": "Albania"}
+  },
+  "letterhead": {
+    "logo": "SBM",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale San Benigno al Mare]]",
+      "Dipartimento Cardio-Toraco-Vascolare",
+      "[[REPARTO:S.S.D. Fisiopatologia Respiratoria]]",
+      "Responsabile: Dott.ssa [[MEDICO:Federica Parodi]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Salita Oregina 52]]",
+      "[[CAP:16136]] [[LUOGO:Genova]]",
+      "Tel. [[TELEFONO:010 3539712]]",
+      "Fax [[FAX:010 3539799]]"
+    ]
+  },
+  "running_header": "Paziente [[PERSONA:KOLA Arben]] - C.F. [[CODICE_FISCALE:@paz]] - Accettazione [[NUMERO_ACCETTAZIONE:AMB-25-0091264]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale San Benigno al Mare]] - Sistema Sanitario Regionale - P.IVA [[PARTITA_IVA:@osb]]",
+    "Il referto è trasmesso al medico curante tramite Fascicolo Sanitario Elettronico, salvo opposizione dell'assistito"
+  ],
+  "blocks": [
+    {"type": "title", "text": "VISITA PNEUMOLOGICA CON SPIROMETRIA", "subtitle": "Prima visita pneumologica (cod. 89.7B.9) - Spirometria globale (cod. 89.37.2)"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:KOLA Arben]]"],
+      ["Nato a", "[[LUOGO_NASCITA:Durazzo (Albania)]]"],
+      ["Data di nascita", "[[DATA_NASCITA:02/08/1975]]"],
+      ["Cittadinanza", "[[CITTADINANZA:albanese]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Telefono", "[[TELEFONO:+39 328 405 1177]]"],
+      ["Domicilio", "[[INDIRIZZO:Via Burlando 33/4]], [[LUOGO:Genova]]"],
+      ["Professione", "[[PROFESSIONE:muratore]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Data visita", "[[DATA_VISITA:16-01-2025]]"],
+      ["N. accettazione", "[[NUMERO_ACCETTAZIONE:AMB-25-0091264]]"],
+      ["CUP", "[[NUMERO_PRENOTAZIONE:GE2501-773019]]"],
+      ["NRE", "[[NUMERO_RICETTA:070A50118834562]]"],
+      ["Priorità", "B (entro 10 gg)"],
+      ["Regime", "SSN"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Accettazione", "value": "[[NUMERO_ACCETTAZIONE:AMB-25-0091264]]", "align": "right"},
+    {"type": "section", "text": "Motivo della visita"},
+    {"type": "paragraph", "text": "Il pz. è inviato dal medico competente aziendale, Dott. [[MEDICO:Paolo Ghiglione]], per [[DIAGNOSI:dispnea da sforzo]] e [[DIAGNOSI:tosse produttiva persistente]] emerse alla visita periodica del [[DATA:28/11/2024]]. Lavora come [[PROFESSIONE:muratore]] presso la [[DATORE_LAVORO:Edilizia Ponente Ligure S.r.l.]] dal 2006; in precedenza addetto al taglio di pietre nel paese di origine. Riferisce esposizione prolungata a polveri di cemento e di silice, con uso discontinuo dei dispositivi di protezione respiratoria."},
+    {"type": "section", "text": "Anamnesi"},
+    {"type": "paragraph", "text": "[[DIPENDENZE:Fumatore attivo di 20 sigarette/die dal 1993 (circa 31 pack-years)]]. Consumo di alcolici occasionale. [[PATOLOGIA:Malattia da reflusso gastroesofageo]] in terapia con [[FARMACO:pantoprazolo 20 mg]] al bisogno. Non precedenti ricoveri. [[ALLERGIA:Allergia alla penicillina]] (orticaria nel 2010). Vive con la moglie, sig.ra [[FAMILIARE:Elira Kola]], presente alla visita, e due figli. Da circa un anno riferisce [[DIAGNOSI:dispnea per sforzi moderati]] (salire 2 piani di scale con carico), [[DIAGNOSI:tosse con espettorato mucoso al risveglio]], due [[DIAGNOSI:episodi bronchitici]] nell'inverno 2023-24 trattati con antibiotico dal medico curante."},
+    {"type": "section", "text": "Esame obiettivo"},
+    {"type": "paragraph", "text": "Condizioni generali buone. Peso [[MISURE_ANTROPOMETRICHE:92 kg]], altezza [[MISURE_ANTROPOMETRICHE:178 cm]], BMI [[MISURE_ANTROPOMETRICHE:29,0]]. PA [[MISURE_ANTROPOMETRICHE:132/84 mmHg]]. SpO2 in aria ambiente [[ESAME_VALORE:95%]], FR [[ESAME_VALORE:18 atti/min]]. Torace normoconformato, espansibilità ridotta. Murmure vescicolare diffusamente ridotto con [[ESAME_VALORE:ronchi sparsi e sibili espiratori]] in sede basale bilaterale. Non edemi declivi, non clubbing."},
+    {"type": "section", "text": "Spirometria globale"},
+    {"type": "table", "header": ["Parametro", "Basale", "Teorico", "% del teorico", "Post broncodilatatore"], "widths": [3, 2, 2, 2, 2.8], "flag_column": null, "rows": [
+      ["FEV1 (L)", "[[ESAME_VALORE:2,41]]", "3,92", "[[ESAME_VALORE:61%]]", "[[ESAME_VALORE:2,57]] (+6,6%)"],
+      ["FVC (L)", "[[ESAME_VALORE:3,96]]", "4,85", "[[ESAME_VALORE:82%]]", "[[ESAME_VALORE:4,08]]"],
+      ["FEV1/FVC", "[[ESAME_VALORE:0,61]]", "0,79", "-", "[[ESAME_VALORE:0,63]]"],
+      ["TLC (L)", "[[ESAME_VALORE:7,12]]", "6,88", "[[ESAME_VALORE:103%]]", "-"],
+      ["RV (L)", "[[ESAME_VALORE:2,95]]", "2,05", "[[ESAME_VALORE:144%]]", "-"]
+    ], "caption": "Test di reversibilità con salbutamolo 400 mcg; manovre accettabili e ripetibili."},
+    {"type": "paragraph", "text": "Esame eseguito dalla TFCPC [[OPERATORE_SANITARIO:Elena Bruzzone]] secondo gli standard ATS/ERS 2019 con pletismografo corporeo. Collaborazione del pz. buona."},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Sindrome ostruttiva di grado moderato non reversibile]] dopo broncodilatatore, con [[DIAGNOSI:iperinsufflazione polmonare]]. Il quadro è compatibile con [[DIAGNOSI:BPCO di grado GOLD 2]] in forte fumatore; data l'esposizione professionale a silice cristallina è necessario escludere una [[DIAGNOSI:pneumoconiosi]]."},
+    {"type": "heading", "text": "Prescrizioni"},
+    {"type": "paragraph", "text": "- [[FARMACO:Tiotropio/olodaterolo 2,5/2,5 mcg]] 2 inalazioni al mattino (addestrato all'uso dell'inalatore in ambulatorio).\n- TC del torace ad alta risoluzione (HRCT) e DLCO.\n- Vaccinazione antinfluenzale e antipneumococcica.\n- Invio al Centro Antifumo aziendale per [[TERAPIA:percorso di disassuefazione dal fumo]].\nCon il consenso del lavoratore si trasmette copia del referto al medico competente, Dott. [[MEDICO:Ghiglione]], per la valutazione dell'idoneità alla mansione e dell'eventuale denuncia di malattia professionale.\n**Controllo:** tra 2 mesi con l'esito della TC. In caso di peggioramento della dispnea o febbre rivolgersi al medico curante."},
+    {"type": "signature", "place_date": "[[LUOGO:Genova]], [[DATA_REFERTO:16.01.2025]]", "role": "Il Medico Pneumologo", "name": "Dott. [[MEDICO:Stefano Repetto]]", "extra": ["Vista la Responsabile, Dott.ssa [[MEDICO:Federica Parodi]]"], "digital": false, "stamp": ["Dott. [[MEDICO:Stefano Repetto]]", "Specialista in Malattie dell'App. Respiratorio", "Iscr. Albo n. [[NUMERO_ALBO:GE-11873]]"]}
+  ],
+  "negatives": []
+}

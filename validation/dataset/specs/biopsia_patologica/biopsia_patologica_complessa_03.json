@@ -1,0 +1,485 @@
+{
+  "id": "biopsia_patologica_complessa_03",
+  "type": "biopsia_patologica",
+  "difficulty": "complessa",
+  "style": {
+    "font": "times",
+    "color": "#6A1B9A",
+    "font_size": 8.5,
+    "margins_mm": 14,
+    "fax_line": "[[DATA_REFERTO:08/07/2025]] 16:22   DA: [[FAX:055 7948120]]   AP [[STRUTTURA_SANITARIA:S.CLELIA]]   A: [[FAX:055 2316677]] [[STRUTTURA_SANITARIA:CDC LE RONDINI]]   RIF. [[NUMERO_REFERTO:IST 25/11902]]"
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Bianca",
+      "last_name": "Dell'Orto",
+      "sex": "F",
+      "birth_date": "1961-10-09",
+      "birth_place": "Firenze"
+    }
+  },
+  "letterhead": {
+    "logo": "ISC",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Istituto di Ricovero Santa Clelia]]",
+      "Dipartimento Materno-Infantile e Oncologico",
+      "[[REPARTO:SOD Istopatologia e Diagnostica Molecolare]]",
+      "Direttore: Prof. [[MEDICO:Tommaso Nardini]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Pieraccini 41]]",
+      "[[CAP:50139]] [[LUOGO:Firenze]]",
+      "Tel. [[TELEFONO:055 7948100]]",
+      "Fax [[FAX:055 7948120]]"
+    ]
+  },
+  "running_header": "Sig.ra [[PERSONA:DELL'ORTO BIANCA]] - n. [[DATA_NASCITA:09.10.1961]] - Ist. [[NUMERO_REFERTO:IST 25/11902]] - Richiedente Dott.ssa [[MEDICO:C. Bagnoli]] ([[STRUTTURA_SANITARIA:CdC Le Rondini]])",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Istituto di Ricovero Santa Clelia]] - P.IVA [[PARTITA_IVA:@isc]] - Referto trasmesso via fax al medico richiedente su autorizzazione scritta della paziente [[PERSONA:B. Dell'Orto]]",
+    "Se ricevuto per errore, distruggere e avvisare il mittente al n. [[TELEFONO:055 7948100]]. Documento con dati genetici e convinzioni religiose: art. 9 GDPR."
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "align": "right",
+      "lines": [
+        "Alla c.a. della Dott.ssa [[MEDICO:Cristina Bagnoli]]",
+        "[[REPARTO:Ginecologia Oncologica]]",
+        "[[STRUTTURA_SANITARIA:Casa di Cura Le Rondini]]",
+        "[[INDIRIZZO:Via del Ponte di Mezzo 22]], [[CAP:50127]] [[LUOGO:Firenze]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "REFERTO ISTOPATOLOGICO E MOLECOLARE",
+      "subtitle": "Isterectomia totale con annessiectomia bilaterale e linfonodi sentinella pelvici (robotica)"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "fields": [
+        [
+          "Paziente",
+          "[[PERSONA:DELL'ORTO BIANCA]]"
+        ],
+        [
+          "Nata il",
+          "[[DATA_NASCITA:9 ottobre 1961]]"
+        ],
+        [
+          "Luogo di nascita",
+          "[[LUOGO_NASCITA:Firenze]]"
+        ],
+        [
+          "Età",
+          "[[ETA:63]] aa."
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Gioberti 117]], [[CAP:50121]] [[LUOGO:Firenze]]"
+        ],
+        [
+          "Telefono",
+          "[[TELEFONO:+39 347 902 1146]]"
+        ],
+        [
+          "Tessera sanitaria",
+          "[[TESSERA_SANITARIA:@ts]]"
+        ],
+        [
+          "Cartella",
+          "[[NUMERO_CARTELLA:SC-2025-030871]]"
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "C.F.",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "N. istologico",
+          "[[NUMERO_REFERTO:IST 25/11902]]"
+        ],
+        [
+          "Intervento",
+          "[[DATA_RICOVERO:23-06-2025]]"
+        ],
+        [
+          "Referto",
+          "[[DATA_REFERTO:08/07/2025]]"
+        ],
+        [
+          "Chirurgo",
+          "Dott.ssa [[MEDICO:Cristina Bagnoli]]"
+        ],
+        [
+          "Accettazione",
+          "[[DATA:24.06.25]]"
+        ],
+        [
+          "Priorità",
+          "Oncologica (P1)"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Informazioni cliniche"
+    },
+    {
+      "type": "paragraph",
+      "text": "Paziente in post-menopausa con [[DIAGNOSI:metrorragia]]; biopsia isteroscopica (ns. rif. [[NUMERO_REFERTO:IST 25/08214]]): adenocarcinoma endometrioide G2. [[PATOLOGIA:Obesità di II grado]] (BMI [[MISURE_ANTROPOMETRICHE:36,2]]), [[PATOLOGIA:diabete mellito tipo 2]]. Pregressa [[INTERVENTO:resezione di adenocarcinoma del colon sinistro]] a 49 anni. Familiarità: la sorella, sig.ra [[FAMILIARE:Viola Dell'Orto]], operata per carcinoma del colon a 44 anni; il padre deceduto per neoplasia gastrica. **La paziente, [[RELIGIONE:Testimone di Geova]], ha espresso con DAT il rifiuto di emotrasfusioni ed emocomponenti**: intervento eseguito con recupero intraoperatorio e protocollo bloodless; il marito, sig. [[CONTATTO_EMERGENZA:Franco Martinelli]] ([[TELEFONO:+39 335 610 4482]]), è indicato come fiduciario."
+    },
+    {
+      "type": "section",
+      "text": "Materiale pervenuto"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Cont.",
+        "Descrizione",
+        "Inclusioni"
+      ],
+      "widths": [
+        0.9,
+        6.5,
+        2.6
+      ],
+      "rows": [
+        [
+          "A",
+          "Utero con cervice, tube e ovaie (pezzo unico aperto in sala, \"valva anteriore\" marcata con punto di repere)",
+          "A1-A16"
+        ],
+        [
+          "B",
+          "Linfonodo sentinella iliaco esterno destro (ICG, verde in sala)",
+          "B1-B2 (ultrastadiazione)"
+        ],
+        [
+          "C",
+          "Linfonodo sentinella otturatorio sinistro",
+          "C1"
+        ],
+        [
+          "D",
+          "Washing peritoneale (inviato alla Citologia, rif. [[CODICE_CAMPIONE:CIT-25-4471]])",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Esame macroscopico"
+    },
+    {
+      "type": "paragraph",
+      "text": "(Descrizione dettata dal Dott. [[OPERATORE_SANITARIO:Andrea Pratesi]], specializzando, e verificata dal Dott. [[MEDICO:Nardini]].) A) Utero di cm 9 x 6 x 4,5, peso g 142, con cervice di cm 3. All'apertura, in corrispondenza del fondo e della parete posteriore, neoformazione esofitica di cm 3,8 x 2,9, di colorito bianco-grigiastro, friabile, che al taglio infiltra il miometrio per uno spessore massimo di mm 6 su uno spessore parietale di mm 17. Non coinvolgimento macroscopico dell'istmo e della cervice. Ovaie di cm 2,5 e 2,2, atrofiche; tube regolari. Campionamento: neoplasia a tutto spessore (A1-A8), istmo (A9-A10), cervice (A11-A12), annessi (A13-A16). B) Linfonodo di cm 1,6. C) Linfonodo di cm 0,9."
+    },
+    {
+      "type": "section",
+      "text": "Esame microscopico"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "paragraph",
+          "text": "Adenocarcinoma endometrioide con architettura prevalentemente ghiandolare e componente solida non squamosa pari a circa il [[ESAME_VALORE:15%]] (FIGO grado 2), con focale differenziazione squamosa morulare. Invasione miometriale di [[ESAME_VALORE:6 mm]] su [[ESAME_VALORE:17 mm]] (< 50%). Invasione degli spazi linfovascolari: focale (un solo vaso, LVSI non estesa sec. ESGO/ESTRO/ESP). Abbondanti linfociti peritumorali e intratumorali (TILs elevati)."
+        },
+        {
+          "type": "paragraph",
+          "text": "Istmo e cervice indenni. Annessi: atrofia ovarica bilaterale, salpingi indenni. Margini parametriali indenni."
+        }
+      ],
+      "right": [
+        {
+          "type": "paragraph",
+          "text": "Linfonodi sentinella: B) iliaco esterno dx: [[ESAME_VALORE:0/1]], indenne anche all'ultrastadiazione (sezioni seriate a 200 µm con citocheratina AE1/AE3); C) otturatorio sn: [[ESAME_VALORE:0/1]]. Non cellule tumorali isolate."
+        },
+        {
+          "type": "paragraph",
+          "text": "Citologia peritoneale (D): negativa per cellule neoplastiche (Dott.ssa [[MEDICO:Irene Cappelli]], referto separato)."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Classificazione molecolare (algoritmo ProMisE / WHO 2020)"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Test",
+        "Metodica",
+        "Risultato",
+        "Note"
+      ],
+      "widths": [
+        2,
+        2.4,
+        3.2,
+        3.4
+      ],
+      "rows": [
+        [
+          "POLE (esoni 9-14)",
+          "NGS",
+          "[[DATO_GENETICO:wild-type]]",
+          "Nessuna variante patogenetica nel dominio esonucleasico"
+        ],
+        [
+          "MLH1",
+          "IIC",
+          "[[ESAME_VALORE:espressione conservata]]",
+          "-"
+        ],
+        [
+          "PMS2",
+          "IIC",
+          "[[ESAME_VALORE:espressione conservata]]",
+          "-"
+        ],
+        [
+          "MSH2",
+          "IIC",
+          "[[ESAME_VALORE:perdita di espressione]]",
+          "Controllo interno stromale positivo"
+        ],
+        [
+          "MSH6",
+          "IIC",
+          "[[ESAME_VALORE:perdita di espressione]]",
+          "Perdita associata a MSH2"
+        ],
+        [
+          "p53",
+          "IIC",
+          "[[ESAME_VALORE:pattern wild-type]]",
+          "Espressione eterogenea"
+        ],
+        [
+          "ER / PgR",
+          "IIC",
+          "[[ESAME_VALORE:ER 90% / PgR 70%]]",
+          "-"
+        ],
+        [
+          "L1CAM",
+          "IIC",
+          "[[ESAME_VALORE:negativo]] (< 10%)",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi"
+    },
+    {
+      "type": "paragraph",
+      "text": "**Utero e annessi: [[DIAGNOSI:adenocarcinoma endometrioide dell'endometrio, FIGO grado 2]], con invasione miometriale < 50% e LVSI focale; cervice, annessi e margini indenni.**\n**Linfonodi sentinella: 0/2 (pN0(sn)). Stadio [[DIAGNOSI:pT1a pN0(sn)]] (TNM 8a ed.); [[DIAGNOSI:FIGO 2023 stadio IAm-MMRd]].**\n**Sottotipo molecolare: [[DATO_GENETICO:mismatch repair deficient (MMRd) con perdita combinata di MSH2/MSH6]].**"
+    },
+    {
+      "type": "note",
+      "text": "La perdita di MSH2/MSH6, l'anamnesi personale di carcinoma del colon a 49 anni e la familiarità di primo grado (sorella [[FAMILIARE:Viola]]) configurano un [[DATO_GENETICO:sospetto di sindrome di Lynch]] (criteri di Amsterdam II soddisfatti). Si raccomanda consulenza genetica oncologica e test germinale su sangue periferico per la sig.ra [[PERSONA:Dell'Orto]]; in caso di positività, test a cascata per la figlia, sig.ra [[FAMILIARE:Sole Martinelli]], e per la sorella."
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "La classificazione FIGO 2023 integra il sottotipo molecolare; lo stadio FIGO 2009 corrispondente è IA.",
+        "Il campione di DNA tumorale (blocchetto A4, rif. [[CODICE_CAMPIONE:MOL-25-0617]]) è conservato a -80 °C per eventuale confronto con il test germinale.",
+        "Comunicazione telefonica preliminare alla Dott.ssa [[MEDICO:Bagnoli]] il [[DATA:4 luglio 2025]], ore 12:15; la paziente ha autorizzato per iscritto l'invio via fax del referto il [[DATA:01/07/2025]]."
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Firenze]], [[DATA_REFERTO:8 luglio 2025]]",
+          "role": "Il Patologo refertante",
+          "name": "Prof. [[MEDICO:Tommaso Nardini]]",
+          "digital": false,
+          "stamp": [
+            "SOD ISTOPATOLOGIA",
+            "Prof. [[MEDICO:T. NARDINI]]",
+            "Ord. Medici FI n. [[NUMERO_ALBO:11408]]"
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "signature",
+          "place_date": "Analisi molecolari",
+          "role": "Il Dirigente Biologo",
+          "name": "Dott.ssa [[MEDICO:Lucia Becattini]]",
+          "digital": false
+        }
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "title",
+      "text": "RICHIESTA DI CONSULENZA GENETICA ONCOLOGICA",
+      "subtitle": "Modulo interno - da trasmettere alla [[REPARTO:SOD Genetica Medica]]"
+    },
+    {
+      "type": "address",
+      "align": "left",
+      "lines": [
+        "Al Dott. [[MEDICO:Paolo Innocenti]]",
+        "[[REPARTO:SOD Genetica Medica]] - Ambulatorio Tumori Ereditari",
+        "[[STRUTTURA_SANITARIA:Istituto di Ricovero Santa Clelia]], padiglione 3"
+      ]
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Probando",
+          "[[PERSONA:Bianca Dell'Orto]]"
+        ],
+        [
+          "Data di nascita",
+          "[[DATA_NASCITA:09/10/1961]]"
+        ],
+        [
+          "Recapito",
+          "[[TELEFONO:+39 347 902 1146]]"
+        ],
+        [
+          "E-mail",
+          "[[EMAIL:bianca.dellorto61@posta.example.it]]"
+        ],
+        [
+          "Motivo",
+          "Tumore MMRd (MSH2/MSH6), [[PATOLOGIA:pregresso carcinoma colorettale]]"
+        ],
+        [
+          "Priorità",
+          "Entro 30 giorni"
+        ]
+      ]
+    },
+    {
+      "type": "table",
+      "caption": "Albero genealogico (sintesi riferita dalla paziente)",
+      "header": [
+        "Familiare",
+        "Grado",
+        "Età",
+        "Neoplasia / note"
+      ],
+      "widths": [
+        3.2,
+        2,
+        1.2,
+        4.6
+      ],
+      "rows": [
+        [
+          "[[FAMILIARE:Viola Dell'Orto]]",
+          "Sorella",
+          "[[ETA:58]]",
+          "[[PATOLOGIA:Carcinoma del colon destro]] a 44 anni; in follow-up presso altro centro"
+        ],
+        [
+          "[[FAMILIARE:Sole Martinelli]]",
+          "Figlia",
+          "[[ETA:31]]",
+          "Nessuna neoplasia; [[GRAVIDANZA:gravidanza in corso (22 settimane)]]"
+        ],
+        [
+          "[[FAMILIARE:Giuseppe Dell'Orto]]",
+          "Padre",
+          "deceduto",
+          "[[DECESSO_CAUSA:Carcinoma gastrico]] a 61 anni"
+        ],
+        [
+          "[[FAMILIARE:Anna Rosa Bellini]]",
+          "Madre",
+          "[[ETA:86]]",
+          "Nessuna neoplasia nota"
+        ]
+      ]
+    },
+    {
+      "type": "checkboxes",
+      "label": "Consensi raccolti dalla Dott.ssa [[MEDICO:Bagnoli]]",
+      "columns": 1,
+      "items": [
+        [
+          "La paziente acconsente all'invio dei propri dati alla Genetica Medica",
+          true
+        ],
+        [
+          "La paziente autorizza il contatto diretto dei familiari a rischio da parte del genetista",
+          false
+        ],
+        [
+          "La paziente desidera informare personalmente la figlia e la sorella",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Note per il genetista: la sig.ra [[PERSONA:Bianca]] ha chiesto che la figlia, attualmente in gravidanza, venga informata solo dopo il parto; il fiduciario sig. [[CONTATTO_EMERGENZA:F. Martinelli]] è a conoscenza dell'esito istologico ma non del sospetto genetico."
+    },
+    {
+      "type": "stamp",
+      "angle": 7,
+      "align": "right",
+      "lines": [
+        "PERVENUTO",
+        "[[REPARTO:GENETICA MEDICA]] - [[DATA:10 LUG 2025]]",
+        "prot. [[NUMERO_PROTOCOLLO:GM/2025/3387]]",
+        "op. [[OPERATORE_SANITARIO:M. Ciampolini]]"
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Lynch",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Amsterdam",
+      "forbidden_categories": [
+        "LUOGO",
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "bianco-grigiastro",
+      "forbidden_categories": [
+        "PERSONA",
+        "NOME",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "ProMisE",
+      "forbidden_categories": [
+        "PERSONA",
+        "ORGANIZZAZIONE"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,607 @@
+{
+  "id": "test_genetico_complessa_04",
+  "type": "test_genetico",
+  "difficulty": "complessa",
+  "style": {
+    "font": "courier",
+    "color": "#BF360C",
+    "font_size": 7.6,
+    "margins_mm": 12,
+    "fax_line": "[[DATA_REFERTO:05/03/2025]] 14:22  DA: [[FAX:06 4417 2290]]  [[STRUTTURA_SANITARIA:POLICLINICO TIBERINO]] LAB FARMACOGENOMICA  A: AMB. MAL. INFETTIVE"
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Aminata",
+      "last_name": "Ndiaye",
+      "sex": "F",
+      "birth_date": "1991-03-02",
+      "birth_place": "Senegal"
+    }
+  },
+  "letterhead": {
+    "logo": "PTSE",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Policlinico Tiberino Sant'Ermete]]",
+      "[[REPARTO:UOC Virologia Clinica e Farmacogenomica]]",
+      "Laboratorio di riferimento regionale HLA e PGx",
+      "Direttore: Prof. [[MEDICO:Claudio Santarelli]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Portuense 1290]]",
+      "[[CAP:00148]] [[LUOGO:Roma]]",
+      "Tel. [[TELEFONO:06 4417 2201]]",
+      "Fax [[FAX:06 4417 2290]]",
+      "[[EMAIL:pgx.lab@ptse.example.it]]"
+    ]
+  },
+  "running_header": "PZ: [[PERSONA:NDIAYE AMINATA]] | [[CODICE_FISCALE:@paz]] | ID HIV [[ID_PAZIENTE:MI-HIV-04471]] | ref. [[NUMERO_REFERTO:PGX/25/0219]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Policlinico Tiberino Sant'Ermete]] - P.IVA [[PARTITA_IVA:@ptse]] - Documento trasmesso via fax per urgenza clinica",
+    "Destinatario: Dott. [[MEDICO:V. Mastrangelo]] - Se ricevuto per errore, distruggere e avvisare il mittente al n. [[TELEFONO:06 4417 2201]]",
+    "Dati sanitari soggetti a maggior tutela (HIV - L. 135/1990): vietata la divulgazione a terzi."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "REFERTO DI FARMACOGENETICA E TIPIZZAZIONE HLA",
+      "subtitle": "HLA-B*57:01, UGT1A1 (promotore TA), CYP2B6 - pre-switch della terapia antiretrovirale"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "title": "ASSISTITA",
+      "fields": [
+        [
+          "Cognome",
+          "[[COGNOME:NDIAYE]]"
+        ],
+        [
+          "Nome",
+          "[[NOME:AMINATA]]"
+        ],
+        [
+          "Nata il",
+          "[[DATA_NASCITA:02/03/1991]]"
+        ],
+        [
+          "Luogo nascita",
+          "[[LUOGO_NASCITA:Thiès (Senegal)]]"
+        ],
+        [
+          "Cittadinanza",
+          "[[CITTADINANZA:senegalese]]"
+        ],
+        [
+          "Cod. STP (pregr.)",
+          "[[CODICE_STP_ENI:STP1201080004471]]"
+        ],
+        [
+          "Permesso sogg.",
+          "[[NUMERO_PERMESSO_SOGGIORNO:I12937456]]"
+        ],
+        [
+          "Scadenza",
+          "[[DATA_SCADENZA:18/09/2026]]"
+        ],
+        [
+          "Domicilio",
+          "[[INDIRIZZO:Via di Torpignattara 141]], [[LUOGO:Roma]]"
+        ],
+        [
+          "Esenzione",
+          "[[CODICE_ESENZIONE:020]]"
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "columns",
+      "left": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Richiedente",
+              "Dott. [[MEDICO:Valerio Mastrangelo]]"
+            ],
+            [
+              "U.O.",
+              "[[REPARTO:Ambulatorio Malattie Infettive]]"
+            ],
+            [
+              "Accettaz.",
+              "[[NUMERO_ACCETTAZIONE:25-PGX-000219]]"
+            ],
+            [
+              "Prelievo",
+              "[[DATA_VISITA:24/02/2025]]"
+            ],
+            [
+              "Referto",
+              "[[DATA_REFERTO:05/03/2025]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "label": "DNA",
+          "value": "[[CODICE_CAMPIONE:PGX25-0219-B]]",
+          "align": "center"
+        },
+        {
+          "type": "paragraph",
+          "size": 6.5,
+          "align": "center",
+          "text": "Prelievo eseguito dall'inf. [[OPERATORE_SANITARIO:Bianca Lo Iacono]]"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Notizie cliniche"
+    },
+    {
+      "type": "paragraph",
+      "text": "Donna di [[ETA:33]] anni, [[ETNIA:origine africana subsahariana]], con [[MALATTIE_INFETTIVE:infezione da HIV-1]] diagnosticata nel [[DATA:2019]] durante la [[GRAVIDANZA:gravidanza]], stadio CDC A2. Attualmente in terapia con [[FARMACO:tenofovir disoproxil/emtricitabina/efavirenz 245/200/600 mg]], con HIV-RNA [[ESAME_VALORE:< 20 copie/mL]] e linfociti CD4+ [[ESAME_VALORE:612 cellule/µL]]. Riferisce [[DIAGNOSI:insonnia]], [[DIAGNOSI:sogni vividi]] e [[DIAGNOSI:vertigini]] persistenti attribuibili a efavirenz. Pregressa [[MALATTIE_INFETTIVE:infezione tubercolare latente]] trattata con [[FARMACO:isoniazide]] nel 2020. HBsAg negativo, anti-HBs positivo da vaccinazione. Nessun segno di sarcoma di Kaposi. Bilirubina totale [[ESAME_VALORE:1,9 mg/dL]] con transaminasi normali. La paziente, [[RELIGIONE:musulmana praticante]], chiede uno schema compatibile con il digiuno del Ramadan (assunzione serale). Si richiede la genotipizzazione prima dello switch a un regime contenente [[FARMACO:abacavir]] o [[FARMACO:atazanavir]]."
+    },
+    {
+      "type": "heading",
+      "text": "Storia della terapia antiretrovirale (dati forniti dal centro richiedente)"
+    },
+    {
+      "type": "table",
+      "font_size": 6.8,
+      "header": [
+        "Periodo",
+        "Regime",
+        "HIV-RNA / CD4+",
+        "Motivo di variazione"
+      ],
+      "widths": [
+        2.4,
+        4.2,
+        3,
+        4
+      ],
+      "rows": [
+        [
+          "[[DATA:mag 2019]] - [[DATA:ott 2019]]",
+          "[[FARMACO:zidovudina/lamivudina + lopinavir/ritonavir]]\n(profilassi materno-fetale)",
+          "[[ESAME_VALORE:41.300 copie/mL]] all'avvio\nCD4+ [[ESAME_VALORE:388/µL]]",
+          "parto il [[DATA:14/10/2019]]; [[INTERVENTO:taglio cesareo elettivo]]"
+        ],
+        [
+          "[[DATA:nov 2019]] - [[DATA:feb 2021]]",
+          "[[FARMACO:tenofovir/emtricitabina + raltegravir]]",
+          "soppressione virologica a 3 mesi",
+          "difficoltà nella posologia bis die"
+        ],
+        [
+          "[[DATA:mar 2021]] - oggi",
+          "[[FARMACO:tenofovir DF/emtricitabina/efavirenz]]\n(singola compressa)",
+          "HIV-RNA non rilevabile\nCD4+ in risalita",
+          "effetti avversi neuropsichiatrici; [[SALUTE_MENTALE:sintomi depressivi lievi]] in valutazione"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "La paziente è seguita anche dalla psicologa del centro, Dott.ssa [[OPERATORE_SANITARIO:Marta Lisi Fabbrocini]], per [[SALUTE_MENTALE:disturbo dell'adattamento con umore ansioso]]; non assume psicofarmaci. Peso [[MISURE_ANTROPOMETRICHE:64 kg]], altezza [[MISURE_ANTROPOMETRICHE:168 cm]]. Clearance della creatinina stimata [[ESAME_VALORE:96 mL/min]]. Nessuna allergia nota a farmaci, riferita [[ALLERGIA:intolleranza al lattosio]]."
+    },
+    {
+      "type": "section",
+      "text": "Metodi"
+    },
+    {
+      "type": "paragraph",
+      "text": "HLA-B*57:01: PCR con primer sequenza-specifici (SSP) e conferma con tipizzazione HLA-B a media risoluzione (PCR-SSO, Luminex). UGT1A1: analisi dei frammenti della regione promotore (TA)n. CYP2B6: genotipizzazione delle varianti c.516G>T (rs3745274) e c.983T>C (rs28399499) mediante PCR real-time con sonde allele-specifiche. Fenotipi assegnati secondo le linee guida CPIC e DPWG vigenti."
+    },
+    {
+      "type": "table",
+      "font_size": 6.8,
+      "caption": "Tracciabilità analitica (sistema qualità ISO 15189)",
+      "header": [
+        "Fase",
+        "Data",
+        "Strumento (n. serie)",
+        "Operatore",
+        "Esito CQ"
+      ],
+      "widths": [
+        2.8,
+        1.8,
+        3.6,
+        3.2,
+        2
+      ],
+      "rows": [
+        [
+          "Estrazione DNA da sangue intero EDTA",
+          "[[DATA:25/02/2025]]",
+          "Estrattore automatico\nS/N [[ID_DISPOSITIVO:QX-EX-0071842]]",
+          "tecn. [[OPERATORE_SANITARIO:Riccardo Sbardella]]",
+          "260/280 = 1,86"
+        ],
+        [
+          "HLA-B SSP + SSO",
+          "[[DATA:27/02/2025]]",
+          "Citofluorimetro a microsfere\nS/N [[ID_DISPOSITIVO:LX200-11043]]",
+          "tecn. [[OPERATORE_SANITARIO:Giorgia Neri D'Amico]]",
+          "conforme"
+        ],
+        [
+          "UGT1A1 analisi frammenti",
+          "[[DATA:28/02/2025]]",
+          "Sequenziatore capillare\nS/N [[ID_DISPOSITIVO:SEQ-3500-27719]]",
+          "tecn. [[OPERATORE_SANITARIO:R. Sbardella]]",
+          "conforme"
+        ],
+        [
+          "CYP2B6 real-time PCR",
+          "[[DATA:03/03/2025]]",
+          "Termociclatore real-time\nS/N [[ID_DISPOSITIVO:RT96-5512088]]",
+          "Dott.ssa [[MEDICO:Ilenia Proietti]]",
+          "conforme"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Risultati"
+    },
+    {
+      "type": "table",
+      "font_size": 7,
+      "header": [
+        "Gene / marcatore",
+        "Genotipo",
+        "Fenotipo previsto",
+        "Note"
+      ],
+      "widths": [
+        2.6,
+        3.2,
+        3.2,
+        4.6
+      ],
+      "rows": [
+        [
+          "HLA-B*57:01",
+          "[[DATO_GENETICO:Assente]]\n(HLA-B [[DATO_GENETICO:*53:01, *58:01]])",
+          "Non a rischio di ipersensibilità ad [[FARMACO:abacavir]]",
+          "Confermato con metodica SSO"
+        ],
+        [
+          "UGT1A1\npromotore (TA)n",
+          "[[DATO_GENETICO:*28/*28]]\n[[DATO_GENETICO:(TA)7/(TA)7]]",
+          "[[DATO_GENETICO:Metabolizzatore lento UGT1A1]]",
+          "Genotipo associato a sindrome di Gilbert; esclusa forma Crigler-Najjar (bilirubina compatibile)"
+        ],
+        [
+          "CYP2B6\nc.516G>T\nc.983T>C",
+          "[[DATO_GENETICO:*6/*6]]\n[[DATO_GENETICO:516 T/T]]; 983 T/T",
+          "[[DATO_GENETICO:Metabolizzatore lento CYP2B6]]",
+          "Frequenza elevata nelle popolazioni africane; spiega le concentrazioni elevate di efavirenz"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Raccomandazioni farmacologiche"
+    },
+    {
+      "type": "table",
+      "font_size": 7,
+      "header": [
+        "Farmaco",
+        "Raccomandazione",
+        "Forza"
+      ],
+      "widths": [
+        2.6,
+        9,
+        2
+      ],
+      "rows": [
+        [
+          "Abacavir",
+          "Utilizzabile: HLA-B*57:01 negativo. Mantenere comunque la sorveglianza clinica nelle prime 6 settimane.",
+          "Forte"
+        ],
+        [
+          "Atazanavir",
+          "Elevata probabilità (oltre 50%) di [[DIAGNOSI:iperbilirubinemia]] con ittero e possibile interruzione. Sconsigliato; preferire alternativa.",
+          "Forte"
+        ],
+        [
+          "Efavirenz",
+          "Esposizione aumentata e rischio di effetti neuropsichiatrici. Se mantenuto, ridurre la dose a 400 mg/die; preferibile lo switch.",
+          "Moderata"
+        ],
+        [
+          "Dolutegravir / Bictegravir",
+          "Nessuna raccomandazione PGx specifica; UGT1A1*28 può aumentare lievemente le concentrazioni senza rilevanza clinica.",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "**Conclusione:** nella sig.ra [[PERSONA:Ndiaye]] il profilo è compatibile con lo switch a [[FARMACO:abacavir/lamivudina/dolutegravir]] in monosomministrazione serale; da evitare [[FARMACO:atazanavir]]. La sintomatologia neuropsichica attuale è coerente con il genotipo [[DATO_GENETICO:CYP2B6 metabolizzatore lento]]. Valutazione definitiva a cura del clinico curante."
+    },
+    {
+      "type": "section",
+      "text": "Informazioni per la famiglia e note di comunicazione"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il risultato UGT1A1 ha carattere ereditario ma non comporta rischi per la salute in assenza di farmaci specifici. La paziente ha chiesto che il risultato non sia comunicato al compagno, sig. [[FAMILIARE:Moussa Diop]], e ha autorizzato come unico contatto in caso di necessità la cugina [[CONTATTO_EMERGENZA:Khady Sow]] ([[TELEFONO:+39 389 0047215]]), che non è a conoscenza della diagnosi di HIV. Il figlio [[FAMILIARE:Ibrahima Diop]], di 5 anni, risulta [[ESAME_VALORE:HIV-negativo]] al follow-up pediatrico concluso presso l'[[REPARTO:Ambulatorio di Infettivologia Pediatrica]]. Il colloquio di restituzione si è svolto con la mediatrice linguistico-culturale [[OPERATORE_SANITARIO:Fatou Mbaye]] (lingua wolof)."
+    },
+    {
+      "type": "note",
+      "text": "La genotipizzazione mirata non esclude altre varianti rare nei geni analizzati. HLA-B*58:01 è riportato a fini informativi (associazione con reazioni ad allopurinolo). I fenotipi sono predittivi e vanno integrati con il monitoraggio clinico e, ove disponibile, con il dosaggio plasmatico dei farmaci (TDM)."
+    },
+    {
+      "type": "heading",
+      "text": "Lista di distribuzione"
+    },
+    {
+      "type": "table",
+      "font_size": 7,
+      "header": [
+        "Destinatario",
+        "Modalità",
+        "Data invio"
+      ],
+      "widths": [
+        6,
+        4,
+        2.6
+      ],
+      "rows": [
+        [
+          "Dott. [[MEDICO:Valerio Mastrangelo]] - [[REPARTO:Ambulatorio Malattie Infettive]]",
+          "Fax [[FAX:06 4417 3355]]",
+          "[[DATA:05.03.25]]"
+        ],
+        [
+          "Dott.ssa [[MEDICO:Rossella De Angelis Nuzzo]] - farmacista, [[REPARTO:UOC Farmacia Ospedaliera]]",
+          "Posta interna",
+          "[[DATA:06.03.25]]"
+        ],
+        [
+          "Interessata (copia cartacea)",
+          "Consegna a mano su appuntamento",
+          "[[DATA:12.03.25]]"
+        ]
+      ]
+    },
+    {
+      "type": "barcode",
+      "kind": "qr",
+      "label": "Accesso protetto al referto (codice riservato alla paziente)",
+      "value": "https://pgx.ptse.example.it/r/[[NUMERO_REFERTO:PGX/25/0219]]/[[ID_PAZIENTE:MI-HIV-04471]]"
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Roma]], [[DATA_REFERTO:05/03/2025]]",
+      "role": "La Dirigente Biologa",
+      "name": "Dott.ssa [[MEDICO:Ilenia Proietti]]",
+      "digital": true
+    },
+    {
+      "type": "signature",
+      "place_date": "Validazione clinica PGx",
+      "role": "Il Direttore UOC - Farmacologo clinico",
+      "name": "Prof. [[MEDICO:Claudio Santarelli]]",
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:POLICLINICO TIBERINO S. ERMETE]]",
+        "VIROLOGIA E FARMACOGENOMICA",
+        "Prof. [[MEDICO:C. SANTARELLI]]",
+        "OMCeO RM n. [[NUMERO_ALBO:RM 51207]]"
+      ]
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "PERVENUTO VIA FAX",
+        "AMB. MALATTIE INFETTIVE",
+        "[[DATA:05 MAR 2025]] ore 14:31",
+        "inf. [[OPERATORE_SANITARIO:Sole Martufi]]"
+      ],
+      "angle": 11,
+      "align": "left"
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "CPIC Guideline for HLA-B genotype and [[FARMACO:abacavir]] dosing; CPIC Guideline for UGT1A1 and [[FARMACO:atazanavir]]; CPIC Guideline for CYP2B6 and efavirenz (aggiornamenti vigenti).",
+        "Ai sensi della L. 135/1990 il referto riporta l'identificativo dell'ambulatorio HIV ([[ID_PAZIENTE:MI-HIV-04471]]); nelle comunicazioni esterne usare esclusivamente tale codice.",
+        "Il precedente codice STP della sig.ra [[PERSONA:A. Ndiaye]] è stato chiuso all'iscrizione al SSN in data [[DATA:11/01/2023]]."
+      ]
+    },
+    {
+      "type": "title",
+      "text": "CONSENSO INFORMATO AI TEST FARMACOGENETICI E HLA",
+      "subtitle": "Mod. PGX-07 rev. 3 - da allegare alla richiesta e conservare agli atti del laboratorio"
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Assistita",
+          "[[PERSONA:Aminata Ndiaye]]"
+        ],
+        [
+          "Nata il",
+          "[[DATA_NASCITA:02.03.91]]"
+        ],
+        [
+          "Accettazione",
+          "[[NUMERO_ACCETTAZIONE:25-PGX-000219]]"
+        ],
+        [
+          "Data colloquio",
+          "[[DATA_VISITA:24 febbraio 2025]]"
+        ],
+        [
+          "Medico che informa",
+          "Dott. [[MEDICO:V. Mastrangelo]]"
+        ],
+        [
+          "Mediatrice (wolof)",
+          "[[OPERATORE_SANITARIO:Fatou Mbaye]]"
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Tessera sanitaria",
+      "value": "[[TESSERA_SANITARIA:@ts]]"
+    },
+    {
+      "type": "paragraph",
+      "text": "Io sottoscritta [[PERSONA:Aminata Ndiaye]], domiciliata in [[INDIRIZZO:Via di Torpignattara 141]], [[CAP:00176]] [[LUOGO:Roma]], recapito telefonico [[TELEFONO:+39 351 228 4096]], dichiaro di aver ricevuto, anche con l'aiuto della mediatrice linguistico-culturale, informazioni comprensibili su: scopo delle analisi (prevedere il rischio di reazioni avverse e la risposta ai farmaci antiretrovirali), natura ereditaria di alcuni risultati, possibilità di risultati inattesi, modalità di conservazione del campione e dei dati, diritto di revocare il consenso in qualsiasi momento senza conseguenze sulle cure."
+    },
+    {
+      "type": "checkboxes",
+      "columns": 1,
+      "label": "Esprimo le seguenti volontà:",
+      "items": [
+        [
+          "acconsento all'esecuzione dei test HLA-B*57:01, UGT1A1 e CYP2B6 sul mio campione di sangue",
+          true
+        ],
+        [
+          "acconsento alla trasmissione del referto al medico richiedente e alla farmacia ospedaliera",
+          true
+        ],
+        [
+          "acconsento alla comunicazione del risultato al mio compagno",
+          false
+        ],
+        [
+          "indico come persona da contattare in caso di urgenza la cugina [[CONTATTO_EMERGENZA:Khady Sow]], senza riferimento alla diagnosi",
+          true
+        ],
+        [
+          "acconsento alla conservazione del DNA residuo per 10 anni a fini di verifica",
+          true
+        ],
+        [
+          "acconsento all'uso anonimo del campione per ricerca e controllo di qualità",
+          false
+        ],
+        [
+          "desidero essere ricontattata in caso di nuove evidenze utili alla mia terapia",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "text": "Il consenso al trattamento dei dati relativi all'infezione da HIV è raccolto separatamente secondo la L. 135/1990. Il referto non viene caricato sul Fascicolo Sanitario Elettronico senza ulteriore consenso esplicito dell'interessata (oscuramento richiesto il [[DATA:24/02/2025]], pratica n. [[NUMERO_PROTOCOLLO:FSE-OSC-2025/03318]])."
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Roma]], [[DATA:24/02/2025]]",
+          "role": "Firma dell'interessata",
+          "name": "[[PERSONA:Aminata Ndiaye]]",
+          "digital": false
+        },
+        {
+          "type": "signature",
+          "place_date": "Per la traduzione orale in wolof",
+          "role": "La mediatrice linguistico-culturale",
+          "name": "[[OPERATORE_SANITARIO:Fatou Mbaye]]",
+          "extra": [
+            "Cooperativa [[ORGANIZZAZIONE:Ponti di Parole]], tessera n. [[NUMERO_ALBO:MED-0418]]"
+          ],
+          "digital": false
+        }
+      ],
+      "right": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Roma]], [[DATA:24/02/2025]]",
+          "role": "Il medico che ha raccolto il consenso",
+          "name": "Dott. [[MEDICO:Valerio Mastrangelo]]",
+          "digital": false
+        },
+        {
+          "type": "stamp",
+          "lines": [
+            "[[STRUTTURA_SANITARIA:POLICLINICO TIBERINO S. ERMETE]]",
+            "AMBULATORIO MALATTIE INFETTIVE",
+            "Dott. [[MEDICO:VALERIO MASTRANGELO]]",
+            "OMCeO RM n. [[NUMERO_ALBO:RM 58833]]"
+          ],
+          "angle": -7,
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Revoca del consenso (da compilare solo in caso di revoca)"
+    },
+    {
+      "type": "paragraph",
+      "align": "left",
+      "text": "Io sottoscritta revoco il consenso sopra espresso con effetto dalla data odierna.\nData ______________________        Firma ________________________________________"
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Gilbert",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "NOME"
+      ]
+    },
+    {
+      "value": "Crigler-Najjar",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Kaposi",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Ramadan",
+      "forbidden_categories": [
+        "PERSONA",
+        "NOME",
+        "DATA"
+      ]
+    },
+    {
+      "value": "Torpignattara",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "biopsia_patologica_facile_02",
+  "type": "biopsia_patologica",
+  "difficulty": "facile",
+  "style": {"font": "times", "color": "#7A1F2B", "font_size": 10.5, "margins_mm": 22},
+  "persons": {
+    "paz": {"first_name": "Adriana", "last_name": "Ceccarelli", "sex": "F", "birth_date": "1954-02-08", "birth_place": "Perugia"}
+  },
+  "letterhead": {
+    "logo": "ASL",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASL Valle del Chiascio]]",
+      "[[STRUTTURA_SANITARIA:Ospedale di Pian dei Mandorli]]",
+      "[[REPARTO:S.C. Anatomia e Istologia Patologica]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Strada Tiberina 212]]",
+      "[[CAP:06134]] [[LUOGO:Perugia]]",
+      "[[EMAIL:istopatologia@aslchiascio.example.it]]"
+    ]
+  },
+  "footer": [
+    "Referto conforme all'originale conservato presso l'archivio della Struttura - Conservazione dei preparati: 10 anni (vetrini e inclusi)"
+  ],
+  "blocks": [
+    {"type": "title", "text": "Esame Istopatologico", "subtitle": "Biopsia cutanea escissionale"},
+    {"type": "fields", "columns": 1, "fields": [
+      ["Cognome", "[[COGNOME:Ceccarelli]]"],
+      ["Nome", "[[NOME:Adriana]]"],
+      ["Data di nascita", "[[DATA_NASCITA:08/02/1954]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Numero esame", "[[NUMERO_REFERTO:25-CUT-01977]]"],
+      ["Accettazione", "[[DATA:03/03/2025]]"],
+      ["Provenienza", "[[REPARTO:Ambulatorio di Dermatologia]]"],
+      ["Refertazione", "[[DATA_REFERTO:11/03/2025]]"]
+    ]},
+    {"type": "heading", "text": "Quesito clinico"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Lesione papulo-nodulare perlacea]] della regione malare sinistra, di circa 8 mm, a lenta crescita da un anno. Sospetto [[DIAGNOSI:basalioma]]. Asportazione con margine clinico di 3 mm."},
+    {"type": "heading", "text": "Materiale"},
+    {"type": "paragraph", "text": "Losanga cutanea orientata con filo di repere in corrispondenza del polo superiore (blocchetti A1-A3)."},
+    {"type": "heading", "text": "Esame macroscopico"},
+    {"type": "paragraph", "text": "Losanga di cute di mm 14 x 7 x 4, che al centro presenta una lesione rilevata, di colorito grigio-perlaceo, di mm 7 di diametro massimo. Si chinano i margini con inchiostro di china. Sezioni trasversali seriate, inclusione totale."},
+    {"type": "heading", "text": "Esame microscopico"},
+    {"type": "paragraph", "text": "Proliferazione di cellule basaloidi disposte in nidi e noduli di varie dimensioni, con palizzata periferica e fenditure di retrazione dallo stroma circostante, che si estende fino al derma reticolare. Non si osserva invasione perineurale. Elastosi solare del derma superficiale."},
+    {"type": "heading", "text": "Diagnosi"},
+    {"type": "paragraph", "text": "**Cute della regione malare sinistra: [[DIAGNOSI:carcinoma basocellulare di tipo nodulare]]**, spessore [[ESAME_VALORE:1,6 mm]].\nMargini di resezione indenni: distanza minima dal margine laterale [[ESAME_VALORE:2,1 mm]], dal margine profondo [[ESAME_VALORE:1,4 mm]]."},
+    {"type": "spacer", "mm": 6},
+    {"type": "signature", "place_date": "[[LUOGO:Perugia]], [[DATA_REFERTO:11/03/2025]]", "role": "Il Medico Patologo", "name": "Dott. [[MEDICO:Giacomo Tassi]]", "digital": false},
+    {"type": "paragraph", "size": 8.5, "align": "left", "text": "Medico richiedente: Dott.ssa [[MEDICO:Renata Bartolini]], Dermatologia. Il referto va consegnato al medico curante."}
+  ],
+  "negatives": []
+}

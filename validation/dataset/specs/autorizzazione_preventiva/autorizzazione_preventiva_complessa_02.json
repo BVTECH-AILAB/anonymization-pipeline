@@ -1,0 +1,599 @@
+{
+  "id": "autorizzazione_preventiva_complessa_02",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "complessa",
+  "style": {
+    "font": "helvetica",
+    "color": "#00838F",
+    "font_size": 7.8,
+    "margins_mm": 13
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Sole",
+      "last_name": "Dell'Orto",
+      "sex": "F",
+      "birth_date": "2026-03-18",
+      "birth_place": "Pescara"
+    },
+    "madre": {
+      "first_name": "Bianca",
+      "last_name": "Mariani",
+      "sex": "F",
+      "birth_date": "1992-11-05",
+      "birth_place": "Ancona"
+    },
+    "padre": {
+      "first_name": "Matteo",
+      "last_name": "Dell'Orto",
+      "sex": "M",
+      "birth_date": "1989-06-21",
+      "birth_place": "Pescara"
+    }
+  },
+  "letterhead": {
+    "logo": "APV",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASL Adriatica Pescara-Vestina]]",
+      "Commissione Aziendale del Farmaco - Farmaci innovativi",
+      "Centro di Coordinamento Malattie Rare (sede aziendale)",
+      "Presidente: Dott. [[MEDICO:Raffaele Di Febo]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Renato Paolini 47]]",
+      "[[CAP:65124]] [[LUOGO:Pescara]]",
+      "Tel. [[TELEFONO:085 4253906]]",
+      "[[EMAIL:caf.innovativi@aslpv.example.it]]"
+    ]
+  },
+  "running_header": "AP terapia genica - Minore [[PERSONA:Sole Dell'Orto]] - C.F. [[CODICE_FISCALE:@paz]] - Pratica [[NUMERO_PROTOCOLLO:CAF/INN/2026/031]]",
+  "footer": [
+    "Pratica [[NUMERO_PROTOCOLLO:CAF/INN/2026/031]] - [[PERSONA:S. Dell'Orto]] (minore) - Documento contenente dati genetici: conservare separatamente dalla cartella amministrativa",
+    "[[STRUTTURA_SANITARIA:ASL Adriatica Pescara-Vestina]] - P.IVA [[PARTITA_IVA:@asl]] - PEC [[PEC:protocollo@pec.aslpv.example.it]]"
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "RICHIESTA DI AUTORIZZAZIONE PREVENTIVA - TERAPIA GENICA",
+      "subtitle": "Farmaco innovativo ad alto costo per malattia rara - [[FARMACO:onasemnogene abeparvovec]] (somministrazione unica)"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Protocollo",
+              "[[NUMERO_PROTOCOLLO:CAF/INN/2026/031]]"
+            ],
+            [
+              "Pervenuta il",
+              "[[DATA:04.08.26]] a mezzo PEC"
+            ],
+            [
+              "Codice malattia rara",
+              "[[CODICE_ESENZIONE:RFG050]]"
+            ]
+          ]
+        },
+        {
+          "type": "checkboxes",
+          "columns": 2,
+          "items": [
+            [
+              "Prima richiesta",
+              true
+            ],
+            [
+              "Rinnovo",
+              false
+            ],
+            [
+              "Urgente (finestra terapeutica)",
+              true
+            ],
+            [
+              "Ordinaria",
+              false
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "barcode",
+          "kind": "qr",
+          "label": "Fascicolo malattie rare",
+          "value": "https://rmr.aslpv.example.it/f/[[ID_PAZIENTE:MR-PE-2026-00714]]",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "1. Dati dell'assistito"
+    },
+    {
+      "type": "patient_box",
+      "title": "Assistita (minore di età)",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome",
+          "[[COGNOME:Dell'Orto]]"
+        ],
+        [
+          "Nome",
+          "[[NOME:Sole]]"
+        ],
+        [
+          "Data di nascita",
+          "[[DATA_NASCITA:18/03/2026]]"
+        ],
+        [
+          "Luogo di nascita",
+          "[[LUOGO_NASCITA:Pescara]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Strada Colle Innamorati 22]], [[CAP:65125]] [[LUOGO:Pescara]]"
+        ],
+        [
+          "Peso attuale",
+          "[[MISURE_ANTROPOMETRICHE:6,4 kg]]"
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "char_boxes",
+          "label": "C.F.",
+          "value": "[[CODICE_FISCALE:@paz]]"
+        }
+      ],
+      "right": [
+        {
+          "type": "char_boxes",
+          "label": "T.S.",
+          "value": "[[TESSERA_SANITARIA:@ts]]"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "header": [
+        "Esercenti la responsabilità genitoriale",
+        "Codice fiscale",
+        "Recapiti",
+        "Note"
+      ],
+      "widths": [
+        3.4,
+        3,
+        3.6,
+        3
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "Madre: [[TUTORE_DELEGATO:Bianca Mariani]]\nnata il [[DATA_NASCITA:05/11/1992]]",
+          "[[CODICE_FISCALE:@madre]]",
+          "[[TELEFONO:+39 339 418 2270]]\n[[EMAIL:bianca.mariani@posta.example.it]]",
+          "referente per le comunicazioni"
+        ],
+        [
+          "Padre: [[TUTORE_DELEGATO:Matteo Dell'Orto]]\nnato il [[DATA_NASCITA:21/06/1989]]",
+          "[[CODICE_FISCALE:@padre]]",
+          "[[TELEFONO:+39 348 775 0164]]",
+          "[[PROFESSIONE:autotrasportatore]], spesso fuori sede"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "2. Prescrizione"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Dose",
+        "Modalità",
+        "Sede",
+        "Data prevista"
+      ],
+      "widths": [
+        3.4,
+        2.6,
+        3.2,
+        3.2,
+        1.8
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "[[FARMACO:onasemnogene abeparvovec]]\nkit per peso 6,1-6,5 kg",
+          "[[FARMACO:1,1 x 10^14 vg/kg]]",
+          "[[TERAPIA:infusione e.v. unica in 60 minuti]]",
+          "[[STRUTTURA_SANITARIA:Policlinico Universitario Colle dell'Ateneo]], [[LUOGO:Roma]]",
+          "entro il [[DATA:31/08/2026]]"
+        ],
+        [
+          "[[FARMACO:prednisolone]]",
+          "[[FARMACO:1 mg/kg/die]]",
+          "per os, da 24 h prima e per 30 giorni",
+          "a domicilio",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Centro prescrittore",
+          "[[REPARTO:U.O.S.D. Neurologia Pediatrica e Malattie Neuromuscolari]], [[STRUTTURA_SANITARIA:Ospedale Civile San Cetteo]]"
+        ],
+        [
+          "Medico prescrittore",
+          "Dott.ssa [[MEDICO:Ludovica Di Nardo]], iscr. Albo PE n. [[NUMERO_ALBO:3391]]"
+        ],
+        [
+          "Data prescrizione",
+          "[[DATA_PRESCRIZIONE:30/07/2026]]"
+        ],
+        [
+          "Scheda registro AIFA",
+          "n. [[NUMERO_RICETTA:ZOL-26-PE-0093]]"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "3. Motivazione clinica"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Anamnesi e diagnosi"
+        },
+        {
+          "type": "paragraph",
+          "text": "La piccola [[NOME:Sole]], secondogenita, nata a termine da gravidanza normodecorsa, è risultata positiva allo screening neonatale esteso per [[DIAGNOSI:atrofia muscolare spinale]] (prelievo del [[DATA:21/03/2026]]). Il test di conferma ha evidenziato [[DATO_GENETICO:delezione omozigote dell'esone 7 del gene SMN1]] con [[DATO_GENETICO:2 copie del gene SMN2]], quadro predittivo di [[DIAGNOSI:SMA di tipo 1]] (malattia di Werdnig-Hoffmann). Entrambi i genitori sono risultati [[DATO_GENETICO:portatori eterozigoti di delezione SMN1]] (consulenza genetica del [[DATA:9 aprile 2026]], Dott. [[MEDICO:Federico Ianni D'Alessandro]]).",
+          "size": 7.5
+        },
+        {
+          "type": "paragraph",
+          "text": "In attesa dell'autorizzazione è stata avviata terapia ponte con [[FARMACO:nusinersen intratecale 12 mg]] (4 dosi di carico completate il [[DATA:02/06/2026]]).",
+          "size": 7.5
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Valutazione funzionale"
+        },
+        {
+          "type": "table",
+          "header": [
+            "Data",
+            "CHOP INTEND",
+            "HINE-2",
+            "Operatore"
+          ],
+          "widths": [
+            1.8,
+            1.5,
+            1.3,
+            2.6
+          ],
+          "font_size": 7,
+          "rows": [
+            [
+              "[[DATA_VISITA:15/04/2026]]",
+              "[[ESAME_VALORE:38/64]]",
+              "[[ESAME_VALORE:3/26]]",
+              "Ft. [[OPERATORE_SANITARIO:Marco Rapino]]"
+            ],
+            [
+              "[[DATA_VISITA:10/06/2026]]",
+              "[[ESAME_VALORE:41/64]]",
+              "[[ESAME_VALORE:4/26]]",
+              "Ft. [[OPERATORE_SANITARIO:Marco Rapino]]"
+            ],
+            [
+              "[[DATA_VISITA:22/07/2026]]",
+              "[[ESAME_VALORE:43/64]]",
+              "[[ESAME_VALORE:5/26]]",
+              "Ft. [[OPERATORE_SANITARIO:M. Rapino]]"
+            ]
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Esame neurologico (Hammersmith) con lieve ipotonia assiale, riflessi osteotendinei ridotti, suzione valida, nessun supporto ventilatorio. Anticorpi anti-AAV9 [[ESAME_VALORE:negativi (titolo < 1:50)]], transaminasi e piastrine nella norma.",
+          "size": 7.5
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "**Motivazione della richiesta.** La somministrazione precoce della terapia genica in fase pre-sintomatica o pauci-sintomatica è associata al miglior esito motorio; la paziente rientra nei criteri di rimborsabilità (SMA 5q con fino a 3 copie di SMN2, peso fino a 21 kg). Si richiede l'autorizzazione all'erogazione presso il centro autorizzato di [[LUOGO:Roma]], con trasferimento della paziente accompagnata da entrambi i genitori. Il pediatra di libera scelta, Dott.ssa [[MEDICO:Chiara Zappacosta]], è informato e seguirà il monitoraggio di transaminasi e piastrine a domicilio nelle 12 settimane successive."
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Pescara]], [[DATA_PRESCRIZIONE:30 luglio 2026]]",
+          "role": "Il medico prescrittore",
+          "name": "Dott.ssa [[MEDICO:Ludovica Di Nardo]]",
+          "digital": false,
+          "stamp": [
+            "[[STRUTTURA_SANITARIA:Ospedale Civile San Cetteo]]",
+            "NEUROLOGIA PEDIATRICA",
+            "Dott.ssa [[MEDICO:L. Di Nardo]]",
+            "Albo PE n. [[NUMERO_ALBO:3391]]"
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "signature",
+          "place_date": "[[DATA:31/07/2026]]",
+          "role": "Il genetista medico",
+          "name": "Dott. [[MEDICO:Federico Ianni D'Alessandro]]",
+          "digital": false,
+          "stamp": [
+            "GENETICA MEDICA",
+            "Dott. [[MEDICO:F. Ianni D'Alessandro]]",
+            "Albo PE n. [[NUMERO_ALBO:2875]]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Piano di monitoraggio e organizzazione"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Tempo",
+        "Controlli previsti",
+        "Sede",
+        "Responsabile"
+      ],
+      "widths": [
+        2,
+        5,
+        3.4,
+        3.2
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "Giorno -1",
+          "Esami ematici basali, troponina, avvio [[FARMACO:prednisolone]]",
+          "[[STRUTTURA_SANITARIA:Policlinico Universitario Colle dell'Ateneo]]",
+          "Dott.ssa [[MEDICO:Ottavia Sbardella]]\n(centro somministratore)"
+        ],
+        [
+          "Giorno 0",
+          "Infusione e osservazione in degenza per 48 ore",
+          "[[REPARTO:Neuropsichiatria Infantile]], [[LUOGO:Roma]]",
+          "Dott.ssa [[MEDICO:Ottavia Sbardella]]"
+        ],
+        [
+          "Settimane 1-12",
+          "Transaminasi, piastrine, creatinina settimanali; riduzione graduale dello steroide",
+          "domicilio / [[REPARTO:ambulatorio neuromuscolare]] di [[LUOGO:Pescara]]",
+          "PLS Dott.ssa [[MEDICO:C. Zappacosta]];\ninf. [[OPERATORE_SANITARIO:Giada Pompilio]]"
+        ],
+        [
+          "Mesi 3, 6, 12",
+          "CHOP INTEND, HINE-2, valutazione respiratoria e nutrizionale",
+          "[[STRUTTURA_SANITARIA:Ospedale Civile San Cetteo]]",
+          "Dott.ssa [[MEDICO:L. Di Nardo]];\nFt. [[OPERATORE_SANITARIO:Marco Rapino]]"
+        ]
+      ]
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Trasferimento",
+          "auto propria, con il padre alla guida"
+        ],
+        [
+          "Partenza prevista",
+          "[[DATA:24 agosto 2026]]"
+        ],
+        [
+          "Accompagnatore",
+          "[[TUTORE_DELEGATO:Bianca Mariani]] (madre)"
+        ],
+        [
+          "Alloggio",
+          "struttura convenzionata del centro, rif. pratica [[NUMERO_PRENOTAZIONE:CDA-OSP-26-4471]]"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Consenso dei genitori"
+    },
+    {
+      "type": "paragraph",
+      "text": "I sottoscritti [[TUTORE_DELEGATO:Bianca Mariani]] e [[TUTORE_DELEGATO:Matteo Dell'Orto]], in qualità di genitori esercenti la responsabilità genitoriale sulla minore [[PERSONA:Sole Dell'Orto]], dichiarano di aver ricevuto dal medico prescrittore e dall'infermiera di ricerca [[OPERATORE_SANITARIO:Giada Pompilio]] informazioni complete su benefici attesi, rischi (epatotossicità, microangiopatia trombotica), necessità della terapia steroidea e dei controlli successivi, e acconsentono al trattamento e al trasferimento presso il centro di [[LUOGO:Roma]]. Acconsentono inoltre al trattamento dei dati genetici della figlia e alla comunicazione al registro nazionale."
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "paragraph",
+          "text": "Firma della madre\n\n______________________________\n(sig.ra [[TUTORE_DELEGATO:Mariani]])",
+          "align": "center"
+        }
+      ],
+      "right": [
+        {
+          "type": "paragraph",
+          "text": "Firma del padre\n\n______________________________\n(sig. [[TUTORE_DELEGATO:Dell'Orto]])",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "type": "note",
+      "text": "La sorella maggiore, [[FAMILIARE:Aurora Dell'Orto]] (4 anni), non presenta segni clinici; i genitori hanno chiesto la valutazione dello stato di portatrice al compimento della maggiore età, come da raccomandazione della consulenza genetica."
+    },
+    {
+      "type": "section",
+      "text": "4. Parere della commissione"
+    },
+    {
+      "type": "paragraph",
+      "text": "La Commissione Aziendale del Farmaco, nella seduta straordinaria del [[DATA:6 agosto 2026]], esaminata la richiesta a favore della minore [[PERSONA:Dell'Orto S.]], preso atto della documentazione genetica e della valutazione del Centro di Coordinamento Malattie Rare, rilevata l'urgenza legata alla finestra terapeutica, esprime parere:"
+    },
+    {
+      "type": "checkboxes",
+      "columns": 3,
+      "items": [
+        [
+          "Favorevole",
+          true
+        ],
+        [
+          "Favorevole con condizioni",
+          false
+        ],
+        [
+          "Non favorevole",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "table",
+      "header": [
+        "Componente",
+        "Ruolo",
+        "Voto"
+      ],
+      "widths": [
+        4,
+        6,
+        1.6
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "Dott. [[MEDICO:Raffaele Di Febo]]",
+          "Presidente, Direttore Sanitario aziendale",
+          "favorevole"
+        ],
+        [
+          "Dott.ssa [[OPERATORE_SANITARIO:Ilenia Ciccone]]",
+          "Farmacista, Responsabile Farmacia Ospedaliera",
+          "favorevole"
+        ],
+        [
+          "Dott. [[MEDICO:Nicola De Laurentiis]]",
+          "Pediatra, Referente Malattie Rare",
+          "favorevole"
+        ],
+        [
+          "Sig. [[OPERATORE_SANITARIO:Tommaso Cilli]]",
+          "Segretario verbalizzante (Ufficio Farmaci Innovativi)",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Condizioni: invio al Centro di Coordinamento della scheda di follow-up a 3, 6 e 12 mesi; la spesa è imputata al fondo per i farmaci innovativi. Il trasferimento è autorizzato in regime di mobilità con un accompagnatore a carico; il secondo genitore, sig. [[TUTORE_DELEGATO:M. Dell'Orto]], è ammesso a rimborso solo per il viaggio."
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "[[STRUTTURA_SANITARIA:ASL Adriatica Pescara-Vestina]]",
+        "COMMISSIONE AZIENDALE DEL FARMACO",
+        "Il Presidente",
+        "Dott. [[MEDICO:R. Di Febo]] - Albo PE [[NUMERO_ALBO:1960]]"
+      ],
+      "angle": 8,
+      "align": "right"
+    },
+    {
+      "type": "heading",
+      "text": "Trasmissione dell'esito"
+    },
+    {
+      "type": "address",
+      "align": "left",
+      "lines": [
+        "Alla Dott.ssa [[MEDICO:Ludovica Di Nardo]] - [[REPARTO:U.O.S.D. Neurologia Pediatrica e Malattie Neuromuscolari]]",
+        "Alla Farmacia Ospedaliera - c.a. Dott.ssa [[OPERATORE_SANITARIO:Ilenia Ciccone]]",
+        "Al [[STRUTTURA_SANITARIA:Policlinico Universitario Colle dell'Ateneo]] - Dott.ssa [[MEDICO:O. Sbardella]] (via PEC)",
+        "Ai genitori della minore: sig.ri [[TUTORE_DELEGATO:Mariani]] / [[TUTORE_DELEGATO:Dell'Orto]], [[INDIRIZZO:Strada Colle Innamorati 22]] - [[CAP:65125]] [[LUOGO:Pescara]]"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Il presente parere è valido per 60 giorni dalla data della seduta. In caso di mancata somministrazione entro tale termine (ad es. per positivizzazione degli anticorpi anti-AAV9 o per intercorrenza infettiva) la richiesta dovrà essere ripresentata con la documentazione aggiornata. Referente amministrativo: sig. [[OPERATORE_SANITARIO:Tommaso Cilli]], tel. [[TELEFONO:085 4253911]]."
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Classificazione clinica della SMA: tipo 1 (Werdnig-Hoffmann), tipo 2 (intermedia), tipo 3 (Kugelberg-Welander). La scala CHOP INTEND è validata per i lattanti con [[DIAGNOSI:SMA di tipo 1]].",
+        "Il titolo anticorpale anti-AAV9 è stato eseguito presso il laboratorio del centro somministratore (campione [[CODICE_CAMPIONE:AAV-26-11873]]).",
+        "Copia del parere è inviata al PLS Dott.ssa [[MEDICO:Zappacosta]] e, tramite la sig.ra [[TUTORE_DELEGATO:B. Mariani]], alla famiglia."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Werdnig-Hoffmann",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Kugelberg-Welander",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Hammersmith",
+      "forbidden_categories": [
+        "LUOGO",
+        "STRUTTURA_SANITARIA"
+      ]
+    },
+    {
+      "value": "CHOP INTEND",
+      "forbidden_categories": [
+        "ORGANIZZAZIONE",
+        "STRUTTURA_SANITARIA"
+      ]
+    }
+  ]
+}

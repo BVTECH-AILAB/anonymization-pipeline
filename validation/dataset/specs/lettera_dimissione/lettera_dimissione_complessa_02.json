@@ -1,0 +1,105 @@
+{
+  "id": "lettera_dimissione_complessa_02",
+  "type": "lettera_dimissione",
+  "difficulty": "complessa",
+  "style": {"font": "times", "color": "#34495E", "font_size": 8.5, "margins_mm": 15},
+  "persons": {
+    "paz": {"first_name": "Matteo", "last_name": "De Santis", "sex": "M", "birth_date": "1990-05-30", "birth_place": "Cagliari"}
+  },
+  "letterhead": {
+    "logo": "ASML",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Socio-Sanitaria Locale Monte Arci]]",
+      "Dipartimento di Salute Mentale e delle Dipendenze",
+      "[[STRUTTURA_SANITARIA:Presidio Ospedaliero San Martino del Tirso]]",
+      "[[REPARTO:Servizio Psichiatrico di Diagnosi e Cura (SPDC)]]",
+      "Responsabile: Dott. [[MEDICO:Efisio Mura]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale San Martino 12]]",
+      "[[CAP:09170]] [[LUOGO:Oristano]]",
+      "SPDC [[TELEFONO:0783 317254]]",
+      "[[EMAIL:spdc.ps@asl-montearci.example.it]]"
+    ]
+  },
+  "running_header": "SPDC - Lettera di dimissione - [[PERSONA:De Santis Matteo]] - TS [[TESSERA_SANITARIA:@ts]] - ricovero n. [[NUMERO_ACCETTAZIONE:SPDC-25-0193]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASSL Monte Arci]] - P.IVA [[PARTITA_IVA:@asl]] - Documento coperto da segreto professionale, contiene dati sulla salute mentale e sull'uso di sostanze",
+    "Copie a: Dott. [[MEDICO:Antonio Melis]] (CSM), Dott.ssa [[MEDICO:Rita Serra]] (MMG), avv. [[TUTORE_DELEGATO:Giovanna Pinna]] (amministratore di sostegno)"
+  ],
+  "blocks": [
+    {"type": "address", "align": "left", "lines": ["Al Dott. [[MEDICO:Antonio Melis]]", "[[REPARTO:Centro di Salute Mentale di Oristano]]", "e p.c. alla Dott.ssa [[MEDICO:Rita Serra]], Medico di Medicina Generale", "e p.c. all'avv. [[TUTORE_DELEGATO:Giovanna Pinna]], Amministratore di sostegno"]},
+    {"type": "title", "text": "LETTERA DI DIMISSIONE", "subtitle": "Ricovero in regime di TSO, convertito in ricovero volontario"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:De Santis Matteo]]"],
+      ["Nato a", "[[LUOGO_NASCITA:Cagliari]] il [[DATA_NASCITA:30/05/1990]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Stato civile", "[[STATO_CIVILE:celibe]]"],
+      ["Residenza", "[[INDIRIZZO:Vico Lamarmora 3]], [[CAP:09170]] [[LUOGO:Oristano]]"],
+      ["Occupazione", "[[PROFESSIONE:cameriere]] c/o [[DATORE_LAVORO:Hotel Marina Blu S.r.l.]]"],
+      ["Amm.re di sostegno", "avv. [[TUTORE_DELEGATO:Giovanna Pinna]]"],
+      ["Esenzione", "[[CODICE_ESENZIONE:044.296]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Ingresso", "[[DATA_RICOVERO:02/06/2025]] ore 22:40"],
+      ["Regime", "TSO, ord. n. [[NUMERO_PROTOCOLLO:118/2025]]"],
+      ["Passaggio a TSV", "[[DATA:09-06-25]]"],
+      ["Dimissione", "[[DATA_RICOVERO:20.06.2025]]"],
+      ["Cartella", "[[NUMERO_CARTELLA:PSI-0412/25]]"],
+      ["Psichiatra referente", "Dott.ssa [[MEDICO:Michela Piras]]"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Ricovero", "value": "[[NUMERO_ACCETTAZIONE:SPDC-25-0193]]", "align": "right"},
+    {"type": "paragraph", "text": "Caro Collega,\nTi inviamo la relazione sul ricovero del sig. [[PERSONA:Matteo De Santis]], [[ETA:35 anni]], già noto al Tuo Servizio, dimesso in data odierna in condizioni di compenso psicopatologico."},
+    {"type": "section", "text": "Modalità di accesso"},
+    {"type": "paragraph", "text": "Il paziente giunge al PS la sera del [[DATA_RICOVERO:2 giugno 2025]] accompagnato dal 118 e dalla Polizia Locale, su richiesta della madre, sig.ra [[FAMILIARE:Maria Antonietta Sanna]], per [[DIAGNOSI:agitazione psicomotoria]], [[DIAGNOSI:insonnia totale da 5 notti]], spese incontrollate e comportamento minaccioso nei confronti dei vicini, che hanno sporto [[DATI_GIUDIZIARI:denuncia per danneggiamento]]. Rifiutando ogni proposta di cura, è stato disposto [[TERAPIA:trattamento sanitario obbligatorio]] con ordinanza del Sindaco di [[LUOGO:Oristano]] n. [[NUMERO_PROTOCOLLO:118/2025]] del [[DATA:03/06/2025]], su proposta del Dott. [[MEDICO:Paolo Cossu]] (guardia medica) e convalida del Dott. [[MEDICO:Efisio Mura]]; provvedimento convalidato dal Giudice Tutelare il [[DATA:04/06/2025]] (1)."},
+    {"type": "section", "text": "Anamnesi"},
+    {"type": "paragraph", "text": "**Psichiatrica.** [[SALUTE_MENTALE:Disturbo bipolare tipo I]] diagnosticato nel 2012, tre precedenti ricoveri in SPDC (ultimo nel 2021). Scarsa aderenza alla terapia con [[FARMACO:litio]], sospeso autonomamente circa due mesi fa. Familiarità: zio materno affetto da [[SALUTE_MENTALE:disturbo bipolare]].\n**Uso di sostanze.** [[DIPENDENZE:Uso di cocaina per via inalatoria]] (circa 1 g nel fine settimana) e [[DIPENDENZE:uso quotidiano di cannabis]]; nega alcol. In carico discontinuo al SerD.\n**Medica.** [[MALATTIE_INFETTIVE:Infezione cronica da HCV]] nota dal 2019, mai trattata. Non allergie note.\n**Sociale.** Vive da solo; dal 2022 è affiancato dall'amministratore di sostegno, avv. [[TUTORE_DELEGATO:G. Pinna]], nominata con [[DATI_GIUDIZIARI:decreto del Giudice Tutelare n. 412/2022 R.G.V.G.]] per la gestione economica. In passato ha lavorato come bracciante in una serra; attualmente [[PROFESSIONE:cameriere]] stagionale. Il fratello, sig. [[FAMILIARE:Luca De Santis]], è la figura familiare di riferimento."},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "heading", "text": "Esame psichico all'ingresso"},
+      {"type": "paragraph", "text": "Vigile, disorientato nel tempo. Aspetto trascurato, ipercinetico. Eloquio logorroico e pressante, fuga delle idee. [[SALUTE_MENTALE:Umore marcatamente euforico e disforico]], irritabilità. [[SALUTE_MENTALE:Deliri di grandezza]] (riferisce di essere stato scelto per «salvare l'isola»). Non dispercezioni. Critica e insight assenti.", "align": "left"}
+    ], "right": [
+      {"type": "heading", "text": "Esame psichico alla dimissione"},
+      {"type": "paragraph", "text": "Vigile, orientato, collaborante. Aspetto curato. Eloquio fluido, di ritmo regolare. Umore in asse, affettività modulata. Non elementi deliranti. Ritmo sonno-veglia regolarizzato (7 ore per notte). Parziale critica dell'episodio, adeguata adesione al progetto di cura.", "align": "left"}
+    ]},
+    {"type": "section", "text": "Scale di valutazione"},
+    {"type": "table", "header": ["Scala", "Ingresso", "Dimissione", "Somministrata da"], "widths": [4, 1.6, 1.6, 3.4], "font_size": 8, "rows": [
+      ["YMRS (Young Mania Rating Scale)", "[[ESAME_VALORE:34/60]]", "[[ESAME_VALORE:8/60]]", "Dott.ssa [[MEDICO:M. Piras]]"],
+      ["BPRS 24 item", "[[ESAME_VALORE:62/168]]", "[[ESAME_VALORE:31/168]]", "Dott.ssa [[MEDICO:M. Piras]]"],
+      ["HAM-D (Hamilton) 17 item", "[[ESAME_VALORE:6/52]]", "[[ESAME_VALORE:4/52]]", "dott. [[OPERATORE_SANITARIO:Federico Loi]]\n(medico in formazione)"],
+      ["CGI-S", "[[ESAME_VALORE:6/7]]", "[[ESAME_VALORE:3/7]]", "Dott.ssa [[MEDICO:M. Piras]]"]
+    ]},
+    {"type": "section", "text": "Decorso clinico"},
+    {"type": "paragraph", "text": "Nei primi giorni il sig. [[PERSONA:De Santis]] si è mostrato oppositivo e irritabile. Il [[DATA:06/06/2025]] episodio di aggressività verbale verso l'infermiere [[OPERATORE_SANITARIO:Gavino Porcu]], gestito con de-escalation verbale e terapia al bisogno; **non è stato necessario ricorrere a contenzione meccanica**. Introdotta [[FARMACO:olanzapina]] fino a [[FARMACO:20 mg/die]] e reintrodotto il [[FARMACO:litio carbonato]] con titolazione progressiva (litiemia [[ESAME_VALORE:0,78 mEq/L]] al [[DATA:16/06/2025]]). Dal [[DATA:9 giugno]] il paziente ha accettato le cure e il TSO è stato revocato con passaggio a ricovero volontario.\nScreening tossicologico urinario all'ingresso positivo per [[ESAME_VALORE:benzoilecgonina]] e [[ESAME_VALORE:THC]]. ECG: ritmo sinusale, [[ESAME_VALORE:QTc 438 ms]]. HCV-RNA [[ESAME_VALORE:1.250.000 UI/mL]], genotipo virale [[ESAME_VALORE:3a]]; elastografia epatica [[ESAME_VALORE:7,1 kPa]]. La consulente infettivologa, Dott.ssa [[MEDICO:Rosa Floris]], propone trattamento con antivirali ad azione diretta dopo stabilizzazione clinica. HIV e HBsAg negativi.\n[[PERSONA:Matteo]] ha ricevuto visite regolari della madre e del fratello [[FAMILIARE:Luca]]; il colloquio familiare del [[DATA:13/06/2025]] si è svolto alla presenza dell'assistente sociale [[OPERATORE_SANITARIO:Franca Deiana]]. Il paziente acconsente che informazioni cliniche siano fornite alla madre e al fratello; nega il consenso per il padre, sig. [[FAMILIARE:Giorgio De Santis]], con cui non ha rapporti."},
+    {"type": "section", "text": "Diagnosi alla dimissione"},
+    {"type": "paragraph", "text": "1. **[[SALUTE_MENTALE:Disturbo bipolare tipo I, episodio maniacale grave con caratteristiche psicotiche]]** (ICD-10 F31.2), in remissione parziale.\n2. [[DIPENDENZE:Disturbo da uso di cocaina, di gravità moderata]] (F14.20).\n3. [[DIPENDENZE:Uso problematico di cannabis]] (F12.10).\n4. [[MALATTIE_INFETTIVE:Epatite cronica HCV-correlata]], non trattata."},
+    {"type": "section", "text": "Terapia alla dimissione"},
+    {"type": "table", "header": ["Farmaco", "Dose", "Orari", "Note"], "widths": [3, 1.8, 2, 4.2], "font_size": 8, "rows": [
+      ["[[FARMACO:Litio carbonato 300 mg]]", "1 + 0 + 2 cpr", "ore 8 / ore 20", "litiemia tra 5 giorni (target 0,6-0,8); controllo TSH e creatinina"],
+      ["[[FARMACO:Olanzapina 10 mg]]", "1 cpr", "ore 21", "dose ridotta dal [[DATA:18/06]]; monitoraggio peso e glicemia"],
+      ["[[FARMACO:Lorazepam 1 mg]]", "1 cpr", "al bisogno", "max 2 cpr/die; scalare e sospendere in 2 settimane"],
+      ["[[FARMACO:Pantoprazolo 20 mg]]", "1 cpr", "ore 7", ""]
+    ]},
+    {"type": "section", "text": "Progetto terapeutico e appuntamenti"},
+    {"type": "table", "header": ["Servizio", "Referente", "Data", "Recapito"], "widths": [3, 3, 2, 2.4], "font_size": 8, "rows": [
+      ["[[REPARTO:CSM di Oristano]]", "Dott. [[MEDICO:Antonio Melis]]\npsichiatra", "[[DATA_VISITA:24/06/2025]] ore 10:00", "[[TELEFONO:0783 317800]]"],
+      ["[[REPARTO:SerD Oristano]]", "dott.ssa [[OPERATORE_SANITARIO:Claudia Atzori]]\npsicologa", "[[DATA_VISITA:26/06/2025]] ore 15:30", "[[TELEFONO:0783 317915]]"],
+      ["[[REPARTO:Ambulatorio di Epatologia]]", "Dott.ssa [[MEDICO:Rosa Floris]]", "[[DATA_VISITA:15/07/2025]] ore 9:00", "prenotazione [[NUMERO_PRENOTAZIONE:CUP-OR-25-77012]]"],
+      ["Servizio Sociale", "[[OPERATORE_SANITARIO:Franca Deiana]]", "da concordare", "[[EMAIL:servizio.sociale@asl-montearci.example.it]]"]
+    ]},
+    {"type": "paragraph", "text": "L'amministratore di sostegno, avv. [[TUTORE_DELEGATO:Pinna]], è stata informata della dimissione e del progetto terapeutico in data [[DATA:19/06/2025]]. Si raccomanda l'astensione da sostanze e dall'alcol; si sconsiglia la guida di veicoli nelle prime settimane di terapia. In caso di nuova crisi contattare il CSM o, nelle ore notturne, il nostro reparto."},
+    {"type": "signature", "place_date": "[[LUOGO:Oristano]], [[DATA_REFERTO:20/06/2025]]", "role": "La Psichiatra di reparto", "name": "Dott.ssa [[MEDICO:Michela Piras]]", "digital": false, "stamp": ["[[REPARTO:S.P.D.C. ORISTANO]]", "Dott.ssa [[MEDICO:Michela Piras]]", "Medico Chirurgo - Spec. Psichiatria", "Ord. Medici OR n. [[NUMERO_ALBO:1187]]"]},
+    {"type": "signature", "place_date": "Visto", "role": "Il Responsabile SPDC", "name": "Dott. [[MEDICO:Efisio Mura]]", "digital": false},
+    {"type": "stamp", "lines": ["[[STRUTTURA_SANITARIA:ASSL MONTE ARCI]]", "DIPARTIMENTO SALUTE MENTALE", "Dott. [[MEDICO:E. Mura]]", "Ord. Medici OR n. [[NUMERO_ALBO:0642]]"], "angle": -12, "align": "center"},
+    {"type": "footnotes", "items": [
+      "TSO ai sensi degli artt. 33-35 L. 833/1978; ordinanza n. [[NUMERO_PROTOCOLLO:118/2025]] notificata al Giudice Tutelare il [[DATA:04/06/2025]] e revocata il [[DATA:09-06-25]].",
+      "Informazioni telefoniche: solo alla madre, sig.ra [[FAMILIARE:M. A. Sanna]] ([[TELEFONO:+39 320 448 1903]]) e al fratello [[FAMILIARE:L. De Santis]] ([[TELEFONO:+39 349 771 0264]]).",
+      "Ai sensi del D.P.R. 309/1990 i dati relativi all'uso di sostanze sono trasmessi al SerD solo con il consenso dell'interessato, acquisito il [[DATA:18/06/2025]]."
+    ]}
+  ],
+  "negatives": [
+    {"value": "Young", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Hamilton", "forbidden_categories": ["PERSONA", "COGNOME", "LUOGO"]},
+    {"value": "serra", "forbidden_categories": ["COGNOME", "MEDICO"]}
+  ]
+}

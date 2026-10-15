@@ -1,0 +1,86 @@
+{
+  "id": "biopsia_patologica_media_03",
+  "type": "biopsia_patologica",
+  "difficulty": "media",
+  "style": {"font": "dejavu", "color": "#00695C", "font_size": 8.8, "margins_mm": 16},
+  "persons": {
+    "paz": {"first_name": "Davide", "last_name": "Furlan", "sex": "M", "birth_date": "2000-05-27", "birth_place": "Trieste"}
+  },
+  "letterhead": {
+    "logo": "AOUV",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:AOU di Valcavera]]",
+      "Dipartimento di Diagnostica Avanzata",
+      "[[REPARTO:SC Anatomia Patologica e Ematopatologia]]",
+      "Direttore f.f.: Dott. [[MEDICO:Stefano Benussi]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Strada di Fiume 447]]",
+      "[[CAP:34149]] [[LUOGO:Trieste]]",
+      "Tel. [[TELEFONO:040 3994821]]"
+    ]
+  },
+  "running_header": "Paz. [[PERSONA:Furlan Davide]] ([[DATA_NASCITA:27/05/2000]]) - Rif. [[NUMERO_REFERTO:EM-25-00932]] - pagina successiva",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:AOU di Valcavera]] - Servizio Sanitario Regionale - Referto istologico con indagini ancillari",
+    "Vetrini e inclusi disponibili per revisione presso l'archivio di Anatomia Patologica, su richiesta del medico curante."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO ISTOPATOLOGICO", "subtitle": "Biopsia escissionale linfonodale con indagini immunofenotipiche"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome", "[[COGNOME:Furlan]]"],
+      ["Nome", "[[NOME:Davide]]"],
+      ["Nato a", "[[LUOGO_NASCITA:Trieste]]"],
+      ["Il", "[[DATA_NASCITA:27/05/2000]]"],
+      ["Cod. fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Sesso", "[[SESSO:M]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Riferimento", "[[NUMERO_REFERTO:EM-25-00932]]"],
+      ["Data intervento", "[[DATA_VISITA:2 luglio 2025]]"],
+      ["Reparto inviante", "[[REPARTO:SC Chirurgia Generale]] (Dott. [[MEDICO:Marko Zuliani]])"],
+      ["Data accettazione", "[[DATA:03-07-2025]]"],
+      ["Clinico di riferimento", "Dott.ssa [[MEDICO:Elisa Vascotto]], [[REPARTO:Ematologia]]"],
+      ["Data referto", "[[DATA_REFERTO:14/07/2025]]"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Blocchetto", "value": "[[CODICE_CAMPIONE:EM25-00932-A2]]", "align": "left"},
+    {"type": "section", "text": "Quesito e notizie cliniche"},
+    {"type": "paragraph", "text": "Giovane pz. di aa. [[ETA:25]], [[PROFESSIONE:studente universitario]], con [[DIAGNOSI:linfoadenomegalia laterocervicale sinistra]] e sovraclaveare da circa due mesi, [[DIAGNOSI:prurito]] e [[DIAGNOSI:sudorazioni notturne]]. TC: [[DIAGNOSI:pacchetto linfonodale mediastinico anteriore di 6,5 cm]]. Il paziente [[PERSONA:Furlan]] riferisce che la madre, sig.ra [[FAMILIARE:Nadia Kosovel]], è stata trattata in passato per [[PATOLOGIA:tiroidite di Hashimoto]]. Si richiede diagnosi con priorità B."},
+    {"type": "section", "text": "Materiale inviato"},
+    {"type": "paragraph", "text": "A) Linfonodo laterocervicale sinistro, livello IV, asportato in toto (blocchetti A1-A4).\nB) Prelievo a fresco per citofluorimetria e congelamento (biobanca, con consenso)."},
+    {"type": "section", "text": "Descrizione macroscopica"},
+    {"type": "paragraph", "text": "Linfonodo di cm 3,2 x 2,1 x 1,8, di consistenza duro-elastica, con capsula ispessita. Al taglio la superficie è suddivisa in noduli biancastri separati da setti fibrosi."},
+    {"type": "section", "text": "Descrizione microscopica"},
+    {"type": "paragraph", "text": "Sovvertimento dell'architettura linfonodale per la presenza di noduli delimitati da bande di fibrosi collagena birifrangente. Nei noduli, su fondo infiammatorio misto ricco di linfociti, eosinofili e istiociti, si osservano cellule di grandi dimensioni, mono- e plurinucleate, con nucleoli eosinofili prominenti (cellule di Reed-Sternberg e varianti lacunari). Focolai di necrosi con orletto di cellule neoplastiche (aspetto sinciziale focale)."},
+    {"type": "section", "text": "Immunoistochimica"},
+    {"type": "table", "header": ["Anticorpo", "Cellule neoplastiche", "Note"], "widths": [2, 2.6, 5], "rows": [
+      ["CD30", "[[ESAME_VALORE:positivo]] (membrana e Golgi)", "Diffuso nelle cellule grandi"],
+      ["CD15", "[[ESAME_VALORE:positivo]] in circa il [[ESAME_VALORE:60%]]", "Pattern a dot paranucleare"],
+      ["PAX5", "[[ESAME_VALORE:debolmente positivo]]", "Più debole rispetto ai linfociti B reattivi"],
+      ["CD20", "[[ESAME_VALORE:negativo]]", "Positivo nei piccoli linfociti B di fondo"],
+      ["CD45", "[[ESAME_VALORE:negativo]]", "-"],
+      ["MUM1", "[[ESAME_VALORE:positivo forte]]", "-"],
+      ["EBER (ISH)", "[[ESAME_VALORE:negativo]]", "Assenza di infezione latente da EBV nelle cellule neoplastiche"],
+      ["Ki-67", "[[ESAME_VALORE:elevato]]", "Cellule neoplastiche e componente reattiva"]
+    ]},
+    {"type": "section", "text": "Diagnosi"},
+    {"type": "paragraph", "text": "**Linfonodo laterocervicale sinistro: [[DIAGNOSI:linfoma di Hodgkin classico, sottotipo sclerosi nodulare]] (grado 2 sec. BNLI per la presenza di aree sinciziali).**"},
+    {"type": "paragraph", "text": "Il caso è stato sottoposto a revisione collegiale con la Dott.ssa [[MEDICO:Chiara Peric]] (ematopatologia) in data [[DATA:11/07/25]] con concordanza diagnostica. Risultato comunicato telefonicamente alla Dott.ssa [[MEDICO:Vascotto]] il [[DATA:14.07.2025]] per l'avvio della stadiazione PET e la preservazione della fertilità."},
+    {"type": "table", "caption": "Referenti del caso", "header": ["Ruolo", "Nominativo", "Contatto"], "widths": [3, 3.4, 3], "rows": [
+      ["Ematologo curante", "Dott.ssa [[MEDICO:Elisa Vascotto]]", "int. [[TELEFONO:040 3994377]]"],
+      ["Patologo refertante", "Dott. [[MEDICO:Stefano Benussi]]", "Segreteria AP"],
+      ["Familiare di riferimento", "[[FAMILIARE:Nadia Kosovel]] (madre)", "[[TELEFONO:+39 333 8045 172]]"]
+    ]},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "signature", "place_date": "[[LUOGO:Trieste]], [[DATA_REFERTO:14/07/2025]]", "role": "Il Dirigente Medico", "name": "Dott. [[MEDICO:Stefano Benussi]]", "digital": false, "stamp": ["SC ANATOMIA PATOLOGICA", "Dott. [[MEDICO:S. Benussi]]", "Ord. Medici TS n. [[NUMERO_ALBO:3712]]"]}
+    ], "right": [
+      {"type": "signature", "place_date": "Revisione", "role": "Ematopatologa", "name": "Dott.ssa [[MEDICO:Chiara Peric]]", "digital": false}
+    ]}
+  ],
+  "negatives": [
+    {"value": "Hodgkin", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Reed-Sternberg", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Hashimoto", "forbidden_categories": ["PERSONA", "COGNOME"]}
+  ]
+}

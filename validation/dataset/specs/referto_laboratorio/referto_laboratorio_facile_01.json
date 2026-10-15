@@ -1,0 +1,56 @@
+{
+  "id": "referto_laboratorio_facile_01",
+  "type": "referto_laboratorio",
+  "difficulty": "facile",
+  "style": {"font": "helvetica", "color": "#2E7D32", "font_size": 9.5, "margins_mm": 18},
+  "persons": {
+    "paz": {"first_name": "Massimo", "last_name": "Carletti", "sex": "M", "birth_date": "1971-09-03", "birth_place": "Torino"}
+  },
+  "letterhead": {
+    "logo": "LAV",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Laboratorio Analisi Cliniche Valsangone S.r.l.]]",
+      "Struttura privata accreditata con il Servizio Sanitario Regionale",
+      "Direttore sanitario: Dott. [[MEDICO:Paolo Arduino]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Corso Francia 214]]",
+      "[[CAP:10146]] [[LUOGO:Torino]]",
+      "Tel. [[TELEFONO:011 7729415]]",
+      "[[EMAIL:accettazione@labvalsangone.example.it]]"
+    ]
+  },
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Laboratorio Analisi Cliniche Valsangone S.r.l.]] - P.IVA [[PARTITA_IVA:@lab]] - Autorizzazione al funzionamento n. 118/2009",
+    "Il presente referto e' destinato esclusivamente al paziente e al medico curante."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO ANALISI CLINICHE"},
+    {"type": "patient_box", "align": "full", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Massimo Carletti]]"],
+      ["C.F.", "[[CODICE_FISCALE:@paz]]"],
+      ["Nato il", "[[DATA_NASCITA:03/09/1971]]"],
+      ["Sesso", "[[SESSO:M]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["N. accettazione", "[[NUMERO_ACCETTAZIONE:VS-26-004817]]"],
+      ["Data prelievo", "[[DATA_VISITA:14/09/2026]]"],
+      ["Data referto", "[[DATA_REFERTO:15/09/2026]]"]
+    ]},
+    {"type": "section", "text": "Chimica clinica"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento", ""], "widths": [4.5, 2, 1.6, 3.2, 0.6], "flag_column": 4, "rows": [
+      ["Glucosio", "[[ESAME_VALORE:104]]", "mg/dL", "70 - 99", "H"],
+      ["Colesterolo totale", "[[ESAME_VALORE:236]]", "mg/dL", "< 200", "H"],
+      ["Colesterolo HDL", "[[ESAME_VALORE:43]]", "mg/dL", "> 40", ""],
+      ["Colesterolo LDL (calcolato)", "[[ESAME_VALORE:161]]", "mg/dL", "< 115", "H"],
+      ["Trigliceridi", "[[ESAME_VALORE:158]]", "mg/dL", "< 150", "H"],
+      ["Creatinina", "[[ESAME_VALORE:0,94]]", "mg/dL", "0,70 - 1,20", ""],
+      ["ALT (GPT)", "[[ESAME_VALORE:27]]", "U/L", "< 41", ""],
+      ["Gamma GT", "[[ESAME_VALORE:36]]", "U/L", "8 - 61", ""]
+    ]},
+    {"type": "note", "text": "Colesterolo LDL calcolato con la formula di Friedewald (valida per trigliceridi inferiori a 400 mg/dL). Campione prelevato a digiuno da almeno 12 ore."},
+    {"type": "signature", "place_date": "[[LUOGO:Torino]], [[DATA_REFERTO:15/09/2026]]", "role": "Il Direttore Sanitario", "name": "Dott. [[MEDICO:Paolo Arduino]]", "digital": true}
+  ],
+  "negatives": [{"value": "Friedewald", "forbidden_categories": ["PERSONA", "COGNOME"]}]
+}

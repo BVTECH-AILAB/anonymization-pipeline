@@ -1,0 +1,78 @@
+{
+  "id": "referto_esterno_media_01",
+  "type": "referto_esterno",
+  "difficulty": "media",
+  "style": {"font": "times", "color": "#1C3A5E", "font_size": 10, "margins_mm": 20},
+  "persons": {
+    "paz": {"first_name": "Laura", "last_name": "Cecchi", "sex": "F", "birth_date": "1971-02-17", "birth_place": "Firenze"}
+  },
+  "letterhead": {
+    "logo": "VG",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Casa di Cura Villa Ginestra]]",
+      "Ospedale privato accreditato - Chirurgia ortopedica e traumatologica",
+      "[[REPARTO:Servizio di Day Surgery]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via di San Felice a Ema 37]]",
+      "[[CAP:50125]] [[LUOGO:Firenze]]",
+      "Centralino [[TELEFONO:055 2364100]]"
+    ]
+  },
+  "running_header": "Pz. [[PERSONA:Cecchi Laura]] - nata il [[DATA_NASCITA:17/02/1971]] - Pratica [[NUMERO_ACCETTAZIONE:DS/2024/04417]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Casa di Cura Villa Ginestra]] S.p.A. - [[INDIRIZZO:Via di San Felice a Ema 37]], [[LUOGO:Firenze]] - P.IVA [[PARTITA_IVA:@vg]]",
+    "Struttura privata autorizzata. Copia conforme all'originale conservato in cartella clinica."
+  ],
+  "blocks": [
+    {"type": "address", "lines": ["Egr. Dott. [[MEDICO:Sandro Mugnaini]]", "Medico di Medicina Generale", "[[LUOGO:Bagno a Ripoli]]"]},
+    {"type": "title", "text": "RELAZIONE CLINICA DI INTERVENTO IN DAY SURGERY", "subtitle": "Prestazione in regime privato con copertura assicurativa"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Cecchi Laura]]"],
+      ["Data di nascita", "[[DATA_NASCITA:17/02/1971]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Residenza", "[[INDIRIZZO:Via Roma 18]], [[CAP:50012]] [[LUOGO:Bagno a Ripoli]]"],
+      ["Assicurazione", "[[ORGANIZZAZIONE:Mutua Salute Toscana Assicurazioni]]"],
+      ["N. polizza", "[[NUMERO_POLIZZA:MST-0047712-AF]]"],
+      ["N. sinistro", "[[NUMERO_POLIZZA:SIN-24-118230]]"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Pratica", "value": "[[NUMERO_ACCETTAZIONE:DS/2024/04417]]", "align": "right"},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Ingresso", "[[DATA_RICOVERO:12/04/2024]] ore 07:15"],
+      ["Dimissione", "[[DATA_RICOVERO:12/04/2024]] ore 17:40"],
+      ["Cartella n.", "[[NUMERO_CARTELLA:24/DS/0912]]"]
+    ]},
+    {"type": "section", "text": "Anamnesi e motivo del ricovero"},
+    {"type": "paragraph", "text": "La sig.ra [[PERSONA:Cecchi]], di aa. [[ETA:53]], insegnante, giunge alla nostra osservazione inviata dal curante per [[DIAGNOSI:gonalgia mediale destra]] insorta dopo trauma distorsivo durante attività escursionistica nel gennaio scorso. La RM eseguita presso altro centro il [[DATA:05.03.24]] documentava [[DIAGNOSI:lesione complessa del corno posteriore del menisco mediale]] del ginocchio destro. In anamnesi [[PATOLOGIA:ipotiroidismo autoimmune]] in terapia con [[FARMACO:levotiroxina 75 mcg]]. [[ALLERGIA:Allergia al cerotto in tessuto non tessuto]]. Non altre patologie di rilievo."},
+    {"type": "section", "text": "Intervento chirurgico"},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Data intervento", "[[DATA:12 aprile 2024]]"],
+      ["Tipo di anestesia", "spinale + sedazione"],
+      ["Procedura", "[[INTERVENTO:artroscopia del ginocchio destro con meniscectomia selettiva mediale]]"],
+      ["Codice ICD-9-CM", "80.6"]
+    ]},
+    {"type": "table", "header": ["Ruolo", "Nominativo", "Qualifica"], "widths": [2.5, 3.5, 3], "rows": [
+      ["Primo operatore", "Dott. [[MEDICO:Niccolò Bargellini]]", "Specialista in Ortopedia"],
+      ["Aiuto", "Dott.ssa [[MEDICO:Elisa Tozzi]]", "Specialista in Ortopedia"],
+      ["Anestesista", "Dott.ssa [[MEDICO:Irene Fabbri]]", "Anestesia e Rianimazione"],
+      ["Strumentista", "Inf. [[OPERATORE_SANITARIO:Marco Lapini]]", "Infermiere di sala operatoria"]
+    ]},
+    {"type": "paragraph", "text": "**Descrizione.** Accessi artroscopici standard antero-laterale e antero-mediale. All'esplorazione: cartilagine femoro-rotulea con [[DIAGNOSI:condropatia di II grado]] secondo Outerbridge, legamento crociato anteriore integro e normoteso. Lesione a flap del corno posteriore del menisco mediale, instabile al palpatore, trattata con resezione selettiva e regolarizzazione del margine residuo. Lavaggio articolare, sutura cutanea, bendaggio elastocompressivo."},
+    {"type": "page_break"},
+    {"type": "section", "text": "Decorso e dimissione"},
+    {"type": "paragraph", "text": "Decorso post-operatorio regolare. Dolore ben controllato con terapia analgesica. La pz. ha deambulato con due bastoni canadesi già nel pomeriggio. Al momento della dimissione è accompagnata dal marito, sig. [[FAMILIARE:Massimo Rinaldi]], al quale sono state illustrate le indicazioni domiciliari."},
+    {"type": "heading", "text": "Terapia consigliata a domicilio"},
+    {"type": "table", "header": ["Farmaco", "Posologia", "Durata"], "widths": [4, 4, 2], "rows": [
+      ["[[FARMACO:Enoxaparina 4000 UI]]", "1 fiala s.c. alle ore 20", "10 giorni"],
+      ["[[FARMACO:Paracetamolo 1000 mg]]", "1 cp al bisogno, max 3 al giorno", "7 giorni"],
+      ["[[TERAPIA:Crioterapia locale con ghiaccio]]", "20 minuti ogni 3-4 ore", "5 giorni"]
+    ]},
+    {"type": "paragraph", "text": "Carico concesso progressivo con bastoni per 7 giorni. Rimozione dei punti di sutura il [[DATA:24.04.24]] presso il nostro ambulatorio. Avviare [[TERAPIA:ciclo di fisiokinesiterapia]] (10 sedute) dalla seconda settimana. Controllo ortopedico a 30 giorni con la Dott.ssa [[MEDICO:Elisa Tozzi]]: appuntamento fissato per il [[DATA_VISITA:14 maggio 2024]]."},
+    {"type": "note", "text": "Per qualsiasi problema la paziente può contattare il reparto tramite il centralino (h24). La documentazione per il rimborso è stata trasmessa a [[ORGANIZZAZIONE:Mutua Salute Toscana Assicurazioni]] con riferimento al sinistro [[NUMERO_POLIZZA:SIN-24-118230]]."},
+    {"type": "heading", "text": "Diagnosi di dimissione"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Lesione a flap del corno posteriore del menisco mediale del ginocchio destro]]** trattata con meniscectomia selettiva artroscopica. [[DIAGNOSI:Condropatia femoro-rotulea di II grado]]."},
+    {"type": "signature", "place_date": "[[LUOGO:Firenze]], [[DATA_REFERTO:12/04/2024]]", "role": "Il Medico Operatore", "name": "Dott. [[MEDICO:Niccolò Bargellini]]", "extra": ["Ordine dei Medici di [[LUOGO:Firenze]] n. [[NUMERO_ALBO:11907]]"], "digital": false, "stamp": ["[[STRUTTURA_SANITARIA:CASA DI CURA VILLA GINESTRA]]", "Day Surgery Ortopedica", "Dott. [[MEDICO:N. Bargellini]]"]}
+  ],
+  "negatives": [{"value": "Outerbridge", "forbidden_categories": ["PERSONA", "MEDICO"]}]
+}

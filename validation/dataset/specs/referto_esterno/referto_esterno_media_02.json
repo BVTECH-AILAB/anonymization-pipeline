@@ -1,0 +1,89 @@
+{
+  "id": "referto_esterno_media_02",
+  "type": "referto_esterno",
+  "difficulty": "media",
+  "style": {"font": "helvetica", "color": "#B85410", "font_size": 9, "margins_mm": 15},
+  "persons": {
+    "paz": {"first_name": "Daniele", "last_name": "Pezzotti", "sex": "M", "birth_date": "1985-07-30", "birth_place": "Bergamo"}
+  },
+  "letterhead": {
+    "logo": "ES",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ergon Salute - Servizi di Medicina del Lavoro]]",
+      "Sorveglianza sanitaria ai sensi del D.Lgs. 81/2008",
+      "Ambulatorio di audiometria e spirometria"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via dell'Industria 14]]",
+      "[[CAP:25136]] [[LUOGO:Brescia]]",
+      "Tel. [[TELEFONO:030 2457180]]",
+      "[[EMAIL:sorveglianza@ergonsalute.example.it]]",
+      "P.IVA [[PARTITA_IVA:@ergon]]"
+    ]
+  },
+  "running_header": "Lav. [[PERSONA:Pezzotti D.]] - Cartella sanitaria e di rischio n. [[NUMERO_CARTELLA:ES-BS-2019-07731]] - Visita del [[DATA_VISITA:08/11/2024]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ergon Salute]] S.r.l. - Documento riservato, da conservare nella cartella sanitaria e di rischio (art. 25 D.Lgs. 81/2008).",
+    "Copia del giudizio al lavoratore e al datore di lavoro; gli accertamenti sanitari restano coperti da segreto professionale."
+  ],
+  "blocks": [
+    {"type": "title", "text": "VISITA MEDICA PERIODICA E GIUDIZIO DI IDONEITÀ", "subtitle": "Esito degli accertamenti sanitari integrativi"},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "patient_box", "title": "LAVORATORE", "columns": 1, "fields": [
+        ["Cognome e nome", "[[PERSONA:Daniele Pezzotti]]"],
+        ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+        ["Nato a", "[[LUOGO_NASCITA:Bergamo]] il [[DATA_NASCITA:30/07/1985]]"],
+        ["Residente", "[[INDIRIZZO:Via Garibaldi 7]], [[LUOGO:Gardone Val Trompia]]"],
+        ["In caso di emergenza", "[[CONTATTO_EMERGENZA:Valentina Ghirardi]] (moglie), tel. [[TELEFONO:+39 349 220 6175]]"]
+      ]}
+    ], "right": [
+      {"type": "patient_box", "title": "AZIENDA E MANSIONE", "columns": 1, "fields": [
+        ["Datore di lavoro", "[[DATORE_LAVORO:Fonderie Valtrompia Nord S.p.A.]]"],
+        ["Unità produttiva", "[[INDIRIZZO:Via Artigianato 3]], [[LUOGO:Lumezzane]]"],
+        ["Mansione", "[[PROFESSIONE:addetto alla colata e sbavatura getti]]"],
+        ["Rischi", "rumore (LEX 8h 89 dB(A)), polveri silicee, movimentazione carichi, calore radiante"]
+      ]}
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Tipo di visita", "periodica annuale"],
+      ["Data visita", "[[DATA_VISITA:08/11/2024]]"],
+      ["Precedente", "[[DATA:15 novembre 2023]]"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Cartella", "value": "[[NUMERO_CARTELLA:ES-BS-2019-07731]]", "align": "left"},
+    {"type": "section", "text": "Anamnesi lavorativa e patologica"},
+    {"type": "paragraph", "text": "Il sig. [[PERSONA:Pezzotti]] lavora presso l'attuale azienda dal 2011, nel reparto fusione dal 2016. Utilizza otoprotettori a inserto in modo dichiarato costante. Non riferisce acufeni. Riferisce [[DIAGNOSI:episodi di lombalgia meccanica]] nell'ultimo anno, trattati con [[FARMACO:ibuprofene 600 mg]] al bisogno. Non fumatore. Consumo di alcolici occasionale. Nessun infortunio sul lavoro nell'ultimo anno."},
+    {"type": "section", "text": "Esame obiettivo"},
+    {"type": "paragraph", "text": "Buone condizioni generali. Peso [[MISURE_ANTROPOMETRICHE:91 kg]], altezza [[MISURE_ANTROPOMETRICHE:181 cm]], BMI [[MISURE_ANTROPOMETRICHE:27,8]]. PA [[MISURE_ANTROPOMETRICHE:130/85 mmHg]], FC [[ESAME_VALORE:68 bpm]]. Obiettività cardiopolmonare nella norma. Rachide lombare: dolorabilità alla digitopressione paravertebrale, Lasègue negativo bilateralmente."},
+    {"type": "section", "text": "Accertamenti integrativi"},
+    {"type": "table", "caption": "Esame audiometrico tonale (soglia in dB HL) - eseguito dal tecnico audiometrista [[OPERATORE_SANITARIO:Luca Zanardelli]] il [[DATA:08.11.24]]", "widths": [2.6, 1, 1, 1, 1, 1, 1], "header": ["Frequenza (Hz)", "500", "1000", "2000", "3000", "4000", "6000"], "rows": [
+      ["Orecchio destro", "[[ESAME_VALORE:15]]", "[[ESAME_VALORE:15]]", "[[ESAME_VALORE:20]]", "[[ESAME_VALORE:35]]", "[[ESAME_VALORE:45]]", "[[ESAME_VALORE:25]]"],
+      ["Orecchio sinistro", "[[ESAME_VALORE:10]]", "[[ESAME_VALORE:15]]", "[[ESAME_VALORE:20]]", "[[ESAME_VALORE:40]]", "[[ESAME_VALORE:50]]", "[[ESAME_VALORE:35]]"]
+    ]},
+    {"type": "table", "caption": "Spirometria", "header": ["Parametro", "Misurato", "Teorico", "% teorico"], "widths": [3, 2, 2, 2], "rows": [
+      ["FVC (L)", "[[ESAME_VALORE:5,12]]", "5,34", "[[ESAME_VALORE:96%]]"],
+      ["FEV1 (L)", "[[ESAME_VALORE:4,08]]", "4,31", "[[ESAME_VALORE:95%]]"],
+      ["FEV1/FVC", "[[ESAME_VALORE:0,80]]", "0,81", "-"]
+    ]},
+    {"type": "paragraph", "text": "Valutazione audiologica della Dott.ssa [[MEDICO:Sara Bonometti]], specialista in Otorinolaringoiatria: [[DIAGNOSI:ipoacusia neurosensoriale bilaterale da trauma acustico cronico]], con caduta selettiva sulle frequenze 3-4 kHz, in lieve peggioramento rispetto al controllo del [[DATA:15/11/2023]] (classe Merluzzi 2). Spirometria nei limiti della norma."},
+    {"type": "section", "text": "Giudizio di idoneità alla mansione specifica"},
+    {"type": "checkboxes", "columns": 2, "items": [
+      ["Idoneo", false],
+      ["Idoneo con prescrizioni", true],
+      ["Idoneo con limitazioni", false],
+      ["Inidoneo temporaneo", false]
+    ]},
+    {"type": "paragraph", "text": "**Prescrizioni:** uso obbligatorio e continuativo di otoprotettori con SNR non inferiore a 32 dB; rispetto delle procedure aziendali di movimentazione manuale dei carichi. Si consiglia al lavoratore controllo ORL presso il SSN e il proseguimento della [[TERAPIA:ginnastica posturale]]. Prossima visita: entro novembre 2025."},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Protocollo giudizio", "[[NUMERO_PROTOCOLLO:GI-2024/3318]]"],
+      ["Data del giudizio", "[[DATA_REFERTO:08/11/2024]]"]
+    ]},
+    {"type": "paragraph", "size": 7.5, "text": "Avverso il giudizio è ammesso ricorso entro trenta giorni dalla data di comunicazione all'organo di vigilanza territorialmente competente (art. 41 c. 9 D.Lgs. 81/2008)."},
+    {"type": "signature", "place_date": "[[LUOGO:Brescia]], [[DATA_REFERTO:08/11/2024]]", "role": "Il Medico Competente", "name": "Dott. [[MEDICO:Alberto Rinaldi Gozzi]]", "extra": ["Specialista in Medicina del Lavoro"], "digital": false, "stamp": ["Dott. [[MEDICO:ALBERTO RINALDI GOZZI]]", "Medico Competente", "OMCeO BS n. [[NUMERO_ALBO:6204]]"]},
+    {"type": "paragraph", "align": "left", "text": "Per ricevuta, il lavoratore: [[PERSONA:Daniele Pezzotti]] ______________________________"}
+  ],
+  "negatives": [
+    {"value": "Merluzzi", "forbidden_categories": ["PERSONA", "MEDICO"]},
+    {"value": "Lasègue", "forbidden_categories": ["PERSONA"]}
+  ]
+}

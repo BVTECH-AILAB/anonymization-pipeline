@@ -1,0 +1,147 @@
+{
+  "id": "referto_radiologico_complessa_02",
+  "type": "referto_radiologico",
+  "difficulty": "complessa",
+  "style": {"font": "times", "color": "#0E5E5A", "font_size": 8.5, "margins_mm": 13},
+  "persons": {
+    "paz": {"first_name": "Youssef", "last_name": "El Amrani", "sex": "M", "birth_date": "1962-09-14", "birth_place": "Marocco"}
+  },
+  "letterhead": {
+    "logo": "ACO",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASST Colline Orobiche - Presidio Ospedaliero San Narno]]",
+      "Dipartimento dei Servizi Diagnostici",
+      "[[REPARTO:UOC Radiologia Diagnostica e Interventistica]]",
+      "Direttore: Prof. [[MEDICO:Gianluigi Personeni]]",
+      "Sezione di Neuroradiologia: Dott. [[MEDICO:Carlo Bonacina]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale delle Rimembranze 38]]",
+      "[[CAP:24068]] [[LUOGO:Seriate]] (BG)",
+      "Segreteria TC: [[TELEFONO:035 3061744]]",
+      "Fax [[FAX:035 3061790]]",
+      "[[EMAIL:radiologia.sannarno@asst-co.example.it]]"
+    ]
+  },
+  "running_header": "TC multidistrettuale - [[PERSONA:EL AMRANI YOUSSEF]] - nato il [[DATA_NASCITA:14/09/1962]] - Acc. [[ACCESSION_NUMBER:RX26-0412234]] / [[ACCESSION_NUMBER:RX26-0412233]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASST Colline Orobiche]] - Sede legale [[INDIRIZZO:Via Borgo Palazzo 112]], [[CAP:24125]] [[LUOGO:Bergamo]] - C.F./P.IVA [[PARTITA_IVA:@asst]] - PEC [[PEC:protocollo@pec.asst-co.example.it]]",
+    "Assistito: [[PERSONA:El Amrani Y.]] - Cod. paziente [[ID_PAZIENTE:PZ-0087123]] - Referto n. [[NUMERO_REFERTO:REF-RAD-2026-118604]]",
+    "Documento con dati relativi alla salute (art. 9 Reg. UE 2016/679): vietata la diffusione. Copia conforme all'originale informatico."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI TOMOGRAFIA COMPUTERIZZATA", "subtitle": "TC encefalo e TC collo-torace-addome-pelvi con mezzo di contrasto - rivalutazione oncologica in corso di terapia a bersaglio molecolare"},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "patient_box", "title": "ASSISTITO", "columns": 1, "fields": [
+        ["Cognome e nome", "[[COGNOME:EL AMRANI]] [[NOME:YOUSSEF]]"],
+        ["Nato il / a", "[[DATA_NASCITA:14/09/1962]] - [[LUOGO_NASCITA:Casablanca (Marocco)]]"],
+        ["Cittadinanza", "[[CITTADINANZA:marocchina]]"],
+        ["Residenza", "[[INDIRIZZO:Via Guglielmo Marconi 54/B]], [[CAP:24044]] [[LUOGO:Dalmine]]"],
+        ["Telefono", "[[TELEFONO:+39 349 7710562]]"],
+        ["Esenzione", "[[CODICE_ESENZIONE:048]]"]
+      ]}
+    ], "right": [
+      {"type": "fields", "columns": 1, "fields": [
+        ["Acc. TC encefalo", "[[ACCESSION_NUMBER:RX26-0412233]]"],
+        ["Acc. TC collo-TAP", "[[ACCESSION_NUMBER:RX26-0412234]]"],
+        ["Prenotazione CUP", "[[NUMERO_PRENOTAZIONE:CUP-BG-26-3378145]]"],
+        ["NRE", "[[NUMERO_RICETTA:0300A4718265093]]"],
+        ["Data esame", "[[DATA_VISITA:22/09/2026]] ore 14:20"],
+        ["Data referto", "[[DATA_REFERTO:23/09/2026]]"],
+        ["Richiedente", "Dott. [[MEDICO:Fabio Mazzoleni]] - [[REPARTO:UOC Oncologia Medica]]"]
+      ]}
+    ]},
+    {"type": "char_boxes", "label": "Codice fiscale", "value": "[[CODICE_FISCALE:@paz]]"},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "barcode", "kind": "code128", "value": "[[ACCESSION_NUMBER:RX26-0412233]]", "label": "TC encefalo", "align": "left"}
+    ], "right": [
+      {"type": "barcode", "kind": "code128", "value": "[[ACCESSION_NUMBER:RX26-0412234]]", "label": "TC collo-torace-addome-pelvi", "align": "left"}
+    ]},
+    {"type": "section", "text": "QUESITO DIAGNOSTICO E NOTIZIE CLINICHE"},
+    {"type": "paragraph", "text": "**Quesito:** rivalutazione di malattia dopo 6 mesi di terapia in paziente con [[PATOLOGIA:adenocarcinoma polmonare del lobo superiore destro, stadio IVB]] ([[DATO_GENETICO:delezione dell'esone 19 di EGFR]], PD-L1 TPS [[ESAME_VALORE:5%]]), in trattamento con [[FARMACO:osimertinib 80 mg/die]] dal [[DATA:marzo 2026]]. Nota [[PATOLOGIA:metastasi cerebrale cerebellare sinistra]] trattata con [[INTERVENTO:radiochirurgia stereotassica]] il [[DATA:02/04/2026]]."},
+    {"type": "paragraph", "text": "Il sig. [[PERSONA:El Amrani]], [[PROFESSIONE:ex operaio edile]] presso la [[DATORE_LAVORO:Edilcostruzioni Brembate S.r.l.]] fino al 2024, è [[DIPENDENZE:ex fumatore (40 pack-years, cessazione nel 2025)]]. Comorbidità: [[PATOLOGIA:diabete mellito tipo 2]] in terapia con [[FARMACO:metformina 1000 mg x 2]] (sospesa 48 ore prima dell'esame, come da protocollo), [[MALATTIE_INFETTIVE:epatite B pregressa (HBsAg negativo, anti-HBc positivo)]] in profilassi con [[FARMACO:entecavir 0,5 mg]]. Creatinina del [[DATA:18/09/2026]] [[ESAME_VALORE:1,08]] mg/dL, eGFR (CKD-EPI) [[ESAME_VALORE:74]] mL/min/1,73 m². Il paziente riferisce [[RELIGIONE:digiuno rituale islamico]] nei giorni precedenti, sospeso su indicazione dell'oncologo: idratazione orale adeguata confermata all'accettazione."},
+    {"type": "note", "text": "ATTENZIONE - [[ALLERGIA:Reazione allergica a mezzo di contrasto iodato]] ([[ALLERGIA:orticaria diffusa ed edema palpebrale dopo iopromide]], TC del [[DATA:11/01/2026]] presso [[STRUTTURA_SANITARIA:Ospedale Civile di Treviglio Sud]]). Esame eseguito previa premedicazione e con cambio di molecola, previo consenso informato e in presenza del medico anestesista Dott.ssa [[MEDICO:Paola Carminati]]."},
+    {"type": "section", "text": "PREMEDICAZIONE E MEZZO DI CONTRASTO"},
+    {"type": "table", "header": ["Ora / data", "Farmaco o prodotto", "Via", "Somministrato da"], "widths": [1.6, 3.2, 0.8, 2.4], "font_size": 7.5, "rows": [
+      ["01:20 del [[DATA:22.09.26]]", "[[FARMACO:prednisone 50 mg]]", "os", "a domicilio (autosomministrazione)"],
+      ["07:20 del [[DATA:22.09.26]]", "[[FARMACO:prednisone 50 mg]]", "os", "a domicilio, verificato dalla figlia [[CONTATTO_EMERGENZA:Samira El Amrani]]"],
+      ["13:25", "[[FARMACO:prednisone 50 mg]] + [[FARMACO:cetirizina 10 mg]]", "os", "inf. [[OPERATORE_SANITARIO:Ivana Gritti]]"],
+      ["14:18", "[[FARMACO:iomeprolo 350 mgI/mL]], [[ESAME_VALORE:95]] mL\nflusso 3,5 mL/s, ago-cannula 18G antecubitale sx", "ev", "TSRM [[OPERATORE_SANITARIO:Davide Cortinovis]]\n(iniettore automatico)"],
+      ["14:40", "osservazione post-contrasto: nessuna reazione avversa", "-", "inf. [[OPERATORE_SANITARIO:I. Gritti]]"]
+    ]},
+    {"type": "section", "text": "TECNICA"},
+    {"type": "paragraph", "text": "TC multistrato a 128 file di detettori. **Encefalo:** acquisizione assiale prima e dopo mezzo di contrasto, ricostruzioni 1 mm in finestra parenchimale e ossea. **Collo-torace-addome-pelvi:** acquisizione in fase tardo-arteriosa (torace) e portale (collo-addome-pelvi), ricostruzioni multiplanari 1,25 mm. Tecnica di acquisizione supervisionata dal medico specializzando dott. [[OPERATORE_SANITARIO:Nicolò Pesenti]]; post-elaborazione volumetrica a cura della TSRM [[OPERATORE_SANITARIO:Elisa Rota]]."},
+    {"type": "paragraph", "text": "**Confronto:** TC collo-torace-addome-pelvi del [[DATA:17 giugno 2026]] (acc. [[ACCESSION_NUMBER:RX26-0218877]]) e TC basale del [[DATA:04/03/2026]] (acc. [[ACCESSION_NUMBER:RX26-0097412]]), entrambe eseguite presso questa UOC; RM encefalo del [[DATA:15-07-2026]] eseguita presso [[STRUTTURA_SANITARIA:Centro Diagnostico Valle Seriana]], disponibile su PACS regionale."},
+    {"type": "section", "text": "REPERTI"},
+    {"type": "heading", "text": "TC encefalo (referto a cura della Sezione di Neuroradiologia)"},
+    {"type": "paragraph", "text": "Esiti di trattamento radiochirurgico in sede emisferica cerebellare sinistra: [[DIAGNOSI:lesione residua con enhancement periferico sottile]] di [[ESAME_VALORE:6 x 5]] mm (precedente [[ESAME_VALORE:9 x 8]] mm), con modesto edema perilesionale in riduzione. Non nuove lesioni focali sovra- o sottotentoriali apprezzabili con la presente metodica. Sistema ventricolare in asse, di normali dimensioni. Non segni di ipertensione endocranica. Non alterazioni ossee della teca."},
+    {"type": "heading", "text": "Collo"},
+    {"type": "paragraph", "text": "Non adenopatie laterocervicali o sovraclaveari di significato patologico. [[DIAGNOSI:Nodulo tiroideo ipodenso]] del lobo destro di [[ESAME_VALORE:11,4]] mm, invariato, già valutato ecograficamente (TIR2)."},
+    {"type": "heading", "text": "Torace"},
+    {"type": "paragraph", "text": "Lesione primitiva al segmento apicale del lobo superiore destro: [[DIAGNOSI:formazione solida spiculata in riduzione dimensionale]], attualmente di [[ESAME_VALORE:21,4 x 16,2]] mm (precedente [[ESAME_VALORE:27,3 x 19,1]] mm; basale [[ESAME_VALORE:38,2 x 29,0]] mm), con incipiente cavitazione centrale. [[DIAGNOSI:Micronoduli satelliti]] in riduzione. Linfonodo ilare destro di [[ESAME_VALORE:12,5]] mm in asse corto (precedente [[ESAME_VALORE:14,2]] mm); linfonodo paratracheale inferiore destro (stazione 4R) di [[ESAME_VALORE:9,3]] mm. Comparsa di [[DIAGNOSI:tenue area a vetro smerigliato subpleurica]] al lobo inferiore sinistro, aspecifica: in considerazione della terapia in atto da valutare clinicamente il possibile significato di [[DIAGNOSI:polmonite da farmaco]]. Non versamento pleurico né pericardico. Enfisema centrolobulare apicale bilaterale."},
+    {"type": "heading", "text": "Addome e pelvi"},
+    {"type": "paragraph", "text": "Fegato di normali dimensioni. In corrispondenza del VI segmento secondo Couinaud si conferma [[DIAGNOSI:lesione ipodensa di 8 mm]] (densità 12 unità Hounsfield), invariata e compatibile con cisti. **[[DIAGNOSI:Comparsa di nuova lesione ipodensa a margini sfumati al segmento VII]]**, di [[ESAME_VALORE:14,6]] mm, con lieve enhancement periferico in fase portale, sospetta per [[DIAGNOSI:localizzazione secondaria]]. Surrene sinistro: nodulo di [[ESAME_VALORE:17,2]] mm, in lieve riduzione (precedente [[ESAME_VALORE:19,4]] mm). Colecisti alitiasica. Pancreas, milza e reni nei limiti. Non adenopatie addominali o pelviche. Prostata aumentata di volume. Scheletro: [[DIAGNOSI:lesione osteoaddensante del soma di L2]], invariata, di verosimile natura secondaria trattata."},
+    {"type": "table", "caption": "Valutazione secondo RECIST 1.1 (lesioni target misurate dal dott. [[OPERATORE_SANITARIO:N. Pesenti]], verificate dalla Dott.ssa [[MEDICO:M. Locatelli]])", "header": ["Lesione target", "Basale [[DATA:04/03/2026]]", "Precedente [[DATA:17/06/2026]]", "Attuale", "Variazione"], "widths": [3, 1.7, 1.7, 1.3, 1.6], "font_size": 7.5, "rows": [
+      ["T1 - LSD, primitiva (asse lungo)", "[[ESAME_VALORE:38,2]] mm", "[[ESAME_VALORE:27,3]] mm", "[[ESAME_VALORE:21,4]] mm", "-"],
+      ["T2 - linfonodo ilare dx (asse corto)", "[[ESAME_VALORE:18,1]] mm", "[[ESAME_VALORE:14,2]] mm", "[[ESAME_VALORE:12,5]] mm", "-"],
+      ["T3 - surrene sx", "[[ESAME_VALORE:26,3]] mm", "[[ESAME_VALORE:19,4]] mm", "[[ESAME_VALORE:17,2]] mm", "-"],
+      ["Somma dei diametri", "[[ESAME_VALORE:82,6]] mm", "[[ESAME_VALORE:60,9]] mm", "[[ESAME_VALORE:51,1]] mm", "[[ESAME_VALORE:-38%]] vs basale"],
+      ["Lesioni non target", "metastasi L2", "invariata", "invariata", "-"],
+      ["Nuove lesioni", "-", "-", "fegato, segm. VII", "**presente**"]
+    ]},
+    {"type": "section", "text": "CONCLUSIONI"},
+    {"type": "paragraph", "text": "**Risposta dissociata: riduzione delle lesioni target (somma dei diametri [[ESAME_VALORE:-38%]] rispetto al basale), ma [[DIAGNOSI:comparsa di nuova lesione epatica sospetta]] al segmento VII. Secondo RECIST 1.1 il quadro è formalmente classificabile come [[DIAGNOSI:progressione di malattia]] (nuova lesione).** Lesione cerebellare trattata in ulteriore riduzione. Si suggerisce discussione al gruppo oncologico multidisciplinare toracico ed eventuale caratterizzazione della lesione epatica con RM con mezzo di contrasto epatospecifico o biopsia ecoguidata."},
+    {"type": "paragraph", "text": "Esito anticipato telefonicamente al Dott. [[MEDICO:Mazzoleni]] il [[DATA:23/09/2026]] alle ore 11:05. Il paziente, assistito dalla figlia [[CONTATTO_EMERGENZA:Samira]] in qualità di interprete, è stato informato che il referto sarà discusso alla prossima visita oncologica del [[DATA:30 settembre 2026]]."},
+    {"type": "signature", "place_date": "[[LUOGO:Seriate]], [[DATA_REFERTO:23/09/2026]]", "role": "Il Medico Radiologo refertante", "name": "Dott.ssa [[MEDICO:Marta Locatelli]]", "extra": ["Specializzando: dott. [[OPERATORE_SANITARIO:Nicolò Pesenti]]", "TC encefalo: Dott. [[MEDICO:Carlo Bonacina]] (OMCeO BG n. [[NUMERO_ALBO:6214]]), [[DATA_REFERTO:23.09.2026]]"], "digital": true, "stamp": ["[[STRUTTURA_SANITARIA:P.O. SAN NARNO]] - RADIOLOGIA", "Dott.ssa [[MEDICO:M. LOCATELLI]]", "OMCeO BG n. [[NUMERO_ALBO:7329]]"]},
+    {"type": "page_break"},
+    {"type": "section", "text": "INFORMAZIONI DOSIMETRICHE (D.Lgs. 101/2020, art. 161)"},
+    {"type": "table", "header": ["Serie", "kV", "CTDIvol (mGy)", "DLP (mGy·cm)", "Dose efficace stimata"], "widths": [3.2, 0.8, 1.4, 1.4, 1.6], "font_size": 7.5, "rows": [
+      ["Encefalo senza mdc", "120", "[[ESAME_VALORE:48,6]]", "[[ESAME_VALORE:812]]", "[[ESAME_VALORE:1,7]] mSv"],
+      ["Encefalo con mdc", "120", "[[ESAME_VALORE:47,9]]", "[[ESAME_VALORE:798]]", "[[ESAME_VALORE:1,6]] mSv"],
+      ["Torace fase tardo-arteriosa", "100", "[[ESAME_VALORE:6,3]]", "[[ESAME_VALORE:241]]", "[[ESAME_VALORE:3,4]] mSv"],
+      ["Collo-addome-pelvi fase portale", "100", "[[ESAME_VALORE:8,1]]", "[[ESAME_VALORE:563]]", "[[ESAME_VALORE:8,4]] mSv"],
+      ["Totale esame", "-", "-", "[[ESAME_VALORE:2414]]", "[[ESAME_VALORE:15,1]] mSv"]
+    ]},
+    {"type": "paragraph", "size": 7.5, "text": "Dose efficace stimata con coefficienti di conversione ICRP 103 per distretto. Dose cumulativa da TC registrata nell'anno solare per l'assistito [[PERSONA:Y. El Amrani]]: DLP complessivo [[ESAME_VALORE:7350]] mGy·cm (4 esami). Classe di dose secondo D.Lgs. 101/2020: III. Fisico medico di riferimento: dott. [[OPERATORE_SANITARIO:Andrea Brembilla]]."},
+    {"type": "section", "text": "ALLEGATO - SCHEDA DI SOMMINISTRAZIONE DEL MEZZO DI CONTRASTO IN PAZIENTE A RISCHIO"},
+    {"type": "fields", "columns": 2, "fields": [
+        ["Assistito", "[[PERSONA:Youssef El Amrani]]"],
+        ["Data di nascita", "[[DATA_NASCITA:14.09.1962]]"],
+        ["Tessera sanitaria", "[[TESSERA_SANITARIA:@ts]]"],
+        ["Peso", "[[MISURE_ANTROPOMETRICHE:78 kg]]"],
+        ["PA pre-esame", "[[MISURE_ANTROPOMETRICHE:138/84 mmHg]]"],
+        ["Cartella ambulatoriale", "[[NUMERO_CARTELLA:AMB-ONC-2026-01472]]"]
+    ]},
+    {"type": "checkboxes", "label": "Valutazione pre-procedurale", "columns": 2, "items": [
+      ["Pregressa reazione a mdc iodato documentata", true],
+      ["Asma bronchiale o atopia", false],
+      ["Insufficienza renale (eGFR < 30)", false],
+      ["Metformina sospesa", true],
+      ["Premedicazione completata secondo protocollo aziendale", true],
+      ["Presenza dell'anestesista in sala", true],
+      ["Ipertiroidismo non controllato", false],
+      ["Consenso informato firmato", true]
+    ]},
+    {"type": "paragraph", "text": "Il sottoscritto [[PERSONA:Youssef El Amrani]], informato sui rischi connessi alla somministrazione di mezzo di contrasto iodato in presenza di pregressa reazione allergica e sulle alternative diagnostiche, acconsente all'esecuzione dell'esame. Il consenso è stato illustrato in lingua araba con la mediazione della figlia, sig.ra [[CONTATTO_EMERGENZA:Samira El Amrani]], tel. [[TELEFONO:333 9182407]], e alla presenza del mediatore culturale aziendale sig. [[OPERATORE_SANITARIO:Rachid Ouali]]. La moglie, sig.ra [[FAMILIARE:Fatima Benali]], ha chiesto di non ricevere informazioni cliniche dirette."},
+    {"type": "signature", "place_date": "[[LUOGO:Seriate]], [[DATA_VISITA:22/09/2026]]", "role": "Firma dell'assistito", "name": "[[PERSONA:El Amrani Youssef]]", "extra": ["Per la traduzione: [[CONTATTO_EMERGENZA:Samira El Amrani]]"], "digital": false},
+    {"type": "signature", "place_date": "Consenso acquisito alle ore 13:30", "role": "Il Medico che acquisisce il consenso", "name": "Dott.ssa [[MEDICO:Paola Carminati]]", "extra": ["UO Anestesia e Rianimazione, reperibile int. 4471"], "digital": false, "stamp": ["ASST COLLINE OROBICHE", "ANESTESIA E RIANIMAZIONE", "Dott.ssa [[MEDICO:P. Carminati]]", "Matr. [[NUMERO_ALBO:BG-08833]]"]},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "paragraph", "size": 7.5, "text": "Copia del referto trasmessa a: Dott. [[MEDICO:Fabio Mazzoleni]] ([[REPARTO:Ambulatorio di Oncologia Toracica]]) e al medico di medicina generale Dott.ssa [[MEDICO:Laura Ghisleni]], [[INDIRIZZO:Piazza Vittorio Veneto 3]], [[LUOGO:Dalmine]]. Immagini disponibili su CD consegnato al sig. [[PERSONA:El Amrani]] il [[DATA:25/09/2026]]."}
+    ], "right": [
+      {"type": "barcode", "kind": "qr", "value": "https://referti.asst-co.example.it/q/[[NUMERO_REFERTO:REF-RAD-2026-118604]]", "label": "Ritiro online - [[PERSONA:Y. El Amrani]]", "align": "right"}
+    ]},
+    {"type": "footnotes", "items": [
+      "Misurazioni RECIST 1.1 eseguite in finestra polmonare per T1 e in finestra mediastinica per T2-T3; linfonodi misurati in asse corto.",
+      "Le unità Hounsfield riportate si riferiscono alla fase portale. Lesioni epatiche localizzate secondo la segmentazione di Couinaud.",
+      "Referto preliminare inviato via fax all'[[REPARTO:Ambulatorio di Oncologia Toracica]] il [[DATA:23.09.2026]] dal TSRM [[OPERATORE_SANITARIO:D. Cortinovis]]."
+    ]}
+  ],
+  "negatives": [
+    {"value": "Hounsfield", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Couinaud", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "RECIST", "forbidden_categories": ["PERSONA", "ORGANIZZAZIONE"]},
+    {"value": "CKD-EPI", "forbidden_categories": ["ORGANIZZAZIONE"]},
+    {"value": "ICRP", "forbidden_categories": ["ORGANIZZAZIONE", "STRUTTURA_SANITARIA"]}
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "referto_radiologico_media_02",
+  "type": "referto_radiologico",
+  "difficulty": "media",
+  "style": {"font": "times", "color": "#1B4F8A", "font_size": 10, "margins_mm": 20},
+  "persons": {
+    "paz": {"first_name": "Chiara", "last_name": "Pellegrino", "sex": "F", "birth_date": "1987-01-19", "birth_place": "Latina"}
+  },
+  "letterhead": {
+    "logo": "VL",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Casa di Cura Villa Liriope]]",
+      "Accreditata con il Servizio Sanitario Regionale",
+      "Servizio di Neuroradiologia Diagnostica",
+      "Direttore Sanitario: Dott.ssa [[MEDICO:Ornella Ciampi]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Monte Senario Nuovo 48]]",
+      "[[CAP:00141]] [[LUOGO:Roma]]",
+      "Tel. [[TELEFONO:06 87134520]]",
+      "[[EMAIL:neuroradiologia@villaliriope.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:Pellegrino Chiara]] - C.F. [[CODICE_FISCALE:@paz]] - Esame n. [[ACCESSION_NUMBER:RM/25/30917]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Casa di Cura Villa Liriope]] S.p.A. - Capitale sociale interamente versato - P.IVA [[PARTITA_IVA:@cdc]]",
+    "Le immagini dell'esame sono consegnate su supporto digitale. Conservare il referto e il CD per i controlli successivi."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI RISONANZA MAGNETICA", "subtitle": "RM encefalo e midollo cervicale senza e con mezzo di contrasto"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Pellegrino Chiara]]"],
+      ["Data di nascita", "[[DATA_NASCITA:19/01/1987]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Peso dichiarato", "[[MISURE_ANTROPOMETRICHE:62]] kg"],
+      ["Medico inviante", "Dott. [[MEDICO:Fabrizio Orlandi]]"],
+      ["Struttura inviante", "[[REPARTO:Centro Sclerosi Multipla]], [[STRUTTURA_SANITARIA:Ospedale San Ruffillo]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Esame n.", "[[ACCESSION_NUMBER:RM/25/30917]]"],
+      ["Data esame", "[[DATA_VISITA:09/10/2025]]"],
+      ["Impegnativa NRE", "[[NUMERO_RICETTA:120A03718842661]]"],
+      ["Codice esenzione", "[[CODICE_ESENZIONE:046]]"]
+    ]},
+    {"type": "barcode", "kind": "code128", "value": "[[ACCESSION_NUMBER:RM/25/30917]]", "align": "right"},
+    {"type": "section", "text": "Notizie cliniche"},
+    {"type": "paragraph", "text": "Pz. di 38 aa. affetta da [[PATOLOGIA:sclerosi multipla recidivante-remittente]], diagnosticata nel maggio 2019 secondo i criteri di McDonald, in trattamento con [[FARMACO:ocrelizumab 600 mg]] e.v. ogni sei mesi (ultima infusione il [[DATA:2 aprile 2025]]). Riferisce [[DIAGNOSI:parestesie all'arto superiore sinistro]] da circa tre settimane. Controllo RM annuale richiesto dal neurologo curante, Dott. [[MEDICO:Orlandi]].\nLa sig.ra [[PERSONA:Pellegrino]] è accompagnata dal marito, sig. [[FAMILIARE:Andrea Cesaroni]], che ha assistito alla compilazione del questionario di sicurezza."},
+    {"type": "checkboxes", "label": "Questionario di sicurezza RM (compilato e firmato dalla paziente)", "columns": 3, "items": [
+      ["Pacemaker o defibrillatore", false],
+      ["Clip vascolari o stent", false],
+      ["Protesi o schegge metalliche", false],
+      ["Claustrofobia", false],
+      ["Gravidanza in atto", false],
+      ["Pregresse reazioni a mdc", false]
+    ]},
+    {"type": "section", "text": "Tecnica"},
+    {"type": "paragraph", "text": "Apparecchiatura a 3 Tesla. Sequenze 3D FLAIR, DIR, T2 TSE assiali, DWI e SWI; sequenza 3D T1 MPRAGE prima e dopo somministrazione endovenosa di [[FARMACO:gadobutrolo 1,0 mmol/mL]] alla dose di 0,1 mmol/kg. Studio del midollo cervicale con sequenze sagittali T2 e STIR e assiali T2* sui livelli patologici. Somministrazione del mezzo di contrasto a cura dell'inf. [[OPERATORE_SANITARIO:Daniela Sbardella]]; nessuna reazione avversa."},
+    {"type": "section", "text": "Confronto"},
+    {"type": "paragraph", "text": "Confronto con gli esami RM del [[DATA:14/03/2024]] e del [[DATA:03.10.24]], eseguiti presso la nostra struttura con analoga tecnica."},
+    {"type": "section", "text": "Reperti"},
+    {"type": "paragraph", "text": "Nella sostanza bianca sovratentoriale si confermano multiple [[DIAGNOSI:lesioni iperintense in T2 e FLAIR]] a distribuzione periventricolare, iuxtacorticale e infratentoriale, alcune con morfologia ovoidale perpendicolare all'asse dei ventricoli laterali (dita di Dawson).\nRispetto al precedente controllo si riconosce una [[DIAGNOSI:nuova lesione iuxtacorticale frontale destra]] di [[ESAME_VALORE:5,5]] mm, che presenta [[DIAGNOSI:impregnazione contrastografica nodulare]] dopo gadolinio, indicativa di attività infiammatoria in atto. Le restanti lesioni sono invariate per numero e dimensioni e non mostrano enhancement.\nAl midollo cervicale [[DIAGNOSI:lesione iperintensa in T2 a livello C3-C4]], eccentrica posterolaterale sinistra, di nuova comparsa rispetto all'esame del [[DATA:03.10.24]] e coerente con la sintomatologia riferita; non captante.\nSistema ventricolare in asse, di normali dimensioni. Non segni di atrofia cerebrale di rilievo per l'età. Non lesioni con caratteristiche suggestive di leucoencefalopatia multifocale progressiva."},
+    {"type": "table", "caption": "Carico lesionale per distretto (sequenze FLAIR e T1 post-contrasto)", "header": ["Distretto", "Lesioni T2 totali", "Nuove o ingrandite", "Captanti gadolinio"], "widths": [3, 2, 2.5, 2.5], "rows": [
+      ["Periventricolare", "[[ESAME_VALORE:23]]", "nessuna", "nessuna"],
+      ["Iuxtacorticale / corticale", "[[ESAME_VALORE:7]]", "[[ESAME_VALORE:una, frontale dx]]", "[[ESAME_VALORE:una, frontale dx]]"],
+      ["Infratentoriale", "[[ESAME_VALORE:4]]", "nessuna", "nessuna"],
+      ["Midollo cervicale", "[[ESAME_VALORE:2 (C3-C4, C6)]]", "[[ESAME_VALORE:una, C3-C4]]", "nessuna"]
+    ]},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "**Quadro RM di [[PATOLOGIA:sclerosi multipla]] con [[DIAGNOSI:attività radiologica di malattia]]: una [[DIAGNOSI:nuova lesione iuxtacorticale frontale destra]] captante il mezzo di contrasto e una [[DIAGNOSI:nuova lesione midollare a livello C3-C4]], non captante.**\nSi segnala al neurologo curante per le valutazioni terapeutiche del caso."},
+    {"type": "signature", "place_date": "[[LUOGO:Roma]], [[DATA_REFERTO:10 ottobre 2025]]", "role": "Il Medico Neuroradiologo", "name": "Dott. [[MEDICO:Gianmarco Tedeschi]]", "extra": ["Esame in doppia lettura con la Dott.ssa [[MEDICO:Paola Ventura]]"], "digital": true, "stamp": ["[[STRUTTURA_SANITARIA:CASA DI CURA VILLA LIRIOPE]]", "Neuroradiologia", "Dott. [[MEDICO:G. Tedeschi]]"]}
+  ],
+  "negatives": [
+    {"value": "Dawson", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "McDonald", "forbidden_categories": ["PERSONA", "COGNOME"]}
+  ]
+}

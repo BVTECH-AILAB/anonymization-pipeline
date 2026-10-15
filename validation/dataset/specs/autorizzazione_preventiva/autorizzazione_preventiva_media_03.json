@@ -1,0 +1,308 @@
+{
+  "id": "autorizzazione_preventiva_media_03",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "media",
+  "style": {
+    "font": "dejavu",
+    "color": "#AD1457",
+    "font_size": 8.8,
+    "margins_mm": 18
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Lorenzo",
+      "last_name": "Quarta",
+      "sex": "M",
+      "birth_date": "2016-08-22",
+      "birth_place": "Lecce"
+    }
+  },
+  "letterhead": {
+    "logo": "ATO",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Sanitaria Locale Terra d'Otranto]]",
+      "Commissione Regionale per la terapia con GH",
+      "Nota AIFA 39 - Registro regionale dei trattamenti",
+      "Coordinatore: Dott. [[MEDICO:Ernesto Calò]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Miglietta 5]]",
+      "[[CAP:73100]] [[LUOGO:Lecce]]",
+      "Segreteria [[TELEFONO:0832 215704]]"
+    ]
+  },
+  "running_header": "Richiesta GH - Minore: [[PERSONA:Lorenzo Quarta]] (n. [[DATA_NASCITA:22/08/2016]]) - Prot. [[NUMERO_PROTOCOLLO:GH/LE/2025/0093]]",
+  "footer": [
+    "La terapia con ormone somatotropo è erogabile a carico del SSN solo previa autorizzazione della Commissione Regionale.",
+    "Modulo GH-01 - I dati dei minori sono trattati con particolare riservatezza (art. 9 Reg. UE 2016/679, art. 2-sexies D.Lgs. 196/2003)"
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "RICHIESTA DI AUTORIZZAZIONE ALLA TERAPIA CON GH",
+      "subtitle": "Ormone della crescita ([[FARMACO:somatropina]]) in età evolutiva"
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "checkboxes",
+          "columns": 1,
+          "items": [
+            [
+              "Prima prescrizione",
+              true
+            ],
+            [
+              "Prosecuzione (rivalutazione annuale)",
+              false
+            ],
+            [
+              "Richiesta urgente",
+              false
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "label": "Prot.",
+          "value": "[[NUMERO_PROTOCOLLO:GH/LE/2025/0093]]",
+          "align": "right"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "1. DATI DELL'ASSISTITO"
+    },
+    {
+      "type": "patient_box",
+      "title": "Assistito minorenne",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome e nome",
+          "[[PERSONA:Lorenzo Quarta]]"
+        ],
+        [
+          "Sesso",
+          "[[SESSO:M]]"
+        ],
+        [
+          "Nato a",
+          "[[LUOGO_NASCITA:Lecce]]"
+        ],
+        [
+          "il",
+          "[[DATA_NASCITA:22/08/2016]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Gallipoli 58]], [[LUOGO:Nardò]]"
+        ],
+        [
+          "Età",
+          "[[ETA:9]] anni"
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "char_boxes",
+      "label": "Tessera sanitaria",
+      "value": "[[TESSERA_SANITARIA:@ts]]"
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Esercente la responsabilità genitoriale",
+          "[[TUTORE_DELEGATO:Valentina Greco]] (madre)"
+        ],
+        [
+          "Recapito",
+          "[[TELEFONO:+39 328 904 1172]]"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "2. PRESCRIZIONE"
+    },
+    {
+      "type": "paragraph",
+      "text": "Farmaco: [[FARMACO:somatropina]] da DNA ricombinante, penna preriempita. Posologia: [[FARMACO:0,025 mg/kg/die s.c. alla sera, 7 giorni su 7]] (dose iniziale [[FARMACO:0,55 mg/die]], peso attuale [[MISURE_ANTROPOMETRICHE:22,1 kg]]). Durata della prima autorizzazione: 12 mesi. Centro prescrittore autorizzato: [[REPARTO:Ambulatorio di Endocrinologia Pediatrica]], [[STRUTTURA_SANITARIA:P.O. San Nicandro dei Messapi]]."
+    },
+    {
+      "type": "section",
+      "text": "3. MOTIVAZIONE CLINICA"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il piccolo [[NOME:Lorenzo]] è giunto alla nostra osservazione su invio del pediatra di libera scelta, Dott.ssa [[MEDICO:Ilaria Perrone]], per [[DIAGNOSI:bassa statura]] e rallentamento della crescita. Nato a termine, peso alla nascita adeguato. Statura bersaglio familiare calcolata sulle stature dei genitori (padre sig. [[FAMILIARE:Antonio Quarta]], [[MISURE_ANTROPOMETRICHE:171 cm]]; madre [[MISURE_ANTROPOMETRICHE:158 cm]])."
+    },
+    {
+      "type": "table",
+      "header": [
+        "Data visita",
+        "Età",
+        "Statura",
+        "SDS",
+        "Velocità di crescita"
+      ],
+      "widths": [
+        2.2,
+        1.8,
+        1.6,
+        1.2,
+        3
+      ],
+      "rows": [
+        [
+          "[[DATA_VISITA:14/02/2024]]",
+          "7 a 6 m",
+          "[[MISURE_ANTROPOMETRICHE:112,6 cm]]",
+          "[[ESAME_VALORE:-2,3]]",
+          "-"
+        ],
+        [
+          "[[DATA_VISITA:19.09.24]]",
+          "8 a 1 m",
+          "[[MISURE_ANTROPOMETRICHE:114,7 cm]]",
+          "[[ESAME_VALORE:-2,5]]",
+          "[[ESAME_VALORE:3,6]] cm/anno"
+        ],
+        [
+          "[[DATA_VISITA:7 maggio 2025]]",
+          "8 a 9 m",
+          "[[MISURE_ANTROPOMETRICHE:116,9 cm]]",
+          "[[ESAME_VALORE:-2,7]]",
+          "[[ESAME_VALORE:3,7]] cm/anno"
+        ]
+      ],
+      "caption": "Dati auxologici (rilevazioni eseguite dalla stessa operatrice, inf. ped. [[OPERATORE_SANITARIO:Sara Mangia]])"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Test di stimolo",
+        "Data",
+        "Picco di GH",
+        "Esito"
+      ],
+      "widths": [
+        3.2,
+        2,
+        2,
+        3
+      ],
+      "rows": [
+        [
+          "Clonidina",
+          "[[DATA:10/06/2025]]",
+          "[[ESAME_VALORE:5,8]] ng/mL",
+          "Deficit"
+        ],
+        [
+          "Arginina",
+          "[[DATA:24/06/2025]]",
+          "[[ESAME_VALORE:6,4]] ng/mL",
+          "Deficit"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "IGF-1 [[ESAME_VALORE:79]] ng/mL (sotto il range per età e sesso). Età ossea secondo Greulich e Pyle: 6 anni e 6 mesi, ritardata di oltre due anni. Stadio puberale secondo Tanner: 1 (prepubere). Funzionalità tiroidea, celiachia e cariotipo non contributivi. RM encefalo con mdc: [[DIAGNOSI:adenoipofisi di dimensioni ridotte]], neuroipofisi in sede. Conclusione: [[DIAGNOSI:deficit isolato di GH]], criteri della Nota 39 soddisfatti (statura inferiore a -2 DS, velocità di crescita ridotta in due rilevazioni successive, due test di stimolo con picco < 8 ng/mL)."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Lecce]], [[DATA_PRESCRIZIONE:01/07/2025]]",
+      "role": "Il medico del centro prescrittore",
+      "name": "Dott. [[MEDICO:Gianluca Rizzello]]",
+      "extra": [
+        "Endocrinologo pediatra - iscr. Albo LE n. [[NUMERO_ALBO:4417]]"
+      ],
+      "digital": false,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:P.O. San Nicandro dei Messapi]]",
+        "Endocrinologia Pediatrica",
+        "Dott. [[MEDICO:G. Rizzello]]"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Il/la sottoscritto/a [[TUTORE_DELEGATO:Valentina Greco]], madre del minore, dichiara di essere stato/a informato/a sulle modalità di somministrazione e sui possibili effetti collaterali della terapia e acconsente al trattamento.\nFirma del genitore ______________________________",
+      "align": "left"
+    },
+    {
+      "type": "section",
+      "text": "4. PARERE DELLA COMMISSIONE"
+    },
+    {
+      "type": "checkboxes",
+      "columns": 3,
+      "items": [
+        [
+          "Autorizzata",
+          true
+        ],
+        [
+          "Non autorizzata",
+          false
+        ],
+        [
+          "Richiesta di integrazioni",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Seduta del [[DATA:16 luglio 2025]]. La Commissione autorizza il trattamento per 12 mesi. Il centro prescrittore trasmetterà alla scadenza la scheda di rivalutazione con i dati auxologici aggiornati."
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "COMMISSIONE REGIONALE GH",
+        "Il Coordinatore",
+        "Dott. [[MEDICO:Ernesto Calò]]"
+      ],
+      "angle": 6,
+      "align": "right"
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Greulich",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Pyle",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Tanner",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    }
+  ]
+}

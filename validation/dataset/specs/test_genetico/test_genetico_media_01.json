@@ -1,0 +1,257 @@
+{
+  "id": "test_genetico_media_01",
+  "type": "test_genetico",
+  "difficulty": "media",
+  "style": {
+    "font": "times",
+    "color": "#8B1E1E",
+    "font_size": 9.5,
+    "margins_mm": 17
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Lorenzo",
+      "last_name": "Bacci",
+      "sex": "M",
+      "birth_date": "1979-03-14",
+      "birth_place": "Livorno"
+    }
+  },
+  "letterhead": {
+    "logo": "AVN",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Valdarno Nuovo]]",
+      "Dipartimento Cardio-Toraco-Vascolare",
+      "[[REPARTO:Laboratorio di Genetica Molecolare Cardiovascolare]]",
+      "Responsabile: Dott.ssa [[MEDICO:Ilaria Guarducci]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale dei Mandorli 40]]",
+      "[[CAP:50139]] [[LUOGO:Firenze]]",
+      "Tel. [[TELEFONO:055 7946021]]"
+    ]
+  },
+  "running_header": "Paz. [[PERSONA:Lorenzo Bacci]] - nato il [[DATA_NASCITA:14/03/1979]] - Rif. lab. [[NUMERO_REFERTO:25GMC-0187]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Valdarno Nuovo]] - P.IVA [[PARTITA_IVA:@aovn]] - Centro di riferimento regionale per le cardiomiopatie ereditarie",
+    "Laboratorio accreditato e certificato UNI EN ISO 15189. Il referto non può essere riprodotto parzialmente."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "REFERTO DI TEST GENETICO",
+      "subtitle": "Pannello NGS per cardiomiopatie ereditarie (62 geni)"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "fields": [
+        [
+          "Paziente",
+          "[[PERSONA:Lorenzo Bacci]]"
+        ],
+        [
+          "Codice fiscale",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Nato il",
+          "[[DATA_NASCITA:14/03/1979]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Pistoiese 211]], [[LUOGO:Prato]]"
+        ],
+        [
+          "Medico richiedente",
+          "Dott. [[MEDICO:Niccolò Pratesi]]"
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "N. referto",
+              "[[NUMERO_REFERTO:25GMC-0187]]"
+            ],
+            [
+              "Prelievo",
+              "[[DATA_VISITA:12.02.25]]"
+            ],
+            [
+              "Emissione",
+              "[[DATA_REFERTO:3 aprile 2025]]"
+            ],
+            [
+              "Materiale",
+              "Sangue periferico (EDTA)"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "label": "Codice DNA",
+          "value": "[[CODICE_CAMPIONE:DNA-25-00412]]",
+          "align": "right"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Indicazione al test"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il pz., di [[ETA:45]] aa., è seguito presso l'[[REPARTO:u.o. Cardiologia]] per [[DIAGNOSI:cardiomiopatia ipertrofica non ostruttiva]] (spessore massimo del setto interventricolare [[ESAME_VALORE:23 mm]] all'ecocardiogramma). Anamnesi familiare positiva per [[PATOLOGIA:morte cardiaca improvvisa]] del padre all'età di 52 anni. Il sig. [[PERSONA:Bacci]] è portatore di [[INTERVENTO:defibrillatore impiantabile (ICD)]] in prevenzione primaria."
+    },
+    {
+      "type": "section",
+      "text": "Metodica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Arricchimento mediante cattura con sonde (Twist Custom Panel) e sequenziamento paired-end 2x150 bp su piattaforma Illumina NextSeq 550. Allineamento sul genoma di riferimento GRCh38; chiamata delle varianti con pipeline interna validata. Copertura media 412x, regioni con copertura almeno 20x pari al 99,3%. Le varianti di interesse clinico sono state confermate con sequenziamento Sanger su secondo prelievo. Classificazione secondo le linee guida ACMG/AMP 2015 e successive raccomandazioni ClinGen."
+    },
+    {
+      "type": "section",
+      "text": "Risultato"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Gene",
+        "Trascritto",
+        "Variante HGVS c.",
+        "Variante HGVS p.",
+        "Zigosità",
+        "Classe ACMG"
+      ],
+      "widths": [
+        1.5,
+        2.1,
+        2.2,
+        2.4,
+        1.8,
+        2.4
+      ],
+      "rows": [
+        [
+          "MYBPC3",
+          "NM_000256.3",
+          "[[DATO_GENETICO:c.1504C>T]]",
+          "[[DATO_GENETICO:p.(Arg502Trp)]]",
+          "[[DATO_GENETICO:Eterozigote]]",
+          "Patogenetica (classe 5)"
+        ],
+        [
+          "MYH7",
+          "NM_000257.4",
+          "[[DATO_GENETICO:c.4472C>T]]",
+          "[[DATO_GENETICO:p.(Ser1491Leu)]]",
+          "[[DATO_GENETICO:Eterozigote]]",
+          "Significato incerto (classe 3)"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Non sono state rilevate altre varianti di classe 3, 4 o 5 nei geni del pannello.",
+      "size": 8.5,
+      "align": "left"
+    },
+    {
+      "type": "section",
+      "text": "Interpretazione"
+    },
+    {
+      "type": "paragraph",
+      "text": "La [[DATO_GENETICO:variante MYBPC3 c.1504C>T in eterozigosi]] è ampiamente descritta in soggetti affetti da cardiomiopatia ipertrofica ed è classificata come patogenetica: il risultato fornisce una **spiegazione molecolare** del quadro clinico del sig. [[PERSONA:L. Bacci]]. La variante del gene MYH7 è al momento di significato incerto e non deve essere utilizzata per decisioni cliniche né per lo screening dei familiari; potrà essere rivalutata alla luce di nuove evidenze."
+    },
+    {
+      "type": "section",
+      "text": "Consulenza genetica e screening familiare"
+    },
+    {
+      "type": "paragraph",
+      "text": "La trasmissione è autosomica dominante: ciascun figlio del paziente ha una probabilità del 50% di avere ereditato la variante. Si raccomanda il test a cascata della sola variante MYBPC3 nei familiari di primo grado, previa consulenza genetica. Durante il colloquio pre-test il paziente ha indicato i seguenti familiari, che ha autorizzato a contattare per il tramite della moglie, sig.ra [[FAMILIARE:Serena Mazzei]]."
+    },
+    {
+      "type": "table",
+      "header": [
+        "Familiare",
+        "Parentela",
+        "Data di nascita",
+        "Stato clinico",
+        "Test proposto"
+      ],
+      "widths": [
+        3,
+        1.8,
+        2,
+        3.2,
+        2.4
+      ],
+      "rows": [
+        [
+          "[[FAMILIARE:Riccardo Bacci]]",
+          "Fratello",
+          "[[DATA_NASCITA:07/06/1982]]",
+          "Asintomatico, ECG non noto",
+          "Test mirato + ecocardiogramma"
+        ],
+        [
+          "[[FAMILIARE:Tommaso Bacci]]",
+          "Figlio",
+          "[[DATA_NASCITA:21/09/2009]]",
+          "Asintomatico",
+          "Test mirato (minore, con consenso dei genitori)"
+        ],
+        [
+          "[[FAMILIARE:Mirella Cecconi]]",
+          "Madre",
+          "[[DATA_NASCITA:30/11/1954]]",
+          "[[PATOLOGIA:Ipertensione arteriosa]]",
+          "Test mirato"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Il prossimo colloquio di consulenza è fissato per il [[DATA:15-05-2025]] presso l'[[REPARTO:Ambulatorio di Genetica Clinica]]. Una copia del referto viene trasmessa al Dott. [[MEDICO:Niccolò Pratesi]] per l'aggiornamento della stratificazione del rischio aritmico."
+    },
+    {
+      "type": "note",
+      "text": "Limiti del test: la metodica non rileva in modo affidabile riarrangiamenti strutturali complessi, varianti in regioni introniche profonde e mosaicismi di basso livello. Un risultato negativo nei familiari esclude la variante familiare ma non altre cause di cardiomiopatia."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Firenze]], [[DATA_REFERTO:03/04/2025]]",
+      "role": "Il Biologo responsabile del laboratorio",
+      "name": "Dott.ssa [[MEDICO:Ilaria Guarducci]]",
+      "digital": true
+    },
+    {
+      "type": "signature",
+      "place_date": "Consulenza genetica pre e post-test",
+      "role": "Il Medico Genetista",
+      "name": "Dott. [[MEDICO:Fabrizio Nesi]]",
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:AO VALDARNO NUOVO]]",
+        "GENETICA MEDICA",
+        "Dott. [[MEDICO:Fabrizio Nesi]]",
+        "Ord. Medici FI n. [[NUMERO_ALBO:FI-13874]]"
+      ]
+    }
+  ],
+  "negatives": []
+}

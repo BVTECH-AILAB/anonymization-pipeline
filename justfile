@@ -40,7 +40,7 @@ fix:
     uv run ruff check --fix
 
 types:
-    uv run ty check src tests
+    uv run ty check src tests validation
 
 # Fix, format and type-check: run before every commit
 lint: fix format types
@@ -49,7 +49,7 @@ lint: fix format types
 check:
     uv run ruff check
     uv run ruff format --check
-    uv run ty check src tests
+    uv run ty check src tests validation
 
 # --- Tests ---
 
@@ -68,3 +68,9 @@ audit:
 # Runtime dependency licences: fails outside the permissive allow-list (Apache, MIT, BSD, ...)
 licences:
     ./scripts/check-licences.sh
+
+# --- Validation (validation/README.md) ---
+
+# Synthetic dataset: native PDFs and ground truth from validation/dataset/specs
+validation-dataset *args:
+    PYTHONPATH=validation uv run python -m anonval.build {{args}}

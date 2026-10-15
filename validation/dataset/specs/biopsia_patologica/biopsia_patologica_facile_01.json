@@ -1,0 +1,61 @@
+{
+  "id": "biopsia_patologica_facile_01",
+  "type": "biopsia_patologica",
+  "difficulty": "facile",
+  "style": {"font": "helvetica", "color": "#1F6F8B", "font_size": 9.5, "margins_mm": 18},
+  "persons": {
+    "paz": {"first_name": "Enrico", "last_name": "Bellandi", "sex": "M", "birth_date": "1967-09-21", "birth_place": "Ancona"}
+  },
+  "letterhead": {
+    "logo": "OCV",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Civile di Valdirosa]]",
+      "[[REPARTO:U.O.C. Anatomia Patologica]]",
+      "Direttore: Dott. [[MEDICO:Lorenzo Pieralisi]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via dei Mandorli 9]]",
+      "[[CAP:60127]] [[LUOGO:Ancona]]",
+      "Segreteria: [[TELEFONO:071 5964310]]"
+    ]
+  },
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale Civile di Valdirosa]] - Servizio Sanitario Regionale - Referto valido ai fini clinici solo se firmato",
+    "I dati personali sono trattati ai sensi del Regolamento UE 2016/679"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI ESAME ISTOLOGICO", "subtitle": "Biopsie endoscopiche gastriche"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Enrico Bellandi]]"],
+      ["Nato il", "[[DATA_NASCITA:21/09/1967]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Sesso", "[[SESSO:M]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["N. istologico", "[[NUMERO_REFERTO:IST/2025/004812]]"],
+      ["Data prelievo", "[[DATA_VISITA:14/05/2025]]"],
+      ["Reparto inviante", "[[REPARTO:Servizio di Endoscopia Digestiva]]"],
+      ["Data referto", "[[DATA_REFERTO:22/05/2025]]"],
+      ["Medico richiedente", "Dott. [[MEDICO:Fabio Tonnini]]"],
+      ["Priorità", "Ordinaria"]
+    ]},
+    {"type": "section", "text": "Notizie cliniche"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Epigastralgia]] e [[DIAGNOSI:dispepsia]] da circa sei mesi. All'EGDS [[DIAGNOSI:mucosa antrale iperemica a chiazze]]. Biopsie secondo protocollo Sydney. Ricerca di Helicobacter pylori."},
+    {"type": "section", "text": "Materiale inviato"},
+    {"type": "paragraph", "text": "A) Antro gastrico: 2 frammenti (blocchetto A1).\nB) Incisura angolare: 1 frammento (blocchetto B1).\nC) Corpo gastrico: 2 frammenti (blocchetto C1)."},
+    {"type": "section", "text": "Descrizione macroscopica"},
+    {"type": "paragraph", "text": "Frammenti bioptici di colorito grigio-rosato, di diametro massimo compreso tra 2 e 4 mm, inclusi in toto. Sezioni seriate colorate con ematossilina-eosina e Giemsa."},
+    {"type": "section", "text": "Descrizione microscopica"},
+    {"type": "paragraph", "text": "Mucosa di tipo antrale e oxintico con infiltrato linfoplasmacellulare della lamina propria e granulociti neutrofili a livello del colletto ghiandolare. Alla colorazione di Giemsa si osservano microrganismi spiraliformi adesi all'epitelio foveolare. Non metaplasia intestinale, non displasia."},
+    {"type": "table", "header": ["Sede", "Infiammazione", "Attività", "Atrofia", "Metaplasia intestinale", "H. pylori"], "widths": [2.2, 1.6, 1.4, 1.2, 1.9, 1.3], "rows": [
+      ["Antro (A1)", "[[ESAME_VALORE:moderata]]", "[[ESAME_VALORE:lieve]]", "assente", "assente", "[[ESAME_VALORE:presente ++]]"],
+      ["Incisura (B1)", "[[ESAME_VALORE:moderata]]", "[[ESAME_VALORE:lieve]]", "assente", "assente", "[[ESAME_VALORE:presente +]]"],
+      ["Corpo (C1)", "[[ESAME_VALORE:lieve]]", "assente", "assente", "assente", "[[ESAME_VALORE:presente +]]"]
+    ]},
+    {"type": "section", "text": "Diagnosi"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Gastrite cronica attiva Helicobacter pylori positiva]]** a prevalente localizzazione antrale. Stadio OLGA 0, assenza di lesioni preneoplastiche."},
+    {"type": "signature", "place_date": "[[LUOGO:Ancona]], [[DATA_REFERTO:22/05/2025]]", "role": "Il Dirigente Medico Anatomo-Patologo", "name": "Dott.ssa [[MEDICO:Silvia Marcantoni]]", "digital": true}
+  ],
+  "negatives": [{"value": "Giemsa", "forbidden_categories": ["PERSONA", "COGNOME"]}]
+}

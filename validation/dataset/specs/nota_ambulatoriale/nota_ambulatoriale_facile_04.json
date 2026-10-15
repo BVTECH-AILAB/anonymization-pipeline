@@ -1,0 +1,51 @@
+{
+  "id": "nota_ambulatoriale_facile_04",
+  "type": "nota_ambulatoriale",
+  "difficulty": "facile",
+  "style": {"font": "courier", "color": "#5B2C83", "font_size": 9, "margins_mm": 20},
+  "persons": {
+    "paz": {"first_name": "Francesca", "last_name": "Sorrentino", "sex": "F", "birth_date": "1983-11-30", "birth_place": "Napoli"}
+  },
+  "letterhead": {
+    "logo": "SRF",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:P.O. Santa Rita delle Fontane]]",
+      "[[REPARTO:Ambulatorio di Endocrinologia]]",
+      "Resp.: Dott. [[MEDICO:Ciro Amitrano]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Fontanelle 63]], [[LUOGO:Napoli]]",
+      "Tel. [[TELEFONO:081 7720914]]"
+    ]
+  },
+  "footer": [
+    "Referto generato dal sistema ambulatoriale aziendale - copia per l'assistito"
+  ],
+  "blocks": [
+    {"type": "title", "text": "VISITA ENDOCRINOLOGICA DI CONTROLLO", "subtitle": "Cod. 89.01 - Visita successiva alla prima"},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Assistita", "[[PERSONA:Francesca Sorrentino]]"],
+      ["Nata il", "[[DATA_NASCITA:30/11/1983]]"],
+      ["C.F.", "[[CODICE_FISCALE:@paz]]"],
+      ["Data visita", "[[DATA_VISITA:22/01/2025]]"],
+      ["Pren. CUP", "[[NUMERO_PRENOTAZIONE:15012025-04471]]"],
+      ["NRE", "[[NUMERO_RICETTA:150A50273318849]]"]
+    ]},
+    {"type": "section", "text": "Anamnesi e decorso"},
+    {"type": "paragraph", "text": "Paziente seguita per [[DIAGNOSI:tiroidite cronica autoimmune di Hashimoto]] con [[DIAGNOSI:ipotiroidismo subclinico]], diagnosticata nel 2021. In terapia con [[FARMACO:levotiroxina 50 mcg]] a digiuno. Riferisce astenia lieve, non palpitazioni, ciclo mestruale regolare. Non desiderio di gravidanza a breve termine."},
+    {"type": "section", "text": "Esami portati in visione"},
+    {"type": "table", "header": ["Esame", "Risultato", "Riferimento"], "widths": [2.2, 4.2, 2], "rows": [
+      ["TSH", "[[ESAME_VALORE:3,82 mUI/L]]", "0,40 - 4,00"],
+      ["FT4", "[[ESAME_VALORE:11,4 pg/mL]]", "8,0 - 18,0"],
+      ["Ab anti-TPO", "[[ESAME_VALORE:412 UI/mL]]", "< 35"],
+      ["Ecografia tiroidea", "[[ESAME_VALORE:ecostruttura disomogenea, nodulo isoecogeno lobo dx 8 mm]]", "-"]
+    ]},
+    {"type": "section", "text": "Esame obiettivo"},
+    {"type": "paragraph", "text": "Tiroide palpabile, di consistenza parenchimatosa, non dolente. PA [[MISURE_ANTROPOMETRICHE:118/76 mmHg]], FC [[ESAME_VALORE:68 bpm]]. Peso [[MISURE_ANTROPOMETRICHE:63 kg]]."},
+    {"type": "section", "text": "Conclusioni e terapia"},
+    {"type": "paragraph", "text": "Quadro di [[DIAGNOSI:tiroidite di Hashimoto]] in compenso con terapia sostitutiva; [[DIAGNOSI:nodulo tiroideo di 8 mm a basso sospetto (EU-TIRADS 3)]], senza indicazione ad agoaspirato.\nProseguire [[FARMACO:levotiroxina 50 mcg]] al mattino a digiuno, 30 minuti prima della colazione.\nControllo TSH e FT4 tra 6 mesi; ecografia tiroidea tra 12 mesi.\nProssima visita: da prenotare tramite CUP con impegnativa per visita di controllo."},
+    {"type": "signature", "place_date": "[[LUOGO:Napoli]], [[DATA_REFERTO:22/01/2025]]", "role": "Lo Specialista Endocrinologo", "name": "Dott.ssa [[MEDICO:Anna Maria Esposito]]", "digital": true}
+  ],
+  "negatives": [{"value": "Hashimoto", "forbidden_categories": ["PERSONA", "MEDICO"]}]
+}

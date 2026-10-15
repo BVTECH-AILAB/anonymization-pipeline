@@ -1,0 +1,580 @@
+{
+  "id": "biopsia_patologica_complessa_02",
+  "type": "biopsia_patologica",
+  "difficulty": "complessa",
+  "style": {
+    "font": "dejavu",
+    "color": "#5D4037",
+    "font_size": 7.8,
+    "margins_mm": 12
+  },
+  "persons": {
+    "fra": {
+      "first_name": "Karim",
+      "last_name": "El Amrani",
+      "sex": "M",
+      "birth_date": "1984-06-03",
+      "birth_place": "Marocco"
+    }
+  },
+  "letterhead": {
+    "logo": "OMC",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Maggiore della Collina]]",
+      "[[STRUTTURA_SANITARIA:Azienda Sanitaria Zona Collinare Torinese]]",
+      "[[REPARTO:S.C. Anatomia Patologica - Patologia Epatica]]",
+      "Direttore: Dott.ssa [[MEDICO:Marta Bertolotto]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Corso Casale 312]]",
+      "[[CAP:10132]] [[LUOGO:Torino]]",
+      "Tel. [[TELEFONO:011 8193307]]",
+      "Fax [[FAX:011 8193399]]"
+    ]
+  },
+  "running_header": "[[PERSONA:EL AMRANI YOUSSEF]] - STP [[CODICE_STP_ENI:STP0103010024518]] - Ist. [[NUMERO_REFERTO:H-2025-01173]] - Malattie Infettive (Dott.ssa [[MEDICO:L. Gribaudo]])",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale Maggiore della Collina]] - Referto per [[PERSONA:El Amrani Y.]] (STP [[CODICE_STP_ENI:STP0103010024518]]) - Contiene dati relativi a infezioni e dipendenze: trattamento ex art. 9 GDPR",
+    "Il referto è consegnato esclusivamente all'interessato o al medico curante; non è prevista la consegna a familiari senza delega scritta."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "REFERTO ISTOLOGICO - BIOPSIA EPATICA",
+      "subtitle": "Agobiopsia epatica percutanea ecoguidata (18G) - valutazione di attività e fibrosi"
+    },
+    {
+      "type": "patient_box",
+      "title": "ASSISTITO STRANIERO TEMPORANEAMENTE PRESENTE",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome e nome",
+          "[[PERSONA:EL AMRANI YOUSSEF]]"
+        ],
+        [
+          "Sesso / età",
+          "[[SESSO:M]] / [[ETA:37]] anni"
+        ],
+        [
+          "Nato il",
+          "[[DATA_NASCITA:15/01/1988]]"
+        ],
+        [
+          "Luogo di nascita",
+          "[[LUOGO_NASCITA:Casablanca (Marocco)]]"
+        ],
+        [
+          "Cittadinanza",
+          "[[CITTADINANZA:marocchina]]"
+        ],
+        [
+          "Passaporto",
+          "[[NUMERO_PASSAPORTO:VZ4417820]]"
+        ],
+        [
+          "Domicilio",
+          "c/o [[ORGANIZZAZIONE:Associazione Il Ponte Onlus]], [[INDIRIZZO:Via Cigna 96]], [[LUOGO:Torino]]"
+        ],
+        [
+          "Cod. paziente",
+          "[[ID_PAZIENTE:PZ-0088127]]"
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice STP",
+      "value": "[[CODICE_STP_ENI:STP0103010024518]]"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "N. istologico",
+              "[[NUMERO_REFERTO:H-2025-01173]]"
+            ],
+            [
+              "Ricovero DH",
+              "[[NUMERO_ACCETTAZIONE:DH25/44310]]"
+            ],
+            [
+              "Biopsia eseguita il",
+              "[[DATA_VISITA:22/04/2025]]"
+            ],
+            [
+              "Pervenuto il",
+              "[[DATA:22.04.2025]] ore 11:50"
+            ],
+            [
+              "Refertato il",
+              "[[DATA_REFERTO:30/04/2025]]"
+            ],
+            [
+              "Esecutore",
+              "Dott. [[MEDICO:Fabrizio Ollino]] ([[REPARTO:Radiologia Interventistica]])"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Richiedente",
+              "Dott.ssa [[MEDICO:Laura Gribaudo]]"
+            ],
+            [
+              "U.O.",
+              "[[REPARTO:SC Malattie Infettive - Ambulatorio Epatologico]]"
+            ],
+            [
+              "In copia a",
+              "Dott. [[MEDICO:Mauro Cravero]], [[REPARTO:SerD Torino Est]]"
+            ],
+            [
+              "Mediazione",
+              "[[OPERATORE_SANITARIO:Samira Bennani]] (arabo/francese)"
+            ]
+          ]
+        },
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "value": "[[CODICE_CAMPIONE:H25-01173-A1]]",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Notizie cliniche"
+    },
+    {
+      "type": "paragraph",
+      "text": "Paziente di [[ETA:37]] anni, in Italia dal 2019, [[RELIGIONE:di fede musulmana]] (procedura programmata al termine del Ramadan su richiesta del pz.). In anamnesi: [[MALATTIE_INFETTIVE:infezione da HIV-1]] diagnosticata nel 2021, in terapia antiretrovirale con [[FARMACO:bictegravir/emtricitabina/tenofovir alafenamide 50/200/25 mg]] con viremia soppressa; [[MALATTIE_INFETTIVE:epatite cronica HCV]] genotipo [[ESAME_VALORE:3a]], naïve al trattamento; [[DIPENDENZE:pregresso uso di eroina per via endovenosa]], attualmente in [[TERAPIA:terapia sostitutiva con metadone]] ([[FARMACO:metadone 60 mg/die]]) presso il SerD; [[DIPENDENZE:consumo alcolico a rischio]] (circa 40 g/die fino al 2024); [[SALUTE_MENTALE:disturbo post-traumatico da stress]] in carico al servizio di etnopsichiatria. FibroScan [[ESAME_VALORE:11,8 kPa]] con CAP [[ESAME_VALORE:288 dB/m]]: discordanza con i marcatori sierici, si richiede biopsia per stadiazione prima di avviare [[TERAPIA:antivirali ad azione diretta]]. Il sig. [[PERSONA:El Amrani]] ha indicato come persona di riferimento il fratello, sig. [[FAMILIARE:Karim El Amrani]] (C.F. [[CODICE_FISCALE:@fra]], tel. [[TELEFONO:+39 351 776 0419]]), al quale **non** autorizza la comunicazione dello stato sierologico HIV."
+    },
+    {
+      "type": "table",
+      "caption": "Esami ematochimici di accompagnamento (prelievo del 14.04.25, Laboratorio Analisi del P.O.)",
+      "header": [
+        "Parametro",
+        "Valore",
+        "Unità",
+        "Intervallo di riferimento"
+      ],
+      "widths": [
+        3.6,
+        1.6,
+        1.6,
+        2.6
+      ],
+      "rows": [
+        [
+          "AST",
+          "[[ESAME_VALORE:96]]",
+          "U/L",
+          "10 - 40"
+        ],
+        [
+          "ALT",
+          "[[ESAME_VALORE:131]]",
+          "U/L",
+          "10 - 50"
+        ],
+        [
+          "Gamma-GT",
+          "[[ESAME_VALORE:174]]",
+          "U/L",
+          "8 - 61"
+        ],
+        [
+          "Piastrine",
+          "[[ESAME_VALORE:118]]",
+          "10^3/µL",
+          "150 - 400"
+        ],
+        [
+          "HCV-RNA",
+          "[[ESAME_VALORE:2.340.000]]",
+          "UI/mL",
+          "non rilevabile"
+        ],
+        [
+          "HIV-1 RNA",
+          "[[ESAME_VALORE:< 20 copie]]",
+          "copie/mL",
+          "-"
+        ],
+        [
+          "Linfociti T CD4+",
+          "[[ESAME_VALORE:512]]",
+          "cell/µL",
+          "500 - 1500"
+        ],
+        [
+          "INR",
+          "[[ESAME_VALORE:1,12]]",
+          "-",
+          "0,80 - 1,20"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Materiale e descrizione macroscopica"
+    },
+    {
+      "type": "paragraph",
+      "text": "A) Fegato, lobo destro (VIII segmento), due passaggi: due frustoli cilindrici di colorito brunastro, di cm 1,9 e 1,4 (lunghezza complessiva cm 3,3), integri, inclusi in toto in un'unica inclusione (A1). Sezioni seriate per: ematossilina-eosina, tricromica di Masson, reticolo sec. Gomori, Perls, PAS e PAS-diastasi. Campionamento a cura della TSLB [[OPERATORE_SANITARIO:Erika Bussone]]."
+    },
+    {
+      "type": "section",
+      "text": "Descrizione microscopica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Campione adeguato: [[ESAME_VALORE:14 spazi portali]] completi. Gli spazi portali sono ampliati da infiltrato infiammatorio linfocitario denso, con formazione di aggregati e un follicolo linfoide; epatite d'interfaccia di grado moderato in oltre il 50% degli spazi portali. Nel lobulo necrosi focali (2-4 foci per campo 10x) e corpi acidofili sparsi; cellule di Kupffer iperplastiche. Steatosi macrovescicolare in circa il [[ESAME_VALORE:25%]] degli epatociti, a distribuzione panlobulare, coerente con l'effetto steatogeno del genotipo 3. Non corpi di Mallory-Denk né rigonfiamento a pallone degli epatociti; non evidenti lesioni di steatoepatite. Alla tricromica di Masson espansione fibrosa della maggior parte degli spazi portali con frequenti setti porto-portali (bridging), senza noduli completi. Depositi di emosiderina di grado 1 alla colorazione di Perls, prevalentemente nelle cellule di Kupffer. Dotti biliari conservati, senza duttopenia. Non displasia epatocitaria."
+    },
+    {
+      "type": "table",
+      "caption": "Punteggi semiquantitativi",
+      "header": [
+        "Sistema",
+        "Parametro",
+        "Punteggio",
+        "Nota"
+      ],
+      "widths": [
+        2.2,
+        3.6,
+        1.6,
+        3.6
+      ],
+      "rows": [
+        [
+          "Ishak (mHAI)",
+          "Attività necroinfiammatoria (grading)",
+          "[[ESAME_VALORE:9/18]]",
+          "A: 3, B: 0, C: 2, D: 4"
+        ],
+        [
+          "Ishak",
+          "Fibrosi (staging)",
+          "[[ESAME_VALORE:4/6]]",
+          "Bridging porto-portale e porto-centrale frequente"
+        ],
+        [
+          "METAVIR",
+          "Attività / Fibrosi",
+          "[[ESAME_VALORE:A2 / F3]]",
+          "Correlazione con elastografia"
+        ],
+        [
+          "Brunt (NAS)",
+          "Steatosi / ballooning / flogosi lobulare",
+          "[[ESAME_VALORE:1 / 0 / 1]]",
+          "NAS non applicabile in epatite virale"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Indagini istochimiche e immunoistochimiche"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Indagine",
+        "Esito",
+        "Commento"
+      ],
+      "widths": [
+        2.6,
+        3,
+        5.4
+      ],
+      "rows": [
+        [
+          "Tricromica di Masson",
+          "[[ESAME_VALORE:fibrosi a ponte]]",
+          "Setti porto-portali e porto-centrali, architettura conservata"
+        ],
+        [
+          "Reticolo (Gomori)",
+          "[[ESAME_VALORE:trabecole regolari]]",
+          "Assenza di ispessimento trabecolare e di noduli rigenerativi"
+        ],
+        [
+          "Perls",
+          "[[ESAME_VALORE:siderosi grado 1]]",
+          "Prevalente nelle cellule di Kupffer, non epatocitaria"
+        ],
+        [
+          "PAS / PAS-diastasi",
+          "[[ESAME_VALORE:negativo per globuli]]",
+          "Esclusi globuli di alfa-1-antitripsina"
+        ],
+        [
+          "HBsAg / HBcAg",
+          "[[ESAME_VALORE:negativi]]",
+          "Assenza di coinfezione HBV tissutale"
+        ],
+        [
+          "CK7 / CK19",
+          "[[ESAME_VALORE:dotti conservati]]",
+          "Lieve reazione duttulare periportale, non metaplasia biliare"
+        ],
+        [
+          "CD3 / CD20",
+          "[[ESAME_VALORE:infiltrato misto T e B]]",
+          "Aggregati linfoidi portali tipici dell'epatite C"
+        ],
+        [
+          "p62 / ubiquitina",
+          "[[ESAME_VALORE:negativi]]",
+          "Non inclusioni citoplasmatiche (esclusi corpi di Mallory-Denk)"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Correlazione clinico-patologica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il dato istologico (stadio Ishak 4) è sostanzialmente concordante con l'elastografia ([[ESAME_VALORE:11,8 kPa]]) e con un indice APRI di [[ESAME_VALORE:2,03]], mentre il FIB-4 ([[ESAME_VALORE:3,41]]) tendeva a sovrastimare. La steatosi è più verosimilmente virus-indotta (genotipo [[ESAME_VALORE:3a]]) che metabolica: BMI riferito [[MISURE_ANTROPOMETRICHE:22,4 kg/m²]], assenza di diabete. L'ART in corso non contiene farmaci con nota epatotossicità steatogena rilevante. Sulla base di questi elementi, la Dott.ssa [[MEDICO:Gribaudo]] ha programmato l'avvio di [[FARMACO:sofosbuvir/velpatasvir 400/100 mg]] per 12 settimane, previa verifica delle interazioni con la terapia antiretrovirale e con il metadone, in accordo con il Dott. [[MEDICO:Cravero]] del SerD."
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi"
+    },
+    {
+      "type": "paragraph",
+      "text": "**Agobiopsia epatica: [[MALATTIE_INFETTIVE:epatite cronica HCV-correlata]] con [[DIAGNOSI:attività necroinfiammatoria moderata]] (Ishak grading [[ESAME_VALORE:9/18]]) e [[DIAGNOSI:fibrosi a ponte, stadio Ishak 4 (METAVIR F3)]]; [[DIAGNOSI:steatosi macrovescicolare del 25%]]; siderosi di grado 1.** Assenza di cirrosi e di lesioni nodulari displastiche nel materiale esaminato."
+    },
+    {
+      "type": "note",
+      "text": "Commento: in un paziente con [[MALATTIE_INFETTIVE:coinfezione HIV/HCV]] e [[DIPENDENZE:consumo alcolico pregresso]], il quadro istologico non mostra componente di steatoepatite alcolica. Lo stadio di fibrosi avanzata giustifica l'avvio prioritario della terapia con [[TERAPIA:antivirali ad azione diretta]] e l'inserimento nel programma di sorveglianza ecografica semestrale. Il caso è stato rivisto con il Dott. [[MEDICO:Pier Carlo Ghiglione]] (seconda opinione, [[DATA:29 aprile 2025]])."
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Il sistema di Ishak (1995) e il METAVIR (1996) sono riportati per confronto con le casistiche di letteratura; il punteggio di Brunt è citato solo per escludere una componente metabolica.",
+        "Su richiesta del pz., il colloquio di restituzione dell'esito si terrà in presenza della mediatrice [[OPERATORE_SANITARIO:S. Bennani]] e senza familiari; appuntamento fissato per il [[DATA:06/05/2025]] presso l'[[REPARTO:Ambulatorio Epatologico]].",
+        "Vetrini A1/HE e A1/Masson disponibili per revisione presso l'archivio, rif. [[CODICE_CAMPIONE:H25-01173-A1]]."
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Registro della catena di custodia del campione"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Fase",
+        "Data e ora",
+        "Operatore",
+        "Note"
+      ],
+      "widths": [
+        2.4,
+        2.2,
+        3.4,
+        3.4
+      ],
+      "rows": [
+        [
+          "Prelievo",
+          "[[DATA_VISITA:22/04/2025]] 10:35",
+          "Dott. [[MEDICO:Fabrizio Ollino]]\ninf. [[OPERATORE_SANITARIO:Davide Rostagno]]",
+          "Due passaggi, nessuna complicanza; osservazione per 6 ore"
+        ],
+        [
+          "Trasporto",
+          "[[DATA:22/04/2025]] 11:40",
+          "OSS [[OPERATORE_SANITARIO:Gianni Bosio]]",
+          "Contenitore in formalina 10%"
+        ],
+        [
+          "Accettazione",
+          "[[DATA:22.04.2025]] 11:50",
+          "TSLB [[OPERATORE_SANITARIO:Erika Bussone]]",
+          "Etichette concordanti con richiesta STP"
+        ],
+        [
+          "Refertazione",
+          "[[DATA_REFERTO:30/04/2025]]",
+          "Dott.ssa [[MEDICO:Marta Bertolotto]]\nDott. [[MEDICO:Pier Carlo Ghiglione]]",
+          "Doppia lettura"
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Torino]], [[DATA_REFERTO:30/04/2025]]",
+          "role": "Il Dirigente Medico",
+          "name": "Dott.ssa [[MEDICO:Marta Bertolotto]]",
+          "extra": [
+            "Patologia epatica"
+          ],
+          "digital": true
+        }
+      ],
+      "right": [
+        {
+          "type": "stamp",
+          "angle": -12,
+          "align": "center",
+          "lines": [
+            "S.C. ANATOMIA PATOLOGICA",
+            "[[STRUTTURA_SANITARIA:OSP. MAGGIORE DELLA COLLINA]]",
+            "Dott. [[MEDICO:P.C. GHIGLIONE]]",
+            "Ordine Medici TO n. [[NUMERO_ALBO:21877]]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "size": 7,
+      "align": "left",
+      "text": "Promemoria per il reparto: il pz. [[PERSONA:Youssef]] (sig. [[PERSONA:Y. El Amrani]]) non dispone di tessera sanitaria; le prestazioni sono erogate in regime STP con codice valido fino al [[DATA_SCADENZA:14/10/2025]]. Per comunicazioni: mediatrice [[OPERATORE_SANITARIO:Samira Bennani]], [[EMAIL:mediazione.collina@ospcollina.example.it]]."
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "title",
+      "text": "ALLEGATO - Consenso informato alla biopsia epatica",
+      "subtitle": "Copia per l'archivio di Anatomia Patologica (modulo MOD-AP-17, rev. 4)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Io sottoscritto [[PERSONA:Youssef El Amrani]], nato il [[DATA_NASCITA:15/01/1988]] a [[LUOGO_NASCITA:Casablanca]], documento [[NUMERO_PASSAPORTO:VZ4417820]] rilasciato da [[ENTE_RILASCIO:Royaume du Maroc - Direction Générale de la Sûreté Nationale]], assistito dalla mediatrice linguistico-culturale [[OPERATORE_SANITARIO:Samira Bennani]], dichiaro di aver ricevuto dal Dott. [[MEDICO:F. Ollino]] informazioni comprensibili, in lingua araba, sulla procedura, sui rischi (sanguinamento, dolore, pneumotorace) e sulle alternative (elastografia, marcatori sierici)."
+    },
+    {
+      "type": "checkboxes",
+      "columns": 1,
+      "items": [
+        [
+          "Acconsento all'esecuzione dell'agobiopsia epatica percutanea ecoguidata",
+          true
+        ],
+        [
+          "Acconsento alla conservazione del materiale residuo per eventuali indagini diagnostiche future",
+          true
+        ],
+        [
+          "Acconsento all'uso del materiale residuo, in forma anonima, per ricerca scientifica",
+          false
+        ],
+        [
+          "Autorizzo la comunicazione dell'esito al fratello [[FAMILIARE:Karim El Amrani]]",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Il paziente chiede che il proprio stato sierologico non sia riportato in documenti destinati a terzi e che eventuali comunicazioni al domicilio presso l'[[ORGANIZZAZIONE:Associazione Il Ponte Onlus]] avvengano in busta chiusa intestata a \"[[PERSONA:Y. E. A.]]\"."
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Torino]], [[DATA:22.04.25]]",
+          "role": "Firma del paziente",
+          "name": "[[PERSONA:Youssef El Amrani]]",
+          "digital": false
+        },
+        {
+          "type": "signature",
+          "place_date": "Presente al colloquio",
+          "role": "Mediatrice",
+          "name": "[[OPERATORE_SANITARIO:Samira Bennani]]",
+          "digital": false
+        }
+      ],
+      "right": [
+        {
+          "type": "signature",
+          "place_date": "Ore 09:10",
+          "role": "Il medico che acquisisce il consenso",
+          "name": "Dott. [[MEDICO:Fabrizio Ollino]]",
+          "digital": false,
+          "stamp": [
+            "RADIOLOGIA INTERVENTISTICA",
+            "Dott. [[MEDICO:F. OLLINO]]",
+            "Matr. [[NUMERO_ALBO:004781]]"
+          ]
+        }
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Ishak",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Mallory-Denk",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Kupffer",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Masson",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Gomori",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Perls",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Brunt",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

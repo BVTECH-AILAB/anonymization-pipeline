@@ -1,0 +1,291 @@
+{
+  "id": "autorizzazione_preventiva_media_02",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "media",
+  "style": {
+    "font": "times",
+    "color": "#1A237E",
+    "font_size": 9.5,
+    "margins_mm": 20
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Chiara",
+      "last_name": "Zanon",
+      "sex": "F",
+      "birth_date": "1977-02-08",
+      "birth_place": "Padova"
+    }
+  },
+  "letterhead": {
+    "logo": "UEO",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda ULSS Euganea Orientale]]",
+      "Distretto Socio-Sanitario Piovese",
+      "[[REPARTO:U.O.S. Assistenza Protesica e Integrativa]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Leonardo da Vinci 4]]",
+      "[[CAP:35028]] [[LUOGO:Piove di Sacco]]",
+      "Tel. [[TELEFONO:049 9718260]]"
+    ]
+  },
+  "running_header": "Pratica [[NUMERO_PROTOCOLLO:PR-2025-003174]] - Assistita: [[PERSONA:Chiara Zanon]] - Ausili per la mobilità",
+  "footer": [
+    "Le prescrizioni incomplete o prive della valutazione funzionale vengono restituite al prescrittore senza istruttoria.",
+    "Trattamento dati ai sensi degli artt. 9 e 13 Reg. UE 2016/679 - Titolare: il Direttore Generale dell'Azienda ULSS"
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "RICHIESTA DI AUTORIZZAZIONE ALLA FORNITURA DI AUSILI",
+      "subtitle": "Assistenza protesica - Elenchi 1 e 2A del Nomenclatore (DPCM 12/01/2017)"
+    },
+    {
+      "type": "barcode",
+      "kind": "code128",
+      "label": "Pratica",
+      "value": "[[NUMERO_PROTOCOLLO:PR-2025-003174]]",
+      "align": "right"
+    },
+    {
+      "type": "section",
+      "text": "1. Dati dell'assistito"
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome",
+          "[[COGNOME:Zanon]]"
+        ],
+        [
+          "Nome",
+          "[[NOME:Chiara]]"
+        ],
+        [
+          "Nata il",
+          "[[DATA_NASCITA:08/02/1977]]"
+        ],
+        [
+          "Esenzione",
+          "[[CODICE_ESENZIONE:046]]"
+        ],
+        [
+          "Indirizzo",
+          "[[INDIRIZZO:Via San Pio X 33]]"
+        ],
+        [
+          "Comune di residenza",
+          "[[CAP:35028]] [[LUOGO:Piove di Sacco]]"
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "char_boxes",
+      "label": "Tessera TEAM",
+      "value": "[[TESSERA_SANITARIA:@ts]]"
+    },
+    {
+      "type": "paragraph",
+      "text": "Caregiver di riferimento: il marito, sig. [[CONTATTO_EMERGENZA:Paolo Bertin]], reperibile al [[TELEFONO:+39 340 228 6617]], che assiste la sig.ra [[PERSONA:Zanon]] nei trasferimenti e nella gestione degli ausili a domicilio."
+    },
+    {
+      "type": "checkboxes",
+      "columns": 3,
+      "items": [
+        [
+          "Prima fornitura",
+          true
+        ],
+        [
+          "Rinnovo",
+          false
+        ],
+        [
+          "Riparazione",
+          false
+        ],
+        [
+          "Con urgenza",
+          false
+        ],
+        [
+          "Ordinaria",
+          true
+        ],
+        [
+          "Ausilio su misura",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "2. Prescrizione"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Codice ISO",
+        "Descrizione dell'ausilio",
+        "Q.tà",
+        "Elenco"
+      ],
+      "widths": [
+        2.2,
+        6,
+        0.8,
+        1
+      ],
+      "rows": [
+        [
+          "12.23.06.003",
+          "Carrozzina elettronica per uso interno ed esterno, comandi a joystick",
+          "1",
+          "1"
+        ],
+        [
+          "12.24.03.015",
+          "Sistema di postura: schienale rigido regolabile e cuscino antidecubito ad aria",
+          "1",
+          "1"
+        ],
+        [
+          "12.31.03.003",
+          "Sollevatore mobile elettrico con imbracatura ad amaca",
+          "1",
+          "2A"
+        ],
+        [
+          "18.12.07.003",
+          "Letto articolato elettrico con sponde",
+          "1",
+          "2A"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Prescrittore: Dott. [[MEDICO:Alberto Menegazzo]], specialista in Medicina Fisica e Riabilitazione, iscr. Ordine dei Medici di [[LUOGO:Padova]] n. [[NUMERO_ALBO:PD 08921]], [[REPARTO:U.O.C. Riabilitazione Neuromotoria]]. Data della prescrizione: [[DATA_PRESCRIZIONE:18/03/2025]]."
+    },
+    {
+      "type": "section",
+      "text": "3. Motivazione clinica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Pz. di [[ETA:48]] aa. affetta da [[PATOLOGIA:sclerosi multipla secondariamente progressiva]], diagnosticata nel 2004, seguita dal [[REPARTO:Centro Sclerosi Multipla]] (referente Dott.ssa [[MEDICO:Francesca Tonello]]). Nell'ultimo anno progressione della disabilità con EDSS secondo Kurtzke pari a [[ESAME_VALORE:7,5]]: [[DIAGNOSI:paraparesi spastica grave]], [[DIAGNOSI:atassia degli arti superiori]], [[DIAGNOSI:faticabilità marcata]]. Non è più in grado di spingere autonomamente una carrozzina manuale; è riconosciuta in [[INVALIDITA:situazione di gravità ai sensi della L. 104/92, art. 3 c. 3]]."
+    },
+    {
+      "type": "paragraph",
+      "text": "In data [[DATA_VISITA:5 marzo 2025]] è stata effettuata valutazione domiciliare dell'accessibilità (porte, rampa d'ingresso, spazi di manovra), con esito favorevole per l'utilizzo della carrozzina elettronica; la paziente conserva un controllo adeguato dell'arto superiore destro per la guida."
+    },
+    {
+      "type": "table",
+      "header": [
+        "Valutazione",
+        "Data",
+        "Eseguita da",
+        "Esito"
+      ],
+      "widths": [
+        3,
+        1.8,
+        3.2,
+        4
+      ],
+      "rows": [
+        [
+          "Visita neurologica",
+          "[[DATA_VISITA:24/02/2025]]",
+          "Dott.ssa [[MEDICO:Francesca Tonello]]",
+          "Progressione, EDSS [[ESAME_VALORE:7,5]]"
+        ],
+        [
+          "Visita fisiatrica",
+          "[[DATA_VISITA:03.03.25]]",
+          "Dott. [[MEDICO:Alberto Menegazzo]]",
+          "Indicazione a mobilità elettronica"
+        ],
+        [
+          "Sopralluogo domiciliare",
+          "[[DATA_VISITA:5 marzo 2025]]",
+          "Ft. [[OPERATORE_SANITARIO:Elisa Carraro]]",
+          "Ambiente idoneo, rampa presente"
+        ]
+      ],
+      "caption": "Percorso valutativo"
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Padova]], [[DATA_PRESCRIZIONE:18 marzo 2025]]",
+      "role": "Il medico prescrittore",
+      "name": "Dott. [[MEDICO:Alberto Menegazzo]]",
+      "digital": false,
+      "stamp": [
+        "Dott. [[MEDICO:Alberto Menegazzo]]",
+        "Medicina Fisica e Riabilitazione",
+        "Ord. Med. PD n. [[NUMERO_ALBO:PD 08921]]"
+      ]
+    },
+    {
+      "type": "section",
+      "text": "4. Parere della commissione"
+    },
+    {
+      "type": "paragraph",
+      "text": "Verificata la congruenza tra la prescrizione, il programma terapeutico e il preventivo n. 2025/441 della ditta fornitrice, si esprime il seguente parere:"
+    },
+    {
+      "type": "checkboxes",
+      "columns": 3,
+      "items": [
+        [
+          "Autorizzato",
+          true
+        ],
+        [
+          "Autorizzato con modifiche",
+          false
+        ],
+        [
+          "Non autorizzato",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Il sollevatore è autorizzato in comodato d'uso dal magazzino ausili aziendale (ausilio riciclato). Collaudo a cura del prescrittore entro 20 giorni dalla consegna."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Piove di Sacco]], [[DATA:27/03/2025]]",
+      "role": "Il Medico Responsabile U.O.S. Protesica",
+      "name": "Dott.ssa [[MEDICO:Marta Schiavon]]",
+      "digital": false,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:Azienda ULSS Euganea Orientale]]",
+        "ASSISTENZA PROTESICA",
+        "VISTO SI AUTORIZZA"
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Kurtzke",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    }
+  ]
+}

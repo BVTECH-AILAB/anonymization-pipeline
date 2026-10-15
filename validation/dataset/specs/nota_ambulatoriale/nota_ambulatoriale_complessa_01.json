@@ -1,0 +1,400 @@
+{
+  "id": "nota_ambulatoriale_complessa_01",
+  "type": "nota_ambulatoriale",
+  "difficulty": "complessa",
+  "style": {
+    "font": "helvetica",
+    "color": "#6A1B9A",
+    "font_size": 8,
+    "margins_mm": 13
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Moussa",
+      "last_name": "Ndiaye",
+      "sex": "M",
+      "birth_date": "1987-01-15",
+      "birth_place": "Senegal"
+    }
+  },
+  "letterhead": {
+    "logo": "ASNO",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASST Navigli Ovest]]",
+      "[[STRUTTURA_SANITARIA:Ospedale Maggiore della Darsena]]",
+      "Dipartimento di Medicina Interna e Specialistica",
+      "[[REPARTO:S.C. Malattie Infettive - Ambulatorio HIV/IST]]",
+      "Direttore: Dott. [[MEDICO:Pietro Sangalli]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Lodovico il Moro 141]]",
+      "[[CAP:20143]] [[LUOGO:Milano]]",
+      "Tel. [[TELEFONO:02 6371 4400]]",
+      "Fax [[FAX:02 6371 4499]]",
+      "[[EMAIL:amb.hiv@asst-navigliovest.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:NDIAYE Moussa]] - C.F. [[CODICE_FISCALE:@paz]] - Cod. paziente [[ID_PAZIENTE:HIV-MI-2016-0388]] - Visita del [[DATA_VISITA:18/06/2025]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASST Navigli Ovest]] - Sede legale [[INDIRIZZO:Piazza Sant'Eustorgio 3]], [[LUOGO:Milano]] - P.IVA [[PARTITA_IVA:@asst]] - PEC [[PEC:protocollo@pec.asst-navigliovest.example.it]]",
+    "Documento riservato: contiene dati tutelati dalla L. 135/1990. Referente infermieristico [[OPERATORE_SANITARIO:D. Brambilla]], tel. [[TELEFONO:02 6371 4420]]"
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "AMBULATORIO HIV - NOTA DI VISITA DI FOLLOW-UP",
+      "subtitle": "Visita infettivologica di controllo (cod. 89.01) con consulenza farmacologica"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "columns": 1,
+          "fields": [
+            [
+              "Cognome",
+              "[[COGNOME:NDIAYE]]"
+            ],
+            [
+              "Nome",
+              "[[NOME:Moussa]]"
+            ],
+            [
+              "Nato a",
+              "[[LUOGO_NASCITA:Thiès (Senegal)]]"
+            ],
+            [
+              "Il",
+              "[[DATA_NASCITA:15/01/1987]]"
+            ],
+            [
+              "Cittadinanza",
+              "[[CITTADINANZA:senegalese]]"
+            ],
+            [
+              "Domicilio",
+              "[[INDIRIZZO:Via Giambellino 112]], [[CAP:20146]] [[LUOGO:Milano]]"
+            ],
+            [
+              "Cellulare",
+              "[[TELEFONO:+39 351 640 2297]]"
+            ],
+            [
+              "Permesso sogg.",
+              "n. [[NUMERO_PERMESSO_SOGGIORNO:I06642187]], scad. [[DATA_SCADENZA:30/09/2026]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Data visita",
+              "[[DATA_VISITA:18/06/2025]] ore 9:40"
+            ],
+            [
+              "Cod. paziente",
+              "[[ID_PAZIENTE:HIV-MI-2016-0388]]"
+            ],
+            [
+              "Prenotazione",
+              "[[NUMERO_PRENOTAZIONE:MI-CUP-25-4471902]]"
+            ],
+            [
+              "NRE",
+              "[[NUMERO_RICETTA:030A50488172036]]"
+            ],
+            [
+              "Esenzione",
+              "[[CODICE_ESENZIONE:020]]"
+            ],
+            [
+              "MMG",
+              "Dott. [[MEDICO:Enrico Villa]]"
+            ]
+          ]
+        },
+        {
+          "type": "char_boxes",
+          "label": "C.F.",
+          "value": "[[CODICE_FISCALE:@paz]]"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Anamnesi infettivologica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il sig. [[PERSONA:Ndiaye]], di [[ETA:38]] anni, [[PROFESSIONE:magazziniere]] presso [[DATORE_LAVORO:Logistica Lambro S.p.A.]], in Italia dal 2011, è seguito presso il ns. ambulatorio dal [[DATA:marzo 2016]] per [[MALATTIE_INFETTIVE:infezione da HIV-1]], diagnosticata in occasione di uno screening per donazione di sangue (stadio CDC A2, nadir dei CD4 [[ESAME_VALORE:288 cellule/µL]]). [[MALATTIE_INFETTIVE:Coinfezione da HBV]] (HBsAg positivo, anti-HBe positivo), con HBV-DNA stabilmente non rilevabile in terapia. Pregressa [[MALATTIE_INFETTIVE:sifilide latente tardiva]] trattata con [[FARMACO:penicillina benzatina 2,4 MUI]] per 3 settimane nel 2019. Test di Mantoux e Quantiferon negativi (ultimo controllo 2024). Mai infezioni opportunistiche; in particolare non lesioni riferibili a sarcoma di Kaposi. Riferita [[DIAGNOSI:iperbilirubinemia indiretta lieve]] già nota, attribuita a [[DIAGNOSI:sindrome di Gilbert]]."
+    },
+    {
+      "type": "paragraph",
+      "text": "Convive con la compagna, sig.ra [[FAMILIARE:Stella Ferraresi]], informata della diagnosi (notifica al partner eseguita nel 2016). La sig.ra [[FAMILIARE:Ferraresi]] esegue screening HIV semestrale presso il ns. Centro: ultimo test negativo il [[DATA:04.04.25]]. Si ribadisce al paziente il principio U=U (non rilevabile = non trasmissibile). Il colloquio si è svolto in parte in lingua wolof con la mediatrice culturale, sig.ra [[OPERATORE_SANITARIO:Awa Diop]]."
+    },
+    {
+      "type": "section",
+      "text": "Terapia antiretrovirale e concomitante"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Posologia",
+        "In corso dal",
+        "Note"
+      ],
+      "widths": [
+        4.2,
+        2,
+        1.8,
+        3.4
+      ],
+      "font_size": 7.5,
+      "rows": [
+        [
+          "[[FARMACO:Bictegravir/emtricitabina/tenofovir alafenamide 50/200/25 mg]]",
+          "1 cp/die ore 20",
+          "[[DATA:02/05/2019]]",
+          "attiva anche su HBV; switch da regime con efavirenz per insonnia"
+        ],
+        [
+          "[[FARMACO:Atorvastatina 10 mg]]",
+          "1 cp la sera",
+          "[[DATA:11-2023]]",
+          "dislipidemia"
+        ],
+        [
+          "[[FARMACO:Colecalciferolo 25.000 UI]]",
+          "1 flac. ogni 15 gg",
+          "[[DATA:01/2024]]",
+          "ipovitaminosi D"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Il paziente, di [[RELIGIONE:religione musulmana]] praticante, chiede indicazioni sull'assunzione della terapia durante il digiuno del Ramadan: si concorda l'assunzione della compressa dopo il pasto serale, mantenendo un orario costante, senza necessità di modificare il regime. Aderenza riferita ottimale (nessuna dose saltata nell'ultimo mese), confermata dal ritiro regolare dei farmaci in Farmacia Ospedaliera."
+    },
+    {
+      "type": "section",
+      "text": "Esami di laboratorio recenti"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Data prelievo",
+        "CD4 (cell/µL)",
+        "CD4 %",
+        "CD4/CD8",
+        "HIV-RNA (cp/mL)",
+        "HBV-DNA",
+        "Creatinina",
+        "Bilirubina tot."
+      ],
+      "widths": [
+        1.7,
+        1.4,
+        1.1,
+        1.2,
+        1.6,
+        1.5,
+        1.4,
+        1.5
+      ],
+      "font_size": 7.5,
+      "rows": [
+        [
+          "[[DATA:12/12/2024]]",
+          "[[ESAME_VALORE:612]]",
+          "[[ESAME_VALORE:29%]]",
+          "[[ESAME_VALORE:0,74]]",
+          "[[ESAME_VALORE:< 20]]",
+          "[[ESAME_VALORE:< 10 UI/mL]]",
+          "[[ESAME_VALORE:1,02 mg/dL]]",
+          "[[ESAME_VALORE:1,9 mg/dL]]"
+        ],
+        [
+          "[[DATA:3 giugno 2025]]",
+          "[[ESAME_VALORE:655]]",
+          "[[ESAME_VALORE:31%]]",
+          "[[ESAME_VALORE:0,81]]",
+          "[[ESAME_VALORE:target non rilevato]]",
+          "[[ESAME_VALORE:< 10 UI/mL]]",
+          "[[ESAME_VALORE:1,05 mg/dL]]",
+          "[[ESAME_VALORE:2,1 mg/dL]]"
+        ]
+      ],
+      "caption": "Esami eseguiti presso il Laboratorio Analisi del presidio. Valori di riferimento in nota (2)."
+    },
+    {
+      "type": "paragraph",
+      "text": "Altri esami del [[DATA:03/06/2025]]: colesterolo LDL [[ESAME_VALORE:96 mg/dL]], ALT [[ESAME_VALORE:28 U/L]], eGFR [[ESAME_VALORE:93 mL/min]], esame urine nella norma. Sierologia TPHA positiva (cicatrice sierologica) con RPR [[ESAME_VALORE:non reattivo]]; anticorpi anti-HCV [[ESAME_VALORE:assenti]]."
+    },
+    {
+      "type": "section",
+      "text": "Esame obiettivo"
+    },
+    {
+      "type": "paragraph",
+      "text": "Buone condizioni generali. Peso [[MISURE_ANTROPOMETRICHE:79 kg]] (stabile), BMI [[MISURE_ANTROPOMETRICHE:24,6]], PA [[MISURE_ANTROPOMETRICHE:128/80 mmHg]], FC [[ESAME_VALORE:70 bpm]]. Cute e mucose: lieve subittero sclerale, non lesioni cutanee o del cavo orale, non candidosi. Non linfoadenomegalie superficiali. Torace: MV normotrasmesso. Addome: fegato e milza nei limiti, segno di Murphy negativo. Non deficit neurologici focali."
+    },
+    {
+      "type": "section",
+      "text": "Consulenza farmacologica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Valutate le interazioni con la farmacista, Dott.ssa [[OPERATORE_SANITARIO:Chiara Colombo]]: nessuna interazione clinicamente rilevante tra il regime antiretrovirale e la terapia in corso. Si raccomanda di **non** assumere integratori o antiacidi contenenti magnesio, alluminio, calcio o ferro nelle 2 ore precedenti la compressa, e di segnalare l'eventuale uso di prodotti erboristici acquistati all'estero (il paziente si recherà nel paese di origine ad agosto)."
+    },
+    {
+      "type": "section",
+      "text": "Conclusioni"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[DIAGNOSI:Infezione da HIV-1 in soppressione virologica stabile]] con buon recupero immunologico; [[DIAGNOSI:epatite B cronica HBeAg-negativa in soppressione]]. [[DIAGNOSI:Dislipidemia]] a target. [[DIAGNOSI:Iperbilirubinemia indiretta compatibile con sindrome di Gilbert]], senza indicazione a modificare la terapia."
+    },
+    {
+      "type": "heading",
+      "text": "Programma"
+    },
+    {
+      "type": "paragraph",
+      "text": "1. Proseguire [[FARMACO:bictegravir/emtricitabina/tenofovir alafenamide]] invariato; consegnate 3 confezioni.\n2. Vaccinazioni: [[TERAPIA:vaccino anti-HPV 9-valente]] (1ª dose oggi, lotto registrato in cartella) e richiamo antipneumococcico; profilassi antimalarica per il viaggio con [[FARMACO:atovaquone/proguanil]], previa valutazione delle interazioni.\n3. Screening IST trimestrale offerto anche alla partner.\n4. Ecografia addominale e alfa-fetoproteina ogni 6 mesi (sorveglianza HBV).\n5. Prossimo controllo con esami: [[DATA:17 dicembre 2025]], ore 9:00 (prenotazione a cura dell'ambulatorio)."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Milano]], [[DATA_REFERTO:18/06/2025]]",
+      "role": "Il Dirigente Medico",
+      "name": "Dott.ssa [[MEDICO:Laura Dell'Acqua]]",
+      "extra": [
+        "Visto il Direttore della S.C., Dott. [[MEDICO:Pietro Sangalli]]"
+      ],
+      "digital": true
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "[[REPARTO:S.C. MALATTIE INFETTIVE]]",
+        "Dott.ssa [[MEDICO:L. Dell'Acqua]]",
+        "Iscr. OMCeO [[LUOGO:Milano]] n. [[NUMERO_ALBO:38812]]"
+      ],
+      "angle": 9,
+      "align": "left"
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Ai sensi della L. 135/1990 il referto è consegnato esclusivamente all'interessato, sig. [[PERSONA:M. Ndiaye]], o a persona da lui delegata per iscritto; il paziente ha chiesto l'oscuramento dei dati HIV nel Fascicolo Sanitario Elettronico.",
+        "Valori di riferimento: CD4 500-1500 cell/µL; rapporto CD4/CD8 > 1; creatinina 0,70-1,20 mg/dL; bilirubina totale 0,3-1,2 mg/dL.",
+        "Somministrazione del vaccino registrata dall'infermiere [[OPERATORE_SANITARIO:Davide Brambilla]] nell'anagrafe vaccinale regionale."
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "title",
+      "text": "Comunicazione al Medico di Medicina Generale"
+    },
+    {
+      "type": "address",
+      "lines": [
+        "Egr. Dott. [[MEDICO:Enrico Villa]]",
+        "Medico di Medicina Generale",
+        "[[INDIRIZZO:Via Savona 58]]",
+        "[[CAP:20144]] [[LUOGO:Milano]]",
+        "Trasmissione riservata con il consenso dell'interessato"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Gentile Collega,\nLe trasmettiamo, con il consenso scritto dell'interessato acquisito in data [[DATA:18/06/2025]], la sintesi della visita di follow-up del comune assistito sig. [[PERSONA:Moussa N.]], nato il [[DATA_NASCITA:15/01/1987]].\nIl paziente è in terapia antiretrovirale efficace con viremia non rilevabile e CD4 stabilmente superiori a 600 cellule/µL. Le segnaliamo in particolare:\n- la necessità di verificare con il ns. ambulatorio ogni nuova prescrizione, inclusi antibiotici e antiacidi, per il rischio di interazioni con [[FARMACO:bictegravir]];\n- l'indicazione alla profilassi antimalarica in vista del viaggio estivo in Africa occidentale, già impostata da noi;\n- il programma di sorveglianza ecografica per la coinfezione HBV, che il paziente eseguirà presso la nostra Azienda.\nPer qualsiasi comunicazione può contattare direttamente la scrivente al numero [[TELEFONO:02 6371 4412]] (martedì e giovedì 14-16) o all'indirizzo [[EMAIL:l.dellacqua@asst-navigliovest.example.it]].\nCordiali saluti."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Milano]], [[DATA_REFERTO:18/06/2025]]",
+      "role": "Dirigente Medico S.C. Malattie Infettive",
+      "name": "Dott.ssa [[MEDICO:Laura Dell'Acqua]]",
+      "digital": true
+    },
+    {
+      "type": "checkboxes",
+      "label": "Consensi raccolti",
+      "columns": 2,
+      "items": [
+        [
+          "Comunicazione dei dati al MMG",
+          true
+        ],
+        [
+          "Inserimento dati HIV nel FSE",
+          false
+        ],
+        [
+          "Contatto telefonico per richiami",
+          true
+        ],
+        [
+          "Partecipazione a coorte di studio",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "text": "Il paziente indica come persona da contattare in caso di necessità la compagna, sig.ra [[FAMILIARE:S. Ferraresi]], tel. [[TELEFONO:+39 347 905 1163]]; non autorizza la comunicazione della diagnosi ad altri familiari né al datore di lavoro."
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Kaposi",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Gilbert",
+      "forbidden_categories": [
+        "PERSONA",
+        "NOME",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Mantoux",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Murphy",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Ramadan",
+      "forbidden_categories": [
+        "PERSONA",
+        "NOME",
+        "DATA"
+      ]
+    }
+  ]
+}

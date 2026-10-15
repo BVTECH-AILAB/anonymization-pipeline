@@ -1,0 +1,92 @@
+{
+  "id": "referto_laboratorio_media_02",
+  "type": "referto_laboratorio",
+  "difficulty": "media",
+  "style": {"font": "times", "color": "#E65100", "font_size": 9.5, "margins_mm": 17},
+  "persons": {
+    "paz": {"first_name": "Tommaso", "last_name": "Ferrando", "sex": "M", "birth_date": "2019-11-05", "birth_place": "Genova"}
+  },
+  "letterhead": {
+    "logo": "IPSA",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Istituto Pediatrico Sant'Agnese]] - IRCCS",
+      "[[REPARTO:S.C. Laboratorio Centrale di Analisi]]",
+      "Settore di Immunologia e Allergologia pediatrica",
+      "Direttore: Dott. [[MEDICO:Giorgio Parodi]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via delle Ginestre 9]]",
+      "[[CAP:16147]] [[LUOGO:Genova]]",
+      "Centralino [[TELEFONO:010 5636100]]",
+      "Laboratorio [[TELEFONO:010 5636422]]",
+      "[[EMAIL:lab.centrale@ipsagnese.example.it]]"
+    ]
+  },
+  "running_header": "Pz. [[PERSONA:FERRANDO TOMMASO]] - n. [[DATA_NASCITA:05.11.19]] - Acc. [[NUMERO_ACCETTAZIONE:P26-0044715]] - Referto [[NUMERO_REFERTO:LC-2026-118204]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Istituto Pediatrico Sant'Agnese]] - Istituto di Ricovero e Cura a Carattere Scientifico - P.IVA [[PARTITA_IVA:@ist]]",
+    "Il referto dei minori viene consegnato esclusivamente al genitore o al tutore munito di documento di identita'."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI LABORATORIO", "subtitle": "Autoanticorpi anti-transglutaminasi ed endomisio, tipizzazione HLA, assetto marziale"},
+    {"type": "patient_box", "align": "full", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Tommaso Ferrando]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Nato il", "[[DATA_NASCITA:05/11/2019]] ([[ETA:6]] aa.)"],
+      ["Sesso", "[[SESSO:M]]"],
+      ["Genitore / tutore", "[[TUTORE_DELEGATO:Elisa Traverso]] (madre)"],
+      ["Recapito", "[[TELEFONO:+39 347 552 1846]]"],
+      ["Medico richiedente", "Dott. [[MEDICO:Fabio Canepa]] (PLS)"],
+      ["Provenienza", "[[REPARTO:Ambulatorio di Gastroenterologia Pediatrica]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["N. accettazione", "[[NUMERO_ACCETTAZIONE:P26-0044715]]"],
+      ["Prelievo", "[[DATA_VISITA:7 ottobre 2026]] ore 08:15"],
+      ["Refertato", "[[DATA_REFERTO:09-10-2026]]"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Provetta", "value": "[[CODICE_CAMPIONE:P260044715-03]]", "align": "right"},
+    {"type": "paragraph", "text": "**Quesito clinico:** [[DIAGNOSI:scarsa crescita staturo-ponderale]] e [[DIAGNOSI:dolori addominali ricorrenti]]; familiarita' per [[PATOLOGIA:celiachia]] (zia materna). Prelievo eseguito con il supporto dell'infermiera pediatrica [[OPERATORE_SANITARIO:Chiara Bruzzone]], alla presenza della madre."},
+    {"type": "section", "text": "Ematologia"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento (4-7 aa.)", ""], "widths": [4, 2, 1.6, 3.4, 0.6], "flag_column": 4, "rows": [
+      ["Emoglobina", "[[ESAME_VALORE:10,4]]", "g/dL", "11,5 - 14,5", "L"],
+      ["Globuli rossi", "[[ESAME_VALORE:4,62]]", "10^6/µL", "4,00 - 5,20", ""],
+      ["MCV", "[[ESAME_VALORE:69,8]]", "fL", "75,0 - 87,0", "L"],
+      ["MCH", "[[ESAME_VALORE:22,5]]", "pg", "24,0 - 30,0", "L"],
+      ["Globuli bianchi", "[[ESAME_VALORE:8,31]]", "10^3/µL", "5,00 - 14,50", ""],
+      ["Piastrine", "[[ESAME_VALORE:412]]", "10^3/µL", "180 - 450", ""]
+    ]},
+    {"type": "section", "text": "Chimica clinica"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento (4-7 aa.)", ""], "widths": [4, 2, 1.6, 3.4, 0.6], "flag_column": 4, "rows": [
+      ["Ferritina", "[[ESAME_VALORE:6,3]]", "ng/mL", "10 - 60", "L"],
+      ["Sideremia", "[[ESAME_VALORE:31]]", "µg/dL", "50 - 120", "L"],
+      ["Transferrina", "[[ESAME_VALORE:352]]", "mg/dL", "200 - 360", ""],
+      ["Albumina", "[[ESAME_VALORE:4,1]]", "g/dL", "3,5 - 5,2", ""],
+      ["ALT (GPT)", "[[ESAME_VALORE:38]]", "U/L", "< 29", "H"]
+    ]},
+    {"type": "signature", "place_date": "[[LUOGO:Genova]], [[DATA_REFERTO:09/10/2026]]", "role": "Il Dirigente Biologo", "name": "Dott.ssa [[MEDICO:Silvia Repetto]]", "digital": true},
+    {"type": "page_break"},
+    {"type": "section", "text": "Immunologia - autoanticorpi"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento", ""], "widths": [4.6, 2, 1.4, 3, 0.6], "flag_column": 4, "rows": [
+      ["IgA totali", "[[ESAME_VALORE:96]]", "mg/dL", "33 - 200", ""],
+      ["Anticorpi anti-transglutaminasi IgA (tTG-IgA)", "[[ESAME_VALORE:> 128]]", "U/mL", "< 7 negativo", "H"],
+      ["Anticorpi anti-endomisio IgA (EMA)", "[[ESAME_VALORE:positivo 1:160]]", "titolo", "negativo", "*"],
+      ["Anticorpi anti-gliadina deamidata IgG", "[[ESAME_VALORE:74,6]]", "U/mL", "< 10", "H"]
+    ]},
+    {"type": "section", "text": "Genetica - tipizzazione HLA"},
+    {"type": "table", "header": ["Locus", "Risultato", "Metodo"], "widths": [3, 5, 3], "rows": [
+      ["HLA-DQ2.5 (DQA1*05 / DQB1*02)", "[[DATO_GENETICO:presente in omozigosi]]", "PCR-SSP"],
+      ["HLA-DQ8 (DQB1*03:02)", "[[DATO_GENETICO:assente]]", "PCR-SSP"]
+    ]},
+    {"type": "note", "text": "Positivita' di tTG-IgA oltre 10 volte il limite superiore, confermata da EMA positivo su secondo campione, in presenza di aplotipo predisponente: quadro fortemente suggestivo di [[DIAGNOSI:malattia celiaca]]. Secondo le linee guida ESPGHAN la diagnosi puo' essere posta senza biopsia duodenale previo colloquio con i genitori. Il dato e' stato comunicato telefonicamente alla sig.ra [[TUTORE_DELEGATO:Traverso]] il [[DATA:09.10.26]] e al Dott. [[MEDICO:Canepa]]."},
+    {"type": "columns", "left": [
+      {"type": "heading", "text": "Note metodologiche"},
+      {"type": "paragraph", "text": "tTG-IgA ed EMA in immunofluorescenza indiretta su esofago di scimmia. Tipizzazione HLA a bassa risoluzione: il risultato non costituisce diagnosi, indica solo la predisposizione genetica."}
+    ], "right": [
+      {"type": "heading", "text": "Validazione"},
+      {"type": "paragraph", "text": "Esami immunologici validati dal Dott. [[MEDICO:Giorgio Parodi]] in data [[DATA_REFERTO:09/10/2026]]. Tecnico esecutore: [[OPERATORE_SANITARIO:Davide Oliveri]]."}
+    ]},
+    {"type": "barcode", "kind": "qr", "label": "Scarica il referto (codice ritiro)", "value": "https://referti.ipsagnese.example.it/r/[[NUMERO_REFERTO:LC-2026-118204]]", "align": "left"},
+    {"type": "signature", "place_date": "[[LUOGO:Genova]], [[DATA_REFERTO:09/10/2026]]", "role": "Il Direttore della S.C.", "name": "Dott. [[MEDICO:Giorgio Parodi]]", "digital": false, "stamp": ["[[STRUTTURA_SANITARIA:IST. PEDIATRICO SANT'AGNESE]]", "LABORATORIO CENTRALE", "Dott. [[MEDICO:Giorgio Parodi]]", "Ord. Medici GE n. [[NUMERO_ALBO:9117]]"]}
+  ]
+}

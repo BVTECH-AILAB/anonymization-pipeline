@@ -1,0 +1,741 @@
+{
+  "id": "lettera_dimissione_complessa_03",
+  "type": "lettera_dimissione",
+  "difficulty": "complessa",
+  "style": {
+    "font": "dejavu",
+    "color": "#1D5C3A",
+    "font_size": 7.8,
+    "margins_mm": 13
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Youssef",
+      "last_name": "El Amrani",
+      "sex": "M",
+      "birth_date": "1974-11-23",
+      "birth_place": "Marocco"
+    }
+  },
+  "letterhead": {
+    "logo": "OSGM",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Santa Giulia delle Mura]]",
+      "Dipartimento di Neuroscienze e Area Critica",
+      "[[REPARTO:S.C. Anestesia e Rianimazione 2 - Neurorianimazione]]",
+      "Terapia Intensiva Neurochirurgica - 10 posti letto",
+      "Direttore: Dott. [[MEDICO:Corrado Bertoletti]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale della Rotonda 14]]",
+      "[[CAP:25125]] [[LUOGO:Brescia]]",
+      "Medici di guardia [[TELEFONO:030 3995 412]]",
+      "Informazioni ai familiari [[TELEFONO:030 3995 418]]",
+      "Fax [[FAX:030 3995 499]]",
+      "[[EMAIL:neurorianimazione@aosgm.example.it]]"
+    ]
+  },
+  "running_header": "Neurorianimazione - [[PERSONA:El Amrani Youssef]] - C.F. [[CODICE_FISCALE:@paz]] - nato il [[DATA_NASCITA:23/11/1974]] - letto 3 - SDO [[NUMERO_ACCETTAZIONE:25/NR/00218]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Santa Giulia delle Mura]] - [[INDIRIZZO:Viale della Rotonda 14]], [[CAP:25125]] [[LUOGO:Brescia]] - P.IVA [[PARTITA_IVA:@aosgm]] - PEC [[PEC:protocollo@pec.aosgm.example.it]]",
+    "Relazione riservata - paziente [[PERSONA:EL AMRANI YOUSSEF]] - cartella [[NUMERO_CARTELLA:NRA-2025-0081]] - dati appartenenti a categorie particolari (art. 9 Reg. UE 2016/679)"
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "align": "right",
+      "lines": [
+        "Ai Colleghi della [[REPARTO:S.C. Neurochirurgia]] - sede",
+        "e p.c. al Dott. [[MEDICO:Giacomo Taglietti]]",
+        "Medico di Medicina Generale - [[LUOGO:Lumezzane]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "LETTERA DI DIMISSIONE DALLA [[REPARTO:NEURORIANIMAZIONE]]",
+      "subtitle": "Relazione clinica di trasferimento in reparto di degenza"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome",
+          "[[COGNOME:El Amrani]]"
+        ],
+        [
+          "Nome",
+          "[[NOME:Youssef]]"
+        ],
+        [
+          "Nato il",
+          "[[DATA_NASCITA:23/11/1974]] a [[LUOGO_NASCITA:Casablanca (Marocco)]]"
+        ],
+        [
+          "Cittadinanza",
+          "[[CITTADINANZA:marocchina]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Montesuello 27]], [[CAP:25065]] [[LUOGO:Lumezzane]]"
+        ],
+        [
+          "Permesso di soggiorno",
+          "n. [[NUMERO_PERMESSO_SOGGIORNO:I0QE21934]]"
+        ],
+        [
+          "Tessera sanitaria",
+          "[[TESSERA_SANITARIA:@ts]]"
+        ],
+        [
+          "Età",
+          "[[ETA:50]] anni"
+        ],
+        [
+          "SDO / nosologico",
+          "[[NUMERO_ACCETTAZIONE:25/NR/00218]]"
+        ],
+        [
+          "Cartella clinica",
+          "[[NUMERO_CARTELLA:NRA-2025-0081]]"
+        ],
+        [
+          "Gruppo sanguigno",
+          "[[GRUPPO_SANGUIGNO:0 Rh positivo]]"
+        ],
+        [
+          "Peso / altezza",
+          "[[MISURE_ANTROPOMETRICHE:82 kg]] / [[MISURE_ANTROPOMETRICHE:176 cm]]"
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "Ingresso in TI",
+          "[[DATA_RICOVERO:03/03/2025]] ore 11:45"
+        ],
+        [
+          "Provenienza",
+          "[[REPARTO:Pronto Soccorso]] / [[REPARTO:Neuroradiologia Interventistica]]"
+        ],
+        [
+          "Trasferimento",
+          "[[DATA_RICOVERO:27/03/2025]] ore 10:30"
+        ],
+        [
+          "Destinazione",
+          "[[REPARTO:S.C. Neurochirurgia]], letto 21"
+        ],
+        [
+          "Degenza in TI",
+          "24 giorni"
+        ],
+        [
+          "Medico referente",
+          "Dott.ssa [[MEDICO:Elena Zanardelli]]"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Contatti familiari, volontà e bisogni del paziente"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Familiari di riferimento"
+        },
+        {
+          "type": "paragraph",
+          "align": "left",
+          "text": "Moglie e contatto di emergenza: sig.ra [[CONTATTO_EMERGENZA:Fatima Zahra Benali]], tel. [[TELEFONO:+39 328 554 1907]].\nFiglio: sig. [[FAMILIARE:Karim El Amrani]], tel. [[TELEFONO:+39 351 208 6643]], [[EMAIL:karim.elamrani@posta.example.it]].\nFratello: sig. [[FAMILIARE:Rachid El Amrani]], residente a [[LUOGO:Sesto San Giovanni]].\nLa moglie comprende l'italiano con difficoltà: i colloqui si svolgono con il figlio o con il mediatore linguistico aziendale."
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Aspetti religiosi e culturali"
+        },
+        {
+          "type": "paragraph",
+          "align": "left",
+          "text": "Il sig. [[PERSONA:El Amrani]] è [[RELIGIONE:musulmano praticante]]. Su richiesta della famiglia la nutrizione enterale e la dieta per os devono essere [[RELIGIONE:prive di derivati suini]]; la famiglia ha chiesto di poter essere assistita dall'imam della comunità durante il ricovero. Nessuna limitazione espressa riguardo a emotrasfusioni o trattamenti intensivi (1)."
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Motivo del ricovero"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il [[DATA_RICOVERO:3 marzo 2025]], mentre lavorava come [[PROFESSIONE:operaio addetto alla fusione]] presso la [[DATORE_LAVORO:Fonderia Valgobbia S.p.A.]], il paziente presentava [[DIAGNOSI:cefalea improvvisa a rombo di tuono]] seguita da [[DIAGNOSI:vomito]] e [[DIAGNOSI:perdita di coscienza]]. All'arrivo del 118 Glasgow Coma Scale [[ESAME_VALORE:GCS 7]] ([[ESAME_VALORE:E1 V2 M4]]), PA [[MISURE_ANTROPOMETRICHE:205/112 mmHg]], [[DIAGNOSI:anisocoria destra]]. TC encefalo: [[DIAGNOSI:emorragia subaracnoidea diffusa]] (scala di Fisher modificata grado 4) con [[DIAGNOSI:idrocefalo acuto]]; angio-TC: [[DIAGNOSI:aneurisma dell'arteria comunicante anteriore]] di 7 x 5 mm, poligono di Willis per il resto regolare. Quadro clinico Hunt-Hess IV, WFNS IV. Intubato in PS dal Dott. [[MEDICO:Ettore Bonometti]] e sottoposto in urgenza a trattamento endovascolare."
+    },
+    {
+      "type": "section",
+      "text": "Anamnesi"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[PATOLOGIA:Ipertensione arteriosa]] nota da circa 5 anni, non trattata con regolarità. [[DIPENDENZE:Tabagismo attivo]] (20 sigarette/die, 30 pack-years). Non consumo di alcol. [[ALLERGIA:Allergia alla penicillina]] (eruzione orticarioide nel 2016). [[INTERVENTO:Appendicectomia]] in giovane età in Marocco. In Italia dal 2001, coniugato, vive con la moglie e il figlio minore; la sorella del paziente ha avuto un'[[PATOLOGIA:emorragia cerebrale]] a 48 anni (familiarità riferita dal figlio [[FAMILIARE:Karim]])."
+    },
+    {
+      "type": "section",
+      "text": "Punteggi di gravità e monitoraggio neurologico"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Score",
+        "Ingresso",
+        "7a giornata",
+        "Trasferimento",
+        "Note"
+      ],
+      "widths": [
+        2.6,
+        1.7,
+        1.7,
+        1.8,
+        4
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "SOFA",
+          "[[ESAME_VALORE:9 punti]]",
+          "[[ESAME_VALORE:7 punti]]",
+          "[[ESAME_VALORE:3 punti]]",
+          "neurologico, respiratorio, cardiovascolare"
+        ],
+        [
+          "APACHE II",
+          "[[ESAME_VALORE:22 punti]]",
+          "-",
+          "-",
+          "rischio di mortalità stimato circa 40%"
+        ],
+        [
+          "SAPS II",
+          "[[ESAME_VALORE:49 punti]]",
+          "-",
+          "-",
+          ""
+        ],
+        [
+          "Glasgow Coma Scale",
+          "[[ESAME_VALORE:E1 V2 M4]]",
+          "sedato",
+          "[[ESAME_VALORE:E4 VT M6]]",
+          "paziente tracheostomizzato"
+        ],
+        [
+          "Hunt-Hess / WFNS",
+          "[[ESAME_VALORE:IV / IV]]",
+          "-",
+          "-",
+          "all'ingresso, prima dell'intubazione"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Decorso clinico per problemi"
+    },
+    {
+      "type": "heading",
+      "text": "1. Neurologico e neurochirurgico"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il [[DATA:03/03/2025]] [[INTERVENTO:embolizzazione endovascolare dell'aneurisma con spirali]] (Dott.ssa [[MEDICO:Nadia Khoury]], [[REPARTO:Neuroradiologia Interventistica]]), con occlusione completa (Raymond-Roy classe 1), e posizionamento di [[INTERVENTO:derivazione ventricolare esterna frontale destra]] (Dott. [[MEDICO:Alessandro Mor]], Neurochirurgia). Pressione intracranica iniziale [[ESAME_VALORE:28 mmHg]], controllata con drenaggio liquorale, osmoterapia e sedazione profonda. Dalla 6a giornata [[DIAGNOSI:vasospasmo cerebrale]] all'eco-Doppler transcranico (velocità media in ACM sinistra [[ESAME_VALORE:186 cm/s]], indice di Lindegaard [[ESAME_VALORE:4,1]]), trattato con [[TERAPIA:ipertensione indotta]] e, il [[DATA:10/03/2025]], con [[INTERVENTO:angioplastica chimica intra-arteriosa]] con nimodipina. TC del [[DATA:14/03/2025]]: [[DIAGNOSI:lesione ischemica tardiva frontale sinistra]] di piccole dimensioni. Svezzamento della DVE con clampaggio progressivo e rimozione il [[DATA:19-03-2025]] senza ricomparsa di idrocefalo. Un [[DIAGNOSI:episodio critico focale motorio]] il [[DATA:8 marzo]]: avviato [[FARMACO:levetiracetam 500 mg]] ogni 12 ore, nessuna recidiva all'EEG del [[DATA:21/03/2025]]."
+    },
+    {
+      "type": "heading",
+      "text": "2. Respiratorio"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[TERAPIA:Ventilazione meccanica invasiva]] dal giorno dell'ingresso, con target di normocapnia (PaCO2 35-40 mmHg). Per la prevedibile durata dello svezzamento è stata eseguita [[INTERVENTO:tracheostomia percutanea dilatativa]] secondo Ciaglia il [[DATA:12/03/2025]] (Dott.ssa [[MEDICO:E. Zanardelli]], assistita dal dott. [[OPERATORE_SANITARIO:Filippo Gatta]], medico in formazione). Svezzamento in pressione di supporto dal [[DATA:16/03/2025]]; respiro spontaneo con ossigeno umidificato via cannula tracheostomica (FiO2 0,28) dal [[DATA:20.03.25]]. Cuffia sgonfiata per periodi crescenti; valutazione della deglutizione con la logopedista [[OPERATORE_SANITARIO:Ilaria Ghidini]] il [[DATA:25/03/2025]]: [[DIAGNOSI:disfagia per liquidi]], prosegue la nutrizione via sondino."
+    },
+    {
+      "type": "heading",
+      "text": "3. Emodinamico"
+    },
+    {
+      "type": "paragraph",
+      "text": "Nelle prime 24 ore controllo pressorio stretto (PAS < 140 mmHg) con [[FARMACO:urapidil]] in infusione fino all'esclusione dell'aneurisma. Durante la fase di vasospasmo [[FARMACO:noradrenalina]] fino a [[FARMACO:0,22 µg/kg/min]] per mantenere PAM 90-100 mmHg, sospesa il [[DATA:17/03/2025]]. Ecocardiogramma: FE [[ESAME_VALORE:58%]], [[DIAGNOSI:ipertrofia ventricolare sinistra concentrica]] da cardiopatia ipertensiva. Ripresa la terapia antipertensiva orale con [[FARMACO:amlodipina]]."
+    },
+    {
+      "type": "heading",
+      "text": "4. Infettivologico"
+    },
+    {
+      "type": "paragraph",
+      "text": "In 8a giornata [[DIAGNOSI:polmonite associata a ventilazione]] da [[MALATTIE_INFETTIVE:Klebsiella pneumoniae produttrice di carbapenemasi (KPC)]] su broncoaspirato; il paziente è in **isolamento da contatto**. Considerata l'allergia alla penicillina, terapia con [[FARMACO:ceftazidime-avibactam 2,5 g]] ogni 8 ore dal [[DATA:12/03/2025]], su indicazione dell'infettivologa Dott.ssa [[MEDICO:Giulia Pelizzari]]; prosegue fino al [[DATA:29/03/2025]]. Coltura del liquor da DVE ripetutamente negativa. Tampone rettale di sorveglianza positivo per KPC il [[DATA:11/03/2025]]."
+    },
+    {
+      "type": "heading",
+      "text": "5. Metabolico e nutrizionale"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[DIAGNOSI:Iponatriemia da sindrome da perdita cerebrale di sali]] (sodio minimo [[ESAME_VALORE:126 mmol/L]] il [[DATA:09/03/2025]]), corretta con soluzione salina ipertonica e [[FARMACO:fludrocortisone 0,1 mg]], poi con sodio cloruro per via enterale. Nutrizione enterale via sondino naso-gastrico dalla 2a giornata, attualmente 1600 kcal/die con formula priva di componenti di origine suina (vedi volontà della famiglia). Glicemie nella norma senza insulina."
+    },
+    {
+      "type": "section",
+      "text": "Accessi vascolari e dispositivi"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Dispositivo",
+        "Sede",
+        "Posizionato",
+        "Rimosso",
+        "Operatore"
+      ],
+      "widths": [
+        2.8,
+        2.6,
+        1.5,
+        1.5,
+        3.4
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "Tubo orotracheale n. 8",
+          "-",
+          "[[DATA:03/03/2025]]",
+          "[[DATA:12/03/2025]]",
+          "Dott. [[MEDICO:Ettore Bonometti]] (PS)"
+        ],
+        [
+          "CVC 3 lumi\n(eco-guidato, Seldinger)",
+          "vena succlavia destra",
+          "[[DATA:03/03/2025]]",
+          "[[DATA:24/03/2025]]",
+          "dott. [[OPERATORE_SANITARIO:Filippo Gatta]]\n(medico in formazione)"
+        ],
+        [
+          "Catetere arterioso",
+          "arteria radiale sinistra",
+          "[[DATA:03/03/2025]]",
+          "[[DATA:22/03/2025]]",
+          "Dott.ssa [[MEDICO:Elena Zanardelli]]"
+        ],
+        [
+          "Derivazione ventricolare\nesterna",
+          "frontale destra (punto di Kocher)",
+          "[[DATA:03/03/2025]]",
+          "[[DATA:19/03/2025]]",
+          "Dott. [[MEDICO:Alessandro Mor]]"
+        ],
+        [
+          "Cannula tracheostomica\ncuffiata n. 8",
+          "-",
+          "[[DATA:12/03/2025]]",
+          "in sede",
+          "Dott.ssa [[MEDICO:E. Zanardelli]]\n(primo cambio previsto il [[DATA:02/04/2025]])"
+        ],
+        [
+          "Sondino naso-gastrico 14 Ch",
+          "narice sinistra",
+          "[[DATA:04/03/2025]]",
+          "in sede",
+          "inf. [[OPERATORE_SANITARIO:Serena Pedrali]]"
+        ],
+        [
+          "Catetere vescicale 16 Ch",
+          "-",
+          "[[DATA:03/03/2025]]",
+          "in sede",
+          "inf. [[OPERATORE_SANITARIO:Davide Lancini]]"
+        ],
+        [
+          "PICC 4 Fr",
+          "vena basilica destra",
+          "[[DATA:24/03/2025]]",
+          "in sede",
+          "inf. [[OPERATORE_SANITARIO:Serena Pedrali]]\n(team accessi vascolari)"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Esami strumentali e di laboratorio"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Esame",
+        "Ingresso",
+        "Picco",
+        "Trasferimento",
+        "U.M."
+      ],
+      "widths": [
+        3,
+        1.6,
+        1.6,
+        1.8,
+        1.6
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "Sodio",
+          "[[ESAME_VALORE:139]]",
+          "[[ESAME_VALORE:126 mmol/L]]",
+          "[[ESAME_VALORE:137]]",
+          "mmol/L"
+        ],
+        [
+          "Emoglobina",
+          "[[ESAME_VALORE:15,1]]",
+          "[[ESAME_VALORE:10,4]]",
+          "[[ESAME_VALORE:11,2]]",
+          "g/dL"
+        ],
+        [
+          "Globuli bianchi",
+          "[[ESAME_VALORE:16.900]]",
+          "[[ESAME_VALORE:21.300]]",
+          "[[ESAME_VALORE:9.800]]",
+          "/µL"
+        ],
+        [
+          "PCR",
+          "[[ESAME_VALORE:0,6]]",
+          "[[ESAME_VALORE:19,8]]",
+          "[[ESAME_VALORE:2,3]]",
+          "mg/dL"
+        ],
+        [
+          "Procalcitonina",
+          "[[ESAME_VALORE:0,08]]",
+          "[[ESAME_VALORE:4,72]]",
+          "[[ESAME_VALORE:0,19]]",
+          "ng/mL"
+        ],
+        [
+          "Creatinina",
+          "[[ESAME_VALORE:0,94]]",
+          "[[ESAME_VALORE:1,27]]",
+          "[[ESAME_VALORE:0,81]]",
+          "mg/dL"
+        ]
+      ],
+      "caption": "Prelievi eseguiti con provette barcode; codice campione del broncoaspirato positivo [[CODICE_CAMPIONE:BA25-003318]], tampone rettale [[CODICE_CAMPIONE:TR25-010442]]."
+    },
+    {
+      "type": "table",
+      "header": [
+        "Esame",
+        "Data",
+        "N. accesso",
+        "Esito sintetico"
+      ],
+      "widths": [
+        2.6,
+        1.5,
+        2.2,
+        5.2
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "TC encefalo + angio-TC",
+          "[[DATA:03/03/2025]]",
+          "[[ACCESSION_NUMBER:RX25-0402871]]",
+          "ESA diffusa, idrocefalo, aneurisma AComA 7 mm"
+        ],
+        [
+          "Angiografia cerebrale (DSA)",
+          "[[DATA:03/03/2025]]",
+          "[[ACCESSION_NUMBER:NRI25-000194]]",
+          "embolizzazione con spirali, occlusione completa"
+        ],
+        [
+          "Angiografia cerebrale (DSA)",
+          "[[DATA:10/03/2025]]",
+          "[[ACCESSION_NUMBER:NRI25-000231]]",
+          "vasospasmo severo A1-M1 sinistro, trattato"
+        ],
+        [
+          "TC encefalo",
+          "[[DATA:14/03/2025]]",
+          "[[ACCESSION_NUMBER:RX25-0441960]]",
+          "piccola ischemia frontale sinistra; ventricoli stabili"
+        ],
+        [
+          "EEG",
+          "[[DATA:21/03/2025]]",
+          "[[NUMERO_REFERTO:EEG-25-01377]]",
+          "rallentamento frontale sinistro, non anomalie epilettiformi"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi alla dimissione dalla Neurorianimazione"
+    },
+    {
+      "type": "paragraph",
+      "text": "1. **[[DIAGNOSI:Emorragia subaracnoidea da rottura di aneurisma dell'arteria comunicante anteriore]]** (Hunt-Hess IV, Fisher 4), trattata con [[INTERVENTO:embolizzazione endovascolare]].\n2. [[DIAGNOSI:Idrocefalo acuto]] trattato con derivazione ventricolare esterna, risolto.\n3. [[DIAGNOSI:Vasospasmo cerebrale sintomatico]] con [[DIAGNOSI:ischemia cerebrale tardiva frontale sinistra]].\n4. [[DIAGNOSI:Polmonite associata a ventilazione]] da [[MALATTIE_INFETTIVE:K. pneumoniae KPC]], in trattamento.\n5. [[DIAGNOSI:Iponatriemia da perdita cerebrale di sali]], corretta; [[DIAGNOSI:crisi epilettica focale sintomatica acuta]].\n6. Esiti di tracheostomia percutanea; [[DIAGNOSI:disfagia neurogena]]; [[PATOLOGIA:ipertensione arteriosa]]."
+    },
+    {
+      "type": "section",
+      "text": "Terapia in atto al trasferimento"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Dose",
+        "Orari",
+        "Note"
+      ],
+      "widths": [
+        3.2,
+        1.8,
+        1.8,
+        4.6
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "[[FARMACO:Levetiracetam 500 mg]]",
+          "1 cpr via SNG",
+          "ore 8 / ore 20",
+          "rivalutare la sospensione a 3 mesi con EEG"
+        ],
+        [
+          "[[FARMACO:Ceftazidime-avibactam 2,5 g]]",
+          "1 fl e.v.\nin 2 ore",
+          "ore 6-14-22",
+          "fino al [[DATA:29/03/2025]] compreso; isolamento da contatto"
+        ],
+        [
+          "[[FARMACO:Amlodipina 10 mg]]",
+          "1 cpr via SNG",
+          "ore 8",
+          "PAS target 120-150 mmHg"
+        ],
+        [
+          "[[FARMACO:Enoxaparina 4000 UI]]",
+          "1 fl s.c.",
+          "ore 20",
+          "profilassi; autorizzata dal neurochirurgo"
+        ],
+        [
+          "[[FARMACO:Sodio cloruro 2 g]]",
+          "1 bustina\nvia SNG",
+          "ore 8-14-20",
+          "sospendere se natriemia > 142 mmol/L"
+        ],
+        [
+          "[[FARMACO:Pantoprazolo 40 mg]]",
+          "1 fl e.v.",
+          "ore 7",
+          "fino a nutrizione per os"
+        ],
+        [
+          "[[FARMACO:Paracetamolo 1 g]]",
+          "1 fl e.v.",
+          "al bisogno",
+          "max 3 g/die; cefalea o febbre"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Problemi aperti e indicazioni"
+    },
+    {
+      "type": "paragraph",
+      "text": "- Monitoraggio neurologico ogni 2 ore nelle prime 48 ore in reparto; TC encefalo di controllo a 7 giorni.\n- Angio-RM di controllo dell'aneurisma embolizzato a 6 mesi (prenotazione [[NUMERO_PRENOTAZIONE:NRI-FU-25-00412]]) e visita neurochirurgica ambulatoriale il [[DATA_VISITA:16/09/2025]].\n- Programma di decannulazione con la logopedista e il fisioterapista [[OPERATORE_SANITARIO:Chiara Bonomelli]]; proposta di trasferimento in [[REPARTO:Unità di Riabilitazione Neurologica Intensiva]] appena stabilizzato.\n- Sospensione definitiva del fumo; screening dei familiari di primo grado per aneurisma intracranico da proporre al MMG, in considerazione della familiarità."
+    },
+    {
+      "type": "section",
+      "text": "Consegne infermieristiche"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Ambito",
+        "Situazione al trasferimento",
+        "Indicazioni"
+      ],
+      "widths": [
+        2.2,
+        4.6,
+        4.6
+      ],
+      "font_size": 7.2,
+      "rows": [
+        [
+          "Cute",
+          "[[DIAGNOSI:lesione da pressione sacrale di II stadio]] dal [[DATA:15/03/2025]]; scala di Braden [[ESAME_VALORE:13 punti]]",
+          "materasso ad aria, mobilizzazione ogni 3 ore, medicazione con idrocolloide ogni 72 ore"
+        ],
+        [
+          "Tracheostomia",
+          "stoma deterso, secrezioni scarse e fluide",
+          "aspirazione al bisogno; controllo pressione della cuffia ogni 8 ore"
+        ],
+        [
+          "Alimentazione",
+          "nutrizione enterale continua 65 mL/h via SNG, priva di derivati suini",
+          "non somministrare liquidi per os fino a nuova valutazione logopedica"
+        ],
+        [
+          "Comunicazione",
+          "comprende ordini semplici in italiano e in arabo; comunica con la lavagna",
+          "favorire la presenza del figlio negli orari di visita"
+        ],
+        [
+          "Isolamento",
+          "da contatto per KPC",
+          "camera singola o coorte; dispositivi dedicati"
+        ]
+      ],
+      "caption": "Consegne redatte dall'inf. [[OPERATORE_SANITARIO:S. Pedrali]] e verificate dal coordinatore [[OPERATORE_SANITARIO:D. Lancini]] il [[DATA:27/03/2025]] alle ore 8:00."
+    },
+    {
+      "type": "paragraph",
+      "text": "Colloqui con i familiari: la moglie, sig.ra [[CONTATTO_EMERGENZA:Benali]], e il figlio [[FAMILIARE:K. El Amrani]] sono stati informati quotidianamente. L'ultimo colloquio, il [[DATA:26/03/2025]], è stato condotto dalla Dott.ssa [[MEDICO:Zanardelli]] alla presenza del coordinatore infermieristico [[OPERATORE_SANITARIO:Davide Lancini]]; i familiari concordano con il trasferimento. Il paziente, ora vigile, è stato informato dal figlio e comprende la situazione."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Brescia]], [[DATA_REFERTO:27.03.2025]]",
+      "role": "Il Medico Referente di Neurorianimazione",
+      "name": "Dott.ssa [[MEDICO:Elena Zanardelli]]",
+      "extra": [
+        "Dirigente Medico - Anestesia e Rianimazione"
+      ],
+      "digital": false,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:A.O. SANTA GIULIA DELLE MURA]]",
+        "[[REPARTO:NEURORIANIMAZIONE]]",
+        "Dott.ssa [[MEDICO:Elena Zanardelli]]",
+        "Ord. Medici BS n. [[NUMERO_ALBO:9028]]"
+      ]
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "IL DIRETTORE S.C.",
+        "Dott. [[MEDICO:C. Bertoletti]]",
+        "Ord. Medici BS n. [[NUMERO_ALBO:7314]]"
+      ],
+      "angle": -10,
+      "align": "left"
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Volontà raccolte dalla moglie, sig.ra [[CONTATTO_EMERGENZA:F. Z. Benali]], e dal figlio il [[DATA:04/03/2025]] con l'ausilio del mediatore linguistico; verbale allegato alla cartella [[NUMERO_CARTELLA:NRA-2025-0081]].",
+        "Copia inviata al MMG Dott. [[MEDICO:G. Taglietti]] tramite Fascicolo Sanitario Elettronico; certificato di malattia trasmesso all'INPS e al datore di lavoro senza indicazione della diagnosi.",
+        "SOFA: Sequential Organ Failure Assessment; APACHE: Acute Physiology and Chronic Health Evaluation; WFNS: World Federation of Neurosurgical Societies; DVE: derivazione ventricolare esterna."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Fisher",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Hunt-Hess",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Willis",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Ciaglia",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Lindegaard",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Kocher",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Seldinger",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Raymond-Roy",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Glasgow",
+      "forbidden_categories": [
+        "LUOGO",
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Braden",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Doppler",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

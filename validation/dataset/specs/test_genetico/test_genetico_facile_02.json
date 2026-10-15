@@ -1,0 +1,53 @@
+{
+  "id": "test_genetico_facile_02",
+  "type": "test_genetico",
+  "difficulty": "facile",
+  "style": {"font": "times", "color": "#6A1B4D", "font_size": 10, "margins_mm": 20},
+  "persons": {
+    "paz": {"first_name": "Annalisa", "last_name": "Lorusso", "sex": "F", "birth_date": "1993-02-17", "birth_place": "Bari"}
+  },
+  "letterhead": {
+    "logo": "LG",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Levante Genomica S.r.l.]]",
+      "Laboratorio di Genetica Medica",
+      "Struttura sanitaria privata accreditata"
+    ],
+    "right": [
+      "[[INDIRIZZO:Corso Alcide De Gasperi 318]]",
+      "[[CAP:70125]] [[LUOGO:Bari]]",
+      "Tel. [[TELEFONO:080 5427716]]",
+      "[[EMAIL:accettazione@levantegenomica.example.it]]"
+    ]
+  },
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Levante Genomica S.r.l.]] - P.IVA [[PARTITA_IVA:@lg]] - Iscritta al Registro delle Imprese",
+    "Il presente referto contiene dati genetici: è consegnato esclusivamente all'interessata o a persona da lei delegata per iscritto."
+  ],
+  "blocks": [
+    {"type": "title", "text": "Referto di test genetico", "subtitle": "Screening del portatore di fibrosi cistica - analisi del gene CFTR"},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Annalisa Lorusso]]"],
+      ["Nata il", "[[DATA_NASCITA:17/02/1993]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["N. accettazione", "[[NUMERO_ACCETTAZIONE:LG24/03391]]"],
+      ["Codice campione", "[[CODICE_CAMPIONE:LG-D-24-03391]]"],
+      ["Inviante", "[[REPARTO:Consultorio Familiare Distretto 9]]"],
+      ["Data prelievo", "[[DATA_VISITA:02/09/2024]]"],
+      ["Data referto", "[[DATA_REFERTO:23/09/2024]]"]
+    ]},
+    {"type": "section", "text": "Motivo della richiesta"},
+    {"type": "paragraph", "text": "Valutazione preconcezionale dello stato di portatore di fibrosi cistica in donna senza storia familiare nota di malattia."},
+    {"type": "section", "text": "Materiale e metodo"},
+    {"type": "paragraph", "text": "DNA genomico estratto da sangue periferico (EDTA). Sequenziamento NGS delle regioni codificanti e delle giunzioni introne-esone del gene CFTR (NM_000492.4) su piattaforma Illumina, copertura minima 30x. Ricerca di delezioni e duplicazioni mediante MLPA. Le varianti rilevanti sono confermate con sequenziamento Sanger."},
+    {"type": "section", "text": "Esito"},
+    {"type": "table", "header": ["Gene", "Trascritto", "Variante HGVS c.", "Variante HGVS p.", "Zigosità", "Classe ACMG"], "widths": [1.1, 2.1, 2.6, 2.3, 1.9, 2.0], "rows": [
+      ["CFTR", "NM_000492.4", "[[DATO_GENETICO:c.1521_1523del]]", "[[DATO_GENETICO:p.(Phe508del)]]", "[[DATO_GENETICO:Eterozigote]]", "Patogenetica"]
+    ]},
+    {"type": "paragraph", "text": "**Conclusioni.** La signora risulta [[DATO_GENETICO:portatrice sana della variante F508del]] del gene CFTR. Lo stato di portatrice non ha conseguenze per la salute della persona, ma comporta un rischio riproduttivo qualora anche il partner sia portatore. Si raccomanda una consulenza genetica e l'estensione del test al partner."},
+    {"type": "note", "text": "Sensibilità analitica stimata superiore al 95% per le varianti puntiformi. Il rischio residuo di essere portatrice dopo un test negativo dipende dall'origine geografica e non è mai nullo."},
+    {"type": "signature", "place_date": "[[LUOGO:Bari]], [[DATA_REFERTO:23/09/2024]]", "role": "Il Responsabile del Laboratorio", "name": "Dott.ssa [[MEDICO:Marilena Capozzi]]", "extra": ["Specialista in Genetica Medica"], "digital": true}
+  ],
+  "negatives": []
+}

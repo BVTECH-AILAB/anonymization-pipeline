@@ -1,0 +1,52 @@
+{
+  "id": "test_genetico_facile_04",
+  "type": "test_genetico",
+  "difficulty": "facile",
+  "style": {"font": "helvetica", "color": "#1A237E", "font_size": 9, "margins_mm": 15},
+  "persons": {
+    "paz": {"first_name": "Franca", "last_name": "Ceccarelli", "sex": "F", "birth_date": "1957-06-08", "birth_place": "Perugia"}
+  },
+  "letterhead": {
+    "logo": "SMR",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Santa Maria della Rocca]]",
+      "Dipartimento dei Servizi Diagnostici",
+      "[[REPARTO:S.S.D. Farmacogenetica e Genetica Molecolare]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Piazzale Monteluce Alta 9]] - [[CAP:06129]] [[LUOGO:Perugia]]",
+      "Segreteria [[TELEFONO:075 5783340]]",
+      "[[EMAIL:farmacogenetica@smrocca.example.it]]"
+    ]
+  },
+  "footer": [
+    "Il risultato si riferisce esclusivamente al campione analizzato. Linee guida AIOM-SIF per la genotipizzazione di DPYD (2024)."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI FARMACOGENETICA", "subtitle": "Genotipizzazione del gene DPYD prima di terapia con fluoropirimidine"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Paziente", "[[PERSONA:Franca Ceccarelli]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Data di nascita", "[[DATA_NASCITA:08/06/1957]]"],
+      ["N. ricetta (NRE)", "[[NUMERO_RICETTA:1000A4127763309]]"],
+      ["U.O. richiedente", "[[REPARTO:S.C. Oncologia Medica]]"],
+      ["N. referto", "[[NUMERO_REFERTO:FG-24-2215]]"],
+      ["Data accettazione", "[[DATA_VISITA:07/10/2024]]"],
+      ["Data referto", "[[DATA_REFERTO:10/10/2024]]"]
+    ]},
+    {"type": "paragraph", "text": "**Indicazione:** valutazione del rischio di tossicità prima dell'avvio di [[FARMACO:capecitabina]] in paziente con [[DIAGNOSI:adenocarcinoma del colon pT3N1a]] operato."},
+    {"type": "paragraph", "text": "**Metodo:** PCR real-time con sonde allele-specifiche su DNA da sangue periferico. Varianti analizzate secondo le raccomandazioni CPIC ed EMA."},
+    {"type": "table", "header": ["Gene", "Variante (HGVS c.)", "Nome comune", "Genotipo", "Activity score"], "widths": [1.2, 3, 2.2, 2.4, 2], "rows": [
+      ["DPYD", "c.1905+1G>A", "DPYD*2A", "Wild type", "1"],
+      ["DPYD", "c.1679T>G", "DPYD*13", "Wild type", "1"],
+      ["DPYD", "[[DATO_GENETICO:c.2846A>T]]", "p.(Asp949Val)", "[[DATO_GENETICO:Eterozigote A/T]]", "0,5"],
+      ["DPYD", "c.1129-5923C>G", "HapB3", "Wild type", "1"]
+    ]},
+    {"type": "section", "text": "Interpretazione"},
+    {"type": "paragraph", "text": "Genotipo compatibile con [[DATO_GENETICO:metabolizzatore intermedio DPYD]] (activity score complessivo [[ESAME_VALORE:1,5]]). Secondo le raccomandazioni vigenti si suggerisce di iniziare la terapia con una [[TERAPIA:riduzione della dose iniziale di fluoropirimidina del 50%]], con successiva titolazione in base alla tollerabilità clinica."},
+    {"type": "note", "text": "L'assenza delle varianti analizzate non esclude del tutto il rischio di tossicità severa, che può dipendere da varianti rare non incluse nel pannello o da fattori non genetici."},
+    {"type": "signature", "place_date": "[[LUOGO:Perugia]], [[DATA_REFERTO:10/10/2024]]", "role": "Il Dirigente Biologo responsabile", "name": "Dott.ssa [[MEDICO:Sabrina Mencarelli]]", "digital": true}
+  ],
+  "negatives": []
+}

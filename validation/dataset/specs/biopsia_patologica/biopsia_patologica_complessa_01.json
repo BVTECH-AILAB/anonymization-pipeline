@@ -1,0 +1,140 @@
+{
+  "id": "biopsia_patologica_complessa_01",
+  "type": "biopsia_patologica",
+  "difficulty": "complessa",
+  "style": {"font": "helvetica", "color": "#0B3D2E", "font_size": 8, "margins_mm": 13},
+  "persons": {
+    "paz": {"first_name": "Rosa", "last_name": "De Santis", "sex": "F", "birth_date": "1944-07-02", "birth_place": "Pescara"},
+    "ads": {"first_name": "Alberto", "last_name": "De Santis", "sex": "M", "birth_date": "1979-02-17", "birth_place": "Pescara"}
+  },
+  "letterhead": {
+    "logo": "PSG",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASL Costa dei Trabocchi]]",
+      "[[STRUTTURA_SANITARIA:P.O. Santa Gemma dei Vestini]]",
+      "Dipartimento Oncologico - [[REPARTO:UOC Anatomia Patologica]]",
+      "Direttore: Prof. [[MEDICO:Ennio Ciccarelli]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via del Circuito 160]]",
+      "[[CAP:65121]] [[LUOGO:Pescara]]",
+      "Segr. [[TELEFONO:085 4253660]]",
+      "[[PEC:anatomiapatologica@pec.aslcdt.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:DE SANTIS ROSA]] - C.F. [[CODICE_FISCALE:@paz]] - Esame [[NUMERO_REFERTO:25-S-3311]] - Nosologico [[NUMERO_CARTELLA:2025012874]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASL Costa dei Trabocchi]] - P.IVA [[PARTITA_IVA:@asl]] - Referto [[NUMERO_REFERTO:25-S-3311]] intestato a [[PERSONA:De Santis Rosa]] (n. [[DATA_NASCITA:02/07/1944]])",
+    "Copia conforme per l'amministratore di sostegno sig. [[TUTORE_DELEGATO:A. De Santis]] - Documento riservato, contiene categorie particolari di dati personali (art. 9 GDPR)"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO ISTOPATOLOGICO DEFINITIVO", "subtitle": "Emicolectomia destra laparoscopica - pezzo operatorio con linfadenectomia"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome", "[[COGNOME:DE SANTIS]]"],
+      ["Nome", "[[NOME:ROSA]]"],
+      ["Nata a", "[[LUOGO_NASCITA:Pescara]] il [[DATA_NASCITA:02/07/1944]]"],
+      ["Sesso", "[[SESSO:F]]"],
+      ["Residenza", "[[INDIRIZZO:Via Nicola Fabrizi 54]], [[CAP:65122]] [[LUOGO:Pescara]]"],
+      ["Domicilio", "c/o [[STRUTTURA_SANITARIA:RSA Villa delle Mimose]], [[LUOGO:Montesilvano]]"],
+      ["Tessera sanitaria", "[[TESSERA_SANITARIA:@ts]]"],
+      ["Esenzione", "[[CODICE_ESENZIONE:048]] - [[CODICE_ESENZIONE:C03]]"],
+      ["Nosologico", "[[NUMERO_CARTELLA:2025012874]]"],
+      ["Stato civile", "[[STATO_CIVILE:vedova]]"]
+    ]},
+    {"type": "char_boxes", "label": "Codice fiscale", "value": "[[CODICE_FISCALE:@paz]]"},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "fields", "columns": 1, "fields": [
+        ["N. esame", "[[NUMERO_REFERTO:25-S-3311]]"],
+        ["Intervento", "[[DATA_RICOVERO:16 settembre 2025]]"],
+        ["Accettazione", "[[DATA:17.09.25]] h 08:12"],
+        ["Refertazione", "[[DATA_REFERTO:03/10/2025]]"],
+        ["Reparto", "[[REPARTO:UOC Chirurgia Generale e Oncologica]], letto 14"],
+        ["Chirurgo", "Dott. [[MEDICO:Gianmarco D'Alessandro]]"]
+      ]}
+    ], "right": [
+      {"type": "heading", "text": "Amministratore di sostegno"},
+      {"type": "paragraph", "align": "left", "text": "Sig. [[TUTORE_DELEGATO:Alberto De Santis]] (nipote), C.F. [[CODICE_FISCALE:@ads]], nominato con decreto del Giudice Tutelare R.G. V.G. n. [[NUMERO_PROTOCOLLO:1187/2023]]. Recapito [[TELEFONO:+39 349 027 6614]], [[EMAIL:alberto.desantis@posta.example.it]]."},
+      {"type": "barcode", "kind": "code128", "value": "[[CODICE_CAMPIONE:25-S-3311-A4]]", "label": "Blocchetto per test molecolari", "align": "left"}
+    ]},
+    {"type": "section", "text": "Notizie cliniche (dalla richiesta)"},
+    {"type": "paragraph", "text": "Paz. di aa. [[ETA:81]], [[SALUTE_MENTALE:demenza di Alzheimer in fase moderata]] (MMSE [[ESAME_VALORE:17/30]]), [[PATOLOGIA:ipertensione arteriosa]], [[PATOLOGIA:fibrillazione atriale permanente]] in [[FARMACO:apixaban 2,5 mg x 2]]. Ricoverata per [[DIAGNOSI:anemia sideropenica severa]] (Hb [[ESAME_VALORE:7,4 g/dL]]) con [[DIAGNOSI:sanguinamento occulto]]; alla colonscopia [[DIAGNOSI:neoformazione stenosante del cieco]] con biopsia preoperatoria (istologico n. [[NUMERO_REFERTO:25-B-2096]]: adenocarcinoma). TC: non lesioni secondarie epatiche. Il consenso all'intervento è stato sottoscritto dall'AdS sig. [[TUTORE_DELEGATO:De Santis Alberto]], in presenza della figlia della pz., sig.ra [[FAMILIARE:Celeste Marinucci]], e della badante [[CONTATTO_EMERGENZA:Oksana Kovalenko]] (tel. [[TELEFONO:+39 320 448 1570]])."},
+    {"type": "section", "text": "Materiale inviato"},
+    {"type": "table", "header": ["Contenitore", "Descrizione dal modulo di richiesta", "Inclusioni"], "widths": [1.2, 6, 2.6], "rows": [
+      ["A", "Emicolon destro con ultima ansa ileale, appendice e grembiule omentale\n(in formalina, ischemia fredda 35 min, firma prelevatore Dott. [[MEDICO:G. D'Alessandro]])", "A1-A9 (tumore)\nA10-A13 (margini)\nA14-A31 (linfonodi)"],
+      ["B", "Linfonodo ileocolico apicale, inviato separatamente\n(\"repere filo nero\")", "B1"],
+      ["C", "Anello di anastomosi meccanica ileocolica", "C1-C2"]
+    ]},
+    {"type": "section", "text": "Descrizione macroscopica"},
+    {"type": "paragraph", "text": "(Campionamento eseguito dal Dott. [[OPERATORE_SANITARIO:Lorenzo Pace]], medico in formazione specialistica, con la TSLB [[OPERATORE_SANITARIO:Ilaria Rapino]]; supervisione Dott.ssa [[MEDICO:Marta Di Febo]].)\nA) Emicolectomia destra comprendente: ileo terminale di cm 8, cieco e colon ascendente di cm 21, appendice di cm 6,5, omento di cm 15 x 9. A livello del cieco, a cm 2 dalla valvola di Bauhin, si reperta neoformazione ulcero-vegetante, circonferenziale per il 70%, di cm 5,8 x 4,6 x 1,9, stenosante, che al taglio infiltra a tutto spessore la parete fino al grasso pericolico, con superficie di taglio di colorito bianco-grigiastro e aree emorragiche. La distanza dal margine distale è di cm 14, dal margine prossimale ileale di cm 9, dal margine radiale (mesenterico) di cm 1,1. La sierosa sovrastante appare liscia. Isolati nel grasso 21 linfonodi, il maggiore di cm 1,4. Mucosa residua con polipo sessile di cm 0,8 nel colon ascendente (A9)."},
+    {"type": "section", "text": "Descrizione microscopica"},
+    {"type": "paragraph", "text": "Adenocarcinoma con architettura ghiandolare e cribriforme, aree solide (circa il 30%) e componente mucinosa extracellulare inferiore al 50%, che infiltra la tonaca muscolare propria e il tessuto adiposo sottosieroso per 7 mm oltre la muscolare (pT3). Tumor budding: [[ESAME_VALORE:Bd2]] ([[ESAME_VALORE:7 gemme]] per campo 0,785 mm²). Abbondante infiltrato linfocitario intratumorale e peritumorale con aggregati linfoidi di tipo Crohn-like. Invasione linfovascolare extramurale presente (EMVI+); invasione perineurale assente. Depositi tumorali (tumor deposits) assenti. Margini chirurgici indenni. Polipo A9: adenoma tubulare con displasia di basso grado."},
+    {"type": "page_break"},
+    {"type": "table", "caption": "Stato linfonodale per stazione", "header": ["Stazione", "Blocchetti", "Linfonodi esaminati", "Esito", "Note"], "widths": [2.4, 1.6, 1.6, 1.4, 3.6], "rows": [
+      ["Pericolici", "A14-A22", "12", "[[ESAME_VALORE:2 metastatici]]", "Metastasi di [[ESAME_VALORE:4 mm]] e [[ESAME_VALORE:2,5 mm]], senza estensione extranodale"],
+      ["Ileocolici intermedi", "A23-A31", "9", "indenni", "-"],
+      ["Apicale (B)", "B1", "1", "indenne", "Linfonodo di repere"],
+      ["Totale", "-", "22", "[[ESAME_VALORE:2/22]]", "pN1b"]
+    ]},
+    {"type": "section", "text": "Indagini immunoistochimiche e molecolari"},
+    {"type": "table", "header": ["Test", "Blocchetto", "Risultato", "Interpretazione"], "widths": [2.4, 1.4, 3, 4], "rows": [
+      ["MLH1", "A4", "[[ESAME_VALORE:perdita di espressione]]", "Controllo interno positivo"],
+      ["PMS2", "A4", "[[ESAME_VALORE:perdita di espressione]]", "Perdita secondaria a MLH1"],
+      ["MSH2", "A4", "[[ESAME_VALORE:espressione conservata]]", "-"],
+      ["MSH6", "A4", "[[ESAME_VALORE:espressione conservata]]", "-"],
+      ["BRAF (qPCR)", "A4", "[[DATO_GENETICO:mutazione BRAF p.V600E]]", "Variante somatica, frazione allelica [[ESAME_VALORE:31%]]"],
+      ["Metilazione MLH1", "A4", "[[DATO_GENETICO:ipermetilazione del promotore di MLH1]]", "Pattern compatibile con forma sporadica"],
+      ["KRAS / NRAS", "A4", "[[DATO_GENETICO:wild-type]]", "Esoni 2, 3, 4"]
+    ]},
+    {"type": "paragraph", "text": "Il quadro (deficit di MLH1/PMS2, mutazione BRAF V600E e ipermetilazione del promotore) è indicativo di instabilità microsatellitare di origine **sporadica**: una sindrome di Lynch è da ritenersi improbabile e non vi è indicazione a consulenza genetica per i familiari della sig.ra [[PERSONA:De Santis]]. Analisi molecolari eseguite dalla Dott.ssa [[MEDICO:Federica Del Re]], Laboratorio di Patologia Molecolare."},
+    {"type": "section", "text": "Diagnosi"},
+    {"type": "paragraph", "text": "**Emicolectomia destra: [[DIAGNOSI:adenocarcinoma del cieco, non altrimenti specificato, di alto grado (G3)]], con deficit delle proteine del mismatch repair (dMMR/MSI-H), BRAF V600E mutato.**\n**Stadiazione: [[DIAGNOSI:pT3 pN1b (2/22) L1 V1 Pn0 R0]] (AJCC/UICC 8a ed.); EMVI positiva.**\nMargini indenni (radiale a [[ESAME_VALORE:11 mm]]). Adenoma tubulare con displasia di basso grado del colon ascendente. Anello anastomotico (C) indenne."},
+    {"type": "footnotes", "items": [
+      "Il budding tumorale è valutato secondo i criteri ITBCC 2016 nel campo hot-spot.",
+      "Il referto preliminare telefonico è stato comunicato al Dott. [[MEDICO:D'Alessandro]] il [[DATA:25/09/2025]] (ore 13:40) dalla Dott.ssa [[MEDICO:Di Febo]].",
+      "Esenzione [[CODICE_ESENZIONE:048]] attivata su richiesta dell'AdS [[TUTORE_DELEGATO:Alberto De Santis]], pratica n. [[NUMERO_PROTOCOLLO:ESZ-2025-77812]]."
+    ]},
+    {"type": "section", "text": "Trasmissione dell'esito"},
+    {"type": "table", "header": ["Destinatario", "Qualifica", "Mezzo", "Data"], "widths": [3.2, 3.2, 2, 1.6], "rows": [
+      ["Dott. [[MEDICO:Simone Dell'Elce]]", "Oncologo, [[REPARTO:Day Hospital Oncologico]]", "Cartella elettronica", "[[DATA:03/10/2025]]"],
+      ["Dott. [[MEDICO:Nicola Di Pietrantonio]]", "Medico di Medicina Generale", "FSE", "[[DATA:03/10/2025]]"],
+      ["[[TUTORE_DELEGATO:Alberto De Santis]]", "AdS della paziente\n([[INDIRIZZO:Via Tiburtina Valeria 318]], [[LUOGO:Chieti Scalo]])", "Raccomandata", "[[DATA:06/10/2025]]"],
+      ["Sig.ra [[FAMILIARE:C. Marinucci]]", "Figlia (solo con autorizzazione AdS)", "Colloquio", "da concordare"]
+    ]},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "signature", "place_date": "[[LUOGO:Pescara]], [[DATA_REFERTO:3 ottobre 2025]]", "role": "Il Dirigente Medico refertante", "name": "Dott.ssa [[MEDICO:Marta Di Febo]]", "digital": false, "stamp": ["U.O.C. ANATOMIA PATOLOGICA", "Dott.ssa [[MEDICO:MARTA DI FEBO]]", "Ord. Medici PE n. [[NUMERO_ALBO:3994]]"]}
+    ], "right": [
+      {"type": "signature", "place_date": "Visto", "role": "Il Direttore UOC", "name": "Prof. [[MEDICO:Ennio Ciccarelli]]", "digital": true}
+    ]},
+    {"type": "barcode", "kind": "qr", "label": "Verifica del referto della paziente [[PERSONA:De Santis R.]]", "value": "https://referti.aslcdt.example.it/ap/[[NUMERO_REFERTO:25-S-3311]]"}
+,
+    {"type": "page_break"},
+    {"type": "title", "text": "ALLEGATO 1", "subtitle": "Consenso all'utilizzo del materiale biologico residuo e verbale GOM colorettale"},
+    {"type": "paragraph", "text": "Il sottoscritto [[TUTORE_DELEGATO:Alberto De Santis]], nato a [[LUOGO_NASCITA:Pescara]] il [[DATA_NASCITA:17/02/1979]], in qualità di amministratore di sostegno della sig.ra [[PERSONA:Rosa De Santis]] (decreto n. [[NUMERO_PROTOCOLLO:1187/2023]]), preso atto dell'informativa ricevuta dal Dott. [[OPERATORE_SANITARIO:Lorenzo Pace]], dichiara quanto segue in merito al tessuto residuo del caso [[NUMERO_REFERTO:25-S-3311]]:"},
+    {"type": "char_boxes", "label": "C.F. dell'AdS", "value": "[[CODICE_FISCALE:@ads]]"},
+    {"type": "checkboxes", "columns": 1, "items": [
+      ["acconsente alla conservazione dei blocchetti in paraffina oltre i termini di legge per eventuali indagini future a beneficio della paziente", true],
+      ["acconsente all'uso anonimizzato del tessuto residuo per finalità di ricerca approvate dal Comitato Etico", true],
+      ["chiede di essere informato di risultati incidentali di rilevanza per i familiari (es. predisposizione ereditaria)", false]
+    ]},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "signature", "place_date": "[[LUOGO:Pescara]], [[DATA:19.09.2025]]", "role": "L'amministratore di sostegno", "name": "[[TUTORE_DELEGATO:Alberto De Santis]]", "digital": false}
+    ], "right": [
+      {"type": "stamp", "angle": 9, "align": "center", "lines": ["TESTIMONE", "Inf. [[OPERATORE_SANITARIO:Mariangela Di Biase]]", "Chirurgia Gen. - matr. [[NUMERO_ALBO:PE-77182]]"]}
+    ]},
+    {"type": "heading", "text": "Estratto del verbale GOM colorettale del [[DATA:8 ottobre 2025]]"},
+    {"type": "table", "header": ["Partecipante", "Disciplina", "Parere"], "widths": [3, 3, 4.6], "rows": [
+      ["Dott.ssa [[MEDICO:Marta Di Febo]]", "Anatomia Patologica", "Stadio III (pT3 pN1b), dMMR sporadico"],
+      ["Dott. [[MEDICO:Simone Dell'Elce]]", "Oncologia Medica", "Valutare fluoropirimidina in monoterapia in relazione a età e fragilità cognitiva"],
+      ["Dott.ssa [[MEDICO:Giulia Sole Ranieri]]", "Geriatria", "G8 [[ESAME_VALORE:9/17]]: paziente fragile; discutere con l'AdS"],
+      ["Dott. [[MEDICO:Gianmarco D'Alessandro]]", "Chirurgia", "Decorso regolare, dimessa in RSA il [[DATA_RICOVERO:24/09/2025]]"]
+    ]},
+    {"type": "paragraph", "text": "Decisione: follow-up clinico-strumentale; eventuale terapia adiuvante da concordare con l'AdS sig. [[TUTORE_DELEGATO:De Santis]] e con la figlia [[FAMILIARE:Celeste]] dopo valutazione geriatrica. Verbalizzante: [[OPERATORE_SANITARIO:Sara Mancinelli]], data manager GOM."}
+  ],
+  "negatives": [
+    {"value": "Alzheimer", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Lynch", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Crohn-like", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Bauhin", "forbidden_categories": ["PERSONA", "COGNOME"]}
+  ]
+}

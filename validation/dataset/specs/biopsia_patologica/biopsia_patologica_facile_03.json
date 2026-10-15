@@ -1,0 +1,56 @@
+{
+  "id": "biopsia_patologica_facile_03",
+  "type": "biopsia_patologica",
+  "difficulty": "facile",
+  "style": {"font": "dejavu", "color": "#2E7D32", "font_size": 9, "margins_mm": 16},
+  "persons": {
+    "paz": {"first_name": "Ioana", "last_name": "Popescu", "sex": "F", "birth_date": "1976-11-03", "birth_place": "Romania"}
+  },
+  "letterhead": {
+    "logo": "AOSB",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:A.O. Santa Brigida]]",
+      "Dipartimento dei Servizi Diagnostici",
+      "[[REPARTO:UOC Anatomia Patologica e Citopatologia]]",
+      "Responsabile: Prof.ssa [[MEDICO:Antonella Quarta]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Rudiae 44]] - [[CAP:73100]] [[LUOGO:Lecce]]",
+      "Tel. [[TELEFONO:0832 668105]]"
+    ]
+  },
+  "footer": [
+    "Il presente referto è inviato al Fascicolo Sanitario Elettronico. Per ritiro vetrini rivolgersi alla segreteria (lun-ven 9-12)."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO ISTOLOGICO"},
+    {"type": "patient_box", "title": "ANAGRAFICA", "align": "right", "columns": 1, "fields": [
+      ["Paziente", "[[PERSONA:Ioana Popescu]]"],
+      ["Data di nascita", "[[DATA_NASCITA:03/11/1976]]"],
+      ["Luogo di nascita", "[[LUOGO_NASCITA:Romania]]"],
+      ["C.F.", "[[CODICE_FISCALE:@paz]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["N. istologico", "[[NUMERO_REFERTO:E/2025/3318]]"],
+      ["Prelievo", "[[DATA_VISITA:07/10/2025]]"],
+      ["Referto", "[[DATA_REFERTO:16/10/2025]]"]
+    ]},
+    {"type": "fields", "columns": 1, "fields": [
+      ["Richiedente", "[[REPARTO:U.O. Ostetricia e Ginecologia - Isteroscopia ambulatoriale]]"],
+      ["Notizie cliniche", "[[DIAGNOSI:Menometrorragia]] da 4 mesi. Ecografia TV: endometrio [[ESAME_VALORE:14 mm]], disomogeneo. Non terapie ormonali in atto."]
+    ]},
+    {"type": "table", "header": ["Contenitore", "Materiale", "Frammenti", "Inclusioni"], "widths": [1.4, 4, 1.4, 1.4], "rows": [
+      ["A", "Biopsia endometriale mirata in isteroscopia", "multipli", "A1-A2"]
+    ]},
+    {"type": "heading", "text": "Descrizione macroscopica"},
+    {"type": "paragraph", "text": "Materiale frammentato, di aspetto molle, di colorito rossastro, complessivamente di cm 1,5 x 1 x 0,3, incluso in toto in due inclusioni."},
+    {"type": "heading", "text": "Descrizione microscopica"},
+    {"type": "paragraph", "text": "Frammenti di endometrio con aumento del rapporto ghiandole/stroma, ghiandole di forma e dimensioni variabili, alcune dilatate cisticamente, rivestite da epitelio di tipo proliferativo privo di atipie citologiche. Stroma cellulato. Non sono presenti aree di necrosi né infiltrazione dello stroma."},
+    {"type": "heading", "text": "Diagnosi"},
+    {"type": "paragraph", "text": "**Endometrio: [[DIAGNOSI:iperplasia endometriale senza atipie]]** (classificazione WHO 2020)."},
+    {"type": "note", "text": "Si consiglia correlazione con il quadro clinico ed ecografico e controllo isteroscopico secondo indicazione del ginecologo curante."},
+    {"type": "signature", "place_date": "[[LUOGO:Lecce]], [[DATA_REFERTO:16/10/2025]]", "role": "Dirigente Medico", "name": "Dott. [[MEDICO:Salvatore Mangione]]", "digital": true}
+  ],
+  "negatives": []
+}

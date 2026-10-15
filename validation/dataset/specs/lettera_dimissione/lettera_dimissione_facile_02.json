@@ -1,0 +1,58 @@
+{
+  "id": "lettera_dimissione_facile_02",
+  "type": "lettera_dimissione",
+  "difficulty": "facile",
+  "style": {"font": "times", "color": "#7A1F2B", "font_size": 10, "margins_mm": 20},
+  "persons": {
+    "paz": {"first_name": "Davide", "last_name": "Lorenzon", "sex": "M", "birth_date": "1979-07-02", "birth_place": "Vicenza"}
+  },
+  "letterhead": {
+    "logo": "POM",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Presidio Ospedaliero di Monteverde]]",
+      "[[REPARTO:Unità Operativa di Chirurgia Generale]]",
+      "Chirurgia mininvasiva e della parete addominale"
+    ],
+    "right": [
+      "[[INDIRIZZO:Piazzale Ospedale 1]]",
+      "[[CAP:31100]] [[LUOGO:Treviso]]",
+      "Segreteria [[TELEFONO:0422 556170]]"
+    ]
+  },
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Presidio Ospedaliero di Monteverde]] - Lettera di dimissione da consegnare al proprio medico curante"
+  ],
+  "blocks": [
+    {"type": "title", "text": "Lettera di dimissione", "subtitle": "Ricovero chirurgico programmato"},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Cognome", "[[COGNOME:Lorenzon]]"],
+      ["Nome", "[[NOME:Davide]]"],
+      ["Sesso", "[[SESSO:M]]"],
+      ["Data di nascita", "[[DATA_NASCITA:02/07/1979]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["N. nosologico", "[[NUMERO_CARTELLA:24-031577]]"],
+      ["Ricoverato il", "[[DATA_RICOVERO:18/09/2024]]"],
+      ["Dimesso il", "[[DATA_RICOVERO:20/09/2024]]"]
+    ]},
+    {"type": "paragraph", "text": "Egregio Collega,\nil Suo assistito è stato ricoverato presso la nostra Unità Operativa per l'esecuzione di intervento chirurgico programmato."},
+    {"type": "heading", "text": "Diagnosi di ingresso"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Colelitiasi sintomatica]] con episodi ricorrenti di [[DIAGNOSI:colica biliare]]."},
+    {"type": "heading", "text": "Intervento eseguito"},
+    {"type": "paragraph", "text": "In data [[DATA:19/09/2024]]: [[INTERVENTO:colecistectomia videolaparoscopica]] in anestesia generale. Reperto operatorio: colecisti a pareti ispessite con multipli calcoli. Decorso intra-operatorio regolare."},
+    {"type": "heading", "text": "Decorso post-operatorio"},
+    {"type": "paragraph", "text": "Regolare. Alvo canalizzato in prima giornata, ripresa dell'alimentazione con dieta leggera, ben tollerata. Ferite chirurgiche in ordine. Esami di controllo nella norma (bilirubina totale [[ESAME_VALORE:0,74]] mg/dL, emoglobina [[ESAME_VALORE:14,1]] g/dL)."},
+    {"type": "heading", "text": "Diagnosi di dimissione"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Colecistite cronica litiasica]]**, trattata con [[INTERVENTO:colecistectomia laparoscopica]]."},
+    {"type": "heading", "text": "Terapia domiciliare"},
+    {"type": "table", "header": ["Farmaco", "Dose", "Orari", "Note"], "widths": [3, 1.5, 1.8, 3.2], "rows": [
+      ["[[FARMACO:Enoxaparina 4000 UI]] fl s.c.", "1 fl", "ore 20", "per 7 giorni"],
+      ["[[FARMACO:Paracetamolo 1 g]] cpr", "1 cpr", "al bisogno", "in caso di dolore"],
+      ["[[FARMACO:Pantoprazolo 20 mg]] cpr", "1 cpr", "ore 7", "a digiuno, per 10 giorni"]
+    ]},
+    {"type": "heading", "text": "Raccomandazioni"},
+    {"type": "paragraph", "text": "Rimozione dei punti di sutura dopo 8-10 giorni presso il curante. Evitare sforzi fisici per 3 settimane. Visita di controllo presso l'ambulatorio chirurgico a 30 giorni, con esito dell'esame istologico. Rivolgersi al Pronto Soccorso in caso di febbre, ittero o dolore addominale intenso."},
+    {"type": "signature", "place_date": "[[LUOGO:Treviso]], [[DATA_REFERTO:20/09/2024]]", "role": "Il Dirigente Medico", "name": "Dott.ssa [[MEDICO:Martina Zanatta]]", "digital": false}
+  ],
+  "negatives": []
+}

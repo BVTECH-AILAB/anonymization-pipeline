@@ -1,0 +1,80 @@
+{
+  "id": "nota_ambulatoriale_media_04",
+  "type": "nota_ambulatoriale",
+  "difficulty": "media",
+  "style": {"font": "helvetica", "color": "#E65100", "font_size": 9.5, "margins_mm": 17},
+  "persons": {
+    "paz": {"first_name": "Tommaso", "last_name": "Greco", "sex": "M", "birth_date": "2016-04-21", "birth_place": "Lecce"}
+  },
+  "letterhead": {
+    "logo": "OBI",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASL Salento Adriatico]]",
+      "[[STRUTTURA_SANITARIA:Ospedale dei Bambini Madonna dell'Idria]]",
+      "[[REPARTO:U.O.C. Pediatria - Ambulatorio di Allergologia Pediatrica]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Otranto 96]]",
+      "[[CAP:73100]] [[LUOGO:Lecce]]",
+      "Tel. [[TELEFONO:0832 661240]] (lun-ven 9-13)"
+    ]
+  },
+  "running_header": "Paziente: [[PERSONA:Greco Tommaso]] (nato il [[DATA_NASCITA:21/04/2016]]) - Prenotazione [[NUMERO_PRENOTAZIONE:LE-25-0218874]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASL Salento Adriatico]] - P.IVA [[PARTITA_IVA:@asl]] - Servizio Sanitario Regionale",
+    "Referto consegnato al genitore esercente la responsabilità genitoriale. Conservare per i successivi controlli."
+  ],
+  "blocks": [
+    {"type": "title", "text": "VISITA ALLERGOLOGICA PEDIATRICA", "subtitle": "Prima visita (cod. 89.7) - Prick test per inalanti (cod. 91.90.6) - Spirometria semplice (cod. 89.37.1)"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome", "[[COGNOME:Greco]]"],
+      ["Nome", "[[NOME:Tommaso]]"],
+      ["Data di nascita", "[[DATA_NASCITA:21/04/2016]]"],
+      ["C.F.", "[[CODICE_FISCALE:@paz]]"],
+      ["Residenza", "[[INDIRIZZO:Via Taranto 51]], [[LUOGO:Lecce]]"],
+      ["Accompagnato da", "[[TUTORE_DELEGATO:Valentina Quarta]] (madre)"],
+      ["Recapito genitore", "[[TELEFONO:+39 349 220 7815]]"],
+      ["Pediatra (PLS)", "Dott.ssa [[MEDICO:Ilaria Miglietta]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Data visita", "[[DATA_VISITA:12/02/2025]]"],
+      ["NRE", "[[NUMERO_RICETTA:160A50340091827]]"],
+      ["Priorità", "D (entro 30 gg)"]
+    ]},
+    {"type": "section", "text": "Anamnesi"},
+    {"type": "paragraph", "text": "[[NOME:Tommaso]], di [[ETA:8]] anni, frequenta la classe terza presso l'[[SCUOLA:Istituto Comprensivo Rudiae]]. Giunge accompagnato dalla madre, sig.ra [[TUTORE_DELEGATO:Quarta]], che riferisce da circa due anni [[DIAGNOSI:rinorrea acquosa, starnutazioni a salve e prurito oculare]] nei mesi primaverili, con frequenti assenze scolastiche, e due episodi di [[DIAGNOSI:broncospasmo con tosse notturna]] nella primavera 2024, trattati dal pediatra con [[FARMACO:salbutamolo spray]] con beneficio.\nAnamnesi familiare: padre con [[PATOLOGIA:rinite allergica]]; il fratello [[FAMILIARE:Leonardo]], di 5 aa., è seguito per [[PATOLOGIA:dermatite atopica]].\nNato a termine da parto eutocico, allattamento materno. Vaccinazioni secondo calendario. Non reazioni avverse a farmaci o alimenti. Vive in appartamento al secondo piano, non animali domestici."},
+    {"type": "section", "text": "Esame obiettivo"},
+    {"type": "paragraph", "text": "Buone condizioni generali. Peso [[MISURE_ANTROPOMETRICHE:28 kg]] (50° percentile), altezza [[MISURE_ANTROPOMETRICHE:131 cm]] (50°-75° percentile). Pieghe di Dennie-Morgan presenti; occhiaie allergiche. Mucosa nasale pallida con turbinati ipertrofici, secrezione sierosa. Murmure vescicolare normotrasmesso, non rumori aggiunti. SpO2 [[ESAME_VALORE:98%]] in aria ambiente. Cute integra, non lesioni eczematose."},
+    {"type": "section", "text": "Prick test per inalanti"},
+    {"type": "table", "header": ["Allergene", "Diametro pomfo", "Esito"], "widths": [4, 2, 2], "flag_column": 2, "rows": [
+      ["Controllo negativo (soluzione fisiologica)", "[[ESAME_VALORE:0 mm]]", ""],
+      ["Controllo positivo (istamina 10 mg/mL)", "[[ESAME_VALORE:6 mm]]", ""],
+      ["Graminacee (Phleum pratense)", "[[ESAME_VALORE:11 mm]]", "+++"],
+      ["Olivo (Olea europaea)", "[[ESAME_VALORE:7 mm]]", "++"],
+      ["Parietaria judaica", "[[ESAME_VALORE:4 mm]]", "+"],
+      ["Dermatophagoides pteronyssinus", "[[ESAME_VALORE:assente]]", ""],
+      ["Epitelio di gatto / cane", "[[ESAME_VALORE:assente]]", ""],
+      ["Alternaria alternata", "[[ESAME_VALORE:assente]]", ""]
+    ], "caption": "Lettura a 15 minuti. Il bambino non assumeva antistaminici da almeno 7 giorni."},
+    {"type": "heading", "text": "Spirometria con test di broncodilatazione"},
+    {"type": "paragraph", "text": "Eseguita dalla Dott.ssa [[MEDICO:Serena Rizzo]] (Pneumologia pediatrica): FEV1 [[ESAME_VALORE:89%]] del teorico, FEV1/FVC [[ESAME_VALORE:0,82]]. Dopo [[FARMACO:salbutamolo 400 mcg]] con distanziatore incremento del FEV1 del [[ESAME_VALORE:13%]] (test positivo). Collaborazione buona."},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Rinocongiuntivite allergica stagionale da pollini di graminacee e olivo]] (lieve sensibilizzazione a parietaria). [[DIAGNOSI:Asma bronchiale lieve intermittente]] con reversibilità significativa al broncodilatatore."},
+    {"type": "page_break"},
+    {"type": "heading", "text": "Terapia e indicazioni"},
+    {"type": "table", "header": ["Farmaco", "Dose", "Quando"], "widths": [3.5, 3, 3], "zebra": false, "rows": [
+      ["[[FARMACO:Mometasone spray nasale 50 mcg]]", "1 erogazione per narice", "ogni sera, da marzo a giugno"],
+      ["[[FARMACO:Cetirizina gocce 10 mg/mL]]", "10 gocce", "la sera, nei periodi di sintomi"],
+      ["[[FARMACO:Salbutamolo 100 mcg]] spray", "2 puff con distanziatore", "al bisogno, ripetibili dopo 20 min"]
+    ]},
+    {"type": "paragraph", "text": "Valutare [[TERAPIA:immunoterapia specifica sublinguale per graminacee]] al termine della stagione pollinica. Si consegna alla madre il piano d'azione scritto per l'asma. L'infermiera [[OPERATORE_SANITARIO:Antonella Calò]] ha addestrato la sig.ra [[TUTORE_DELEGATO:Quarta]] e il bambino all'uso corretto del distanziatore.\nSi rilascia certificato per la somministrazione del [[FARMACO:salbutamolo]] in orario scolastico, da consegnare alla segreteria dell'[[SCUOLA:Istituto Comprensivo Rudiae]].\n**Controllo:** [[DATA:15/10/2025]] con spirometria, già prenotato."},
+    {"type": "checkboxes", "label": "Documentazione consegnata al genitore", "columns": 3, "items": [["Referto della visita", true], ["Piano d'azione per l'asma", true], ["Certificato per la scuola", true]]},
+    {"type": "signature", "place_date": "[[LUOGO:Lecce]], [[DATA_REFERTO:12 febbraio 2025]]", "role": "Il Pediatra Allergologo", "name": "Dott. [[MEDICO:Fabio Marzo]]", "digital": false, "stamp": ["Dott. [[MEDICO:Fabio Marzo]]", "Specialista in Pediatria e Allergologia", "Iscr. Albo n. [[NUMERO_ALBO:LE-04416]]"]},
+    {"type": "barcode", "kind": "qr", "label": "Referto online", "value": "https://referti.aslsalento.example.it/r/[[NUMERO_REFERTO:PED-ALL-25-00412]]", "align": "left"}
+  ],
+  "negatives": [
+    {"value": "Dennie-Morgan", "forbidden_categories": ["PERSONA", "MEDICO", "COGNOME"]},
+    {"value": "da marzo a giugno", "forbidden_categories": ["MEDICO", "PERSONA", "COGNOME"]}
+  ]
+}

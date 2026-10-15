@@ -1,0 +1,104 @@
+{
+  "id": "referto_esterno_facile_03",
+  "type": "referto_esterno",
+  "difficulty": "facile",
+  "style": {
+    "font": "courier",
+    "color": "#333333",
+    "font_size": 9,
+    "margins_mm": 16,
+    "fax_line": "[[DATA_VISITA:05/02/2024]] 16:22  DA: [[FAX:0547 613380]]  [[STRUTTURA_SANITARIA:CENTRO DIAGN. VALLE SAVIO]]  P. 001/001"
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Giuseppe",
+      "last_name": "Amato",
+      "sex": "M",
+      "birth_date": "1978-11-03",
+      "birth_place": "Napoli"
+    }
+  },
+  "letterhead": {
+    "logo": "CDV",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Centro Diagnostico Valle del Savio]]",
+      "Diagnostica per immagini - Ecografia",
+      "Convenzionato SSN"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Carducci 210]]",
+      "[[CAP:47521]] [[LUOGO:Cesena]]",
+      "Tel. [[TELEFONO:0547 613301]]",
+      "Fax [[FAX:0547 613380]]"
+    ]
+  },
+  "footer": [
+    "Documento trasmesso via fax. Se ricevuto per errore si prega di distruggerlo e di avvisare il mittente."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "REFERTO ECOGRAFICO",
+      "subtitle": "Ecografia addome completo"
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome",
+          "[[COGNOME:Amato]]"
+        ],
+        [
+          "Nome",
+          "[[NOME:Giuseppe]]"
+        ],
+        [
+          "Data di nascita",
+          "[[DATA_NASCITA:03/11/1978]]"
+        ],
+        [
+          "Codice fiscale",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Data esame",
+          "[[DATA_VISITA:05/02/2024]]"
+        ],
+        [
+          "N. esame",
+          "[[ACCESSION_NUMBER:ECO24-01452]]"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Quesito: [[DIAGNOSI:ipertransaminasemia]] di riscontro occasionale."
+    },
+    {
+      "type": "section",
+      "text": "Descrizione"
+    },
+    {
+      "type": "paragraph",
+      "text": "FEGATO: di dimensioni ai limiti superiori (diametro longitudinale del lobo destro [[ESAME_VALORE:16,2 cm]]), a margini regolari, con diffuso e omogeneo aumento dell'ecogenicità parenchimale come da [[DIAGNOSI:steatosi epatica di grado moderato]]. Non lesioni focali apprezzabili. Vena porta di calibro regolare.\n\nCOLECISTI: distesa, a pareti sottili, contenente [[DIAGNOSI:calcolo di 14 mm]] mobile con il decubito, con cono d'ombra posteriore.\n\nVIE BILIARI: non dilatate. Coledoco di [[ESAME_VALORE:4 mm]].\n\nPANCREAS: per quanto visibile nei limiti.\n\nMILZA: di dimensioni regolari (diametro bipolare [[ESAME_VALORE:11 cm]]).\n\nRENI: in sede, di normali dimensioni e spessore parenchimale. Non idronefrosi, non calcoli.\n\nVESCICA: scarsamente distesa. Aorta addominale di calibro regolare."
+    },
+    {
+      "type": "section",
+      "text": "Conclusioni"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[DIAGNOSI:Steatosi epatica moderata]]. [[DIAGNOSI:Colelitiasi]] non complicata. Si consiglia valutazione da parte del medico curante, calo ponderale e controllo ecografico a distanza di 12 mesi."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Cesena]], [[DATA_REFERTO:05/02/2024]]",
+      "role": "Il Medico Radiologo",
+      "name": "Dott. [[MEDICO:Stefano Morigi]]",
+      "digital": false
+    }
+  ],
+  "negatives": []
+}

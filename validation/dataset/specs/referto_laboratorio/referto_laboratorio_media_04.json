@@ -1,0 +1,91 @@
+{
+  "id": "referto_laboratorio_media_04",
+  "type": "referto_laboratorio",
+  "difficulty": "media",
+  "style": {"font": "dejavu", "color": "#AD1457", "font_size": 8.5, "margins_mm": 16},
+  "persons": {
+    "paz": {"first_name": "Khadija", "last_name": "Benali", "sex": "F", "birth_date": "1996-07-14", "birth_place": "Marocco"}
+  },
+  "letterhead": {
+    "logo": "FI",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Laboratorio Analisi Cliniche Faro Ionico S.r.l.]]",
+      "Struttura accreditata SSR - Settori: chimica clinica, ematologia,",
+      "immunometria, microbiologia e sierologia infettivologica",
+      "Direttore tecnico: Dott. [[MEDICO:Salvatore Pappalardo]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Mario Rapisardi 302]]",
+      "[[CAP:95123]] [[LUOGO:Catania]]",
+      "Tel. [[TELEFONO:095 7461288]]",
+      "WhatsApp referti [[TELEFONO:+39 351 880 4417]]"
+    ]
+  },
+  "running_header": "[[COGNOME:BENALI]] [[NOME:KHADIJA]] - Acc. n. [[NUMERO_ACCETTAZIONE:FI/26/07752]] del [[DATA_VISITA:02/10/2026]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Laboratorio Analisi Cliniche Faro Ionico S.r.l.]] - P.IVA [[PARTITA_IVA:@lab]] - Iscr. Reg. Imprese CT",
+    "I risultati vanno interpretati dal medico curante alla luce del quadro clinico complessivo."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO", "subtitle": "Esami del primo trimestre di gravidanza (D.M. 10/09/1998)"},
+    {"type": "patient_box", "align": "full", "columns": 2, "fields": [
+      ["Cognome", "[[COGNOME:BENALI]]"],
+      ["Nome", "[[NOME:KHADIJA]]"],
+      ["Nata il", "[[DATA_NASCITA:14/07/1996]]"],
+      ["Luogo di nascita", "[[LUOGO_NASCITA:Marocco]] (EE)"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Esenzione", "[[CODICE_ESENZIONE:M11]]"],
+      ["Medico prescrittore", "Dott.ssa [[MEDICO:Carmela Distefano]]"],
+      ["Struttura inviante", "[[STRUTTURA_SANITARIA:Consultorio Familiare Ognina]]"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Accettazione", "[[NUMERO_ACCETTAZIONE:FI/26/07752]]"],
+      ["NRE", "[[NUMERO_RICETTA:190A04815562733]]"],
+      ["Prelievo", "[[DATA_VISITA:02/10/2026]]"],
+      ["Referto", "[[DATA_REFERTO:6 ottobre 2026]]"],
+      ["Epoca gestaz.", "[[GRAVIDANZA:11 sett. + 2 gg]]"],
+      ["Ultima mestruazione", "[[DATA:15-07-2026]]"]
+    ]},
+    {"type": "barcode", "kind": "code128", "label": "Campione", "value": "[[CODICE_CAMPIONE:FI2607752]]", "align": "right"},
+    {"type": "section", "text": "Ematologia"},
+    {"type": "table", "header": ["Esame", "Esito", "U.M.", "Valori di riferimento", ""], "widths": [4, 2, 1.5, 3.2, 0.5], "flag_column": 4, "rows": [
+      ["Emoglobina", "[[ESAME_VALORE:10,9]]", "g/dL", "11,0 - 14,0 (gravidanza)", "L"],
+      ["Ematocrito", "[[ESAME_VALORE:33,1]]", "%", "33,0 - 42,0", ""],
+      ["MCV", "[[ESAME_VALORE:71,2]]", "fL", "80,0 - 98,0", "L"],
+      ["Piastrine", "[[ESAME_VALORE:236]]", "10^3/µL", "150 - 400", ""],
+      ["Ferritina", "[[ESAME_VALORE:9,8]]", "ng/mL", "15 - 150", "L"]
+    ]},
+    {"type": "section", "text": "Immunoematologia"},
+    {"type": "table", "header": ["Esame", "Esito", "Note"], "widths": [4, 3, 4.2], "rows": [
+      ["Gruppo sanguigno AB0 e Rh(D)", "[[GRUPPO_SANGUIGNO:0 Rh(D) positivo]]", "Doppia determinazione su due campioni"],
+      ["Test di Coombs indiretto (TAI)", "[[ESAME_VALORE:Negativo]]", "Ripetere alla 28a settimana"]
+    ]},
+    {"type": "section", "text": "Chimica clinica"},
+    {"type": "table", "header": ["Esame", "Esito", "U.M.", "Valori di riferimento", ""], "widths": [4, 2, 1.5, 3.2, 0.5], "flag_column": 4, "rows": [
+      ["Glicemia a digiuno", "[[ESAME_VALORE:84]]", "mg/dL", "< 92 (gravidanza)", ""],
+      ["ALT (GPT)", "[[ESAME_VALORE:13]]", "U/L", "< 33", ""],
+      ["TSH", "[[ESAME_VALORE:1,87]]", "µUI/mL", "0,10 - 2,50 (I trim.)", ""]
+    ]},
+    {"type": "page_break"},
+    {"type": "section", "text": "Sierologia infettivologica"},
+    {"type": "table", "header": ["Esame", "Esito", "Indice / titolo", "Interpretazione"], "widths": [3.6, 2.2, 2, 3.6], "rows": [
+      ["Toxoplasma IgG", "[[ESAME_VALORE:Positivo]]", "[[ESAME_VALORE:48,2]] UI/mL", "Pregressa infezione"],
+      ["Toxoplasma IgM", "[[ESAME_VALORE:Non reattivo]]", "[[ESAME_VALORE:0,21]] Index", "Assenza di infezione recente"],
+      ["Rosolia IgG", "[[ESAME_VALORE:Positivo]]", "[[ESAME_VALORE:62]] UI/mL", "Immunita' presente"],
+      ["HIV 1-2 Ag/Ab", "[[ESAME_VALORE:Non reattivo]]", "-", "-"],
+      ["Treponema pallidum Ab totali", "[[ESAME_VALORE:Non reattivo]]", "-", "-"],
+      ["HBsAg", "[[ESAME_VALORE:Non reattivo]]", "-", "-"],
+      ["Anti-HCV", "[[ESAME_VALORE:Non reattivo]]", "-", "-"]
+    ]},
+    {"type": "section", "text": "Urine"},
+    {"type": "table", "header": ["Esame", "Esito", "Valori attesi"], "widths": [4, 3.5, 3.7], "rows": [
+      ["Esame urine completo", "[[ESAME_VALORE:nella norma]]", "-"],
+      ["Urinocoltura", "[[ESAME_VALORE:sterile]]", "carica < 10.000 UFC/mL"]
+    ]},
+    {"type": "paragraph", "text": "La sig.ra [[PERSONA:Benali]], alla [[GRAVIDANZA:prima gravidanza]], presenta [[DIAGNOSI:anemia microcitica]] con ferritina ridotta: si suggerisce elettroforesi dell'emoglobina per escludere una [[PATOLOGIA:talassemia minor]] e, in caso di positivita', lo screening del partner. Il marito, sig. [[FAMILIARE:Youssef Amrani]], si e' gia' prenotato per l'emocromo presso questo laboratorio. Referto consegnato in data [[DATA:07.10.26]] alla paziente, con traduzione orale in arabo a cura della mediatrice culturale [[OPERATORE_SANITARIO:Samira Haddad]]."},
+    {"type": "note", "text": "Toxoplasma e Rosolia: immunodosaggi in chemiluminescenza; avidita' IgG non eseguita perche' IgM non reattive. Coombs indiretto in tecnica di agglutinazione su colonna (gel test)."},
+    {"type": "signature", "place_date": "[[LUOGO:Catania]], [[DATA_REFERTO:06/10/2026]]", "role": "Il Direttore tecnico - Biologo", "name": "Dott. [[MEDICO:Salvatore Pappalardo]]", "digital": false, "stamp": ["[[STRUTTURA_SANITARIA:FARO IONICO S.R.L.]]", "Dott. [[MEDICO:S. Pappalardo]]", "Ord. Naz. Biologi n. [[NUMERO_ALBO:AA_048812]]"]}
+  ],
+  "negatives": [{"value": "Coombs", "forbidden_categories": ["PERSONA", "COGNOME"]}]
+}

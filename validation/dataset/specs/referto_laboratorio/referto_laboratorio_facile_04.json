@@ -1,0 +1,57 @@
+{
+  "id": "referto_laboratorio_facile_04",
+  "type": "referto_laboratorio",
+  "difficulty": "facile",
+  "style": {"font": "helvetica", "color": "#00838F", "font_size": 10, "margins_mm": 20},
+  "persons": {
+    "paz": {"first_name": "Giovanna", "last_name": "Scalia", "sex": "F", "birth_date": "1981-01-30", "birth_place": "Palermo"}
+  },
+  "letterhead": {
+    "logo": "CAO",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Centro Analisi Cliniche Oreto Nord S.r.l.]]",
+      "Laboratorio generale di base con settori specializzati",
+      "Accreditato SSR"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Ammiraglio Rizzo 58]]",
+      "[[CAP:90142]] [[LUOGO:Palermo]]",
+      "Tel. [[TELEFONO:091 6213347]]",
+      "[[EMAIL:referti@oretonord.example.it]]"
+    ]
+  },
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Centro Analisi Cliniche Oreto Nord S.r.l.]] - Capitale sociale 10.000 euro i.v. - P.IVA [[PARTITA_IVA:@centro]]"
+  ],
+  "blocks": [
+    {"type": "title", "text": "ESAME COMPLETO DELLE URINE"},
+    {"type": "patient_box", "align": "right", "columns": 1, "title": "INTESTATARIO", "fields": [
+      ["Sig.ra", "[[PERSONA:Giovanna Scalia]]"],
+      ["Nata il", "[[DATA_NASCITA:30/01/1981]]"],
+      ["C.F.", "[[CODICE_FISCALE:@paz]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Accettazione n.", "[[NUMERO_ACCETTAZIONE:ON-58214]]"],
+      ["Raccolta del", "[[DATA_VISITA:29/09/2026]]"],
+      ["Refertato il", "[[DATA_REFERTO:30/09/2026]]"]
+    ]},
+    {"type": "section", "text": "Esame chimico-fisico e sedimento urinario"},
+    {"type": "table", "header": ["Parametro", "Risultato", "Valori attesi", ""], "widths": [4, 3, 3.5, 0.6], "flag_column": 3, "rows": [
+      ["Colore", "[[ESAME_VALORE:giallo carico]]", "giallo paglierino", ""],
+      ["Aspetto", "[[ESAME_VALORE:torbido]]", "limpido", "*"],
+      ["pH", "[[ESAME_VALORE:6,5]]", "5,0 - 8,0", ""],
+      ["Peso specifico", "[[ESAME_VALORE:1.024]]", "1.010 - 1.030", ""],
+      ["Proteine", "[[ESAME_VALORE:tracce]]", "< 15 mg/dL", ""],
+      ["Glucosio", "[[ESAME_VALORE:assente]]", "< 15 mg/dL", ""],
+      ["Emoglobina", "[[ESAME_VALORE:0,06]] mg/dL", "< 0,03 mg/dL", "*"],
+      ["Esterasi leucocitaria", "[[ESAME_VALORE:75]] Leu/µL", "< 25 Leu/µL", "*"],
+      ["Nitriti", "[[ESAME_VALORE:positivi]]", "negativi", "*"],
+      ["Sedimento: leucociti", "[[ESAME_VALORE:20-25]] per campo", "0 - 5 per campo", "*"],
+      ["Sedimento: emazie", "[[ESAME_VALORE:3-4]] per campo", "0 - 2 per campo", "*"],
+      ["Sedimento: batteri", "[[ESAME_VALORE:numerosi]]", "rari", "*"]
+    ]},
+    {"type": "paragraph", "text": "Si consiglia esecuzione di urinocoltura con antibiogramma su nuovo campione del mattino, raccolto a mitto intermedio in contenitore sterile."},
+    {"type": "signature", "place_date": "[[LUOGO:Palermo]], [[DATA_REFERTO:30/09/2026]]", "role": "Il Biologo responsabile", "name": "Dott.ssa [[MEDICO:Marta Giunta]]", "digital": false}
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "id": "referto_laboratorio_complessa_01",
+  "type": "referto_laboratorio",
+  "difficulty": "complessa",
+  "style": {"font": "helvetica", "color": "#4A148C", "font_size": 8, "margins_mm": 13},
+  "persons": {
+    "paz": {"first_name": "Riccardo", "last_name": "De Angelis", "sex": "M", "birth_date": "1982-06-19", "birth_place": "Roma"}
+  },
+  "letterhead": {
+    "logo": "PSC",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliero-Universitaria Policlinico San Callisto]]",
+      "Dipartimento di Scienze di Laboratorio e Infettivologiche",
+      "[[REPARTO:UOC Microbiologia e Virologia - Laboratorio di Retrovirologia]]",
+      "Direttore: Prof.ssa [[MEDICO:Antonella Ciriello]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Casilina Vecchia 211]]",
+      "[[CAP:00182]] [[LUOGO:Roma]]",
+      "Tel. [[TELEFONO:06 49971820]] - Fax [[FAX:06 49971829]]",
+      "[[EMAIL:retrovirologia@aou-sancallisto.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:DE ANGELIS RICCARDO]] - C.F. [[CODICE_FISCALE:@paz]] - Cod. amb. [[ID_PAZIENTE:HIV-RM-04417]] - Acc. [[NUMERO_ACCETTAZIONE:26RV013388]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:AOU Policlinico San Callisto]] - P.IVA [[PARTITA_IVA:@aou]] - PEC [[PEC:protocollo@pec.aou-sancallisto.example.it]]",
+    "Dati sanitari soggetti a particolare tutela (L. 135/1990): consegna solo all'interessato o a persona da questi delegata per iscritto.",
+    "Referto di [[PERSONA:De Angelis R.]] - copia per [[REPARTO:Ambulatorio Malattie Infettive - Day Service HIV]]"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI LABORATORIO", "subtitle": "Monitoraggio immuno-virologico - follow-up semestrale"},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "patient_box", "align": "full", "columns": 1, "fields": [
+        ["Cognome", "[[COGNOME:DE ANGELIS]]"],
+        ["Nome", "[[NOME:RICCARDO]]"],
+        ["Nato il", "[[DATA_NASCITA:19/06/1982]]"],
+        ["Sesso", "[[SESSO:M]]"],
+        ["Residenza", "[[INDIRIZZO:Via dei Castani 88/B]]\n[[CAP:00172]] [[LUOGO:Roma]]"],
+        ["Cellulare", "[[TELEFONO:+39 339 418 2075]]"],
+        ["Tessera sanitaria", "[[TESSERA_SANITARIA:@ts]]"],
+        ["Esenzione", "[[CODICE_ESENZIONE:020]]"]
+      ]}
+    ], "right": [
+      {"type": "fields", "columns": 1, "fields": [
+        ["N. accettazione", "[[NUMERO_ACCETTAZIONE:26RV013388]]"],
+        ["Prenotazione CUP", "[[NUMERO_PRENOTAZIONE:CUP-26-7718204]]"],
+        ["Richiedente", "Dott. [[MEDICO:Alessio Marchionni]]"],
+        ["Provenienza", "[[REPARTO:Ambulatorio Malattie Infettive - Day Service HIV]]"],
+        ["Prelievo", "[[DATA_VISITA:28/09/2026]] ore 08:05"],
+        ["Prelevatore", "inf. [[OPERATORE_SANITARIO:Gianluca Proietti]]"],
+        ["Referto", "[[DATA_REFERTO:05/10/2026]]"]
+      ]},
+      {"type": "barcode", "kind": "code128", "label": "Provetta", "value": "[[CODICE_CAMPIONE:RV26-13388-A]]", "align": "left"}
+    ]},
+    {"type": "char_boxes", "label": "Codice fiscale", "value": "[[CODICE_FISCALE:@paz]]"},
+    {"type": "heading", "text": "Notizie cliniche (dal modulo di richiesta)"},
+    {"type": "paragraph", "text": "Pz. di [[ETA:44]] aa. con [[MALATTIE_INFETTIVE:infezione da HIV-1]] nota dal [[DATA:marzo 2014]], fattore di rischio [[ORIENTAMENTO_SESSUALE:MSM]], in [[TERAPIA:terapia antiretrovirale]] con [[FARMACO:bictegravir/emtricitabina/tenofovir alafenamide 50/200/25 mg]] 1 cp/die. In anamnesi [[DIPENDENZE:uso di metanfetamine in contesto di chemsex]], attualmente in carico al [[STRUTTURA_SANITARIA:SerD Roma Est]] (referente Dott.ssa [[MEDICO:Ilaria Fabbri]]). In anamnesi anche [[PATOLOGIA:sindrome di Gilbert]]. Profilassi per Pneumocystis jirovecii sospesa nel 2016. All'ultima visita nessuna lesione cutanea riferibile a sarcoma di Kaposi. Il sig. [[PERSONA:De Angelis]] convive con il partner, sig. [[FAMILIARE:Kwame Mensah]], indicato come persona da contattare."},
+    {"type": "section", "text": "Virologia e sierologia infettivologica"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Riferimento", "Metodo / note"], "widths": [3.2, 2.4, 1.4, 2.2, 4], "rows": [
+      ["HIV-1 RNA plasmatico", "[[ESAME_VALORE:Target non rilevato]]", "copie/mL", "LLOQ 20", "RT-PCR real time"],
+      ["HBsAg", "[[ESAME_VALORE:Non reattivo]]", "", "", "CMIA"],
+      ["Anti-HBs", "[[ESAME_VALORE:312]]", "mUI/mL", "> 10 protettivo", "CMIA"],
+      ["Anti-HBc totali", "[[ESAME_VALORE:Reattivo]]", "", "", "Quadro di [[MALATTIE_INFETTIVE:pregressa infezione da HBV]] con immunita'"],
+      ["Anti-HCV", "[[ESAME_VALORE:Non reattivo]]", "", "", "CMIA"],
+      ["Treponema pallidum Ab (TPHA)", "[[ESAME_VALORE:Reattivo]]", "", "", "Agglutinazione"],
+      ["RPR", "[[ESAME_VALORE:1:8]]", "titolo", "", "Precedente [[ESAME_VALORE:1:2]] del [[DATA_VISITA:12.03.26]]:\nincremento di 2 diluizioni,\nsospetta [[MALATTIE_INFETTIVE:reinfezione luetica]] (1)"],
+      ["QuantiFERON-TB", "[[ESAME_VALORE:Negativo]]", "UI/mL", "< 0,35", "IGRA"]
+    ]},
+    {"type": "section", "text": "Immunologia cellulare - sottopopolazioni linfocitarie"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento", ""], "widths": [4.6, 2, 1.8, 3.2, 0.6], "flag_column": 4, "rows": [
+      ["Linfociti totali", "[[ESAME_VALORE:1.840]]", "cell/µL", "1.000 - 4.000", ""],
+      ["Linfociti T CD3+", "[[ESAME_VALORE:76,4]]", "%", "60 - 85", ""],
+      ["Linfociti T CD4+", "[[ESAME_VALORE:512]]", "cell/µL", "410 - 1.590", ""],
+      ["Linfociti T CD4+ (percentuale)", "[[ESAME_VALORE:27,8]]", "%", "31 - 60", "L"],
+      ["Linfociti T CD8+", "[[ESAME_VALORE:688]]", "cell/µL", "190 - 1.140", ""],
+      ["Rapporto CD4/CD8", "[[ESAME_VALORE:0,74]]", "", "1,00 - 3,60", "L"],
+      ["Nadir CD4 storico (2014)", "[[ESAME_VALORE:186]]", "cell/µL", "-", ""]
+    ]},
+    {"type": "page_break"},
+    {"type": "section", "text": "Test genotipico di resistenza e farmacogenetica"},
+    {"type": "paragraph", "text": "Viremia non rilevabile: test eseguito su **DNA provirale** (archivio) estratto da sangue intero, sequenziamento Sanger delle regioni pol (PR, RT, IN). Interpretazione con algoritmo HIVdb versione 9.6."},
+    {"type": "table", "header": ["Regione", "Mutazioni rilevate", "Farmaci interessati", "Interpretazione"], "widths": [2.4, 3.2, 3.6, 4], "rows": [
+      ["Proteasi (PR)", "[[ESAME_VALORE:nessuna mutazione maggiore]]", "-", "Sensibilita' conservata"],
+      ["Trascrittasi inversa (RT)", "[[ESAME_VALORE:M184V]]", "emtricitabina\nlamivudina", "Resistenza di alto livello;\nattivita' residua per tenofovir"],
+      ["Integrasi (IN)", "[[ESAME_VALORE:E157Q]] (polimorfismo)", "bictegravir\ndolutegravir", "Nessun impatto clinico atteso"]
+    ]},
+    {"type": "table", "header": ["Test farmacogenetico", "Risultato", "Implicazione"], "widths": [3.4, 3.4, 6.4], "rows": [
+      ["HLA-B*57:01 (PCR-SSP)", "[[DATO_GENETICO:allele HLA-B*57:01 non rilevato]]", "Nessuna controindicazione genetica all'uso di abacavir"],
+      ["UGT1A1*28 (genotipo)", "[[DATO_GENETICO:omozigote (TA)7/(TA)7]]", "Compatibile con [[PATOLOGIA:sindrome di Gilbert]]; nessun aggiustamento della terapia in atto"]
+    ]},
+    {"type": "section", "text": "Andamento storico (ultimi 4 controlli)"},
+    {"type": "table", "header": ["Data prelievo", "N. accettazione", "HIV-1 RNA (copie/mL)", "CD4 (cell/µL)", "CD4 %", "Regime / note"], "widths": [2, 2.2, 2.2, 1.6, 1.2, 4], "font_size": 7.5, "rows": [
+      ["[[DATA_VISITA:12/03/2026]]", "[[NUMERO_ACCETTAZIONE:26RV004102]]", "[[ESAME_VALORE:< 20 rilevato]]", "[[ESAME_VALORE:478]]", "[[ESAME_VALORE:26,1]]", "BIC/FTC/TAF; RPR [[ESAME_VALORE:1:2]]"],
+      ["[[DATA_VISITA:18.09.25]]", "[[NUMERO_ACCETTAZIONE:25RV019877]]", "[[ESAME_VALORE:Target non rilevato]]", "[[ESAME_VALORE:455]]", "[[ESAME_VALORE:25,3]]", "BIC/FTC/TAF"],
+      ["[[DATA_VISITA:3 marzo 2025]]", "[[NUMERO_ACCETTAZIONE:25RV003940]]", "[[ESAME_VALORE:48]]", "[[ESAME_VALORE:431]]", "[[ESAME_VALORE:23,9]]", "Blip viremico; aderenza ridotta riferita\ndal pz. durante [[DIPENDENZE:uso di metanfetamine]]"],
+      ["[[DATA_VISITA:14-10-2024]]", "[[NUMERO_ACCETTAZIONE:24RV021566]]", "[[ESAME_VALORE:Target non rilevato]]", "[[ESAME_VALORE:402]]", "[[ESAME_VALORE:22,7]]", "Switch da DTG/ABC/3TC a BIC/FTC/TAF\n(prescr. Dott. [[MEDICO:A. Marchionni]])"]
+    ]},
+    {"type": "page_break"},
+    {"type": "section", "text": "Chimica clinica"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento", ""], "widths": [4.6, 2, 1.8, 3.2, 0.6], "flag_column": 4, "rows": [
+      ["Creatinina", "[[ESAME_VALORE:1,08]]", "mg/dL", "0,70 - 1,20", ""],
+      ["eGFR (CKD-EPI 2021)", "[[ESAME_VALORE:84]]", "mL/min/1,73 m²", "> 90", "L"],
+      ["Bilirubina totale", "[[ESAME_VALORE:2,31]]", "mg/dL", "0,30 - 1,20", "H"],
+      ["Bilirubina indiretta", "[[ESAME_VALORE:1,94]]", "mg/dL", "< 0,80", "H"],
+      ["ALT (GPT)", "[[ESAME_VALORE:22]]", "U/L", "< 41", ""],
+      ["Colesterolo LDL", "[[ESAME_VALORE:128]]", "mg/dL", "< 116", "H"],
+      ["Glucosio", "[[ESAME_VALORE:91]]", "mg/dL", "70 - 99", ""],
+      ["Fosfato", "[[ESAME_VALORE:2,6]]", "mg/dL", "2,5 - 4,5", ""]
+    ]},
+    {"type": "note", "text": "Viremia persistentemente soppressa con ripresa immunologica parziale. La mutazione [[ESAME_VALORE:M184V]] archiviata non compromette il regime in atto. RPR in aumento in [[ORIENTAMENTO_SESSUALE:MSM]] con [[DIPENDENZE:pratiche di chemsex]]: indicata rivalutazione infettivologica urgente e trattamento secondo protocollo. Referto da discutere con il sig. [[PERSONA:R. De Angelis]] esclusivamente in sede di visita."},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "heading", "text": "Comunicazioni"},
+      {"type": "paragraph", "align": "left", "text": "Esito RPR comunicato il [[DATA_REFERTO:5 ottobre 2026]] alle 11:20 al Dott. [[MEDICO:Marchionni]] dalla Dott.ssa [[MEDICO:V. Orsini]]. Il pz. ha delegato il ritiro del referto al sig. [[FAMILIARE:K. Mensah]] (delega prot. [[NUMERO_PROTOCOLLO:2026/DEL/3381]])."}
+    ], "right": [
+      {"type": "heading", "text": "Esecuzione analitica"},
+      {"type": "paragraph", "align": "left", "text": "Sequenziamento: TSLB [[OPERATORE_SANITARIO:Sara Cimini]]. Citofluorimetria: TSLB [[OPERATORE_SANITARIO:Marco Tozzi]]. Revisione bioinformatica: Dott. [[MEDICO:Paolo Nicastro]]."}
+    ]},
+    {"type": "signature", "place_date": "[[LUOGO:Roma]], [[DATA_REFERTO:05/10/2026]]", "role": "Il Dirigente Biologo", "name": "Dott.ssa [[MEDICO:Valentina Orsini]]", "digital": true},
+    {"type": "stamp", "lines": ["[[STRUTTURA_SANITARIA:POLICLINICO SAN CALLISTO]]", "LAB. RETROVIROLOGIA", "Dott.ssa [[MEDICO:Valentina Orsini]]", "Ord. Biologi n. [[NUMERO_ALBO:AA_062917]]"], "angle": 9, "align": "left"},
+    {"type": "barcode", "kind": "qr", "label": "Referto di [[PERSONA:R. De Angelis]] - verifica online", "value": "https://referti.aou-sancallisto.example.it/q/[[NUMERO_REFERTO:RV-26-0091174]]", "align": "right"},
+    {"type": "footnotes", "items": [
+      "Titolo RPR confermato su secondo campione prelevato il [[DATA:01/10/2026]] (provetta [[CODICE_CAMPIONE:RV26-13651-A]]).",
+      "Si raccomanda la notifica al partner (sig. [[FAMILIARE:Mensah]]) secondo la procedura aziendale di partner notification.",
+      "Valori di riferimento CD4/CD8 riferiti a soggetti adulti sieronegativi."
+    ]}
+  ],
+  "negatives": [
+    {"value": "Kaposi", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Gilbert", "forbidden_categories": ["PERSONA", "COGNOME", "NOME"]},
+    {"value": "jirovecii", "forbidden_categories": ["PERSONA"]},
+    {"value": "Sanger", "forbidden_categories": ["PERSONA", "COGNOME"]}
+  ]
+}

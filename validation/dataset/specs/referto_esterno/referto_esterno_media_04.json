@@ -1,0 +1,73 @@
+{
+  "id": "referto_esterno_media_04",
+  "type": "referto_esterno",
+  "difficulty": "media",
+  "style": {"font": "dejavu", "color": "#5B2C6F", "font_size": 8.8, "margins_mm": 17},
+  "persons": {
+    "paz": {"first_name": "Vincenzo", "last_name": "Sabatini", "sex": "M", "birth_date": "1947-12-02", "birth_place": "Roma"}
+  },
+  "letterhead": {
+    "logo": "CEA",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Centro Endoscopico Digestivo Aurelia Nova]]",
+      "[[REPARTO:Servizio di Endoscopia Digestiva e Sedazione]]",
+      "Struttura privata accreditata - Direttore Sanitario Dott. [[MEDICO:M. Cardelli]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Circonvallazione dei Gelsi 212]]",
+      "[[CAP:00165]] [[LUOGO:Roma]]",
+      "Tel. [[TELEFONO:06 3928 4410]]",
+      "[[EMAIL:endoscopia@aurelianova.example.it]]"
+    ]
+  },
+  "running_header": "Paz. [[PERSONA:SABATINI V.]] - Esame [[ACCESSION_NUMBER:END-2406-03391]] - [[DATA_VISITA:26/06/2024]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Aurelia Nova]] Servizi Sanitari S.r.l. - P.IVA [[PARTITA_IVA:@aurelia]] - Capitale sociale 50.000 euro i.v.",
+    "Il presente referto non sostituisce la visita del medico curante. Conservare con la documentazione clinica."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI COLONSCOPIA", "subtitle": "Pancolonscopia con polipectomia in sedazione profonda"},
+    {"type": "columns", "divider": false, "left": [
+      {"type": "patient_box", "columns": 1, "fields": [
+        ["Paziente", "[[PERSONA:Vincenzo Sabatini]]"],
+        ["Nato il", "[[DATA_NASCITA:02/12/1947]] (aa. [[ETA:76]])"],
+        ["C.F.", "[[CODICE_FISCALE:@paz]]"],
+        ["Tessera SSN", "[[TESSERA_SANITARIA:@ts]]"]
+      ]}
+    ], "right": [
+      {"type": "barcode", "kind": "code128", "label": "N. esame", "value": "[[ACCESSION_NUMBER:END-2406-03391]]", "align": "right"},
+      {"type": "fields", "columns": 1, "fields": [
+        ["Data esame", "[[DATA_VISITA:26/06/2024]]"],
+        ["Inviante", "Dott. [[MEDICO:Enzo Proietti]] (MMG)"]
+      ]}
+    ]},
+    {"type": "table", "caption": "Persone presenti / di riferimento", "header": ["Ruolo", "Nominativo", "Recapito"], "widths": [2.6, 3.4, 3], "rows": [
+      ["Caregiver (figlia)", "[[CONTATTO_EMERGENZA:Patrizia Sabatini]]", "[[TELEFONO:+39 328 661 0473]]"],
+      ["Endoscopista", "Dott. [[MEDICO:Fabrizio Melis]]", "interno 214"],
+      ["Anestesista", "Dott.ssa [[MEDICO:Carla Iannone]]", "interno 230"],
+      ["Infermiera di sala", "[[OPERATORE_SANITARIO:Rita Ferrante]]", "-"]
+    ]},
+    {"type": "section", "text": "Indicazione e anamnesi"},
+    {"type": "paragraph", "text": "Indicazione: [[DIAGNOSI:sangue occulto fecale positivo]] allo screening e [[DIAGNOSI:anemia microcitica lieve]]. Il pz. è affetto da [[PATOLOGIA:fibrillazione atriale permanente]] in terapia con [[FARMACO:apixaban 5 mg x 2]], sospeso 48 ore prima dell'esame su indicazione del curante, e da [[PATOLOGIA:BPCO]] di grado moderato. Il consenso informato è stato firmato dal paziente alla presenza della figlia, sig.ra [[CONTATTO_EMERGENZA:Sabatini Patrizia]], che lo accompagna e lo riaccompagnerà a domicilio."},
+    {"type": "section", "text": "Preparazione e sedazione"},
+    {"type": "paragraph", "text": "Preparazione con [[FARMACO:PEG 2 L in dose frazionata]]. Pulizia intestinale secondo Boston Bowel Preparation Scale: [[ESAME_VALORE:BBPS 7]] (2-3-2). Sedazione profonda con [[FARMACO:propofol 140 mg]] in boli frazionati, in respiro spontaneo con O2 in occhialini, monitoraggio di SpO2, ECG e PA. Nessun evento avverso."},
+    {"type": "section", "text": "Descrizione"},
+    {"type": "paragraph", "text": "Esplorazione fino al cieco, identificato dalla valvola ileo-ciecale e dall'orifizio appendicolare; intubazione dell'ileo terminale per circa 5 cm, di aspetto normale. Tempo di retrazione 9 minuti. Numerosi diverticoli del sigma e del discendente, senza segni di flogosi. Riscontro delle lesioni riportate in tabella, asportate e recuperate per esame istologico."},
+    {"type": "table", "header": ["N.", "Sede", "Morfologia (Parigi)", "Dimensione", "Tecnica", "Contenitore"], "widths": [0.6, 1.8, 2, 1.3, 2.4, 2.3], "rows": [
+      ["1", "colon ascendente", "[[ESAME_VALORE:0-Is]]", "[[ESAME_VALORE:12 mm]]", "polipectomia con ansa a freddo", "[[CODICE_CAMPIONE:AN24-03391-A]]"],
+      ["2", "colon trasverso", "[[ESAME_VALORE:0-IIa]]", "[[ESAME_VALORE:6 mm]]", "ansa a freddo", "[[CODICE_CAMPIONE:AN24-03391-B]]"],
+      ["3", "sigma", "[[ESAME_VALORE:0-Ip]]", "[[ESAME_VALORE:18 mm]]", "ansa diatermica, clip emostatica", "[[CODICE_CAMPIONE:AN24-03391-C]]"]
+    ]},
+    {"type": "section", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Polipi multipli del colon]] (n. 3) asportati endoscopicamente in modo completo. [[DIAGNOSI:Malattia diverticolare del colon sinistro]] non complicata.** Campioni inviati al [[STRUTTURA_SANITARIA:Laboratorio Istopatologico Tevere]]; l'esito sarà disponibile in circa 15 giorni lavorativi e verrà consegnato al sig. [[PERSONA:Sabatini]] o a persona delegata."},
+    {"type": "heading", "text": "Indicazioni post-procedura"},
+    {"type": "paragraph", "text": "Dieta leggera per 24 ore. Riprendere [[FARMACO:apixaban]] dalla sera del [[DATA:28.06.24]] in assenza di sanguinamento. Non guidare né firmare atti legali per le 12 ore successive alla sedazione. In caso di rettorragia, dolore addominale intenso o febbre contattare il centro o recarsi al Pronto Soccorso. La colonscopia di sorveglianza andrà programmata in base all'esito istologico, indicativamente entro 3 anni."},
+    {"type": "signature", "place_date": "[[LUOGO:Roma]], [[DATA_REFERTO:26 giugno 2024]]", "role": "Il Medico Endoscopista", "name": "Dott. [[MEDICO:Fabrizio Melis]]", "extra": ["Specialista in Gastroenterologia"], "digital": false, "stamp": ["ENDOSCOPIA DIGESTIVA", "Dott. [[MEDICO:Fabrizio Melis]]", "OMCeO [[LUOGO:Roma]] n. [[NUMERO_ALBO:M-48117]]"]},
+    {"type": "signature", "place_date": "Valutazione anestesiologica: ASA III", "role": "L'Anestesista", "name": "Dott.ssa [[MEDICO:Carla Iannone]]", "digital": false}
+  ],
+  "negatives": [
+    {"value": "Boston", "forbidden_categories": ["LUOGO", "PERSONA"]},
+    {"value": "Parigi", "forbidden_categories": ["LUOGO"]}
+  ]
+}

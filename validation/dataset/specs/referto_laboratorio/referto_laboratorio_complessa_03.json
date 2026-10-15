@@ -1,0 +1,130 @@
+{
+  "id": "referto_laboratorio_complessa_03",
+  "type": "referto_laboratorio",
+  "difficulty": "complessa",
+  "style": {"font": "dejavu", "color": "#B71C1C", "font_size": 7.5, "margins_mm": 12},
+  "persons": {
+    "paz": {"first_name": "Rosa", "last_name": "Dell'Orto", "sex": "F", "birth_date": "1948-01-25", "birth_place": "Milano"}
+  },
+  "letterhead": {
+    "logo": "NT",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:ASST Navigli e Ticinello]]",
+      "[[STRUTTURA_SANITARIA:Ospedale Sant'Eustorgio]]",
+      "[[REPARTO:SIMT - Servizio di Immunoematologia e Medicina Trasfusionale]]",
+      "Ambulatorio Patient Blood Management (PBM)",
+      "Direttore: Dott. [[MEDICO:Carlo Brivio]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Conca del Naviglio 22]]",
+      "[[CAP:20123]] [[LUOGO:Milano]]",
+      "Segreteria [[TELEFONO:02 58391402]]",
+      "Urgenze trasfusionali h24 [[TELEFONO:02 58391499]]",
+      "[[EMAIL:simt.pbm@asst-navigliticinello.example.it]]"
+    ]
+  },
+  "running_header": "[[COGNOME:DELL'ORTO]] [[NOME:ROSA]] - nata il [[DATA_NASCITA:25/01/1948]] - Pratica PBM [[NUMERO_PROTOCOLLO:PBM-2026-0417]] - ALLERTA: [[RELIGIONE:Testimone di Geova]], NO EMOCOMPONENTI",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:ASST Navigli e Ticinello]] - Sede legale [[INDIRIZZO:Viale Papiniano 48]], [[CAP:20144]] [[LUOGO:Milano]] - C.F. e P.IVA [[PARTITA_IVA:@asst]]",
+    "Paziente [[PERSONA:Dell'Orto R.]] - Cartella clinica [[NUMERO_CARTELLA:2026/ORT/011842]] - Rifiuto documentato di trasfusione (DAT del [[DATA:14/02/2019]])",
+    "Documento ad uso sanitario interno: vietata la diffusione ai sensi del Reg. UE 2016/679."
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO IMMUNOEMATOLOGICO E VALUTAZIONE PBM", "subtitle": "Percorso pre-operatorio per chirurgia ortopedica maggiore in paziente che rifiuta la trasfusione"},
+    {"type": "note", "text": "ALLERTA TRASFUSIONALE - La paziente, [[RELIGIONE:Testimone di Geova]], rifiuta sangue intero, emazie, plasma e piastrine anche in caso di pericolo di vita (DAT depositata presso il Comune di [[LUOGO:Milano]]). Accetta [[TERAPIA:recupero intraoperatorio di sangue in circuito continuo]], albumina e fattori della coagulazione ricombinanti."},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "patient_box", "align": "full", "columns": 1, "fields": [
+        ["Cognome", "[[COGNOME:DELL'ORTO]]"],
+        ["Nome", "[[NOME:ROSA]]"],
+        ["Nata il", "[[DATA_NASCITA:25/01/1948]] ([[ETA:78]] anni)"],
+        ["Sesso", "[[SESSO:F]]"],
+        ["Residenza", "[[INDIRIZZO:Via Giambellino 74]], [[CAP:20146]] [[LUOGO:Milano]]"],
+        ["Stato civile", "[[STATO_CIVILE:vedova]]"],
+        ["Invalidita'", "[[INVALIDITA:invalidita' civile 75%]]"],
+        ["Amm. di sostegno", "[[TUTORE_DELEGATO:Ettore Brambilla]] (decreto R.G. [[NUMERO_PROTOCOLLO:4471/2024]])"],
+        ["Familiare", "figlia [[FAMILIARE:Bianca Colombo]], tel. [[TELEFONO:+39 333 609 1187]]"]
+      ]}
+    ], "right": [
+      {"type": "fields", "columns": 1, "fields": [
+        ["N. accettazione", "[[NUMERO_ACCETTAZIONE:IE-26-022514]]"],
+        ["Richiedente", "Dott. [[MEDICO:Luca Vergani]]"],
+        ["Reparto", "[[REPARTO:UOC Ortopedia e Traumatologia]]"],
+        ["Intervento", "[[INTERVENTO:artroprotesi totale d'anca destra]]"],
+        ["Ricovero previsto", "[[DATA_RICOVERO:09/11/2026]]"],
+        ["Prelievo", "[[DATA_VISITA:01/10/2026]] ore 10:15"],
+        ["Referto", "[[DATA_REFERTO:03/10/2026]]"]
+      ]},
+      {"type": "barcode", "kind": "code128", "label": "Provetta tappo rosa (K2-EDTA)", "value": "[[CODICE_CAMPIONE:IE26022514R]]", "align": "left"}
+    ]},
+    {"type": "char_boxes", "label": "Codice fiscale", "value": "[[CODICE_FISCALE:@paz]]"},
+    {"type": "char_boxes", "label": "Tessera sanitaria", "value": "[[TESSERA_SANITARIA:@ts]]"},
+    {"type": "section", "text": "Immunoematologia"},
+    {"type": "table", "header": ["Esame", "Risultato", "Metodo", "Note"], "widths": [3.2, 3, 2.6, 5], "rows": [
+      ["Gruppo AB0 e Rh(D)", "[[GRUPPO_SANGUIGNO:A Rh(D) negativo]]", "Gel test, doppia determinazione", "Concorde con storico del [[DATA:12.05.11]]"],
+      ["Fenotipo Rh", "[[ESAME_VALORE:ccddee (rr)]]", "Gel test", "-"],
+      ["Antigene Kell", "[[ESAME_VALORE:K negativo]]", "Gel test", "-"],
+      ["Fenotipo esteso", "[[ESAME_VALORE:Fy(a+b-), Jk(a-b+)]]", "Gel test", "Sistemi Duffy e Kidd"],
+      ["Coombs indiretto (TAI)", "[[ESAME_VALORE:Positivo]]", "Gel test LISS", "Alloimmunizzazione verosimilmente da [[GRAVIDANZA:3 pregresse gravidanze]]"],
+      ["Identificazione anticorpi", "[[ESAME_VALORE:anti-E + anti-Jka]]", "Pannello 11 cellule", "Titolo anti-E [[ESAME_VALORE:1:16]]; anti-Jka debole (1)"],
+      ["Coombs diretto (TAD)", "[[ESAME_VALORE:Non agglutinante]]", "Gel test polispecifico", "-"]
+    ]},
+    {"type": "section", "text": "Ematologia e assetto marziale"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento", ""], "widths": [4.4, 2, 1.8, 3.2, 0.6], "flag_column": 4, "rows": [
+      ["Emoglobina", "[[ESAME_VALORE:10,2]]", "g/dL", "12,0 - 15,5", "L"],
+      ["MCV", "[[ESAME_VALORE:79,6]]", "fL", "80,0 - 99,0", "L"],
+      ["Reticolociti", "[[ESAME_VALORE:1,1]]", "%", "0,5 - 2,0", ""],
+      ["Ferritina", "[[ESAME_VALORE:16]]", "ng/mL", "30 - 300 (PBM)", "L"],
+      ["Saturazione transferrina", "[[ESAME_VALORE:7]]", "%", "20 - 45", "L"],
+      ["Folati sierici", "[[ESAME_VALORE:2,9]]", "ng/mL", "3,9 - 26,8", "L"],
+      ["Vitamina B12", "[[ESAME_VALORE:412]]", "pg/mL", "197 - 771", ""],
+      ["Creatinina", "[[ESAME_VALORE:0,98]]", "mg/dL", "0,50 - 0,90", "H"],
+      ["eGFR (CKD-EPI)", "[[ESAME_VALORE:57]]", "mL/min", "> 60", "L"],
+      ["Proteina C reattiva", "[[ESAME_VALORE:0,42]]", "mg/dL", "< 0,50", ""]
+    ]},
+    {"type": "section", "text": "Coagulazione"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento", ""], "widths": [4.4, 2, 1.8, 3.2, 0.6], "flag_column": 4, "rows": [
+      ["PT - INR", "[[ESAME_VALORE:1,04]]", "", "0,80 - 1,20", ""],
+      ["aPTT ratio", "[[ESAME_VALORE:0,97]]", "", "0,82 - 1,18", ""],
+      ["Fibrinogeno", "[[ESAME_VALORE:356]]", "mg/dL", "200 - 400", ""],
+      ["Piastrine", "[[ESAME_VALORE:241]]", "10^3/µL", "150 - 400", ""]
+    ]},
+    {"type": "page_break"},
+    {"type": "section", "text": "Colloquio e valutazione clinica"},
+    {"type": "paragraph", "text": "Colloquio del [[DATA_VISITA:1 ottobre 2026]] con la sig.ra [[PERSONA:Dell'Orto]], alla presenza della figlia [[FAMILIARE:Bianca]] e dell'amministratore di sostegno, sig. [[TUTORE_DELEGATO:E. Brambilla]]. La paziente, affetta da [[PATOLOGIA:decadimento cognitivo lieve]] e da [[SALUTE_MENTALE:sindrome depressiva]] in terapia con [[FARMACO:sertralina 50 mg]], appare orientata e in grado di esprimere una volonta' coerente con la DAT del 2019: conferma il rifiuto di emocomponenti per motivi religiosi. Anamnesi: [[PATOLOGIA:coxartrosi destra]], [[PATOLOGIA:ipertensione arteriosa]] in terapia con [[FARMACO:ramipril 5 mg]], [[ALLERGIA:allergia a penicillina]] (orticaria). Valutazione anestesiologica congiunta con il Dott. [[MEDICO:Federico Mapelli]]: rischio emorragico stimato elevato in presenza di alloanticorpi multipli, che renderebbero comunque difficoltoso il reperimento di unita' compatibili. La paziente [[PERSONA:R. Dell'Orto]] e la figlia sono state informate dei rischi; l'AdS ha preso atto delle volonta' espresse."},
+    {"type": "section", "text": "Piano PBM concordato"},
+    {"type": "table", "header": ["Data", "Azione", "Farmaco / procedura", "Esecuzione / note"], "widths": [2, 3, 4, 4.8], "rows": [
+      ["[[DATA:06/10/2026]]", "Correzione carenza marziale", "[[FARMACO:carbossimaltosio ferrico 1000 mg]] e.v.", "Somministrato in day hospital dall'inf. [[OPERATORE_SANITARIO:Giada Sironi]]"],
+      ["[[DATA:13.10.26]]", "Stimolazione eritropoietica", "[[FARMACO:epoetina alfa 40.000 UI]] s.c.", "Settimanale per 3 dosi; controllo PA a cura dell'inf. [[OPERATORE_SANITARIO:G. Sironi]]"],
+      ["[[DATA:13.10.26]]", "Supplementazione", "[[FARMACO:acido folico 5 mg]] die", "Fino all'intervento"],
+      ["[[DATA:2 novembre 2026]]", "Controllo pre-ricovero", "Emocromo, reticolociti, ferritina", "Obiettivo: Hb pre-operatoria pari o superiore a 13 g/dL"],
+      ["Intra-operatorio", "Risparmio ematico", "[[FARMACO:acido tranexamico 1 g e.v.]]\n[[TERAPIA:recupero intraoperatorio di sangue in circuito continuo]]", "Concordato con l'anestesista, Dott. [[MEDICO:F. Mapelli]], e con l'operatore, Dott. [[MEDICO:L. Vergani]]"]
+    ]},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "checkboxes", "label": "Volonta' espresse dalla paziente (DAT confermata)", "columns": 1, "items": [
+        ["Rifiuta emazie concentrate e sangue intero", true],
+        ["Rifiuta plasma e piastrine", true],
+        ["Accetta albumina e fattori ricombinanti", true],
+        ["Accetta recupero intraoperatorio in circuito continuo", true],
+        ["Accetta emodiluizione normovolemica", false]
+      ]}
+    ], "right": [
+      {"type": "paragraph", "align": "left", "text": "Firma della paziente: [[PERSONA:Rosa Dell'Orto]]\nFirma dell'AdS: [[TUTORE_DELEGATO:Ettore Brambilla]]\nTestimone: inf. [[OPERATORE_SANITARIO:Nicolo' Fumagalli]]\n[[LUOGO:Milano]], [[DATA_VISITA:01/10/2026]]"},
+      {"type": "stamp", "lines": ["SIMT - [[STRUTTURA_SANITARIA:OSPEDALE SANT'EUSTORGIO]]", "Dott.ssa [[MEDICO:Paola Galbiati]]", "Dirigente Medico", "Ord. Medici MI n. [[NUMERO_ALBO:39027]]"], "angle": 14, "align": "center"}
+    ]},
+    {"type": "signature", "place_date": "[[LUOGO:Milano]], [[DATA_REFERTO:3 ottobre 2026]]", "role": "Il Dirigente Medico SIMT", "name": "Dott.ssa [[MEDICO:Paola Galbiati]]", "digital": true, "extra": ["Visto: Dott. [[MEDICO:Carlo Brivio]], Direttore SIMT"]},
+    {"type": "barcode", "kind": "qr", "label": "Scheda PBM di [[PERSONA:Dell'Orto Rosa]] - consultazione per il reparto", "value": "https://pbm.asst-navigliticinello.example.it/s/[[NUMERO_REFERTO:SIMT-26-0039914]]", "align": "left"},
+    {"type": "footnotes", "items": [
+      "Anti-Jka del sistema Kidd: anticorpo a titolo debole, a rischio di reazione emolitica ritardata; comunicato al Dott. [[MEDICO:L. Vergani]] il [[DATA_REFERTO:03/10/2026]].",
+      "La figlia, sig.ra [[FAMILIARE:B. Colombo]], ha chiesto di essere contattata al [[TELEFONO:+39 333 609 1187]] per ogni variazione del piano.",
+      "Provetta tappo rosa (K2-EDTA) per immunoematologia: validita' del campione 72 ore dal prelievo."
+    ]}
+  ],
+  "negatives": [
+    {"value": "rosa", "forbidden_categories": ["NOME", "PERSONA"]},
+    {"value": "Coombs", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Kell", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Kidd", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Duffy", "forbidden_categories": ["PERSONA", "COGNOME"]}
+  ]
+}

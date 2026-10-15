@@ -1,0 +1,84 @@
+{
+  "id": "autorizzazione_preventiva_media_01",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "media",
+  "style": {"font": "helvetica", "color": "#00695C", "font_size": 9, "margins_mm": 17},
+  "persons": {
+    "paz": {"first_name": "Davide", "last_name": "Lacerenza", "sex": "M", "birth_date": "1994-09-11", "birth_place": "Potenza"}
+  },
+  "letterhead": {
+    "logo": "AVB",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Sanitaria Locale Val d'Agri e Basento]]",
+      "Dipartimento del Farmaco",
+      "Commissione Terapeutica Aziendale - farmaci ad alto costo",
+      "Presidente: Dott.ssa [[MEDICO:Carmela Vaccaro]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Torraca 2]]",
+      "[[CAP:85100]] [[LUOGO:Potenza]]",
+      "Tel. [[TELEFONO:0971 310544]]"
+    ]
+  },
+  "running_header": "Richiesta AP prot. [[NUMERO_PROTOCOLLO:CTA/2025/0618]] - Assistito: [[PERSONA:Davide Lacerenza]] - C.F. [[CODICE_FISCALE:@paz]]",
+  "footer": [
+    "Sede legale [[INDIRIZZO:Via Torraca 2]], [[CAP:85100]] [[LUOGO:Potenza]] - P.IVA [[PARTITA_IVA:@asl]]",
+    "Documento contenente dati relativi alla salute: non inoltrare a soggetti diversi dal destinatario (art. 9 Reg. UE 2016/679)"
+  ],
+  "blocks": [
+    {"type": "columns", "divider": false, "left": [
+      {"type": "paragraph", "text": "**MODULO DI RICHIESTA DI AUTORIZZAZIONE PREVENTIVA**\nFarmaci biologici e biosimilari - uso in regime di distribuzione diretta", "align": "left"}
+    ], "right": [
+      {"type": "barcode", "kind": "code128", "label": "Prot.", "value": "[[NUMERO_PROTOCOLLO:CTA/2025/0618]]", "align": "right"}
+    ]},
+    {"type": "checkboxes", "columns": 3, "items": [
+      ["Prima richiesta", false], ["Rinnovo", false], ["Switch terapeutico", true],
+      ["Urgente (entro 7 gg)", true], ["Ordinaria", false], ["Uso off-label", false]
+    ]},
+    {"type": "section", "text": "1. DATI DELL'ASSISTITO"},
+    {"type": "patient_box", "title": "Assistito", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Davide Lacerenza]]"],
+      ["Sesso", "[[SESSO:M]]"],
+      ["Nato a", "[[LUOGO_NASCITA:Potenza]]"],
+      ["il", "[[DATA_NASCITA:11/09/1994]]"],
+      ["Residenza", "[[INDIRIZZO:Contrada Sarnelli 15]]"],
+      ["Comune", "[[LUOGO:Avigliano]]"],
+      ["Esenzione", "[[CODICE_ESENZIONE:009]]"]
+    ]},
+    {"type": "char_boxes", "label": "Codice fiscale", "value": "[[CODICE_FISCALE:@paz]]"},
+    {"type": "char_boxes", "label": "Tessera sanitaria", "value": "[[TESSERA_SANITARIA:@ts]]"},
+    {"type": "paragraph", "text": "Persona di riferimento indicata dall'assistito: madre, sig.ra [[CONTATTO_EMERGENZA:Teresa Summa]], tel. [[TELEFONO:0971 87442]] (accompagna il pz. alle somministrazioni presso l'u.o. di riferimento)."},
+    {"type": "section", "text": "2. PRESCRIZIONE"},
+    {"type": "table", "header": ["Principio attivo", "Posologia", "Via", "Durata richiesta"], "widths": [3, 4.4, 1.2, 2.2], "rows": [
+      ["[[FARMACO:ustekinumab]]", "[[FARMACO:induzione 390 mg e.v. dose unica]]", "e.v.", "1 somm."],
+      ["[[FARMACO:ustekinumab]]", "[[FARMACO:90 mg s.c. ogni 8 settimane]]", "s.c.", "12 mesi"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["Centro prescrittore", "[[STRUTTURA_SANITARIA:A.O.R. Santa Lucilla]] - [[REPARTO:U.O.C. Gastroenterologia ed Endoscopia Digestiva]]"],
+      ["Medico prescrittore", "Dott.ssa [[MEDICO:Annalisa Grippo]]"],
+      ["Data", "[[DATA_PRESCRIZIONE:03/11/2025]]"],
+      ["Iscr. Ordine PZ", "n. [[NUMERO_ALBO:2871]]"]
+    ]},
+    {"type": "section", "text": "3. MOTIVAZIONE CLINICA"},
+    {"type": "paragraph", "text": "Il sig. [[PERSONA:Lacerenza]], pz. di giovane età, è affetto da [[DIAGNOSI:malattia di Crohn ileo-colica]] (Montreal A2 L3 B1) diagnosticata nel marzo 2016, con [[INTERVENTO:resezione ileo-cecale]] eseguita il [[DATA:14 giugno 2019]]. Dal 2021 in trattamento con [[FARMACO:adalimumab 40 mg ogni 14 giorni]], con perdita secondaria di risposta documentata nel corso del 2025 nonostante l'intensificazione a cadenza settimanale."},
+    {"type": "paragraph", "text": "All'ultima valutazione ambulatoriale del [[DATA_VISITA:28.10.25]]: indice di Harvey-Bradshaw [[ESAME_VALORE:11]], calprotectina fecale [[ESAME_VALORE:820]] µg/g, PCR [[ESAME_VALORE:3,4]] mg/dL; ileocolonscopia con [[DIAGNOSI:ulcere aftoidi e serpiginose dell'anastomosi]] (SES-CD [[ESAME_VALORE:14]]). Livelli di adalimumab adeguati con anticorpi anti-farmaco assenti: fallimento meccanicistico, che indica il passaggio ad altra classe."},
+    {"type": "table", "header": ["Terapia precedente", "Periodo", "Esito", "Prescritta da"], "widths": [3.2, 2.6, 3.4, 2.6], "rows": [
+      ["[[FARMACO:mesalazina 2,4 g/die]]", "2016 - 2017", "inefficace", "Dott. [[MEDICO:Michele Santangelo]]"],
+      ["[[FARMACO:azatioprina 150 mg/die]]", "2017 - 2018", "sospesa per [[DIAGNOSI:pancreatite acuta]]", "Dott. [[MEDICO:Michele Santangelo]]"],
+      ["[[FARMACO:adalimumab 40 mg s.c.]]", "2021 - in corso", "perdita di risposta", "Dott.ssa [[MEDICO:Annalisa Grippo]]"]
+    ], "caption": "Storia terapeutica (dati da cartella ambulatoriale n. [[NUMERO_CARTELLA:GE-2016-00412]])"},
+    {"type": "paragraph", "text": "Screening pre-trattamento: QuantiFERON [[ESAME_VALORE:negativo]], HBsAg e anti-HCV negativi, RX torace nella norma. Vaccinazioni aggiornate. Non controindicazioni note."},
+    {"type": "signature", "place_date": "[[LUOGO:Potenza]], [[DATA_PRESCRIZIONE:3 novembre 2025]]", "role": "Il medico prescrittore", "name": "Dott.ssa [[MEDICO:Annalisa Grippo]]", "extra": ["Visto: il Direttore della U.O.C., Dott. [[MEDICO:Michele Santangelo]]"], "digital": false, "stamp": ["[[STRUTTURA_SANITARIA:A.O.R. Santa Lucilla]]", "U.O.C. GASTROENTEROLOGIA", "Dott.ssa [[MEDICO:A. Grippo]]"]},
+    {"type": "section", "text": "4. PARERE DELLA COMMISSIONE"},
+    {"type": "paragraph", "text": "Istruttoria a cura del farmacista dirigente dott. [[OPERATORE_SANITARIO:Rocco Laurino]].", "align": "left"},
+    {"type": "checkboxes", "columns": 3, "items": [["Favorevole", true], ["Non favorevole", false], ["Sospeso", false]]},
+    {"type": "paragraph", "text": "La Commissione, esaminata la documentazione, esprime parere favorevole all'erogazione in distribuzione diretta per 12 mesi, con rivalutazione dell'efficacia alla settimana 16. Il farmaco è dispensato dalla Farmacia Ospedaliera dell'A.O.R. su presentazione del piano terapeutico AIFA."},
+    {"type": "signature", "place_date": "[[LUOGO:Potenza]], [[DATA:12.11.2025]]", "role": "Il Presidente della CTA", "name": "Dott.ssa [[MEDICO:Carmela Vaccaro]]", "digital": false, "stamp": ["[[STRUTTURA_SANITARIA:Azienda Sanitaria Locale Val d'Agri e Basento]]", "COMMISSIONE TERAPEUTICA AZIENDALE"]}
+  ],
+  "negatives": [
+    {"value": "Crohn", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Harvey-Bradshaw", "forbidden_categories": ["PERSONA", "MEDICO"]},
+    {"value": "Montreal", "forbidden_categories": ["LUOGO"]}
+  ]
+}

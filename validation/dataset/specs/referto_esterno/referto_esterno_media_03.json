@@ -1,0 +1,213 @@
+{
+  "id": "referto_esterno_media_03",
+  "type": "referto_esterno",
+  "difficulty": "media",
+  "style": {
+    "font": "courier",
+    "color": "#1D4F91",
+    "font_size": 8.5,
+    "margins_mm": 14,
+    "fax_line": "[[DATA_VISITA:21/05/2024]] 11:07  DA: [[FAX:040 3992418]]  [[STRUTTURA_SANITARIA:NPI SANT'EUFEMIA]]  A: [[FAX:0432 508877]]  TOT. PAG. 002"
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Tommaso",
+      "last_name": "Furlan",
+      "sex": "M",
+      "birth_date": "2015-03-11",
+      "birth_place": "Udine"
+    }
+  },
+  "letterhead": {
+    "logo": "ASUC",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Sanitaria Universitaria di Collebruno]]",
+      "[[STRUTTURA_SANITARIA:Presidio Pediatrico Sant'Eufemia]]",
+      "[[REPARTO:S.C. Neuropsichiatria Infantile]]",
+      "Ambulatorio Epilessie dell'età evolutiva"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via dei Cipressi 9]]",
+      "[[CAP:34137]] [[LUOGO:Trieste]]",
+      "Segreteria [[TELEFONO:040 3992400]]",
+      "Fax [[FAX:040 3992418]]"
+    ]
+  },
+  "running_header": "[[COGNOME:Furlan]] [[NOME:Tommaso]] - n. [[DATA_NASCITA:11.03.2015]] - Rif. [[NUMERO_REFERTO:NPI-24-002871]]",
+  "footer": [
+    "Documento trasmesso via fax al Pediatra di Libera Scelta su richiesta della famiglia. Contiene dati sanitari riservati.",
+    "Se ricevuto per errore distruggerlo e darne comunicazione al mittente."
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "lines": [
+        "Alla c.a. Dott.ssa [[MEDICO:Paola Cosatti]]",
+        "Pediatra di Libera Scelta",
+        "[[LUOGO:Tavagnacco]] - fax [[FAX:0432 508877]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "REFERTO DI VISITA NEUROPSICHIATRICA INFANTILE",
+      "subtitle": "con registrazione EEG in veglia e iperpnea"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome",
+          "[[COGNOME:Furlan]]"
+        ],
+        [
+          "Nome",
+          "[[NOME:Tommaso]]"
+        ],
+        [
+          "Data di nascita",
+          "[[DATA_NASCITA:11/03/2015]]"
+        ],
+        [
+          "C.F.",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Residenza",
+          "[[LUOGO:Tavagnacco]]"
+        ],
+        [
+          "Accompagnato da",
+          "[[TUTORE_DELEGATO:Elisa Kosovel]] (madre)"
+        ]
+      ]
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "Data visita",
+          "[[DATA_VISITA:21/05/2024]]"
+        ],
+        [
+          "N. referto",
+          "[[NUMERO_REFERTO:NPI-24-002871]]"
+        ],
+        [
+          "Impegnativa",
+          "[[NUMERO_RICETTA:0600A4417820193]]"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Motivo della consulenza"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il piccolo [[NOME:Tommaso]], aa. [[ETA:9]], viene condotto dalla madre per [[DIAGNOSI:episodi di sospensione del contatto]] della durata di pochi secondi, plurimi nell'arco della giornata, notati dalle insegnanti della [[SCUOLA:Scuola Primaria Borgo dei Gelsi]] di [[LUOGO:Tavagnacco]] a partire da marzo 2024. Durante gli episodi il bambino interrompe l'attività, fissa lo sguardo e talvolta presenta ammiccamento palpebrale; non cadute a terra, non perdita di urine."
+    },
+    {
+      "type": "section",
+      "text": "Anamnesi"
+    },
+    {
+      "type": "paragraph",
+      "text": "Nato a termine da parto eutocico, peso alla nascita [[MISURE_ANTROPOMETRICHE:3.280 g]]. Sviluppo psicomotorio nella norma. [[PATOLOGIA:Convulsioni febbrili semplici]] a 2 anni (episodio singolo). Familiarità: lo zio paterno, sig. [[FAMILIARE:Mauro Furlan]], ha presentato crisi di assenza in età scolare, risolte in adolescenza. Il padre, [[TUTORE_DELEGATO:Andrea Furlan]], riferisce cefalea emicranica. Non allergie note. Nessuna terapia in atto."
+    },
+    {
+      "type": "section",
+      "text": "Esame obiettivo neurologico"
+    },
+    {
+      "type": "paragraph",
+      "text": "Peso [[MISURE_ANTROPOMETRICHE:29 kg]], altezza [[MISURE_ANTROPOMETRICHE:133 cm]]. Vigile, collaborante, eloquio adeguato all'età. Nervi cranici indenni. Forza, tono e trofismo conservati e simmetrici. ROT normoevocabili. Coordinazione e marcia nella norma. Prova di iperpnea in ambulatorio: dopo circa 90 secondi comparsa di episodio di [[DIAGNOSI:arresto psicomotorio con fissità dello sguardo]] di circa 8 secondi, con ripresa immediata."
+    },
+    {
+      "type": "section",
+      "text": "EEG in veglia (registrazione n. [[ACCESSION_NUMBER:EEG-24-1187]])"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Fase",
+        "Reperto",
+        "Durata"
+      ],
+      "widths": [
+        2.2,
+        6,
+        1.4
+      ],
+      "rows": [
+        [
+          "Veglia a riposo",
+          "[[ESAME_VALORE:attività di fondo alfa 9 Hz, ben organizzata e reattiva]]",
+          "12 min"
+        ],
+        [
+          "Stimolazione luminosa",
+          "[[ESAME_VALORE:assenza di risposte fotoparossistiche]]",
+          "4 min"
+        ],
+        [
+          "Iperpnea (3 min)",
+          "[[ESAME_VALORE:scarica generalizzata di complessi punta-onda a 3 Hz]], sincrona e simmetrica, con correlato clinico di assenza",
+          "3 min"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Registrazione eseguita dal tecnico di neurofisiopatologia [[OPERATORE_SANITARIO:Giulia Marussi]] e refertata dal Dott. [[MEDICO:Luca Bressan]] (S.C. Neurofisiopatologia) in data [[DATA:21 maggio 2024]]."
+    },
+    {
+      "type": "section",
+      "text": "Conclusioni"
+    },
+    {
+      "type": "paragraph",
+      "text": "Quadro clinico ed elettroencefalografico compatibile con **[[DIAGNOSI:epilessia con assenze dell'infanzia (CAE)]]**. Si propone di iniziare terapia con [[FARMACO:etosuccimide sciroppo 250 mg/5 mL]], 5 mL la sera per una settimana, poi 5 mL due volte al giorno; dose da adeguare al controllo clinico. Eseguire prima dell'avvio emocromo e funzionalità epatica."
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "heading",
+      "text": "Indicazioni per la famiglia e la scuola"
+    },
+    {
+      "type": "paragraph",
+      "text": "Sono state fornite alla madre, sig.ra [[TUTORE_DELEGATO:Kosovel]], informazioni scritte sulla gestione degli episodi e sulle attività sportive consentite (evitare il nuoto non sorvegliato). Su richiesta dei genitori si rilascia certificazione per la scuola ai fini della somministrazione di farmaci in orario scolastico."
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Prossimo controllo",
+          "[[DATA_VISITA:03-09-2024]] (con EEG)"
+        ],
+        [
+          "Modalità",
+          "prenotazione diretta in segreteria"
+        ]
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Trieste]], [[DATA_REFERTO:21.05.2024]]",
+      "role": "Il Dirigente Medico di Neuropsichiatria Infantile",
+      "name": "Dott.ssa [[MEDICO:Marta Kravos]]",
+      "digital": false,
+      "stamp": [
+        "S.C. NEUROPSICHIATRIA INFANTILE",
+        "Dott.ssa [[MEDICO:Marta Kravos]]",
+        "Matr. [[NUMERO_ALBO:TS-30417]]"
+      ]
+    }
+  ],
+  "negatives": []
+}

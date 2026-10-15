@@ -1,0 +1,482 @@
+{
+  "id": "nota_ambulatoriale_complessa_02",
+  "type": "nota_ambulatoriale",
+  "difficulty": "complessa",
+  "style": {
+    "font": "times",
+    "color": "#37474F",
+    "font_size": 8.5,
+    "margins_mm": 15
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Rosa",
+      "last_name": "Marchetti",
+      "sex": "F",
+      "birth_date": "1979-07-04",
+      "birth_place": "Ancona"
+    }
+  },
+  "letterhead": {
+    "logo": "DSM",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Sanitaria Territoriale Riviera del Conero]]",
+      "Dipartimento di Salute Mentale e delle Dipendenze Patologiche",
+      "[[REPARTO:Centro di Salute Mentale Ancona Sud]]",
+      "Direttore del DSM: Dott.ssa [[MEDICO:Maria Teresa Bianco]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Tiziano 44]]",
+      "[[CAP:60125]] [[LUOGO:Ancona]]",
+      "Accoglienza [[TELEFONO:071 8702210]]",
+      "[[EMAIL:csm.anconasud@ast-conero.example.it]]"
+    ]
+  },
+  "running_header": "[[REPARTO:CSM Ancona Sud]] - Cartella n. [[NUMERO_CARTELLA:CSM-AN-2014-0672]] - [[PERSONA:Marchetti Rosa]] ([[DATA_NASCITA:04/07/1979]]) - Riservato",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda Sanitaria Territoriale Riviera del Conero]] - P.IVA [[PARTITA_IVA:@ast]] - PEC [[PEC:ast.conero@pec.example.it]]",
+    "Copia trasmessa all'Amministratore di sostegno, Avv. [[TUTORE_DELEGATO:M. Rossetti]] (decreto R.G. n. [[NUMERO_PROTOCOLLO:1427/2021]]). Vietata la divulgazione."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "NOTA DI VISITA PSICHIATRICA AMBULATORIALE",
+      "subtitle": "Visita psichiatrica di controllo (cod. 94.12.1) - Colloquio con i familiari (cod. 94.42)"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "title": "ASSISTITA",
+          "columns": 1,
+          "fields": [
+            [
+              "Cognome e nome",
+              "[[PERSONA:MARCHETTI Rosa]]"
+            ],
+            [
+              "Nata a",
+              "[[LUOGO_NASCITA:Ancona]] il [[DATA_NASCITA:04/07/1979]]"
+            ],
+            [
+              "Residenza",
+              "[[INDIRIZZO:Via Flaminia 233]], [[LUOGO:Ancona]]"
+            ],
+            [
+              "Stato civile",
+              "[[STATO_CIVILE:divorziata]]"
+            ],
+            [
+              "Titolo di studio",
+              "[[TITOLO_STUDIO:diploma di ragioneria]]"
+            ],
+            [
+              "Esenzione",
+              "[[CODICE_ESENZIONE:044]] - invalidità civile [[INVALIDITA:75%]]"
+            ]
+          ]
+        },
+        {
+          "type": "char_boxes",
+          "label": "Tess. San.",
+          "value": "[[TESSERA_SANITARIA:@ts]]"
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Data visita",
+              "[[DATA_VISITA:24/09/2025]]"
+            ],
+            [
+              "Cartella CSM",
+              "[[NUMERO_CARTELLA:CSM-AN-2014-0672]]"
+            ],
+            [
+              "Agenda interna",
+              "[[NUMERO_PRENOTAZIONE:AG-CSM-250924-07]]"
+            ],
+            [
+              "Codice fiscale",
+              "[[CODICE_FISCALE:@paz]]"
+            ],
+            [
+              "Case manager",
+              "Inf. [[OPERATORE_SANITARIO:Samuele Pieroni]]"
+            ],
+            [
+              "MMG",
+              "Dott. [[MEDICO:Paolo Fermani]]"
+            ],
+            [
+              "Presenti",
+              "pz., figlia, AdS (dalle 10:15)"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "1. Motivo della visita e decorso"
+    },
+    {
+      "type": "paragraph",
+      "text": "Visita programmata anticipata su richiesta della figlia, sig.ra [[FAMILIARE:Sole Marchetti]], che ha contattato il Centro il [[DATA:19.09.25]] riferendo che la madre da circa dieci giorni dorme 3-4 ore per notte, è irritabile, spende in modo incontrollato e ha ripreso a bere. La sig.ra [[PERSONA:Marchetti]], [[ETA:46]] anni, è seguita dal CSM dal 2014 per [[SALUTE_MENTALE:disturbo bipolare di tipo I]], con tre ricoveri in SPDC (l'ultimo nel 2022, in regime di [[SALUTE_MENTALE:trattamento sanitario obbligatorio]]), e dal SerD per [[DIPENDENZE:disturbo da uso di alcol di grado moderato]], in remissione parziale. Dal 2021 è affiancata da un amministratore di sostegno, Avv. [[TUTORE_DELEGATO:Matteo Rossetti]], nominato dal Giudice Tutelare di [[LUOGO:Ancona]] per la gestione economica."
+    },
+    {
+      "type": "paragraph",
+      "text": "Lavora part-time come [[PROFESSIONE:addetta alla mensa]] presso la [[DATORE_LAVORO:Cooperativa Sociale Il Faro]] (inserimento lavorativo tramite borsa lavoro). Separata dal 2016, [[STATO_CIVILE:divorziata]] dal 2019 dall'ex coniuge, sig. [[FAMILIARE:Franco Gabrielli]], con cui i rapporti sono conflittuali. Vive sola; la figlia [[FAMILIARE:Sole]], studentessa universitaria, la visita quotidianamente. Riferita sospensione autonoma del [[FARMACO:litio]] da circa un mese, \"perché mi rallentava\", e assunzione di 4-5 bicchieri di vino bianco al giorno nelle ultime due settimane. Nel 2023 ritiro della patente per guida in stato di ebbrezza ([[DATI_GIUDIZIARI:procedimento penale ex art. 186 C.d.S., definito con lavori di pubblica utilità]])."
+    },
+    {
+      "type": "section",
+      "text": "2. Esame psichico"
+    },
+    {
+      "type": "paragraph",
+      "text": "La paziente si presenta in orario, accompagnata dalla figlia; abbigliamento curato ma vistoso, trucco marcato. Vigile, orientata nei tre parametri. Eloquio logorroico, accelerato, a tratti difficilmente interrompibile. Umore espanso con rapide virate disforiche quando si affronta il tema dell'alcol. Pensiero tachipsichico con fuga delle idee; contenuti di grandiosità (progetta di aprire un ristorante) senza strutturazione deliroide. Non dispercezioni. Insight parziale: riconosce di \"essere su di giri\" ma nega il problema alcol-correlato. Non ideazione suicidaria né eteroaggressiva riferita o rilevabile. Ritmo sonno-veglia gravemente alterato. Non segni di astinenza; non atassia, non oftalmoplegia, non confusione (escluso quadro di Wernicke)."
+    },
+    {
+      "type": "table",
+      "header": [
+        "Scala",
+        "Punteggio attuale",
+        "Visita precedente ([[DATA:11/06/2025]])",
+        "Interpretazione"
+      ],
+      "widths": [
+        3,
+        2,
+        2.6,
+        3.4
+      ],
+      "rows": [
+        [
+          "Young Mania Rating Scale (YMRS)",
+          "[[ESAME_VALORE:27/60]]",
+          "[[ESAME_VALORE:6/60]]",
+          "[[ESAME_VALORE:episodio maniacale moderato]]"
+        ],
+        [
+          "Hamilton Depression Rating Scale (HAM-D 17)",
+          "[[ESAME_VALORE:9/52]]",
+          "[[ESAME_VALORE:11/52]]",
+          "[[ESAME_VALORE:sintomi depressivi lievi (quadro misto)]]"
+        ],
+        [
+          "AUDIT",
+          "[[ESAME_VALORE:21/40]]",
+          "[[ESAME_VALORE:12/40]]",
+          "[[ESAME_VALORE:consumo dannoso, probabile dipendenza]]"
+        ]
+      ],
+      "caption": "Scale somministrate dalla psicologa Dott.ssa [[OPERATORE_SANITARIO:Irene Gentili]]."
+    },
+    {
+      "type": "section",
+      "text": "3. Parametri ed esami"
+    },
+    {
+      "type": "paragraph",
+      "text": "PA [[MISURE_ANTROPOMETRICHE:142/90 mmHg]], FC [[ESAME_VALORE:96 bpm]], peso [[MISURE_ANTROPOMETRICHE:68 kg]] (calo di 4 kg in un mese). Alcolemia nell'aria espirata (etilometro di servizio) [[ESAME_VALORE:0,31 g/L]] alle ore 10:05. Litiemia del [[DATA:22/09/2025]] [[ESAME_VALORE:0,12 mEq/L]] (sottoterapeutica), GGT [[ESAME_VALORE:118 U/L]], MCV [[ESAME_VALORE:101 fL]], TSH [[ESAME_VALORE:2,1 mUI/L]], creatinina [[ESAME_VALORE:0,74 mg/dL]]. ECG: ritmo sinusale, QTc [[ESAME_VALORE:428 ms]]."
+    },
+    {
+      "type": "section",
+      "text": "4. Colloquio con la figlia e con l'Amministratore di sostegno"
+    },
+    {
+      "type": "paragraph",
+      "text": "La figlia riferisce acquisti online per circa 2.000 euro nell'ultima settimana e telefonate notturne a conoscenti. L'Avv. [[TUTORE_DELEGATO:Rossetti]], giunto alle 10:15, conferma prelievi ripetuti dal conto e concorda di ridurre temporaneamente la disponibilità settimanale. La sig.ra [[PERSONA:R. Marchetti]] accetta, dopo ampia discussione, la ripresa della terapia stabilizzante e l'intensificazione dei contatti con il CSM e con il SerD; rifiuta per ora il ricovero volontario in SPDC. Non sussistono al momento i presupposti per un TSO (assenza di rifiuto delle cure e di urgenza non altrimenti gestibile)."
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "5. Valutazione diagnostica"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[SALUTE_MENTALE:Disturbo bipolare di tipo I, episodio attuale maniacale con caratteristiche miste]], di gravità moderata, precipitato dalla sospensione del [[FARMACO:litio]]. [[DIPENDENZE:Disturbo da uso di alcol moderato, in ricaduta]]. Ipertransaminasemia e macrocitosi alcol-correlate. Non elementi per encefalopatia di Wernicke né per sindrome di Korsakoff."
+    },
+    {
+      "type": "section",
+      "text": "6. Terapia e piano di trattamento"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Posologia",
+        "Indicazioni e monitoraggio"
+      ],
+      "widths": [
+        3,
+        3,
+        5
+      ],
+      "rows": [
+        [
+          "[[FARMACO:Litio carbonato 300 mg]]",
+          "1 cp mattina e 2 cp sera\n(ripresa graduale)",
+          "litiemia a 5 giorni, target 0,6-0,8 mEq/L;\nfunzione renale e tiroidea a 3 mesi"
+        ],
+        [
+          "[[FARMACO:Olanzapina 10 mg]]",
+          "1 cp alle ore 21",
+          "per 4-6 settimane, poi rivalutazione;\nglicemia e profilo lipidico"
+        ],
+        [
+          "[[FARMACO:Lorazepam 1 mg]]",
+          "1 cp al bisogno, max 2/die",
+          "per insonnia e agitazione; non associare ad alcol;\nsospendere entro 3 settimane"
+        ],
+        [
+          "[[FARMACO:Tiamina 100 mg]]",
+          "1 cp/die",
+          "prevenzione delle complicanze neurologiche\nalcol-correlate"
+        ]
+      ],
+      "font_size": 7.8
+    },
+    {
+      "type": "paragraph",
+      "text": "- Visite domiciliari bisettimanali del case manager, Inf. [[OPERATORE_SANITARIO:S. Pieroni]], con supervisione dell'assunzione serale dei farmaci; il [[FARMACO:litio]] verrà affidato alla figlia, che ha accettato.\n- Invio urgente al SerD (Dott. [[MEDICO:Gianluca Moretti]]) per rivalutazione: proposta di [[TERAPIA:terapia anticraving con acamprosato]] e di inserimento nel gruppo di auto-mutuo aiuto.\n- [[TERAPIA:Psicoeducazione familiare]] con la psicologa Dott.ssa [[OPERATORE_SANITARIO:Gentili]], 4 incontri, a partire dal [[DATA:1° ottobre 2025]].\n- Contatto con l'assistente sociale, sig.ra [[OPERATORE_SANITARIO:Lucia Cardinali]], per la sospensione temporanea della borsa lavoro e la certificazione di malattia.\n- In caso di peggioramento (insonnia totale, agitazione, comportamenti a rischio) la figlia contatterà il CSM o, fuori orario, il 112."
+    },
+    {
+      "type": "heading",
+      "text": "Rete di riferimento della paziente"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Ruolo",
+        "Nominativo",
+        "Recapito",
+        "Note"
+      ],
+      "widths": [
+        2.6,
+        3,
+        2.6,
+        3.6
+      ],
+      "rows": [
+        [
+          "Amministratore di sostegno",
+          "Avv. [[TUTORE_DELEGATO:Matteo Rossetti]]",
+          "[[TELEFONO:071 2074418]]",
+          "studio in [[INDIRIZZO:Corso Garibaldi 87]]"
+        ],
+        [
+          "Figlia (convivente diurna)",
+          "[[FAMILIARE:Sole Marchetti]]",
+          "[[TELEFONO:+39 333 851 0942]]",
+          "persona di riferimento per la terapia"
+        ],
+        [
+          "Case manager CSM",
+          "Inf. [[OPERATORE_SANITARIO:Samuele Pieroni]]",
+          "[[TELEFONO:071 8702236]]",
+          "lun-ven 8-14"
+        ],
+        [
+          "[[REPARTO:SerD Ancona]]",
+          "Dott. [[MEDICO:Gianluca Moretti]]",
+          "[[TELEFONO:071 8709120]]",
+          "primo accesso entro il [[DATA:30/09/2025]]"
+        ],
+        [
+          "Medico di medicina generale",
+          "Dott. [[MEDICO:Paolo Fermani]]",
+          "[[TELEFONO:071 2861175]]",
+          "informato telefonicamente"
+        ]
+      ],
+      "font_size": 7.8
+    },
+    {
+      "type": "paragraph",
+      "text": "**Prossimo controllo:** [[DATA:1 ottobre 2025]] ore 9:30 presso il CSM (prima della seduta di psicoeducazione), con litiemia."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Ancona]], [[DATA_REFERTO:24 settembre 2025]]",
+      "role": "Il Dirigente Medico Psichiatra",
+      "name": "Dott. [[MEDICO:Giacomo Santarelli]]",
+      "digital": false,
+      "stamp": [
+        "DSM - [[REPARTO:CSM ANCONA SUD]]",
+        "Dott. [[MEDICO:Giacomo Santarelli]]",
+        "Medico Psichiatra",
+        "Ord. Medici AN n. [[NUMERO_ALBO:4517]]"
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "title",
+      "text": "ALLEGATO - PIANO DI CRISI CONDIVISO",
+      "subtitle": "Concordato durante la visita del [[DATA_VISITA:24/09/2025]] e valido fino alla prossima revisione"
+    },
+    {
+      "type": "paragraph",
+      "text": "Il presente piano è stato discusso con la sig.ra [[PERSONA:Rosa Marchetti]], con la figlia e con l'Amministratore di sostegno. Raccoglie i segnali precoci di ricaduta riconosciuti dalla paziente e le azioni che lei stessa ha scelto. Ne riceve copia ciascuno dei firmatari."
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Segnali precoci riconosciuti da [[PERSONA:Rosa]]"
+        },
+        {
+          "type": "paragraph",
+          "text": "- dormire meno di 5 ore per due notti di seguito;\n- sentirsi \"piena di energia\" e fare progetti costosi;\n- telefonare di notte ad amici e parenti;\n- ricominciare a bere \"per calmarsi\";\n- smettere il [[FARMACO:litio]] o dimenticarlo più di una volta."
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Cosa fare"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. [[PERSONA:Rosa]] avvisa la figlia o il case manager.\n2. La figlia [[FAMILIARE:Sole]] chiama il CSM al numero [[TELEFONO:071 8702210]] (lun-ven 8-20).\n3. Il CSM fissa una visita entro 48 ore.\n4. Fuori orario: Guardia Medica o 112.\n5. L'AdS limita le spese fino alla visita."
+        }
+      ]
+    },
+    {
+      "type": "checkboxes",
+      "label": "Preferenze espresse dalla paziente in caso di crisi",
+      "columns": 1,
+      "items": [
+        [
+          "Preferisce essere visitata a domicilio prima di un eventuale accesso in Pronto Soccorso",
+          true
+        ],
+        [
+          "Acconsente che la figlia sia informata delle decisioni terapeutiche",
+          true
+        ],
+        [
+          "Acconsente che l'ex coniuge sia informato",
+          false
+        ],
+        [
+          "Chiede di non ricevere benzodiazepine per via iniettiva, se possibile",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Farmaci risultati efficaci in passato: [[FARMACO:olanzapina]] e [[FARMACO:litio]]. Farmaci da evitare secondo la paziente: [[FARMACO:aloperidolo]] ([[DIAGNOSI:distonia acuta]] durante il ricovero del 2018)."
+    },
+    {
+      "type": "table",
+      "header": [
+        "Firmatario",
+        "Nominativo",
+        "Firma"
+      ],
+      "widths": [
+        3,
+        4,
+        4
+      ],
+      "zebra": false,
+      "rows": [
+        [
+          "La paziente",
+          "[[PERSONA:Rosa Marchetti]]",
+          "\n"
+        ],
+        [
+          "La figlia",
+          "[[FAMILIARE:Sole Marchetti]]",
+          "\n"
+        ],
+        [
+          "L'Amministratore di sostegno",
+          "Avv. [[TUTORE_DELEGATO:Matteo Rossetti]]",
+          "\n"
+        ],
+        [
+          "Il case manager",
+          "Inf. [[OPERATORE_SANITARIO:Samuele Pieroni]]",
+          "\n"
+        ]
+      ]
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "CENTRO DI SALUTE MENTALE",
+        "Dott. [[MEDICO:G. Santarelli]]",
+        "Psichiatra - n. [[NUMERO_ALBO:4517]]",
+        "[[DATA_REFERTO:24/09/2025]]"
+      ],
+      "angle": -12,
+      "align": "right"
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Documento redatto ai sensi del Reg. UE 2016/679: i dati relativi alla salute mentale e alle dipendenze sono trattati esclusivamente per finalità di cura; la paziente ha autorizzato la comunicazione alla figlia [[FAMILIARE:S. Marchetti]] e all'AdS.",
+        "La paziente non ha autorizzato la comunicazione di alcuna informazione all'ex coniuge, sig. [[FAMILIARE:F. Gabrielli]].",
+        "Scale YMRS e HAM-D: punteggi di cut-off secondo le versioni italiane validate. AUDIT: 8-15 consumo a rischio, 16-19 consumo dannoso, 20 o più probabile dipendenza."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Wernicke",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Korsakoff",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Hamilton",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Young",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "vino bianco",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    }
+  ]
+}

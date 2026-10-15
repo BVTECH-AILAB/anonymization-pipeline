@@ -1,0 +1,132 @@
+{
+  "id": "referto_laboratorio_complessa_02",
+  "type": "referto_laboratorio",
+  "difficulty": "complessa",
+  "style": {"font": "times", "color": "#1B5E20", "font_size": 8.5, "margins_mm": 12},
+  "persons": {
+    "paz": {"first_name": "Ousmane", "last_name": "Ndiaye", "sex": "M", "birth_date": "1998-02-10", "birth_place": "Senegal"}
+  },
+  "letterhead": {
+    "logo": "ORP",
+    "logo_shape": "leaf",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Riunita Partenope Est]]",
+      "[[STRUTTURA_SANITARIA:Presidio Ospedaliero Santa Lucia ai Ponti Rossi]]",
+      "Dipartimento dei Servizi - [[REPARTO:UOC Microbiologia e Parassitologia]]",
+      "in collaborazione con [[REPARTO:UOSD Ematologia di Laboratorio]]",
+      "Direttore UOC: Dott. [[MEDICO:Gennaro Capasso]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Nuova Poggioreale 61]]",
+      "[[CAP:80143]] [[LUOGO:Napoli]]",
+      "Tel. [[TELEFONO:081 7702144]]",
+      "Fax [[FAX:081 7702190]]",
+      "[[EMAIL:parassitologia@aorpe.example.it]]"
+    ]
+  },
+  "running_header": "Assistito STP [[CODICE_STP_ENI:STP1502010004512]] - [[PERSONA:NDIAYE Ousmane]] - Rich. [[NUMERO_ACCETTAZIONE:MP-26-031877]] - Ambulatorio Migranti",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:A.O. Riunita Partenope Est]] - Sede legale [[INDIRIZZO:Piazza Carlo III 7]], [[CAP:80137]] [[LUOGO:Napoli]] - P.IVA [[PARTITA_IVA:@ao]]",
+    "Prestazione erogata ai sensi dell'art. 35 D.Lgs. 286/1998 (stranieri temporaneamente presenti). Mediazione: [[OPERATORE_SANITARIO:Aminata Sow]]",
+    "Malattia soggetta a notifica obbligatoria: segnalazione inviata al [[STRUTTURA_SANITARIA:Servizio Epidemiologia e Prevenzione ASL Napoli Partenope]]"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI LABORATORIO - URGENTE", "subtitle": "Screening sanitario del migrante e diagnostica parassitologica"},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "patient_box", "align": "full", "columns": 1, "title": "ASSISTITO (STP)", "fields": [
+        ["Cognome e nome", "[[PERSONA:NDIAYE Ousmane]]"],
+        ["Codice STP", "[[CODICE_STP_ENI:STP1502010004512]]"],
+        ["Nato il", "[[DATA_NASCITA:10/02/1998]]"],
+        ["Luogo di nascita", "[[LUOGO_NASCITA:Dakar]] ([[LUOGO_NASCITA:Senegal]])"],
+        ["Cittadinanza", "[[CITTADINANZA:senegalese]]"],
+        ["Domicilio", "c/o [[ORGANIZZAZIONE:Centro di Accoglienza Il Faro]], [[INDIRIZZO:Via Taddeo da Sessa 12]], [[LUOGO:Napoli]]"],
+        ["Recapito", "[[TELEFONO:+39 389 117 6042]]"],
+        ["Lingua", "wolof, francese"]
+      ]}
+    ], "right": [
+      {"type": "fields", "columns": 1, "fields": [
+        ["Richiesta n.", "[[NUMERO_ACCETTAZIONE:MP-26-031877]]"],
+        ["Provenienza", "[[REPARTO:Ambulatorio Medicina delle Migrazioni]]"],
+        ["Medico richiedente", "Dott.ssa [[MEDICO:Raffaella Iovino]]"],
+        ["Prelievo", "[[DATA_VISITA:21/09/2026]] ore 09:40"],
+        ["Accettazione campione", "[[DATA_VISITA:21.09.26]] ore 10:02"],
+        ["Ultima validazione", "[[DATA_REFERTO:24 settembre 2026]]"]
+      ]},
+      {"type": "barcode", "kind": "code128", "label": "Campione EDTA", "value": "[[CODICE_CAMPIONE:MP26031877E1]]", "align": "left"}
+    ]},
+    {"type": "paragraph", "text": "**Notizie cliniche.** Giovane uomo di [[ETA:28]] anni, in Italia da circa 3 mesi (sbarcato a Lampedusa dopo un lungo transito in Libia), giunto in PS per [[DIAGNOSI:febbre intermittente con brivido]] e [[DIAGNOSI:cefalea]] da 5 giorni. Accompagnato dal cugino, sig. [[FAMILIARE:Cheikh Ndiaye]], domiciliato presso lo stesso centro. Colloquio condotto con la mediatrice culturale sig.ra [[OPERATORE_SANITARIO:Aminata Sow]]. Il pz. riferisce di essere di [[RELIGIONE:religione musulmana]] e di non osservare al momento restrizioni alimentari. Nessuna profilassi antimalarica assunta."},
+    {"type": "section", "text": "Parassitologia - ricerca plasmodi (URGENTE)"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Note"], "widths": [3.6, 3.4, 1.4, 5], "rows": [
+      ["Test antigenico rapido (HRP2 / pLDH)", "[[ESAME_VALORE:Positivo HRP2 e pan-pLDH]]", "", "Eseguito alle 10:25, comunicato in PS"],
+      ["Goccia spessa (colorazione di Giemsa)", "[[ESAME_VALORE:Positiva]]", "", "Trofozoiti ad anello, rari gametociti"],
+      ["Striscio sottile - specie", "[[MALATTIE_INFETTIVE:Plasmodium falciparum]]", "", "Identificazione morfologica, conferma in PCR (1)"],
+      ["Parassitemia", "[[ESAME_VALORE:1,8]]", "%", "Soglia di malaria grave: > 2% (non superata)"],
+      ["PCR Plasmodium spp. (real time)", "[[ESAME_VALORE:P. falciparum DNA rilevato]]", "", "Assenza di co-infezione con altre specie"]
+    ]},
+    {"type": "table", "caption": "Monitoraggio della parassitemia in corso di terapia con [[FARMACO:artemether-lumefantrina 80/480 mg]] (aggiornato all'ultima validazione)", "header": ["Controllo", "Data e ora prelievo", "Parassitemia (%)", "Gametociti", "Operatore"], "widths": [2.4, 3.2, 2.4, 2, 3.4], "rows": [
+      ["T0 (ingresso)", "[[DATA_VISITA:21/09/2026]] 09:40", "[[ESAME_VALORE:1,8]]", "rari", "inf. [[OPERATORE_SANITARIO:P. Ruocco]]"],
+      ["T + 24 h", "[[DATA_VISITA:22/09/2026]] 09:30", "[[ESAME_VALORE:0,6]]", "rari", "inf. [[OPERATORE_SANITARIO:Anna Iaccarino]]"],
+      ["T + 48 h", "[[DATA_VISITA:23-09-2026]] 09:50", "[[ESAME_VALORE:0,05]]", "assenti", "inf. [[OPERATORE_SANITARIO:Anna Iaccarino]]"],
+      ["T + 72 h", "[[DATA_VISITA:24.09.26]] 08:45", "[[ESAME_VALORE:non rilevabile]]", "assenti", "inf. [[OPERATORE_SANITARIO:P. Ruocco]]"]
+    ]},
+    {"type": "paragraph", "text": "Terapia impostata dal Dott. [[MEDICO:Ciro Amitrano]] con [[FARMACO:artemether-lumefantrina 80/480 mg]] 6 dosi in 3 giorni; risposta parassitologica adeguata (riduzione superiore al 75% a 48 ore)."},
+    {"type": "page_break"},
+    {"type": "section", "text": "Ematologia ed emoglobinopatie"},
+    {"type": "table", "header": ["Esame", "Risultato", "U.M.", "Valori di riferimento", ""], "widths": [4.2, 2, 1.6, 3, 0.6], "flag_column": 4, "rows": [
+      ["Emoglobina", "[[ESAME_VALORE:10,7]]", "g/dL", "13,5 - 17,5", "L"],
+      ["MCV", "[[ESAME_VALORE:78,4]]", "fL", "80,0 - 99,0", "L"],
+      ["Piastrine", "[[ESAME_VALORE:87]]", "10^3/µL", "150 - 450", "L"],
+      ["Leucociti", "[[ESAME_VALORE:5,12]]", "10^3/µL", "4,00 - 10,00", ""],
+      ["Eosinofili (assoluti)", "[[ESAME_VALORE:0,94]]", "10^3/µL", "0,02 - 0,50", "H"],
+      ["Bilirubina indiretta", "[[ESAME_VALORE:1,62]]", "mg/dL", "< 0,80", "H"],
+      ["LDH", "[[ESAME_VALORE:418]]", "U/L", "135 - 225", "H"],
+      ["Test di Coombs diretto", "[[ESAME_VALORE:Negativo]]", "", "", ""]
+    ]},
+    {"type": "table", "caption": "Elettroforesi capillare dell'emoglobina (HPLC di conferma)", "header": ["Frazione", "Risultato", "Riferimento", "Interpretazione"], "widths": [2.2, 2, 2.4, 6.8], "rows": [
+      ["HbA", "[[ESAME_VALORE:58,9]] %", "95,0 - 98,0 %", "Quadro compatibile con [[DATO_GENETICO:portatore sano di HbS (tratto drepanocitico, genotipo HbAS)]].\nSi consiglia consulenza genetica e, se desiderato, test del partner prima di una gravidanza (2)."],
+      ["HbS", "[[ESAME_VALORE:37,6]] %", "assente", "-"],
+      ["HbA2", "[[ESAME_VALORE:3,1]] %", "2,0 - 3,3 %", "-"],
+      ["HbF", "[[ESAME_VALORE:0,4]] %", "< 1,0 %", "-"]
+    ]},
+    {"type": "section", "text": "Sierologia e screening infettivologico"},
+    {"type": "table", "header": ["Esame", "Risultato", "Indice / titolo", "Interpretazione"], "widths": [3.6, 2.4, 2, 5.4], "rows": [
+      ["HBsAg", "[[ESAME_VALORE:Reattivo]]", "[[ESAME_VALORE:> 250]] UI/mL", "[[MALATTIE_INFETTIVE:Infezione da HBV]] in atto; avviati HBeAg, anti-HBe, HBV-DNA, anti-HDV"],
+      ["Anti-HBc IgM", "[[ESAME_VALORE:Non reattivo]]", "-", "Esclude infezione acuta recente"],
+      ["Anti-HCV", "[[ESAME_VALORE:Non reattivo]]", "-", "-"],
+      ["HIV 1-2 Ag/Ab", "[[ESAME_VALORE:Non reattivo]]", "-", "Test eseguito previo consenso informato verbale, alla presenza della mediatrice"],
+      ["Treponema pallidum Ab", "[[ESAME_VALORE:Non reattivo]]", "-", "-"],
+      ["Schistosoma spp. IgG (ELISA)", "[[ESAME_VALORE:Reattivo]]", "[[ESAME_VALORE:2,7]] index", "Sospetta [[MALATTIE_INFETTIVE:schistosomiasi]]: richiesto esame urine su raccolta delle ore 12-14"],
+      ["Strongyloides stercoralis IgG", "[[ESAME_VALORE:Debolmente reattivo]]", "[[ESAME_VALORE:1,3]] index", "In zona grigia; eosinofilia presente, ripetere a 4 settimane"],
+      ["QuantiFERON-TB Plus", "[[ESAME_VALORE:Positivo]]", "TB1 [[ESAME_VALORE:1,46]] / TB2 [[ESAME_VALORE:1,71]] UI/mL", "Compatibile con [[MALATTIE_INFETTIVE:infezione tubercolare latente]] in assenza di sintomi respiratori; Rx torace programmato"]
+    ]},
+    {"type": "section", "text": "Microbiologia"},
+    {"type": "table", "header": ["Campione", "Esame", "Esito"], "widths": [2.6, 4, 6.8], "rows": [
+      ["Espettorato (1/3)", "Ricerca BAAR (Ziehl-Neelsen)", "[[ESAME_VALORE:Assenti bacilli alcool-acido resistenti]]"],
+      ["Espettorato (1/3)", "PCR M. tuberculosis complex", "[[ESAME_VALORE:Non rilevato]]"],
+      ["Feci (3 campioni)", "Esame parassitologico (concentrazione)", "[[ESAME_VALORE:Uova di Schistosoma mansoni]] nel campione del [[DATA_VISITA:22/09/2026]]"],
+      ["Sangue (2 set)", "Emocoltura", "[[ESAME_VALORE:Sterile dopo 5 giorni]]"]
+    ]},
+    {"type": "note", "text": "Diagnosi di laboratorio: [[DIAGNOSI:malaria da Plasmodium falciparum non complicata]] in soggetto con [[DATO_GENETICO:tratto drepanocitico]] e [[MALATTIE_INFETTIVE:epatite B cronica]] da caratterizzare. Valore critico (parassitemia) comunicato alle ore 10:31 del [[DATA_VISITA:21/09/2026]] dalla Dott.ssa [[MEDICO:Teresa Vitiello]] al medico di guardia del PS, Dott. [[MEDICO:Ciro Amitrano]]. Il pz. [[PERSONA:Ndiaye]] e' stato informato con l'aiuto della mediatrice."},
+    {"type": "columns", "divider": true, "left": [
+      {"type": "heading", "text": "Personale"},
+      {"type": "paragraph", "align": "left", "text": "Prelievo: inf. [[OPERATORE_SANITARIO:Pasquale Ruocco]]. Lettura vetrini: TSLB [[OPERATORE_SANITARIO:Rosaria Mautone]], revisione Dott. [[MEDICO:G. Capasso]]. Elettroforesi Hb: TSLB [[OPERATORE_SANITARIO:Luigi Sannino]]."},
+      {"type": "stamp", "lines": ["[[STRUTTURA_SANITARIA:A.O. PARTENOPE EST]]", "MICROBIOLOGIA", "Dott. [[MEDICO:Gennaro Capasso]]", "Ord. Medici NA n. [[NUMERO_ALBO:28741]]"], "angle": -12, "align": "center"}
+    ], "right": [
+      {"type": "heading", "text": "Consegna e contatti"},
+      {"type": "paragraph", "align": "left", "text": "Referto consegnato al sig. [[PERSONA:O. Ndiaye]] in data [[DATA:25/09/2026]]; copia al cugino [[FAMILIARE:C. Ndiaye]] su delega scritta. Recapito del centro di accoglienza: [[TELEFONO:081 5530127]], educatore di riferimento sig. [[CONTATTO_EMERGENZA:Fabio Esposito]]."}
+    ]},
+    {"type": "signature", "place_date": "[[LUOGO:Napoli]], [[DATA_REFERTO:24/09/2026]]", "role": "Il Dirigente Medico - Ematologia di Laboratorio", "name": "Dott.ssa [[MEDICO:Teresa Vitiello]]", "digital": true, "extra": ["Validazione sezione parassitologica: Dott. [[MEDICO:Gennaro Capasso]]"]},
+    {"type": "barcode", "kind": "qr", "label": "Ritiro referto STP [[CODICE_STP_ENI:STP1502010004512]]", "value": "https://referti.aorpe.example.it/stp/[[NUMERO_REFERTO:MP26-RF-008815]]", "align": "left"},
+    {"type": "footnotes", "items": [
+      "Conferma molecolare eseguita su campione [[CODICE_CAMPIONE:MP26031877E2]]; ceppo conservato per sorveglianza delle resistenze.",
+      "Il dato genetico e' comunicato esclusivamente all'interessato; la condivisione con familiari (es. il cugino sig. [[FAMILIARE:Cheikh Ndiaye]]) richiede consenso espresso.",
+      "Tecnica di Giemsa a pH 7,2; conta su 2.000 eritrociti."
+    ]}
+  ],
+  "negatives": [
+    {"value": "Giemsa", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Ziehl-Neelsen", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Coombs", "forbidden_categories": ["PERSONA", "COGNOME"]},
+    {"value": "Schistosoma mansoni", "forbidden_categories": ["PERSONA", "COGNOME"]}
+  ]
+}

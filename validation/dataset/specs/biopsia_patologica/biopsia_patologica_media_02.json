@@ -1,0 +1,289 @@
+{
+  "id": "biopsia_patologica_media_02",
+  "type": "biopsia_patologica",
+  "difficulty": "media",
+  "style": {
+    "font": "helvetica",
+    "color": "#A0306E",
+    "font_size": 9,
+    "margins_mm": 15
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Annalisa",
+      "last_name": "Lorusso",
+      "sex": "F",
+      "birth_date": "1973-08-19",
+      "birth_place": "Bari"
+    }
+  },
+  "letterhead": {
+    "logo": "OLA",
+    "logo_shape": "circle",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Oncologico Fra' Ludovico Arcieri]]",
+      "Dipartimento di Oncologia Clinica e Sperimentale",
+      "[[REPARTO:UOC Anatomia Patologica - Patologia Mammaria]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Japigia 220]]",
+      "[[CAP:70126]] [[LUOGO:Bari]]",
+      "Segreteria lun-ven 8:30-13:00"
+    ]
+  },
+  "running_header": "[[PERSONA:LORUSSO ANNALISA]] - [[DATA_NASCITA:19.08.1973]] - Istologico [[NUMERO_REFERTO:2025/M/01458]] - Breast Unit",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale Oncologico Fra' Ludovico Arcieri]] - Istituto a carattere scientifico - P.IVA [[PARTITA_IVA:@osp]]",
+    "Centro di senologia certificato. Il referto non sostituisce il colloquio con lo specialista."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "ESAME ISTOLOGICO SU AGOBIOPSIA MAMMARIA",
+      "subtitle": "Core biopsy ecoguidata 14G - Breast Unit"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "title": "PAZIENTE",
+          "columns": 1,
+          "fields": [
+            [
+              "Cognome Nome",
+              "[[PERSONA:LORUSSO ANNALISA]]"
+            ],
+            [
+              "Nata il",
+              "[[DATA_NASCITA:19/08/1973]] a [[LUOGO_NASCITA:Bari]]"
+            ],
+            [
+              "C.F.",
+              "[[CODICE_FISCALE:@paz]]"
+            ],
+            [
+              "Cartella",
+              "[[NUMERO_CARTELLA:BU-25-0773]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "N. istologico",
+              "[[NUMERO_REFERTO:2025/M/01458]]"
+            ],
+            [
+              "Esecuzione",
+              "[[DATA_VISITA:5 maggio 2025]]"
+            ],
+            [
+              "Accettazione",
+              "[[DATA:06/05/2025]]"
+            ],
+            [
+              "Referto",
+              "[[DATA_REFERTO:13/05/2025]]"
+            ],
+            [
+              "Inviante",
+              "[[REPARTO:Radiologia Senologica]]"
+            ]
+          ]
+        },
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "value": "[[CODICE_CAMPIONE:M25-01458-A1]]",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Notizie cliniche"
+    },
+    {
+      "type": "paragraph",
+      "text": "Pz. di aa. [[ETA:51]], in pre-menopausa. Alla mammografia di screening del [[DATA:14.04.25]] [[DIAGNOSI:opacità spiculata del QSE della mammella destra]] di [[ESAME_VALORE:16 mm]], BI-RADS 5 all'ecografia. Familiarità: madre, sig.ra [[FAMILIARE:Rosaria Vitucci]], operata per [[PATOLOGIA:carcinoma mammario]] a 58 anni. La paziente è accompagnata dal marito [[CONTATTO_EMERGENZA:Vito Capozzi]] (recapito [[TELEFONO:+39 340 662 1985]])."
+    },
+    {
+      "type": "section",
+      "text": "Materiale"
+    },
+    {
+      "type": "paragraph",
+      "text": "A) Mammella destra, QSE ore 10, a 4 cm dal capezzolo: n. 4 frustoli (blocchetti A1-A2). Prelievi eseguiti dalla Dott.ssa [[MEDICO:Teresa Amoruso]], con posizionamento di clip metallica di repere."
+    },
+    {
+      "type": "section",
+      "text": "Descrizione macroscopica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Quattro frustoli cilindrici di colorito bianco-grigiastro, di consistenza aumentata, lunghi da 11 a 19 mm. Tempo di ischemia fredda inferiore a 1 ora; fissazione in formalina tamponata per 26 ore."
+    },
+    {
+      "type": "section",
+      "text": "Descrizione microscopica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Infiltrazione stromale da parte di carcinoma costituito da cordoni e nidi solidi di cellule con atipia nucleare moderata, formazione tubulare inferiore al 10%, [[ESAME_VALORE:6 mitosi/10 HPF]]. Focale componente di [[DIAGNOSI:carcinoma duttale in situ]] di tipo cribriforme, di grado nucleare intermedio. Non evidenti invasioni vascolari. TILs stromali circa il [[ESAME_VALORE:5%]]."
+    },
+    {
+      "type": "section",
+      "text": "Immunoistochimica e profilo biologico"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Marcatore",
+        "Clone",
+        "Risultato",
+        "Intensità / %",
+        "Interpretazione"
+      ],
+      "widths": [
+        2,
+        1.6,
+        2,
+        2,
+        3.2
+      ],
+      "rows": [
+        [
+          "Recettori estrogenici (ER)",
+          "SP1",
+          "[[ESAME_VALORE:positivo]]",
+          "[[ESAME_VALORE:forte, 95%]]",
+          "Positivo"
+        ],
+        [
+          "Recettori progestinici (PgR)",
+          "1E2",
+          "[[ESAME_VALORE:positivo]]",
+          "[[ESAME_VALORE:moderata, 40%]]",
+          "Positivo"
+        ],
+        [
+          "HER2",
+          "4B5",
+          "[[ESAME_VALORE:score 2+]]",
+          "[[ESAME_VALORE:completa debole, 30%]]",
+          "Equivoco: eseguita ISH"
+        ],
+        [
+          "Ki-67",
+          "30-9",
+          "-",
+          "[[ESAME_VALORE:25%]]",
+          "Indice proliferativo intermedio"
+        ],
+        [
+          "E-caderina",
+          "36",
+          "[[ESAME_VALORE:positiva]]",
+          "membrana",
+          "Fenotipo duttale"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Ibridazione in situ (SISH a doppia sonda) per HER2: rapporto HER2/CEP17 [[ESAME_VALORE:1,4]], numero medio di copie HER2 per nucleo [[ESAME_VALORE:3,2]]: **HER2 non amplificato** (gruppo 5 ASCO/CAP). Profilo **HER2-low**."
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi"
+    },
+    {
+      "type": "paragraph",
+      "text": "**Mammella destra, QSE (agobiopsia): [[DIAGNOSI:carcinoma infiltrante di tipo non speciale (NST)]], grado istologico [[ESAME_VALORE:G2]] sec. Nottingham (score [[ESAME_VALORE:3+2+2]]), associato a [[DIAGNOSI:carcinoma duttale in situ]] di grado intermedio.**\nCategoria B5b. Profilo immunofenotipico [[DIAGNOSI:luminal B-like, HER2-negativo (HER2-low)]]."
+    },
+    {
+      "type": "note",
+      "text": "Caso discusso al GOM senologico del [[DATA:15/05/2025]]. La sig.ra [[PERSONA:Lorusso]] è stata informata dalla Dott.ssa [[MEDICO:Teresa Amoruso]]; in considerazione della familiarità si propone consulenza genetica oncologica (test BRCA1/BRCA2)."
+    },
+    {
+      "type": "table",
+      "caption": "Distribuzione del referto",
+      "header": [
+        "Destinatario",
+        "Struttura / recapito",
+        "Modalità"
+      ],
+      "widths": [
+        3,
+        4,
+        2
+      ],
+      "rows": [
+        [
+          "Dott.ssa [[MEDICO:Teresa Amoruso]]",
+          "[[REPARTO:Radiologia Senologica]]",
+          "Cartella clinica"
+        ],
+        [
+          "MMG Dott. [[MEDICO:Onofrio Lamanna]]",
+          "[[INDIRIZZO:Via Peucetia 31]], [[LUOGO:Bari]]",
+          "FSE"
+        ],
+        [
+          "Sig.ra [[PERSONA:Lorusso Annalisa]]",
+          "Ritiro con delega al marito [[CONTATTO_EMERGENZA:V. Capozzi]]",
+          "Sportello"
+        ]
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Bari]], [[DATA_REFERTO:13/05/2025]]",
+          "role": "Il Patologo",
+          "name": "Dott. [[MEDICO:Nicola Dibenedetto]]",
+          "digital": false,
+          "stamp": [
+            "ANATOMIA PATOLOGICA",
+            "Dott. [[MEDICO:N. Dibenedetto]]",
+            "Matr. [[NUMERO_ALBO:44817]]"
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "signature",
+          "place_date": "Seconda lettura",
+          "role": "Doppia lettura",
+          "name": "Dott.ssa [[MEDICO:Grazia Lacalamita]]",
+          "digital": false
+        }
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Nottingham",
+      "forbidden_categories": [
+        "LUOGO",
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "bianco-grigiastro",
+      "forbidden_categories": [
+        "COGNOME",
+        "PERSONA"
+      ]
+    }
+  ]
+}

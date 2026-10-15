@@ -1,0 +1,536 @@
+{
+  "id": "biopsia_patologica_complessa_04",
+  "type": "biopsia_patologica",
+  "difficulty": "complessa",
+  "style": {
+    "font": "helvetica",
+    "color": "#B71C1C",
+    "font_size": 7.8,
+    "margins_mm": 12
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Thanh",
+      "last_name": "Nguyen",
+      "sex": "M",
+      "birth_date": "1961-04-22",
+      "birth_place": "Francia"
+    }
+  },
+  "letterhead": {
+    "logo": "AOML",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:A.O. Monte Lauro]]",
+      "[[STRUTTURA_SANITARIA:Presidio Ospedaliero Gaetano Fichera]]",
+      "[[REPARTO:UOC Anatomia Patologica e Patologia Molecolare]]",
+      "Direttore: Dott.ssa [[MEDICO:Giovanna D'Urso]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Santa Sofia 210]]",
+      "[[CAP:95123]] [[LUOGO:Catania]]",
+      "Tel. [[TELEFONO:095 7436612]]",
+      "[[EMAIL:ap.fichera@aomontelauro.example.it]]"
+    ]
+  },
+  "running_header": "[[PERSONA:NGUYEN THANH]] - [[DATA_NASCITA:22/04/1961]] - Ist. [[NUMERO_REFERTO:2025-CT-07719]] (estemporaneo [[NUMERO_REFERTO:EST-25-0388]]) - Chirurgia Toracica, letto 9",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:A.O. Monte Lauro]] - P.IVA [[PARTITA_IVA:@ao]] - Referto di [[PERSONA:Nguyen T.]], cartella [[NUMERO_CARTELLA:25/018834]] - Copia per INAIL solo su richiesta dell'interessato",
+    "Il presente documento contiene dati genetici (art. 9 GDPR). Vetrini e blocchetti conservati presso l'archivio dell'UOC per almeno 20 anni."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "REFERTO ISTOPATOLOGICO E BIOMOLECOLARE",
+      "subtitle": "Lobectomia superiore destra VATS con linfadenectomia ilo-mediastinica sistematica"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "title": "PAZIENTE",
+          "columns": 1,
+          "fields": [
+            [
+              "Cognome",
+              "[[COGNOME:NGUYEN]]"
+            ],
+            [
+              "Nome",
+              "[[NOME:THANH]]"
+            ],
+            [
+              "Nato a",
+              "[[LUOGO_NASCITA:Lione (Francia)]]"
+            ],
+            [
+              "Il",
+              "[[DATA_NASCITA:22/04/1961]]"
+            ],
+            [
+              "Cittadinanza",
+              "[[CITTADINANZA:francese]]"
+            ],
+            [
+              "Residenza",
+              "[[INDIRIZZO:Via Garibaldi 288]], [[CAP:95121]] [[LUOGO:Catania]]"
+            ],
+            [
+              "Professione",
+              "[[PROFESSIONE:saldatore navale]] (in pensione)"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "N. istologico",
+              "[[NUMERO_REFERTO:2025-CT-07719]]"
+            ],
+            [
+              "Ricovero",
+              "[[NUMERO_ACCETTAZIONE:RIC-25-118402]]"
+            ],
+            [
+              "Intervento",
+              "[[DATA_RICOVERO:10/02/2025]]"
+            ],
+            [
+              "Pervenuto",
+              "[[DATA:10.02.25]]"
+            ],
+            [
+              "Referto",
+              "[[DATA_REFERTO:24/02/2025]]"
+            ],
+            [
+              "Chirurgo",
+              "Dott. [[MEDICO:Salvatore Privitera]]"
+            ],
+            [
+              "Pneumologo",
+              "Dott.ssa [[MEDICO:Agata Russo Spampinato]]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "char_boxes",
+      "label": "Tessera sanitaria",
+      "value": "[[TESSERA_SANITARIA:@ts]]"
+    },
+    {
+      "type": "section",
+      "text": "Notizie cliniche"
+    },
+    {
+      "type": "paragraph",
+      "text": "Uomo di [[ETA:63]] aa., [[DIPENDENZE:tabagismo attivo (40 pack-years)]], ex [[PROFESSIONE:saldatore]] presso [[DATORE_LAVORO:Cantieri Navali Ionici S.p.A.]] dal 1982 al 2016 con riferita esposizione ad amianto; [[INVALIDITA:invalidità civile al 75%]]; [[SALUTE_MENTALE:disturbo d'ansia generalizzato]] in terapia con [[FARMACO:escitalopram 10 mg]]; [[PATOLOGIA:BPCO GOLD 2]]. TC torace: [[DIAGNOSI:nodulo solido spiculato di 34 mm del lobo superiore destro]] con retrazione pleurica; PET: SUVmax [[ESAME_VALORE:9,6]]. Broncoscopia con EBUS-TBNA preoperatoria (rif. [[NUMERO_REFERTO:2025-CT-01408]]) negativa sulle stazioni 4R e 7. Il paziente, che parla italiano e [[CITTADINANZA:francese]], è stato accompagnato dalla moglie, sig.ra [[CONTATTO_EMERGENZA:Speranza Lo Iacono]] ([[TELEFONO:+39 392 115 4870]]), e dal figlio [[FAMILIARE:Luca Nguyen]]."
+    },
+    {
+      "type": "section",
+      "text": "Esame estemporaneo intraoperatorio"
+    },
+    {
+      "type": "paragraph",
+      "text": "Rif. [[NUMERO_REFERTO:EST-25-0388]] del [[DATA:10/02/2025]], ore 10:42. Materiale: resezione atipica (wedge) del lobo superiore destro. Risposta comunicata in sala al Dott. [[MEDICO:Privitera]] alle 11:05 dal Dott. [[MEDICO:Orazio Licciardello]]: **\"carcinoma non a piccole cellule, verosimilmente adenocarcinoma; margine parenchimale indenne\"**. Esito confermato in definitiva."
+    },
+    {
+      "type": "section",
+      "text": "Materiale inviato"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Cont.",
+        "Descrizione",
+        "Blocchetti",
+        "Note del prelevatore"
+      ],
+      "widths": [
+        0.8,
+        4.2,
+        1.8,
+        3.6
+      ],
+      "rows": [
+        [
+          "A",
+          "Wedge LSD (estemporaneo)",
+          "A1-A2",
+          "Congelato, poi fissato"
+        ],
+        [
+          "B",
+          "Lobo superiore destro",
+          "B1-B14",
+          "Punto di repere sulla pleura retratta\n(firma [[OPERATORE_SANITARIO:inf. Rosario Finocchiaro]], sala 3)"
+        ],
+        [
+          "C",
+          "Stazione 2R",
+          "C1",
+          "-"
+        ],
+        [
+          "D",
+          "Stazione 4R",
+          "D1-D2",
+          "-"
+        ],
+        [
+          "E",
+          "Stazione 7 (sottocarenale)",
+          "E1-E2",
+          "-"
+        ],
+        [
+          "F",
+          "Stazioni 10R-11R (ilari e interlobari)",
+          "F1-F3",
+          "Linfonodi antracotici"
+        ],
+        [
+          "G",
+          "Stazione 8-9 (paraesofagea e legamento polmonare)",
+          "G1",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Descrizione macroscopica"
+    },
+    {
+      "type": "paragraph",
+      "text": "(A cura della Dott.ssa [[OPERATORE_SANITARIO:Chiara Mangano]], medico in formazione specialistica, e della TSLB [[OPERATORE_SANITARIO:Rosa Pappalardo]].) B) Lobo polmonare di cm 16 x 11 x 5, peso g 238, con bronco lobare di cm 1,5 alla trancia. Superficie pleurica con area retratta e ombelicata di cm 1,8 in corrispondenza del segmento apicale. Al taglio neoformazione solida, grigio-biancastra con aree antracotiche, di cm 3,6 x 3,1 x 2,8, a margini infiltrativi, che giunge a contatto con la pleura viscerale, distante cm 2,9 dalla trancia bronchiale e cm 2,2 dal margine vascolare. Parenchima circostante enfisematoso; placca fibroialina pleurica parietale (pervenuta adesa) di cm 1,2."
+    },
+    {
+      "type": "section",
+      "text": "Descrizione microscopica"
+    },
+    {
+      "type": "paragraph",
+      "text": "Adenocarcinoma invasivo non mucinoso con pattern acinare prevalente ([[ESAME_VALORE:55%]]), papillare ([[ESAME_VALORE:15%]]), micropapillare ([[ESAME_VALORE:20%]]) e lepidico ([[ESAME_VALORE:10%]]); dimensione della componente invasiva [[ESAME_VALORE:3,3 cm]]. Grado IASLC [[ESAME_VALORE:G3]] (pattern di alto grado ≥ 20%). Alla colorazione Elastica van Gieson si documenta superamento della lamina elastica pleurica senza esposizione in superficie (PL1). Diffusione aerogena (STAS) presente. Invasione vascolare presente, linfatica assente, perineurale assente. Nel parenchima circostante iperplasia delle cellule di Clara (club cells) dei bronchioli terminali, [[PATOLOGIA:enfisema centrolobulare]] e fibrosi interstiziale lieve; alla colorazione di Perls rari corpuscoli dell'asbesto ([[ESAME_VALORE:3 corpuscoli/cm²]]). Le cellule di Kulchitsky dei bronchi sono regolari, senza iperplasia neuroendocrina (DIPNECH esclusa)."
+    },
+    {
+      "type": "table",
+      "caption": "Linfonodi esaminati per stazione (IASLC)",
+      "header": [
+        "Stazione",
+        "Esaminati",
+        "Metastatici",
+        "Note"
+      ],
+      "widths": [
+        3.2,
+        1.6,
+        1.6,
+        4
+      ],
+      "rows": [
+        [
+          "2R paratracheale alta",
+          "3",
+          "0",
+          "-"
+        ],
+        [
+          "4R paratracheale bassa",
+          "4",
+          "0",
+          "Antracosi"
+        ],
+        [
+          "7 sottocarenale",
+          "3",
+          "0",
+          "-"
+        ],
+        [
+          "10R-11R ilari/interlobari",
+          "5",
+          "0",
+          "Linfonodo intrapolmonare indenne"
+        ],
+        [
+          "8-9",
+          "2",
+          "0",
+          "-"
+        ],
+        [
+          "Totale",
+          "17",
+          "[[ESAME_VALORE:0/17]]",
+          "pN0"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Indagini immunoistochimiche e biomolecolari"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Marcatore / gene",
+        "Metodica",
+        "Risultato",
+        "Note"
+      ],
+      "widths": [
+        2.4,
+        2.4,
+        3.2,
+        3.4
+      ],
+      "rows": [
+        [
+          "TTF-1 (8G7G3/1)",
+          "IIC",
+          "[[ESAME_VALORE:positivo diffuso]]",
+          "Origine polmonare"
+        ],
+        [
+          "Napsina A",
+          "IIC",
+          "[[ESAME_VALORE:positiva]]",
+          "-"
+        ],
+        [
+          "p40",
+          "IIC",
+          "[[ESAME_VALORE:negativo]]",
+          "Esclusa componente squamosa"
+        ],
+        [
+          "PD-L1 (22C3)",
+          "IIC",
+          "[[ESAME_VALORE:TPS 30%]]",
+          "Espressione intermedia (1-49%)"
+        ],
+        [
+          "ALK (D5F3)",
+          "IIC",
+          "[[ESAME_VALORE:negativo]]",
+          "-"
+        ],
+        [
+          "ROS1 (D4D6)",
+          "IIC",
+          "[[ESAME_VALORE:negativo]]",
+          "-"
+        ],
+        [
+          "EGFR",
+          "NGS (pannello DNA/RNA 52 geni)",
+          "[[DATO_GENETICO:delezione esone 19 p.E746_A750del]]",
+          "VAF [[ESAME_VALORE:27%]]; mutazione sensibilizzante"
+        ],
+        [
+          "TP53",
+          "NGS",
+          "[[DATO_GENETICO:variante TP53 p.R273H]]",
+          "Co-mutazione"
+        ],
+        [
+          "KRAS, BRAF, MET, RET, NTRK",
+          "NGS",
+          "[[DATO_GENETICO:nessuna alterazione]]",
+          "-"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Analisi biomolecolari eseguite su DNA estratto dal blocchetto B6 (cellularità neoplastica [[ESAME_VALORE:60%]]), campione [[CODICE_CAMPIONE:NGS-25-0217]], dal Dott. [[MEDICO:Emanuele Pappalardo]], Laboratorio di Patologia Molecolare."
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi"
+    },
+    {
+      "type": "paragraph",
+      "text": "**Lobo superiore destro: [[DIAGNOSI:adenocarcinoma polmonare invasivo non mucinoso a prevalenza acinare, grado 3 IASLC]], di cm 3,3 (componente invasiva), con invasione della pleura viscerale (PL1), STAS e invasione vascolare. Margini bronchiale, vascolare e parenchimale indenni (R0).**\n**Linfonodi: [[ESAME_VALORE:0/17]]. Stadio [[DIAGNOSI:pT2a pN0 (8a ed. TNM)]], stadio IB.**\n**[[DATO_GENETICO:EGFR mutato (delezione esone 19)]]; PD-L1 [[ESAME_VALORE:TPS 30%]]; ALK e ROS1 negativi.**\nReperti associati: [[PATOLOGIA:enfisema centrolobulare]], [[DIAGNOSI:placca pleurica fibroialina]] e corpuscoli dell'asbesto, quadro compatibile con [[DIAGNOSI:pregressa esposizione professionale ad amianto]]."
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Lo stadio è attribuito sulla base della dimensione della sola componente invasiva, come previsto dalla classificazione WHO 2021.",
+        "La presenza di placche pleuriche e corpuscoli dell'asbesto in un ex lavoratore dei [[DATORE_LAVORO:Cantieri Navali Ionici]] comporta l'obbligo di denuncia di malattia professionale (art. 139 DPR 1124/1965): segnalazione inoltrata all'INAIL dalla Dott.ssa [[MEDICO:D'Urso]] con prot. [[NUMERO_PROTOCOLLO:INAIL-CT-2025-004417]] in data [[DATA:26/02/2025]].",
+        "La moglie del pz., sig.ra [[CONTATTO_EMERGENZA:Lo Iacono]], ha richiesto una copia del referto: consegnabile solo con delega firmata dal sig. [[PERSONA:T. Nguyen]] e documento d'identità."
+      ]
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Catania]], [[DATA_REFERTO:24 febbraio 2025]]",
+          "role": "Il Dirigente Medico refertante",
+          "name": "Dott.ssa [[MEDICO:Giovanna D'Urso]]",
+          "digital": true
+        }
+      ],
+      "right": [
+        {
+          "type": "stamp",
+          "angle": -10,
+          "align": "center",
+          "lines": [
+            "A.O. MONTE LAURO - ANATOMIA PATOLOGICA",
+            "Dott. [[MEDICO:O. LICCIARDELLO]]",
+            "estemporaneo del [[DATA:10/02/2025]]",
+            "Albo CT n. [[NUMERO_ALBO:9914]]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "title",
+      "text": "SCHEDA DI TRASMISSIONE AL GOM TORACICO",
+      "subtitle": "Discussione del [[DATA:5 marzo 2025]] - richiesta di terapia adiuvante a bersaglio molecolare"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Ruolo",
+        "Nominativo",
+        "Recapito"
+      ],
+      "widths": [
+        3,
+        3.6,
+        3.8
+      ],
+      "rows": [
+        [
+          "Oncologo di riferimento",
+          "Dott. [[MEDICO:Bao Tran Moretti]]",
+          "[[REPARTO:UOC Oncologia Medica]], int. [[TELEFONO:095 7436288]]"
+        ],
+        [
+          "Chirurgo toracico",
+          "Dott. [[MEDICO:Salvatore Privitera]]",
+          "[[REPARTO:UOC Chirurgia Toracica]]"
+        ],
+        [
+          "Pneumologa",
+          "Dott.ssa [[MEDICO:A. Russo Spampinato]]",
+          "[[REPARTO:Ambulatorio di Pneumologia Interventistica]]"
+        ],
+        [
+          "Medico curante",
+          "Dott. [[MEDICO:Carmelo Sciacca]]",
+          "[[INDIRIZZO:Via Etnea 402]], [[LUOGO:Catania]] - [[TELEFONO:095 441208]]"
+        ],
+        [
+          "Caregiver",
+          "[[CONTATTO_EMERGENZA:Speranza Lo Iacono]] (moglie)",
+          "[[TELEFONO:+39 392 115 4870]]"
+        ],
+        [
+          "Patronato",
+          "[[ORGANIZZAZIONE:Patronato Sicilia Lavoro]] (pratica INAIL)",
+          "pratica n. [[NUMERO_PROTOCOLLO:PSL/25/0912]]"
+        ]
+      ]
+    },
+    {
+      "type": "checkboxes",
+      "label": "Il paziente sig. [[PERSONA:Nguyen]] ha dato consenso a:",
+      "columns": 2,
+      "items": [
+        [
+          "discussione del caso al GOM",
+          true
+        ],
+        [
+          "uso del tessuto per ricerca (biobanca)",
+          true
+        ],
+        [
+          "comunicazione dell'esito al figlio [[FAMILIARE:Luca]]",
+          true
+        ],
+        [
+          "contatto da parte del patronato",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "note",
+      "text": "Proposta: in considerazione dello stadio IB con [[DATO_GENETICO:delezione dell'esone 19 di EGFR]], valutare [[TERAPIA:terapia adiuvante con osimertinib]] per 3 anni, previa valutazione cardiologica. Il paziente segue già un percorso di disassuefazione dal fumo presso il [[REPARTO:Centro Antifumo]] ([[OPERATORE_SANITARIO:dott.ssa Valeria Ingrassia]], psicologa)."
+    },
+    {
+      "type": "barcode",
+      "kind": "qr",
+      "label": "Fascicolo GOM di [[PERSONA:NGUYEN THANH]] - accesso riservato",
+      "value": "https://gom.aomontelauro.example.it/caso/[[ID_PAZIENTE:GOMT-25-0071]]",
+      "align": "left"
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Clara",
+      "forbidden_categories": [
+        "NOME",
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "van Gieson",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Kulchitsky",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Perls",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Gaetano Fichera",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Garibaldi",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

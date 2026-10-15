@@ -1,0 +1,705 @@
+{
+  "id": "autorizzazione_preventiva_complessa_03",
+  "type": "autorizzazione_preventiva",
+  "difficulty": "complessa",
+  "style": {
+    "font": "times",
+    "color": "#E65100",
+    "font_size": 8.2,
+    "margins_mm": 14
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Carmela",
+      "last_name": "Lo Presti",
+      "sex": "F",
+      "birth_date": "1959-02-27",
+      "birth_place": "Catania"
+    }
+  },
+  "letterhead": {
+    "logo": "AIE",
+    "logo_shape": "shield",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Sanitaria Provinciale Ionio-Etnea]]",
+      "Dipartimento del Farmaco - U.O.C. Farmaceutica Territoriale",
+      "Commissione Aziendale per l'impiego off-label dei farmaci",
+      "Presidente: Dott.ssa [[MEDICO:Agata Scuderi Musumeci]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale Mario Rapisardi 418]]",
+      "[[CAP:95124]] [[LUOGO:Catania]]",
+      "Tel. [[TELEFONO:095 7712640]] - Fax [[FAX:095 7712655]]",
+      "[[EMAIL:offlabel.farmaco@aspie.example.it]]"
+    ]
+  },
+  "running_header": "Pratica [[NUMERO_PROTOCOLLO:OL-2026/0388]] - Assistita [[PERSONA:LO PRESTI Carmela]] - C.F. [[CODICE_FISCALE:@paz]]",
+  "footer": [
+    "Pratica [[NUMERO_PROTOCOLLO:OL-2026/0388]] - [[PERSONA:C. Lo Presti]] - Contiene dati relativi alla salute e alle convinzioni religiose (art. 9 Reg. UE 2016/679)",
+    "[[STRUTTURA_SANITARIA:Azienda Sanitaria Provinciale Ionio-Etnea]] - P.IVA [[PARTITA_IVA:@asp]] - PEC [[PEC:protocollo@pec.aspie.example.it]]"
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "AUTORIZZAZIONE PREVENTIVA - IMPIEGO OFF-LABEL DI FARMACI",
+      "subtitle": "L. 94/1998, art. 3 c. 2 - Percorso di Patient Blood Management in assistita che rifiuta le emotrasfusioni"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Protocollo",
+              "[[NUMERO_PROTOCOLLO:OL-2026/0388]]"
+            ],
+            [
+              "Pervenuta il",
+              "[[DATA:08.09.26]] (PEC n. [[NUMERO_PROTOCOLLO:0091274]])"
+            ],
+            [
+              "Istruttoria",
+              "farm. [[OPERATORE_SANITARIO:Giovanna Pappalardo]]"
+            ]
+          ]
+        },
+        {
+          "type": "checkboxes",
+          "columns": 2,
+          "items": [
+            [
+              "Prima richiesta",
+              true
+            ],
+            [
+              "Rinnovo",
+              false
+            ],
+            [
+              "Urgente (entro 30 gg)",
+              true
+            ],
+            [
+              "Ordinaria",
+              false
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "barcode",
+          "kind": "code128",
+          "label": "Pratica",
+          "value": "[[NUMERO_PROTOCOLLO:OL-2026/0388]]",
+          "align": "center"
+        },
+        {
+          "type": "checkboxes",
+          "label": "Tipo di prestazione",
+          "columns": 2,
+          "items": [
+            [
+              "Farmaco off-label",
+              true
+            ],
+            [
+              "Farmaco L. 648/96",
+              false
+            ],
+            [
+              "Dispositivo medico",
+              false
+            ],
+            [
+              "Prestazione extra-LEA",
+              false
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "1. DATI DELL'ASSISTITA"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "patient_box",
+          "title": "Assistita",
+          "columns": 1,
+          "fields": [
+            [
+              "Cognome",
+              "[[COGNOME:Lo Presti]]"
+            ],
+            [
+              "Nome",
+              "[[NOME:Carmela]]"
+            ],
+            [
+              "Nata a",
+              "[[LUOGO_NASCITA:Catania]] il [[DATA_NASCITA:27/02/1959]]"
+            ],
+            [
+              "Residenza",
+              "[[INDIRIZZO:Via Galatea 57]], [[CAP:95024]] [[LUOGO:Acireale]]"
+            ],
+            [
+              "Telefono",
+              "[[TELEFONO:095 6043318]] / [[TELEFONO:+39 349 220 8716]]"
+            ],
+            [
+              "Stato civile",
+              "[[STATO_CIVILE:coniugata]]"
+            ],
+            [
+              "Professione",
+              "[[PROFESSIONE:insegnante di scuola primaria in quiescenza]]"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "char_boxes",
+          "label": "C.F.",
+          "value": "[[CODICE_FISCALE:@paz]]"
+        },
+        {
+          "type": "char_boxes",
+          "label": "T.S.",
+          "value": "[[TESSERA_SANITARIA:@ts]]"
+        },
+        {
+          "type": "fields",
+          "columns": 1,
+          "fields": [
+            [
+              "Esenzioni",
+              "[[CODICE_ESENZIONE:0031]] / [[CODICE_ESENZIONE:E01]]"
+            ],
+            [
+              "MMG",
+              "Dott. [[MEDICO:Giuseppe Cavallaro]]"
+            ],
+            [
+              "Distretto",
+              "[[LUOGO:Acireale]]"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "header": [
+        "Persona di riferimento",
+        "Rapporto",
+        "Recapiti",
+        "Note"
+      ],
+      "widths": [
+        3.2,
+        2.4,
+        3.6,
+        4.2
+      ],
+      "font_size": 7.4,
+      "caption": "Persone indicate dall'assistita nel modulo di consenso (raccolto dall'inf. [[OPERATORE_SANITARIO:Concetta Barbagallo]] il [[DATA:02/09/2026]])",
+      "rows": [
+        [
+          "[[FAMILIARE:Salvatore Grasso]]",
+          "coniuge",
+          "[[TELEFONO:+39 338 615 4402]]",
+          "convivente; accompagna la paziente alle visite"
+        ],
+        [
+          "[[CONTATTO_EMERGENZA:Viola Grasso]]",
+          "figlia",
+          "[[TELEFONO:+39 340 778 1953]]\n[[EMAIL:viola.grasso@posta.example.it]]",
+          "da contattare in caso di emergenza; residente a [[LUOGO:Milano]]"
+        ],
+        [
+          "[[TUTORE_DELEGATO:Nunzio Lo Presti]]",
+          "fratello, fiduciario DAT",
+          "[[TELEFONO:+39 347 309 6620]]",
+          "nominato nelle DAT ai sensi della L. 219/2017"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "2. PRESCRIZIONE"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Posologia",
+        "Durata",
+        "Uso",
+        "Indicazione richiesta"
+      ],
+      "widths": [
+        3.4,
+        3,
+        2,
+        1.5,
+        4.4
+      ],
+      "font_size": 7.4,
+      "rows": [
+        [
+          "[[FARMACO:epoetina alfa 40.000 UI]]\nsiringa preriempita",
+          "[[FARMACO:40.000 UI s.c. una volta a settimana]]",
+          "4 settimane pre-intervento",
+          "off-label",
+          "ottimizzazione dell'emoglobina pre-operatoria in assistita che rifiuta le emotrasfusioni"
+        ],
+        [
+          "[[FARMACO:ferro carbossimaltosio 500 mg/10 mL]]",
+          "[[FARMACO:1000 mg e.v. in dose unica]], ripetibile a 7 gg",
+          "2 somministrazioni",
+          "on-label",
+          "carenza marziale documentata"
+        ],
+        [
+          "[[FARMACO:cianocobalamina 1000 µg]] + [[FARMACO:acido folico 5 mg]]",
+          "1 fl i.m./sett. + 1 cp/die",
+          "fino all'intervento",
+          "on-label",
+          "supporto all'eritropoiesi"
+        ],
+        [
+          "[[FARMACO:acido tranexamico 1 g]]",
+          "[[FARMACO:bolo e.v. + infusione continua]]",
+          "peri-operatorio",
+          "on-label",
+          "riduzione delle perdite ematiche"
+        ]
+      ]
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Centro prescrittore",
+          "[[REPARTO:U.O.C. Cardiochirurgia]] - [[STRUTTURA_SANITARIA:Ospedale Santa Venera del Simeto]]"
+        ],
+        [
+          "Medico prescrittore",
+          "Dott. [[MEDICO:Corrado Licciardello]] (Ord. Med. CT n. [[NUMERO_ALBO:8842]])"
+        ],
+        [
+          "Data prescrizione",
+          "[[DATA_PRESCRIZIONE:05/09/2026]]"
+        ],
+        [
+          "Ricetta (NRE)",
+          "[[NUMERO_RICETTA:1900A6631048277]]"
+        ],
+        [
+          "Intervento programmato",
+          "[[INTERVENTO:riparazione valvolare mitralica in minitoracotomia destra]]"
+        ],
+        [
+          "Ricovero previsto",
+          "[[DATA_RICOVERO:12/10/2026]], pren. [[NUMERO_PRENOTAZIONE:CCH-26-01547]]"
+        ]
+      ]
+    },
+    {
+      "type": "checkboxes",
+      "label": "Documentazione allegata",
+      "columns": 3,
+      "items": [
+        [
+          "Relazione clinica",
+          true
+        ],
+        [
+          "Ecocardiogramma TE",
+          true
+        ],
+        [
+          "Esami ematochimici",
+          true
+        ],
+        [
+          "Copia DAT",
+          true
+        ],
+        [
+          "Consenso informato off-label",
+          true
+        ],
+        [
+          "Letteratura a supporto",
+          true
+        ]
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "3. MOTIVAZIONE CLINICA"
+    },
+    {
+      "type": "paragraph",
+      "text": "Assistita di [[ETA:67]] anni con anamnesi di [[PATOLOGIA:ipertensione arteriosa]] in buon compenso, [[PATOLOGIA:ipotiroidismo post-tiroidectomia totale]] (2011) in terapia sostitutiva con [[FARMACO:levotiroxina 75 µg/die]] e [[ALLERGIA:allergia alle penicilline]] (orticaria generalizzata). Da circa un anno riferisce dispnea da sforzo ingravescente, attualmente in classe NYHA III. L'ecocardiogramma transesofageo eseguito il [[DATA_VISITA:22/07/2026]] documenta [[DIAGNOSI:insufficienza mitralica severa da prolasso bilembo]] nel contesto di [[DIAGNOSI:malattia di Barlow]], con anulus dilatato e funzione sistolica conservata. L'Heart Team aziendale ha posto indicazione a [[INTERVENTO:riparazione valvolare mitralica]] in elezione."
+    },
+    {
+      "type": "paragraph",
+      "text": "La sig.ra [[PERSONA:Lo Presti]], di confessione [[RELIGIONE:Testimone di Geova]], ha dichiarato in forma scritta e reiterato al colloquio del [[DATA_VISITA:02/09/2026]] il rifiuto di sangue intero, emazie concentrate, plasma e piastrine, anche in condizioni di pericolo di vita; accetta invece, per scelta di coscienza individuale, il recupero intraoperatorio del sangue in circuito chiuso, l'albumina e i fattori della coagulazione ricombinanti. Le DAT sono state depositate presso l'Ufficio di Stato Civile del Comune di [[LUOGO:Acireale]] il [[DATA:14 marzo 2024]]."
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Esami ematochimici (prelievo del 28/08/2026)"
+        },
+        {
+          "type": "table",
+          "header": [
+            "Esame",
+            "Risultato",
+            "Riferimento"
+          ],
+          "widths": [
+            3,
+            1.6,
+            2.2
+          ],
+          "font_size": 7.2,
+          "flag_column": null,
+          "rows": [
+            [
+              "Emoglobina (g/dL)",
+              "[[ESAME_VALORE:10,6]]",
+              "12,0 - 15,5"
+            ],
+            [
+              "MCV (fL)",
+              "[[ESAME_VALORE:76]]",
+              "80 - 98"
+            ],
+            [
+              "Ferritina (ng/mL)",
+              "[[ESAME_VALORE:18]]",
+              "30 - 300"
+            ],
+            [
+              "Saturazione transferrina",
+              "[[ESAME_VALORE:11 %]]",
+              "20 - 45 %"
+            ],
+            [
+              "Vitamina B12 (pg/mL)",
+              "[[ESAME_VALORE:182]]",
+              "197 - 771"
+            ],
+            [
+              "Folati (ng/mL)",
+              "[[ESAME_VALORE:3,1]]",
+              "> 3,9"
+            ],
+            [
+              "Creatinina (mg/dL)",
+              "[[ESAME_VALORE:0,84]]",
+              "0,50 - 1,00"
+            ],
+            [
+              "PCR (mg/dL)",
+              "[[ESAME_VALORE:0,21]]",
+              "< 0,50"
+            ]
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Dati ecocardiografici e antropometrici"
+        },
+        {
+          "type": "paragraph",
+          "text": "FE [[ESAME_VALORE:61%]]; ERO [[ESAME_VALORE:0,48 cm²]]; volume rigurgitante [[ESAME_VALORE:72 mL]]; PAPs stimata [[ESAME_VALORE:44 mmHg]]. Radice aortica ai seni di Valsalva [[ESAME_VALORE:33 mm]]. Rigurgito classificato come tipo II secondo Carpentier. Flusso venoso polmonare con inversione sistolica al Doppler pulsato.",
+          "size": 7.6
+        },
+        {
+          "type": "paragraph",
+          "text": "Peso [[MISURE_ANTROPOMETRICHE:64 kg]], altezza [[MISURE_ANTROPOMETRICHE:158 cm]], BMI [[MISURE_ANTROPOMETRICHE:25,6]]; PA [[MISURE_ANTROPOMETRICHE:135/80 mmHg]]. Volemia stimata circa 4,1 L.",
+          "size": 7.6
+        },
+        {
+          "type": "note",
+          "text": "Riferimento ambulatorio PBM: inf. [[OPERATORE_SANITARIO:C. Barbagallo]], tel. [[TELEFONO:095 7726114]] (lun-ven 8-14)."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Strategia di risparmio del sangue concordata con l'assistita"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Fase",
+        "Misure previste",
+        "Sede / responsabile"
+      ],
+      "widths": [
+        2,
+        7,
+        4.2
+      ],
+      "font_size": 7.3,
+      "rows": [
+        [
+          "Pre-operatoria",
+          "Correzione della carenza marziale e vitaminica; epoetina alfa fino a Hb target >= 13 g/dL; sospensione dell'acido acetilsalicilico 7 giorni prima; prelievi pediatrici a ridotto volume",
+          "[[REPARTO:Ambulatorio di Patient Blood Management]]\nDott.ssa [[MEDICO:Ilaria Sapienza]]"
+        ],
+        [
+          "Intra-operatoria",
+          "Recupero intraoperatorio (cell salvage) in circuito chiuso; emodiluizione normovolemica acuta in continuità con il paziente; acido tranexamico; tromboelastometria",
+          "[[REPARTO:Sala operatoria Cardiochirurgia]]\nDott. [[MEDICO:C. Licciardello]], Dott.ssa [[MEDICO:I. Sapienza]]"
+        ],
+        [
+          "Post-operatoria",
+          "Tolleranza dell'anemia normovolemica; ossigenoterapia; ferro e.v. ed eventuale epoetina; riduzione al minimo dei prelievi",
+          "[[REPARTO:Terapia Intensiva Cardiochirurgica]]\ncoord. inf. [[OPERATORE_SANITARIO:Rosario Mangano]]"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "**Motivazione dell'uso off-label.** L'epoetina alfa non è autorizzata per l'ottimizzazione pre-operatoria in cardiochirurgia; tuttavia la letteratura (1, 2) ne documenta efficacia e sicurezza a breve termine in pazienti che rifiutano le emotrasfusioni, nei quali l'Hb pre-operatoria è il principale determinante della sopravvivenza. In assenza di alternative terapeutiche autorizzate e considerata la severità del vizio valvolare, si chiede l'autorizzazione al trattamento per 4 settimane, con controllo emocromocitometrico settimanale e profilassi antitrombotica secondo protocollo. Il rischio trombotico è stato discusso con la sig.ra [[PERSONA:Carmela Lo Presti]] e con il coniuge, sig. [[FAMILIARE:Grasso]]."
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "signature",
+          "place_date": "[[LUOGO:Catania]], [[DATA_PRESCRIZIONE:5 settembre 2026]]",
+          "role": "Il medico prescrittore",
+          "name": "Dott. [[MEDICO:Corrado Licciardello]]",
+          "digital": false,
+          "stamp": [
+            "[[STRUTTURA_SANITARIA:Ospedale Santa Venera del Simeto]]",
+            "U.O.C. CARDIOCHIRURGIA",
+            "Dott. [[MEDICO:C. Licciardello]]",
+            "Ord. Med. CT [[NUMERO_ALBO:8842]]"
+          ]
+        }
+      ],
+      "right": [
+        {
+          "type": "signature",
+          "place_date": "[[DATA:06/09/2026]]",
+          "role": "Visto, l'anestesista referente PBM",
+          "name": "Dott.ssa [[MEDICO:Ilaria Sapienza]]",
+          "digital": false,
+          "stamp": [
+            "ANESTESIA E RIANIMAZIONE",
+            "Dott.ssa [[MEDICO:I. Sapienza]]",
+            "Ord. Med. CT n. [[NUMERO_ALBO:10377]]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "DICHIARAZIONE DELL'ASSISTITA E CONSENSO AL TRATTAMENTO OFF-LABEL"
+    },
+    {
+      "type": "paragraph",
+      "text": "La sottoscritta [[PERSONA:Carmela Lo Presti]], nata a [[LUOGO_NASCITA:Catania]] il [[DATA_NASCITA:27/02/1959]], informata dal Dott. [[MEDICO:Licciardello]] che il farmaco epoetina alfa sarà impiegato al di fuori delle indicazioni autorizzate, dei benefici attesi e dei possibili effetti indesiderati (in particolare trombosi venosa e arteriosa, ipertensione), dichiara di aver compreso le informazioni ricevute e di acconsentire al trattamento. Conferma il rifiuto delle emotrasfusioni per motivi religiosi e solleva i sanitari da responsabilità per le conseguenze di tale scelta, nei limiti previsti dalla L. 219/2017. In caso di sua incapacità, le decisioni sanitarie saranno condivise con il fiduciario sig. [[TUTORE_DELEGATO:Nunzio Lo Presti]] (C.I. n. [[NUMERO_CARTA_IDENTITA:CA41872MP]], rilasciata dal [[ENTE_RILASCIO:Comune di Aci Castello]])."
+    },
+    {
+      "type": "columns",
+      "divider": false,
+      "left": [
+        {
+          "type": "paragraph",
+          "text": "Firma dell'assistita\n\n______________________________\n(sig.ra [[PERSONA:C. Lo Presti]])",
+          "align": "center"
+        }
+      ],
+      "right": [
+        {
+          "type": "paragraph",
+          "text": "Firma del fiduciario per presa visione\n\n______________________________\n([[TUTORE_DELEGATO:N. Lo Presti]])",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Testimone al colloquio: inf. [[OPERATORE_SANITARIO:Concetta Barbagallo]]. Su richiesta dell'assistita era presente anche il sig. [[PERSONA:Domenico Russo Arcidiacono]], ministro di culto della congregazione di appartenenza, che non ha partecipato alla decisione clinica.",
+      "size": 7.6
+    },
+    {
+      "type": "section",
+      "text": "4. PARERE DELLA COMMISSIONE"
+    },
+    {
+      "type": "paragraph",
+      "text": "La Commissione Aziendale per l'impiego off-label dei farmaci, nella seduta del [[DATA:17 settembre 2026]], esaminata la richiesta relativa all'assistita [[PERSONA:Lo Presti C.]], verificati la documentazione allegata, il consenso informato specifico e l'assunzione di responsabilità del medico prescrittore, rilevata l'assenza di alternative terapeutiche autorizzate, esprime parere:"
+    },
+    {
+      "type": "checkboxes",
+      "columns": 3,
+      "items": [
+        [
+          "Favorevole",
+          false
+        ],
+        [
+          "Favorevole con prescrizioni",
+          true
+        ],
+        [
+          "Non favorevole",
+          false
+        ]
+      ]
+    },
+    {
+      "type": "table",
+      "header": [
+        "Componente",
+        "Qualifica",
+        "Presenza / voto"
+      ],
+      "widths": [
+        4.2,
+        6,
+        2.4
+      ],
+      "font_size": 7.4,
+      "rows": [
+        [
+          "Dott.ssa [[MEDICO:Agata Scuderi Musumeci]]",
+          "Presidente, Dirigente medico di Direzione Sanitaria",
+          "presente - favorevole"
+        ],
+        [
+          "Dott. [[MEDICO:Alfio Zappalà]]",
+          "Cardiologo, componente esperto",
+          "presente - favorevole"
+        ],
+        [
+          "Dott.ssa [[MEDICO:Maria Grazia D'Urso]]",
+          "Ematologa, componente esperto",
+          "presente - favorevole"
+        ],
+        [
+          "Dott. [[MEDICO:Sebastiano Nicotra]]",
+          "Medico legale",
+          "presente - astenuto"
+        ],
+        [
+          "Dott.ssa [[OPERATORE_SANITARIO:Giovanna Pappalardo]]",
+          "Farmacista, segretaria verbalizzante",
+          "presente"
+        ]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Prescrizioni: dispensazione diretta da parte della Farmacia ospedaliera per un massimo di 4 confezioni; sospensione dell'epoetina al raggiungimento di Hb 14 g/dL o in caso di PA sistolica superiore a 160 mmHg; invio alla Commissione di una scheda di esito entro 60 giorni dalla dimissione. Il Dott. [[MEDICO:Nicotra]] chiede che a verbale risulti la verifica della validità delle DAT."
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "[[STRUTTURA_SANITARIA:ASP IONIO-ETNEA]]",
+        "COMMISSIONE OFF-LABEL",
+        "La Presidente",
+        "Dott.ssa [[MEDICO:A. Scuderi Musumeci]]",
+        "Ord. Med. CT n. [[NUMERO_ALBO:2219]]",
+        "Verbale n. [[NUMERO_PROTOCOLLO:COL-27/2026]]"
+      ],
+      "angle": -11,
+      "align": "right"
+    },
+    {
+      "type": "heading",
+      "text": "Trasmissione dell'esito"
+    },
+    {
+      "type": "address",
+      "align": "left",
+      "lines": [
+        "Al Dott. [[MEDICO:Corrado Licciardello]] - [[REPARTO:U.O.C. Cardiochirurgia]]",
+        "[[STRUTTURA_SANITARIA:Ospedale Santa Venera del Simeto]]",
+        "Alla Farmacia ospedaliera - c.a. Dott.ssa [[OPERATORE_SANITARIO:G. Pappalardo]]",
+        "Al MMG Dott. [[MEDICO:Giuseppe Cavallaro]]",
+        "([[EMAIL:g.cavallaro.mmg@medici.example.it]])",
+        "All'assistita sig.ra [[PERSONA:Carmela Lo Presti]]",
+        "[[INDIRIZZO:Via Galatea 57]] - [[CAP:95024]] [[LUOGO:Acireale]]"
+      ]
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Letteratura sull'impiego dell'eritropoietina nella chirurgia senza sangue e nei programmi di Patient Blood Management; dossier istruito dalla farm. [[OPERATORE_SANITARIO:Pappalardo]].",
+        "Classificazione funzionale del rigurgito secondo Carpentier (tipo II: eccessiva mobilità dei lembi); la [[DIAGNOSI:malattia di Barlow]] ne è la forma degenerativa più estesa.",
+        "Ai sensi della L. 219/2017 le DAT sono vincolanti per il medico; copia è conservata in cartella clinica n. [[NUMERO_CARTELLA:2026/CCH/04419]]."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Barlow",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Carpentier",
+      "forbidden_categories": [
+        "PERSONA",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Valsalva",
+      "forbidden_categories": [
+        "PERSONA",
+        "LUOGO"
+      ]
+    },
+    {
+      "value": "Doppler",
+      "forbidden_categories": [
+        "PERSONA",
+        "ID_DISPOSITIVO"
+      ]
+    },
+    {
+      "value": "Heart Team",
+      "forbidden_categories": [
+        "ORGANIZZAZIONE",
+        "REPARTO"
+      ]
+    }
+  ]
+}

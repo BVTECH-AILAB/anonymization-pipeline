@@ -1,0 +1,301 @@
+{
+  "id": "lettera_dimissione_media_03",
+  "type": "lettera_dimissione",
+  "difficulty": "media",
+  "style": {
+    "font": "dejavu",
+    "color": "#B4532A",
+    "font_size": 8.8,
+    "margins_mm": 15
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Leonardo",
+      "last_name": "Esposito",
+      "sex": "M",
+      "birth_date": "2017-04-21",
+      "birth_place": "Napoli"
+    }
+  },
+  "letterhead": {
+    "logo": "OBVF",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale dei Bambini Villa Flegrea]]",
+      "Dipartimento della Salute della Donna e del Bambino",
+      "[[REPARTO:U.O.C. Pediatria e Diabetologia Pediatrica]]",
+      "Direttore: Dott. [[MEDICO:Gennaro Vitiello]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Domitiana 77]]",
+      "[[CAP:80078]] [[LUOGO:Pozzuoli]]",
+      "Reparto [[TELEFONO:081 5269301]]"
+    ]
+  },
+  "running_header": "Paziente: [[PERSONA:Leonardo Esposito]] ([[ETA:7 anni]]) - Cartella [[NUMERO_CARTELLA:PED-25-01418]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale dei Bambini Villa Flegrea]] - Ente del Servizio Sanitario Regionale",
+    "Copia della lettera consegnata ai genitori. Il documento contiene dati relativi alla salute di un minore."
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "align": "right",
+      "lines": [
+        "Alla Dott.ssa [[MEDICO:Maria Grazia Iervolino]]",
+        "Pediatra di Libera Scelta",
+        "[[LUOGO:Bacoli]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "LETTERA DI DIMISSIONE",
+      "subtitle": "Esordio di diabete mellito tipo 1"
+    },
+    {
+      "type": "patient_box",
+      "title": "DATI DEL PICCOLO PAZIENTE",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome e nome",
+          "[[PERSONA:Leonardo Esposito]]"
+        ],
+        [
+          "Data di nascita",
+          "[[DATA_NASCITA:21/04/2017]]"
+        ],
+        [
+          "Codice fiscale",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Fusaro 61]], [[LUOGO:Bacoli]]"
+        ],
+        [
+          "Madre",
+          "[[TUTORE_DELEGATO:Anna Cuomo]] - [[TELEFONO:+39 333 418 0952]]"
+        ],
+        [
+          "Padre",
+          "[[TUTORE_DELEGATO:Ciro Esposito]]"
+        ],
+        [
+          "Cartella",
+          "[[NUMERO_CARTELLA:PED-25-01418]]"
+        ],
+        [
+          "Esenzione",
+          "[[CODICE_ESENZIONE:013.250]]"
+        ]
+      ]
+    },
+    {
+      "type": "fields",
+      "columns": 2,
+      "fields": [
+        [
+          "Ingresso",
+          "[[DATA_RICOVERO:03/11/2024]] da Pronto Soccorso Pediatrico"
+        ],
+        [
+          "Dimissione",
+          "[[DATA_RICOVERO:10-11-2024]]"
+        ]
+      ]
+    },
+    {
+      "type": "barcode",
+      "kind": "code128",
+      "label": "Nosologico",
+      "value": "[[NUMERO_ACCETTAZIONE:24PF0019833]]",
+      "align": "right"
+    },
+    {
+      "type": "paragraph",
+      "text": "Gentile Collega,\ndimettiamo in data odierna il piccolo [[PERSONA:Leonardo]], ricoverato il [[DATA_RICOVERO:3 novembre]] per [[DIAGNOSI:poliuria]], [[DIAGNOSI:polidipsia]], [[DIAGNOSI:enuresi notturna secondaria]] e [[DIAGNOSI:calo ponderale]] di circa 2 kg nelle ultime tre settimane, riferiti dalla madre, sig.ra [[TUTORE_DELEGATO:Cuomo]]."
+    },
+    {
+      "type": "section",
+      "text": "Anamnesi"
+    },
+    {
+      "type": "paragraph",
+      "text": "Nato a termine da parto eutocico, sviluppo psicomotorio regolare. Vaccinazioni secondo calendario. Non patologie di rilievo. Familiarità per [[PATOLOGIA:tiroidite autoimmune]] (madre). Frequenta la seconda classe presso la [[SCUOLA:Scuola Primaria Plesso Gianturco]]."
+    },
+    {
+      "type": "section",
+      "text": "Decorso clinico"
+    },
+    {
+      "type": "paragraph",
+      "text": "All'ingresso il pz. si presentava disidratato (stimata 7%), con respiro di Kussmaul e alito acetonemico. Peso [[MISURE_ANTROPOMETRICHE:22,4 kg]], altezza [[MISURE_ANTROPOMETRICHE:124 cm]]. Glicemia [[ESAME_VALORE:486 mg/dL]], emogasanalisi venosa con pH [[ESAME_VALORE:7,18]] e bicarbonati [[ESAME_VALORE:9,4 mmol/L]], chetonemia [[ESAME_VALORE:4,8 mmol/L]], quadro di [[DIAGNOSI:chetoacidosi diabetica moderata]].\nÈ stato trattato secondo protocollo ISPAD con [[TERAPIA:reidratazione endovenosa]] e [[TERAPIA:infusione continua di insulina]], con risoluzione dell'acidosi in 18 ore. Dalla seconda giornata [[TERAPIA:terapia insulinica multiniettiva]] sottocute. Decorso successivo regolare, senza ipoglicemie gravi.\nLa coppia genitoriale ha seguito il percorso educativo strutturato con l'infermiera dedicata [[OPERATORE_SANITARIO:Rosaria Di Meo]] e la dietista (conteggio dei carboidrati, gestione di ipoglicemia e chetosi, uso del sensore). Il papà, sig. [[TUTORE_DELEGATO:Esposito]], ha eseguito in autonomia le somministrazioni dalla quinta giornata."
+    },
+    {
+      "type": "section",
+      "text": "Esami principali"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Esame",
+        "Risultato",
+        "U.M.",
+        "Riferimento",
+        ""
+      ],
+      "widths": [
+        3.6,
+        1.8,
+        1.6,
+        2.4,
+        0.6
+      ],
+      "flag_column": 4,
+      "rows": [
+        [
+          "Emoglobina glicata (HbA1c)",
+          "[[ESAME_VALORE:11,6]]",
+          "%",
+          "4,0 - 6,0",
+          "H"
+        ],
+        [
+          "Peptide C",
+          "[[ESAME_VALORE:0,21]]",
+          "ng/mL",
+          "0,80 - 3,85",
+          "L"
+        ],
+        [
+          "Anticorpi anti-GAD",
+          "[[ESAME_VALORE:86,5]]",
+          "UI/mL",
+          "< 5,0",
+          "H"
+        ],
+        [
+          "Anticorpi anti-IA2",
+          "[[ESAME_VALORE:positivi]]",
+          "",
+          "negativi",
+          "*"
+        ],
+        [
+          "Anti-transglutaminasi IgA",
+          "[[ESAME_VALORE:0,6]]",
+          "U/mL",
+          "< 7,0",
+          ""
+        ],
+        [
+          "TSH",
+          "[[ESAME_VALORE:2,14]]",
+          "µUI/mL",
+          "0,60 - 4,80",
+          ""
+        ],
+        [
+          "Tipizzazione HLA",
+          "[[DATO_GENETICO:HLA-DQ2/DQ8 eterozigote]]",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi di dimissione"
+    },
+    {
+      "type": "paragraph",
+      "text": "**[[DIAGNOSI:Diabete mellito tipo 1 all'esordio]]**, [[DIAGNOSI:chetoacidosi diabetica moderata]] risolta. Screening per celiachia e tiroidite negativo."
+    },
+    {
+      "type": "section",
+      "text": "Terapia domiciliare"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Dose",
+        "Orari",
+        "Note"
+      ],
+      "widths": [
+        3,
+        2.2,
+        2,
+        3.4
+      ],
+      "rows": [
+        [
+          "[[FARMACO:Insulina glargine 100 UI/mL]]",
+          "8 UI s.c.",
+          "ore 21",
+          "anche in caso di inappetenza"
+        ],
+        [
+          "[[FARMACO:Insulina lispro 100 UI/mL]]",
+          "rapporto I/CHO 1:20",
+          "prima dei 3 pasti",
+          "correzione: 1 UI ogni 100 mg/dL sopra 150"
+        ],
+        [
+          "[[FARMACO:Glucagone 1 mg]] spray nasale",
+          "1 erogazione",
+          "al bisogno",
+          "ipoglicemia grave con incoscienza"
+        ],
+        [
+          "Glucosio in tavolette",
+          "15 g",
+          "al bisogno",
+          "glicemia < 70 mg/dL"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Controlli e indicazioni"
+    },
+    {
+      "type": "paragraph",
+      "text": "Prima visita presso il nostro [[REPARTO:Ambulatorio di Diabetologia Pediatrica]] il [[DATA_VISITA:18.11.24]] alle ore 9:30, con download dei dati del sensore. È stato consegnato il piano di gestione del diabete a scuola, da condividere con il dirigente scolastico e gli insegnanti per l'eventuale somministrazione di insulina in orario scolastico. Per ogni urgenza i genitori possono contattare la reperibilità diabetologica al numero del reparto indicato in intestazione."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Pozzuoli]], [[DATA_REFERTO:10/11/2024]]",
+      "role": "Il Pediatra di Reparto",
+      "name": "Dott.ssa [[MEDICO:Teresa Scotto di Carlo]]",
+      "digital": false,
+      "stamp": [
+        "[[REPARTO:PEDIATRIA E DIABETOLOGIA PEDIATRICA]]",
+        "Dott.ssa [[MEDICO:Teresa Scotto di Carlo]]",
+        "Ordine Medici NA n. [[NUMERO_ALBO:31877]]"
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "Firma di un genitore per ricevuta: ____________________",
+      "role": "Il Direttore",
+      "name": "Dott. [[MEDICO:Gennaro Vitiello]]",
+      "digital": false
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Kussmaul",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

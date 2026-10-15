@@ -1,0 +1,56 @@
+{
+  "id": "test_genetico_facile_03",
+  "type": "test_genetico",
+  "difficulty": "facile",
+  "style": {"font": "dejavu", "color": "#2E7D32", "font_size": 9, "margins_mm": 16},
+  "persons": {
+    "paz": {"first_name": "Stefano", "last_name": "Bertoldi", "sex": "M", "birth_date": "1982-11-03", "birth_place": "Verona"}
+  },
+  "letterhead": {
+    "logo": "OBA",
+    "logo_shape": "cross",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale Civile Borgo Adige]]",
+      "Dipartimento di Medicina di Laboratorio",
+      "[[REPARTO:S.S. Biologia Molecolare Clinica]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Lungadige Galtarossa 27]]",
+      "[[CAP:37133]] [[LUOGO:Verona]]",
+      "Tel. [[TELEFONO:045 8073512]]",
+      "Fax [[FAX:045 8073599]]"
+    ]
+  },
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Ospedale Civile Borgo Adige]] - Servizio Sanitario Regionale",
+    "Esame eseguito in regime di Servizio Sanitario Nazionale. Conservare il referto insieme alla documentazione clinica."
+  ],
+  "blocks": [
+    {"type": "title", "text": "TEST GENETICO PER TROMBOFILIA EREDITARIA", "subtitle": "Fattore V Leiden e Protrombina G20210A"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Stefano Bertoldi]]"],
+      ["Nato il", "[[DATA_NASCITA:03/11/1982]]"],
+      ["Cod. fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Tessera SSN", "[[TESSERA_SANITARIA:@ts]]"]
+    ]},
+    {"type": "fields", "columns": 3, "fields": [
+      ["Accettazione", "[[NUMERO_ACCETTAZIONE:240917-0448]]"],
+      ["Prelievo", "[[DATA_VISITA:17/09/2024]]"],
+      ["Referto", "[[DATA_REFERTO:26/09/2024]]"]
+    ]},
+    {"type": "fields", "columns": 1, "fields": [
+      ["Richiesto da", "[[REPARTO:Ambulatorio di Angiologia e Malattie della Coagulazione]]"],
+      ["Quesito clinico", "Pregressa [[DIAGNOSI:trombosi venosa profonda femoro-poplitea sinistra]] non provocata"],
+      ["Materiale", "Sangue intero in K3-EDTA"]
+    ]},
+    {"type": "section", "text": "Risultati"},
+    {"type": "table", "header": ["Gene", "Polimorfismo", "Variante HGVS", "Genotipo", "Interpretazione"], "widths": [1.2, 2.6, 2.6, 2.2, 3.4], "rows": [
+      ["F5", "Fattore V Leiden (R506Q)", "[[DATO_GENETICO:c.1601G>A]]", "[[DATO_GENETICO:Eterozigote G/A]]", "Rischio trombotico aumentato"],
+      ["F2", "Protrombina G20210A", "c.*97G>A", "Wild type G/G", "Assenza della variante"]
+    ]},
+    {"type": "paragraph", "text": "Metodo: estrazione del DNA genomico e genotipizzazione mediante PCR real-time con sonde TaqMan specifiche per allele. Il controllo positivo e negativo di ogni seduta analitica è risultato conforme."},
+    {"type": "paragraph", "text": "**Commento.** Il paziente è [[DATO_GENETICO:eterozigote per il Fattore V Leiden]]. In associazione con l'evento trombotico riferito, il dato va considerato nella decisione sulla durata della [[TERAPIA:terapia anticoagulante]], da valutare con il centro di riferimento. Lo screening dei consanguinei è da proporre solo dopo consulenza genetica."},
+    {"type": "signature", "place_date": "[[LUOGO:Verona]], [[DATA_REFERTO:26/09/2024]]", "role": "Il Dirigente Biologo", "name": "Dott. [[MEDICO:Matteo Righetti]]", "digital": true}
+  ],
+  "negatives": []
+}

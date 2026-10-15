@@ -1,0 +1,639 @@
+{
+  "id": "lettera_dimissione_complessa_01",
+  "type": "lettera_dimissione",
+  "difficulty": "complessa",
+  "style": {
+    "font": "helvetica",
+    "color": "#0E4D64",
+    "font_size": 8,
+    "margins_mm": 14
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Rosa",
+      "last_name": "Dell'Orto",
+      "sex": "F",
+      "birth_date": "1963-02-08",
+      "birth_place": "Genova"
+    }
+  },
+  "letterhead": {
+    "logo": "AOSM",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Santa Maria della Rupe]]",
+      "Dipartimento di Emergenza-Urgenza e Area Critica",
+      "[[REPARTO:S.C. Anestesia, Rianimazione e Terapia Intensiva]]",
+      "[[REPARTO:Terapia Intensiva Generale]] - 8 posti letto",
+      "Direttore: Prof.ssa [[MEDICO:Ludovica Ferraris-Bellini]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Vittorio Veneto 197]]",
+      "[[CAP:19124]] [[LUOGO:La Spezia]]",
+      "Medici TI [[TELEFONO:0187 533912]]",
+      "Fax [[FAX:0187 533950]]",
+      "[[EMAIL:ti.generale@aosmr.example.it]]"
+    ]
+  },
+  "running_header": "TI Generale - [[PERSONA:Dell'Orto Rosa]] - C.F. [[CODICE_FISCALE:@paz]] - nata il [[DATA_NASCITA:08/02/1963]] - letto 6 - nosologico [[NUMERO_ACCETTAZIONE:2025-TI-000377]]",
+  "footer": [
+    "[[STRUTTURA_SANITARIA:Azienda Ospedaliera Santa Maria della Rupe]] - Sede legale [[INDIRIZZO:Via Vittorio Veneto 197]], [[CAP:19124]] [[LUOGO:La Spezia]] - P.IVA [[PARTITA_IVA:@aosmr]] - PEC [[PEC:protocollo@pec.aosmr.example.it]]",
+    "Documento riservato relativo a [[PERSONA:DELL'ORTO ROSA]] - contiene dati appartenenti a categorie particolari (art. 9 Reg. UE 2016/679)"
+  ],
+  "blocks": [
+    {
+      "type": "address",
+      "align": "right",
+      "lines": [
+        "Ai Colleghi della [[REPARTO:S.C. Pneumologia]] - sede",
+        "e p.c. al Dott. [[MEDICO:Ettore Lagomarsino]]",
+        "Medico di Medicina Generale, [[LUOGO:Sarzana]]"
+      ]
+    },
+    {
+      "type": "title",
+      "text": "LETTERA DI DIMISSIONE DALLA TERAPIA INTENSIVA",
+      "subtitle": "Relazione clinica di trasferimento interno"
+    },
+    {
+      "type": "patient_box",
+      "columns": 2,
+      "fields": [
+        [
+          "Cognome",
+          "[[COGNOME:Dell'Orto]]"
+        ],
+        [
+          "Nome",
+          "[[NOME:Rosa]]"
+        ],
+        [
+          "Nata il",
+          "[[DATA_NASCITA:08/02/1963]] a [[LUOGO_NASCITA:Genova]]"
+        ],
+        [
+          "Sesso",
+          "[[SESSO:F]]"
+        ],
+        [
+          "Residenza",
+          "[[INDIRIZZO:Via Variante Aurelia 54]], [[CAP:19038]] [[LUOGO:Sarzana]]"
+        ],
+        [
+          "Tessera sanitaria",
+          "[[TESSERA_SANITARIA:@ts]]"
+        ],
+        [
+          "Nosologico",
+          "[[NUMERO_ACCETTAZIONE:2025-TI-000377]]"
+        ],
+        [
+          "Cartella clinica",
+          "[[NUMERO_CARTELLA:TI/25/0042]]"
+        ],
+        [
+          "Gruppo sanguigno",
+          "[[GRUPPO_SANGUIGNO:A Rh negativo]]"
+        ],
+        [
+          "Età",
+          "[[ETA:61]] anni"
+        ]
+      ]
+    },
+    {
+      "type": "char_boxes",
+      "label": "Codice fiscale",
+      "value": "[[CODICE_FISCALE:@paz]]"
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "Ingresso in TI",
+          "[[DATA_RICOVERO:14/01/2025]] ore 03:20"
+        ],
+        [
+          "Provenienza",
+          "Pronto Soccorso / [[REPARTO:Shock Room]]"
+        ],
+        [
+          "Dimissione da TI",
+          "[[DATA_RICOVERO:29/01/2025]] ore 11:00"
+        ],
+        [
+          "Destinazione",
+          "[[REPARTO:S.C. Pneumologia]], letto 14"
+        ],
+        [
+          "Degenza in TI",
+          "15 giorni"
+        ],
+        [
+          "Medico referente",
+          "Dott.ssa [[MEDICO:Bianca Gualtieri]]"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Contatti e volontà espresse dalla paziente"
+    },
+    {
+      "type": "columns",
+      "divider": true,
+      "left": [
+        {
+          "type": "heading",
+          "text": "Familiari di riferimento"
+        },
+        {
+          "type": "paragraph",
+          "text": "Marito e contatto di emergenza: sig. [[CONTATTO_EMERGENZA:Walter Bianco]], tel. [[TELEFONO:+39 335 610 2284]].\nFiglia: sig.ra [[FAMILIARE:Sole Bianco]], tel. [[TELEFONO:+39 347 902 1175]].\nLa paziente autorizza la comunicazione di informazioni cliniche telefoniche solo al marito.",
+          "align": "left"
+        }
+      ],
+      "right": [
+        {
+          "type": "heading",
+          "text": "Disposizioni anticipate di trattamento"
+        },
+        {
+          "type": "paragraph",
+          "text": "La sig.ra [[PERSONA:Dell'Orto]], [[RELIGIONE:Testimone di Geova]], ha depositato DAT in data [[DATA:12/09/2019]] con **rifiuto di emotrasfusioni** ed emocomponenti (emazie, plasma, piastrine). Accetta albumina, eritropoietina e frazioni minori. Volontà riconfermata dalla paziente, lucida, il [[DATA:24/01/2025]] (1).",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Motivo del ricovero"
+    },
+    {
+      "type": "paragraph",
+      "text": "La sig.ra [[PERSONA:Rosa Dell'Orto]] giunge in PS la notte del [[DATA_RICOVERO:14 gennaio 2025]], accompagnata dal marito, per [[DIAGNOSI:febbre elevata]], [[DIAGNOSI:dispnea ingravescente]] e [[DIAGNOSI:stato confusionale]] insorti da 48 ore. All'arrivo PA [[MISURE_ANTROPOMETRICHE:78/42 mmHg]], FC 128 bpm, FR 34 atti/min, SpO2 [[ESAME_VALORE:82%]] in maschera Venturi, Glasgow Coma Scale [[ESAME_VALORE:GCS 13]], lattati [[ESAME_VALORE:6,4 mmol/L]]. Rx torace: [[DIAGNOSI:addensamenti parenchimali bilaterali]]. Dopo riempimento volemico con cristalloidi (30 mL/kg) persistenza di ipotensione: avviata [[FARMACO:noradrenalina]] e richiesta consulenza rianimatoria (Dott. [[MEDICO:Samuel Owusu]]), con trasferimento in TI."
+    },
+    {
+      "type": "section",
+      "text": "Anamnesi"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[PATOLOGIA:Asma bronchiale lieve intermittente]]. [[PATOLOGIA:Ipotiroidismo]] dopo [[INTERVENTO:tiroidectomia totale]] (2011) per gozzo multinodulare. [[SALUTE_MENTALE:Disturbo ansioso-depressivo]] in terapia con [[FARMACO:sertralina 50 mg]], seguita dal CSM. [[ALLERGIA:Allergia al mezzo di contrasto iodato]] (orticaria generalizzata nel 2017). Ex fumatrice (15 pack-years). Lavora come [[PROFESSIONE:insegnante di scuola primaria]]. Vive con il marito; autonoma nelle ADL."
+    },
+    {
+      "type": "section",
+      "text": "Punteggi di gravità"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Score",
+        "Ingresso",
+        "72 ore",
+        "Dimissione da TI",
+        "Note"
+      ],
+      "widths": [
+        2.4,
+        1.6,
+        1.6,
+        1.8,
+        4
+      ],
+      "font_size": 7.5,
+      "rows": [
+        [
+          "SOFA",
+          "[[ESAME_VALORE:11 punti]]",
+          "[[ESAME_VALORE:8 punti]]",
+          "[[ESAME_VALORE:2 punti]]",
+          "cardiovascolare, respiratorio, renale, coagulazione"
+        ],
+        [
+          "APACHE II",
+          "[[ESAME_VALORE:24 punti]]",
+          "-",
+          "-",
+          "mortalità attesa circa 40%"
+        ],
+        [
+          "SAPS II",
+          "[[ESAME_VALORE:52 punti]]",
+          "-",
+          "-",
+          ""
+        ],
+        [
+          "RASS (Richmond)",
+          "-",
+          "[[ESAME_VALORE:RASS -4]]",
+          "[[ESAME_VALORE:RASS 0]]",
+          "sedazione profonda nelle prime 72 ore"
+        ],
+        [
+          "CAM-ICU",
+          "-",
+          "non valutabile",
+          "[[ESAME_VALORE:assenza di delirium]]",
+          "[[DIAGNOSI:delirium ipoattivo]] dopo l'estubazione"
+        ]
+      ]
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "Decorso clinico per problemi"
+    },
+    {
+      "type": "heading",
+      "text": "1. Respiratorio"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[DIAGNOSI:ARDS moderata]] (P/F [[ESAME_VALORE:118]] all'ingresso). [[INTERVENTO:Intubazione orotracheale]] il [[DATA:14/01/2025]] e [[TERAPIA:ventilazione meccanica protettiva]] (Vt 6 mL/kg di peso ideale, PEEP 12 cmH2O, pressione di plateau < 28 cmH2O). Eseguiti due cicli di [[TERAPIA:pronazione]] di 16 ore il [[DATA:15/01/2025]] e il [[DATA:16/01/2025]] con miglioramento dell'ossigenazione. Svezzamento in pressione di supporto dal [[DATA:20/01/2025]]; estubazione il [[DATA:22/01/2025]] e successiva [[TERAPIA:ventilazione non invasiva]] intermittente per 36 ore. Attualmente in ossigenoterapia con occhialini nasali a 2 L/min, SpO2 [[ESAME_VALORE:95%]]. Non posizionato catetere di Swan-Ganz."
+    },
+    {
+      "type": "heading",
+      "text": "2. Emodinamico"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[DIAGNOSI:Shock settico]] trattato con [[FARMACO:noradrenalina]] fino a [[FARMACO:0,35 µg/kg/min]] e [[FARMACO:idrocortisone 200 mg/die]] dal [[DATA:14/01/2025]]; amine sospese il [[DATA:19/01/2025]]. Ecocardiogramma (Dott.ssa [[MEDICO:Bianca Gualtieri]]): FE [[ESAME_VALORE:50%]], VCI collassabile, assenza di versamento pericardico. Steroide in scalo, sospeso il [[DATA:25 gennaio]]."
+    },
+    {
+      "type": "heading",
+      "text": "3. Infettivologico"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[MALATTIE_INFETTIVE:Polmonite pneumococcica bilaterale]] con batteriemia: emocolture e BAL positivi per Streptococcus pneumoniae penicillino-sensibile; colorazione di Gram del BAL con diplococchi Gram positivi. Terapia iniziale con [[FARMACO:ceftriaxone 2 g]] + [[FARMACO:azitromicina 500 mg]], poi de-escalation a [[FARMACO:amoxicillina]] su indicazione dell'infettivologo Dott. [[MEDICO:Pietro Canepa]]. PCT in netta riduzione. Tampone nasofaringeo per virus respiratori negativo."
+    },
+    {
+      "type": "heading",
+      "text": "4. Renale"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[DIAGNOSI:Danno renale acuto KDIGO 2]] su base settica (creatinina massima [[ESAME_VALORE:3,12 mg/dL]]), gestito senza terapia sostitutiva renale. Diuresi valida dalla quinta giornata, funzione renale in miglioramento."
+    },
+    {
+      "type": "heading",
+      "text": "5. Ematologico e gestione senza emotrasfusioni"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[DIAGNOSI:Anemia]] con Hb minima [[ESAME_VALORE:6,8 g/dL]] il [[DATA:20 gennaio]]. Nel rispetto delle volontà espresse non sono state eseguite emotrasfusioni; strategia di patient blood management concordata con il marito, sig. [[CONTATTO_EMERGENZA:Bianco]], e con la Direzione Sanitaria: [[FARMACO:epoetina alfa 40.000 UI]] sottocute settimanale, [[FARMACO:ferro carbossimaltosio 1000 mg]] e.v., [[FARMACO:acido folico]], riduzione dei prelievi con provette pediatriche. Test di Coombs diretto negativo. Hb alla dimissione [[ESAME_VALORE:8,9 g/dL]] in risalita."
+    },
+    {
+      "type": "heading",
+      "text": "6. Neurologico e psicologico"
+    },
+    {
+      "type": "paragraph",
+      "text": "Sedazione con [[FARMACO:propofol]] e [[FARMACO:fentanil]], poi [[FARMACO:dexmedetomidina]]. Dopo l'estubazione [[DIAGNOSI:delirium ipoattivo]], risolto con misure non farmacologiche e presenza dei familiari in reparto aperto. [[DIAGNOSI:Debolezza acquisita in terapia intensiva]] (MRC sum score [[ESAME_VALORE:MRC 42/60]]). Colloqui di supporto con la psicologa dott.ssa [[OPERATORE_SANITARIO:Giovanna Ottonello]]; ripresa la [[FARMACO:sertralina]] dal [[DATA:26 gennaio]]. Diario di TI consegnato alla paziente."
+    },
+    {
+      "type": "section",
+      "text": "Dispositivi e accessi vascolari"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Dispositivo",
+        "Sede",
+        "Posizionato",
+        "Rimosso",
+        "Operatore"
+      ],
+      "widths": [
+        2.6,
+        2.8,
+        1.5,
+        1.5,
+        3.2
+      ],
+      "font_size": 7.5,
+      "rows": [
+        [
+          "CVC 3 lumi\n(eco-guidato)",
+          "vena giugulare interna destra",
+          "[[DATA:14/01/2025]]",
+          "[[DATA:28/01/2025]]",
+          "Dott. [[MEDICO:Samuel Owusu]]"
+        ],
+        [
+          "Catetere arterioso",
+          "arteria radiale sinistra",
+          "[[DATA:14/01/2025]]",
+          "[[DATA:27/01/2025]]",
+          "dott. [[OPERATORE_SANITARIO:Tommaso Ricci]]\n(medico in formazione)"
+        ],
+        [
+          "Tubo orotracheale n. 7,5",
+          "-",
+          "[[DATA:14/01/2025]]",
+          "[[DATA:22/01/2025]]",
+          "Dott. [[MEDICO:Samuel Owusu]]"
+        ],
+        [
+          "Sondino naso-gastrico",
+          "narice destra",
+          "[[DATA:15/01/2025]]",
+          "[[DATA:24/01/2025]]",
+          "inf. [[OPERATORE_SANITARIO:Marco Ghiglione]]"
+        ],
+        [
+          "Catetere vescicale 14 Ch",
+          "-",
+          "[[DATA:14/01/2025]]",
+          "in sede",
+          "inf. [[OPERATORE_SANITARIO:Debora Lanteri]]\n(rimuovere entro 48 ore)"
+        ],
+        [
+          "Agocannula 20 G",
+          "avambraccio destro",
+          "[[DATA:27/01/2025]]",
+          "in sede",
+          "inf. [[OPERATORE_SANITARIO:Marco Ghiglione]]"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Esami di laboratorio e microbiologia"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Esame",
+        "Ingresso",
+        "72 ore",
+        "Dimissione",
+        "U.M."
+      ],
+      "widths": [
+        3,
+        1.6,
+        1.6,
+        1.6,
+        1.6
+      ],
+      "font_size": 7.5,
+      "rows": [
+        [
+          "Lattati",
+          "[[ESAME_VALORE:6,4 mmol/L]]",
+          "[[ESAME_VALORE:2,1]]",
+          "[[ESAME_VALORE:0,9]]",
+          "mmol/L"
+        ],
+        [
+          "PCR",
+          "[[ESAME_VALORE:31,7]]",
+          "[[ESAME_VALORE:18,2]]",
+          "[[ESAME_VALORE:3,4]]",
+          "mg/dL"
+        ],
+        [
+          "Procalcitonina",
+          "[[ESAME_VALORE:46,3]]",
+          "[[ESAME_VALORE:12,8]]",
+          "[[ESAME_VALORE:0,41]]",
+          "ng/mL"
+        ],
+        [
+          "Creatinina",
+          "[[ESAME_VALORE:2,67]]",
+          "[[ESAME_VALORE:3,12 mg/dL]]",
+          "[[ESAME_VALORE:1,18]]",
+          "mg/dL"
+        ],
+        [
+          "Piastrine",
+          "[[ESAME_VALORE:96.000]]",
+          "[[ESAME_VALORE:71.000]]",
+          "[[ESAME_VALORE:214.000]]",
+          "/µL"
+        ],
+        [
+          "P/F ratio",
+          "[[ESAME_VALORE:118]]",
+          "[[ESAME_VALORE:196]]",
+          "[[ESAME_VALORE:310]]",
+          "mmHg"
+        ]
+      ]
+    },
+    {
+      "type": "table",
+      "header": [
+        "Campione",
+        "Prelievo",
+        "Codice",
+        "Esito"
+      ],
+      "widths": [
+        2.4,
+        1.6,
+        2.4,
+        5
+      ],
+      "font_size": 7.5,
+      "rows": [
+        [
+          "Emocoltura (2 set)",
+          "[[DATA:14/01/2025]]",
+          "[[CODICE_CAMPIONE:EC25-011482]]",
+          "Streptococcus pneumoniae, sensibile a penicillina"
+        ],
+        [
+          "BAL",
+          "[[DATA:15/01/2025]]",
+          "[[CODICE_CAMPIONE:BL25-000318]]",
+          "S. pneumoniae 10^5 UFC/mL"
+        ],
+        [
+          "Antigene urinario",
+          "[[DATA:14/01/2025]]",
+          "[[CODICE_CAMPIONE:UR25-011497]]",
+          "pneumococco positivo; Legionella negativo"
+        ],
+        [
+          "Emocoltura di controllo",
+          "[[DATA:21/01/2025]]",
+          "[[CODICE_CAMPIONE:EC25-012906]]",
+          "negativa a 5 giorni"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi alla dimissione dalla TI"
+    },
+    {
+      "type": "paragraph",
+      "text": "1. **[[DIAGNOSI:Shock settico da polmonite pneumococcica bilaterale con batteriemia]]**, risolto.\n2. [[DIAGNOSI:ARDS moderata]] trattata con ventilazione meccanica invasiva (8 giorni) e [[TERAPIA:pronazione]].\n3. [[DIAGNOSI:Danno renale acuto KDIGO 2]] in risoluzione.\n4. [[DIAGNOSI:Anemia severa]] gestita senza emotrasfusioni per volontà della paziente.\n5. [[DIAGNOSI:Delirium ipoattivo]], risolto; [[DIAGNOSI:debolezza acquisita in terapia intensiva]].\n6. [[PATOLOGIA:Ipotiroidismo post-chirurgico]]; [[SALUTE_MENTALE:disturbo ansioso-depressivo]]."
+    },
+    {
+      "type": "section",
+      "text": "Terapia in atto al trasferimento"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Dose",
+        "Orari",
+        "Note"
+      ],
+      "widths": [
+        3.2,
+        1.8,
+        1.8,
+        4.2
+      ],
+      "font_size": 7.5,
+      "rows": [
+        [
+          "[[FARMACO:Amoxicillina 1 g]]",
+          "1 g e.v.",
+          "ore 6-14-22",
+          "fino al [[DATA:31/01/2025]] (14 giorni totali)"
+        ],
+        [
+          "[[FARMACO:Enoxaparina 4000 UI]]",
+          "1 fl s.c.",
+          "ore 20",
+          "profilassi; controllo piastrine"
+        ],
+        [
+          "[[FARMACO:Levotiroxina 100 µg]]",
+          "1 cpr",
+          "ore 6",
+          "a digiuno"
+        ],
+        [
+          "[[FARMACO:Sertralina 50 mg]]",
+          "1 cpr",
+          "ore 8",
+          "terapia abituale"
+        ],
+        [
+          "[[FARMACO:Epoetina alfa 40.000 UI]]",
+          "1 fl s.c.",
+          "settimanale",
+          "prossima somministrazione il [[DATA:02/02/2025]]"
+        ],
+        [
+          "[[FARMACO:Pantoprazolo 40 mg]]",
+          "1 cpr",
+          "ore 7",
+          "sospendere alla ripresa completa dell'alimentazione"
+        ],
+        [
+          "[[FARMACO:Salbutamolo spray]]",
+          "2 puff",
+          "al bisogno",
+          "con distanziatore"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Problemi aperti e indicazioni"
+    },
+    {
+      "type": "paragraph",
+      "text": "- Proseguire riabilitazione motoria e respiratoria (fisioterapista di riferimento: [[OPERATORE_SANITARIO:Andrea Bozzo]]).\n- Monitoraggio di emocromo, ferritina e reticolociti due volte a settimana; ogni decisione su emocomponenti deve rispettare le DAT della paziente. In caso di emergenza emorragica contattare il Comitato di Assistenza Sanitaria indicato dal marito.\n- Rx torace di controllo a 4-6 settimane; visita di follow-up presso l'[[REPARTO:Ambulatorio post-Terapia Intensiva]] il [[DATA_VISITA:05/03/2025]] (prenotazione [[NUMERO_PRENOTAZIONE:PTI-25-00071]]).\n- Rimozione del catetere vescicale entro 48 ore e controllo della ripresa della minzione spontanea."
+    },
+    {
+      "type": "paragraph",
+      "text": "Colloqui con i familiari: il marito, sig. [[CONTATTO_EMERGENZA:W. Bianco]], e la figlia [[FAMILIARE:Sole]] sono stati informati quotidianamente dell'evoluzione clinica. Le ultime informazioni sono state fornite il [[DATA:28/01/2025]] dalla Dott.ssa [[MEDICO:B. Gualtieri]] alla presenza della coordinatrice infermieristica [[OPERATORE_SANITARIO:Debora Lanteri]]. Le secrezioni bronchiali sono attualmente scarse, di colore bianco."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:La Spezia]], [[DATA_REFERTO:29.01.25]]",
+      "role": "Il Medico Referente di Terapia Intensiva",
+      "name": "Dott.ssa [[MEDICO:Bianca Gualtieri]]",
+      "extra": [
+        "Dirigente Medico - Anestesia e Rianimazione"
+      ],
+      "digital": false,
+      "stamp": [
+        "[[STRUTTURA_SANITARIA:A.O. SANTA MARIA DELLA RUPE]]",
+        "[[REPARTO:TERAPIA INTENSIVA GENERALE]]",
+        "Dott.ssa [[MEDICO:Bianca Gualtieri]]",
+        "Ord. Medici SP n. [[NUMERO_ALBO:2871]]"
+      ]
+    },
+    {
+      "type": "stamp",
+      "lines": [
+        "IL DIRETTORE S.C.",
+        "Prof.ssa [[MEDICO:L. Ferraris-Bellini]]",
+        "Ord. Medici SP n. [[NUMERO_ALBO:1654]]"
+      ],
+      "angle": 9,
+      "align": "left"
+    },
+    {
+      "type": "footnotes",
+      "items": [
+        "Le DAT sono registrate con prot. n. [[NUMERO_PROTOCOLLO:DAT/2019/004417]] presso l'Ufficio di Stato Civile del Comune di [[LUOGO:Sarzana]]; il modulo di rifiuto informato è allegato alla cartella [[NUMERO_CARTELLA:TI/25/0042]].",
+        "Copia della presente lettera è stata consegnata, su richiesta della paziente, al marito sig. [[CONTATTO_EMERGENZA:Walter Bianco]] e inviata al MMG Dott. [[MEDICO:E. Lagomarsino]] tramite Fascicolo Sanitario Elettronico.",
+        "SOFA: Sequential Organ Failure Assessment; APACHE: Acute Physiology and Chronic Health Evaluation; RASS: Richmond Agitation-Sedation Scale; MRC: Medical Research Council."
+      ]
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Swan-Ganz",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "MEDICO"
+      ]
+    },
+    {
+      "value": "Richmond",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME",
+        "LUOGO"
+      ]
+    },
+    {
+      "value": "Glasgow",
+      "forbidden_categories": [
+        "LUOGO",
+        "PERSONA"
+      ]
+    },
+    {
+      "value": "Gram",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "Coombs",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    },
+    {
+      "value": "bianco",
+      "forbidden_categories": [
+        "COGNOME",
+        "FAMILIARE",
+        "CONTATTO_EMERGENZA"
+      ]
+    }
+  ]
+}

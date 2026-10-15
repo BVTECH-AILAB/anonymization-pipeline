@@ -1,0 +1,252 @@
+{
+  "id": "lettera_dimissione_media_04",
+  "type": "lettera_dimissione",
+  "difficulty": "media",
+  "style": {
+    "font": "helvetica",
+    "color": "#7B3F00",
+    "font_size": 9,
+    "margins_mm": 20
+  },
+  "persons": {
+    "paz": {
+      "first_name": "Arben",
+      "last_name": "Hoxha",
+      "sex": "M",
+      "birth_date": "1983-12-03",
+      "birth_place": "Albania"
+    }
+  },
+  "letterhead": {
+    "logo": null,
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale San Leonardo di Poggiorosso]]",
+      "Dipartimento Chirurgico - Area Traumatologica",
+      "[[REPARTO:S.O.C. Ortopedia e Traumatologia]]",
+      "Direttore: Dott. [[MEDICO:Lapo Guidotti]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Via Ciliegiole 97]]",
+      "[[CAP:51100]] [[LUOGO:Pistoia]]",
+      "Segreteria [[TELEFONO:0573 351722]]"
+    ]
+  },
+  "running_header": "Pz. [[PERSONA:Hoxha Arben]] - N. ricovero [[NUMERO_ACCETTAZIONE:2024-PT-0081452]] - Lettera di dimissione",
+  "footer": [
+    "Lettera di dimissione - copia per il paziente e per il medico curante",
+    "Per informazioni sul ricovero rivolgersi alla segreteria di reparto dal lunedì al venerdì, ore 9-13."
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "text": "LETTERA DI DIMISSIONE",
+      "subtitle": "Ricovero urgente per trauma - infortunio sul lavoro"
+    },
+    {
+      "type": "patient_box",
+      "align": "right",
+      "columns": 1,
+      "fields": [
+        [
+          "Paziente",
+          "[[PERSONA:Hoxha Arben]]"
+        ],
+        [
+          "Nato il",
+          "[[DATA_NASCITA:03/12/1983]] in [[LUOGO_NASCITA:Albania]]"
+        ],
+        [
+          "Cittadinanza",
+          "[[CITTADINANZA:albanese]]"
+        ],
+        [
+          "C.F.",
+          "[[CODICE_FISCALE:@paz]]"
+        ],
+        [
+          "Domicilio",
+          "[[INDIRIZZO:Via Pistoiese 455]], [[LUOGO:Prato]]"
+        ],
+        [
+          "Recapito",
+          "fratello [[FAMILIARE:Ilir Hoxha]], [[TELEFONO:+39 328 774 5160]]"
+        ]
+      ]
+    },
+    {
+      "type": "fields",
+      "columns": 3,
+      "fields": [
+        [
+          "N. ricovero",
+          "[[NUMERO_ACCETTAZIONE:2024-PT-0081452]]"
+        ],
+        [
+          "Ingresso",
+          "[[DATA_RICOVERO:08/07/2024]]"
+        ],
+        [
+          "Dimissione",
+          "[[DATA_RICOVERO:19/07/2024]]"
+        ]
+      ]
+    },
+    {
+      "type": "barcode",
+      "kind": "code128",
+      "label": "N. ricovero",
+      "value": "[[NUMERO_ACCETTAZIONE:2024-PT-0081452]]",
+      "align": "left"
+    },
+    {
+      "type": "paragraph",
+      "text": "Al Medico Curante\n\nGentile Collega,\nIl sig. [[PERSONA:Arben Hoxha]], [[PROFESSIONE:muratore]] dipendente della ditta [[DATORE_LAVORO:Edilnova Costruzioni S.r.l.]], è giunto alla nostra osservazione l'[[DATA_RICOVERO:8 luglio 2024]] in seguito a [[DIAGNOSI:caduta accidentale da impalcatura]] (altezza circa 2,5 m) durante l'attività lavorativa. È stato redatto in Pronto Soccorso il certificato di infortunio sul lavoro INAIL n. [[NUMERO_PROTOCOLLO:INAIL-24-PT-338120]]."
+    },
+    {
+      "type": "section",
+      "text": "Anamnesi"
+    },
+    {
+      "type": "paragraph",
+      "text": "Anamnesi patologica remota negativa. Non assume farmaci. [[ALLERGIA:Allergia ai FANS]] (angioedema nel 2019). Fumatore di circa 10 sigarette/die. Comunica in italiano in modo adeguato; per il consenso informato è stato comunque presente il fratello, sig. [[FAMILIARE:Hoxha]]."
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi all'ingresso"
+    },
+    {
+      "type": "paragraph",
+      "text": "[[DIAGNOSI:Frattura pluriframmentaria del pilone tibiale destro]] (tipo III sec. Rüedi-Allgöwer, AO 43-C2) con [[DIAGNOSI:frattura associata del perone distale]]. [[DIAGNOSI:Contusione del polso sinistro]] senza lesioni ossee."
+    },
+    {
+      "type": "section",
+      "text": "Interventi e procedure"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Data",
+        "Procedura",
+        "Operatori"
+      ],
+      "widths": [
+        1.6,
+        5,
+        3.4
+      ],
+      "rows": [
+        [
+          "[[DATA:08/07/2024]]",
+          "[[INTERVENTO:Riduzione e stabilizzazione con fissatore esterno a ponte]] in attesa della risoluzione dell'edema dei tessuti molli",
+          "Dott. [[MEDICO:Niccolò Bartolini]]"
+        ],
+        [
+          "[[DATA:15/07/2024]]",
+          "[[INTERVENTO:Rimozione del fissatore esterno, riduzione cruenta e osteosintesi con placca anatomica mediale e placca peroneale]]",
+          "Dott. [[MEDICO:Niccolò Bartolini]]; anestesia: spinale"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Decorso"
+    },
+    {
+      "type": "paragraph",
+      "text": "Decorso post-operatorio regolare, ferite chirurgiche in ordine, non segni di sindrome compartimentale. La TC di controllo del [[DATA:16/07/2024]] ha documentato una buona riduzione della superficie articolare. Profilassi antitrombotica con [[FARMACO:enoxaparina 4000 UI]] e profilassi antibiotica perioperatoria con [[FARMACO:cefazolina 2 g]]. Il pz. ha iniziato la mobilizzazione con il fisioterapista [[OPERATORE_SANITARIO:Giulia Mencarelli]]: deambulazione con due bastoni antibrachiali senza carico sull'arto inferiore destro. Emoglobina alla dimissione [[ESAME_VALORE:12,8]] g/dL."
+    },
+    {
+      "type": "page_break"
+    },
+    {
+      "type": "section",
+      "text": "Diagnosi di dimissione"
+    },
+    {
+      "type": "paragraph",
+      "text": "**[[DIAGNOSI:Frattura del pilone tibiale destro trattata con osteosintesi]]**; [[DIAGNOSI:frattura del perone distale destro]] trattata con osteosintesi. Infortunio sul lavoro."
+    },
+    {
+      "type": "section",
+      "text": "Terapia alla dimissione"
+    },
+    {
+      "type": "table",
+      "header": [
+        "Farmaco",
+        "Dose",
+        "Orari",
+        "Note"
+      ],
+      "widths": [
+        3,
+        1.6,
+        1.6,
+        3.8
+      ],
+      "rows": [
+        [
+          "[[FARMACO:Enoxaparina 4000 UI]] s.c.",
+          "1 fl",
+          "ore 20",
+          "per 35 giorni complessivi"
+        ],
+        [
+          "[[FARMACO:Paracetamolo 1000 mg]]",
+          "1 cpr",
+          "ogni 8 ore",
+          "al bisogno; NON assumere FANS"
+        ],
+        [
+          "[[FARMACO:Tramadolo 50 mg]]",
+          "1 cpr",
+          "sera",
+          "al bisogno, per dolore intenso"
+        ],
+        [
+          "[[FARMACO:Colecalciferolo 10.000 UI]]",
+          "30 gocce",
+          "settimanale",
+          "per 3 mesi"
+        ]
+      ]
+    },
+    {
+      "type": "section",
+      "text": "Indicazioni e controlli"
+    },
+    {
+      "type": "paragraph",
+      "text": "Arto inferiore destro in scarico completo per 6 settimane, poi carico progressivo secondo indicazione dell'ortopedico. Medicazione e rimozione dei punti presso il nostro ambulatorio a 12 giorni dall'intervento. Controllo clinico-radiografico a 6 settimane il [[DATA_VISITA:28/08/2024]] (prenotazione [[NUMERO_PRENOTAZIONE:CUP-PT-24-556017]]). Prognosi INAIL: 90 giorni salvo complicazioni; il datore di lavoro, [[DATORE_LAVORO:Edilnova Costruzioni S.r.l.]], riceverà la certificazione di prosecuzione tramite il medico curante."
+    },
+    {
+      "type": "signature",
+      "place_date": "[[LUOGO:Pistoia]], [[DATA_REFERTO:19-07-2024]]",
+      "role": "Il Dirigente Medico",
+      "name": "Dott. [[MEDICO:Niccolò Bartolini]]",
+      "digital": false,
+      "stamp": [
+        "[[REPARTO:ORTOPEDIA E TRAUMATOLOGIA]]",
+        "Dott. [[MEDICO:Niccolò Bartolini]]",
+        "Ordine Medici PT n. [[NUMERO_ALBO:2593]]"
+      ]
+    },
+    {
+      "type": "signature",
+      "place_date": "Visto",
+      "role": "Il Direttore S.O.C.",
+      "name": "Dott. [[MEDICO:Lapo Guidotti]]",
+      "digital": false
+    }
+  ],
+  "negatives": [
+    {
+      "value": "Rüedi-Allgöwer",
+      "forbidden_categories": [
+        "PERSONA",
+        "COGNOME"
+      ]
+    }
+  ]
+}

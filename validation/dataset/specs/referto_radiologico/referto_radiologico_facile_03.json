@@ -1,0 +1,52 @@
+{
+  "id": "referto_radiologico_facile_03",
+  "type": "referto_radiologico",
+  "difficulty": "facile",
+  "style": {"font": "dejavu", "color": "#6B1E3C", "font_size": 9, "margins_mm": 17},
+  "persons": {
+    "paz": {"first_name": "Tommaso", "last_name": "Bellandi", "sex": "M", "birth_date": "1991-06-14", "birth_place": "Firenze"}
+  },
+  "letterhead": {
+    "logo": "PPV",
+    "logo_shape": "square",
+    "lines": [
+      "[[STRUTTURA_SANITARIA:Ospedale di Poggio Ventoso]]",
+      "[[REPARTO:UOC Diagnostica per Immagini - Settore RM]]",
+      "Direttore f.f.: Dott. [[MEDICO:Iacopo Benvenuti]]"
+    ],
+    "right": [
+      "[[INDIRIZZO:Viale dei Mille 207]]",
+      "[[CAP:50131]] [[LUOGO:Firenze]]",
+      "Prenotazioni RM: [[TELEFONO:055 7781340]]"
+    ]
+  },
+  "footer": [
+    "Servizio Sanitario Regionale - P.IVA [[PARTITA_IVA:@osp]] - Informativa privacy disponibile presso gli sportelli CUP e sul sito aziendale"
+  ],
+  "blocks": [
+    {"type": "title", "text": "REFERTO DI RISONANZA MAGNETICA", "subtitle": "RM del ginocchio sinistro senza mezzo di contrasto"},
+    {"type": "patient_box", "columns": 2, "fields": [
+      ["Cognome e nome", "[[PERSONA:Tommaso Bellandi]]"],
+      ["Data di nascita", "[[DATA_NASCITA:14/06/1991]]"],
+      ["Codice fiscale", "[[CODICE_FISCALE:@paz]]"],
+      ["Regime", "SSN - esterno"]
+    ]},
+    {"type": "fields", "columns": 2, "fields": [
+      ["N. accesso", "[[ACCESSION_NUMBER:MR-25-0062519]]"],
+      ["Data esame", "[[DATA_VISITA:03/02/2026]]"],
+      ["Medico prescrittore", "Dott. [[MEDICO:Sandro Pieraccini]]"],
+      ["Provenienza", "[[REPARTO:Ambulatorio di Ortopedia]]"]
+    ]},
+    {"type": "barcode", "kind": "code128", "value": "[[ACCESSION_NUMBER:MR-25-0062519]]", "align": "right"},
+    {"type": "heading", "text": "Quesito diagnostico"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Trauma distorsivo del ginocchio sinistro]] durante attività sportiva circa tre settimane fa. Dolore all'emirima mediale e blocchi articolari episodici. [[DIAGNOSI:Sospetta lesione meniscale]]."},
+    {"type": "heading", "text": "Tecnica"},
+    {"type": "paragraph", "text": "Esame eseguito con apparecchiatura a 1,5 Tesla e bobina dedicata. Sequenze DP con saturazione del grasso sui tre piani, T1 sagittale e T2* coronale. Non è stato somministrato mezzo di contrasto."},
+    {"type": "heading", "text": "Descrizione"},
+    {"type": "paragraph", "text": "[[DIAGNOSI:Lesione obliqua del corno posteriore del menisco mediale]], che raggiunge la superficie articolare inferiore, senza frammenti dislocati nella gola intercondiloidea.\nMenisco laterale indenne.\nLegamento crociato anteriore e legamento crociato posteriore regolari per decorso e segnale. Legamento collaterale mediale con [[DIAGNOSI:modesta infiltrazione edematosa dei tessuti periligamentosi]], in assenza di discontinuità delle fibre (distrazione di I grado).\nFocolaio di [[DIAGNOSI:edema osseo contusivo del condilo femorale laterale]], senza linee di frattura.\nCartilagine articolare femoro-tibiale e femoro-rotulea di spessore conservato. Modesto versamento articolare. Piccola cisti di Baker nel recesso semimembranoso-gastrocnemio mediale."},
+    {"type": "heading", "text": "Conclusioni"},
+    {"type": "paragraph", "text": "**[[DIAGNOSI:Lesione del corno posteriore del menisco mediale]], [[DIAGNOSI:distrazione di I grado del collaterale mediale]] ed [[DIAGNOSI:edema osseo contusivo del condilo femorale laterale]].** Si rimanda allo specialista ortopedico per la valutazione del trattamento."},
+    {"type": "signature", "place_date": "[[LUOGO:Firenze]], [[DATA_REFERTO:04/02/2026]]", "role": "Il Medico Radiologo", "name": "Dott.ssa [[MEDICO:Costanza Niccolai]]", "digital": true}
+  ],
+  "negatives": [{"value": "Baker", "forbidden_categories": ["PERSONA", "COGNOME"]}]
+}

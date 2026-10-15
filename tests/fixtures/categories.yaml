@@ -1,0 +1,129 @@
+# Category registry of the tests only (tests/conftest.py reads it instead of
+# resources/categories.yaml).
+#
+# Same groups and categories as the packaged registry, with the generic families and the partial
+# categories always active: the tests check the fallback to the generic category, the eponym
+# filter on the PERSONA family and the tag of a group, whatever the production registry does.
+# Keep the groups aligned with resources/categories.yaml.
+
+groups:
+  anagrafica:
+    NOME:                "first name"
+    COGNOME:             "surname (including maiden/married name)"
+    PERSONA:             "first name and surname of a natural person together, as they appear in the text"
+    PATERNITA_MATERNITA: "first name and surname of father and mother"
+    SESSO:               "registered sex (M/F)"
+    DATA_NASCITA:        "date of birth"
+    DATA_DECESSO:        "date of death"
+    LUOGO_NASCITA:       "municipality, province and country of birth"
+    CITTADINANZA:        "citizenship, nationality"
+    STATO_CIVILE:        "marital status (single, married, widowed...)"
+    PROFESSIONE:         "profession, occupation"
+    TITOLO_STUDIO:       "educational qualification, level of education"
+    ETA:                 "age of a person in years"
+  residenza:
+    INDIRIZZO: "street/square and house number"
+    CAP:       "postal code (CAP)"
+    LUOGO:     "municipality, province, hamlet of residence or domicile"
+    STATO:     "country of residence"
+  identificativi:
+    CODICE_FISCALE:    "Italian tax code (codice fiscale)"
+    PARTITA_IVA:       "VAT number (partita IVA)"
+    TESSERA_SANITARIA: "health card number, TEAM, ASL/SSN code"
+    CODICE_STP_ENI:    "STP/ENI code (temporarily present foreigners)"
+    CODICE_ESENZIONE:  "co-payment exemption code (disease, income, disability)"
+    NUMERO_POLIZZA:    "insurance policy or claim number"
+    NUMERO_PROTOCOLLO: "registration (protocol) number of a personal file"
+  documenti:
+    NUMERO_CARTA_IDENTITA:     "identity card number (electronic or paper)"
+    NUMERO_PASSAPORTO:         "passport number"
+    NUMERO_PATENTE:            "driving licence number"
+    NUMERO_PERMESSO_SOGGIORNO: "residence permit or residence card number"
+    ENTE_RILASCIO:             "municipality or authority that issued the document"
+    DATA_RILASCIO:             "document issue date"
+    DATA_SCADENZA:             "document expiry date"
+    MRZ:                       "each line of the machine-readable zone (MRZ) of passports and identity cards, copied in full"
+  contatti:
+    EMAIL:           "email addresses"
+    PEC:             "certified email (PEC) addresses"
+    TELEFONO:        "landline or mobile phone numbers"
+    FAX:             "fax numbers"
+    USERNAME_SOCIAL: "social media profiles, usernames, handles"
+    INDIRIZZO_IP:    "IPv4 and IPv6 addresses"
+    ID_DISPOSITIVO:  "MAC addresses, IMEI, device identifiers"
+    URL_PERSONALE:   "links to profiles or portals with personal data"
+  finanziari:
+    IBAN:          "IBAN bank details"
+    CARTA_CREDITO: "credit card number, expiry, CVV"
+    NUMERO_CONTO:  "bank or postal account number"
+  veicoli:
+    TARGA:  "vehicle licence plates"
+    TELAIO: "chassis number (VIN)"
+  identificativi_sanitari:
+    ID_PAZIENTE:         "patient code, internal registry code"
+    NUMERO_CARTELLA:     "medical record number, nosological number"
+    NUMERO_ACCETTAZIONE: "admission, hospitalization, emergency department number"
+    NUMERO_REFERTO:      "report or exam number"
+    NUMERO_RICETTA:      "NRE, electronic prescription, therapeutic plan number"
+    NUMERO_PRENOTAZIONE: "booking code, CUP"
+    ACCESSION_NUMBER:    "identifier of imaging and lab exams (accession number)"
+    CODICE_CAMPIONE:     "test tube, biopsy, slide code"
+  persone_correlate:
+    MEDICO:              "name of the attending, reporting or prescribing physician (also inside transcribed stamps and signatures)"
+    OPERATORE_SANITARIO: "name of nurses, technicians, residents"
+    NUMERO_ALBO:         "medical register (albo) number, staff number (often inside stamps)"
+    FAMILIARE:           "name of spouse, children, relatives mentioned"
+    CONTATTO_EMERGENZA:  "name of the emergency contact person, caregiver"
+    TUTORE_DELEGATO:     "name of guardian, legal support administrator, delegate, parent of a minor"
+  date:
+    DATA:              "generic dates"
+    DATA_VISITA:       "visit or service date"
+    DATA_REFERTO:      "report issue date"
+    DATA_RICOVERO:     "admission or discharge date"
+    DATA_PRESCRIZIONE: "prescription date"
+  organizzazioni:
+    ORGANIZZAZIONE:      "organizations and companies in general"
+    STRUTTURA_SANITARIA: "hospital, clinic, laboratory, local health authority (ASL)"
+    REPARTO:             "ward, outpatient clinic, operating unit"
+    DATORE_LAVORO:       "company where the data subject works"
+    SCUOLA:              "school attended"
+  sanitari:
+    DIAGNOSI:               "diagnoses, diagnostic question, symptoms"
+    PATOLOGIA:              "past and chronic diseases, medical history"
+    TERAPIA:                "therapies, treatments, rehabilitation"
+    FARMACO:                "drugs, active ingredient, dosage, posology"
+    ESAME_VALORE:           "lab values, exam results, clinical measurements"
+    INTERVENTO:             "surgeries, procedures"
+    ALLERGIA:               "allergies and intolerances"
+    GRUPPO_SANGUIGNO:       "blood group and Rh factor"
+    INVALIDITA:             "civil invalidity, disability, law 104"
+    GRAVIDANZA:             "pregnancy, childbirth, termination of pregnancy"
+    SALUTE_MENTALE:         "psychiatric or psychological diagnoses and therapies"
+    DIPENDENZE:             "alcohol, drug, smoking addictions, addiction services (SerD)"
+    MALATTIE_INFETTIVE:     "HIV, hepatitis, sexually transmitted diseases"
+    DATO_GENETICO:          "genetic tests, mutations, predispositions"
+    MISURE_ANTROPOMETRICHE: "weight, height, BMI, blood pressure"
+    DECESSO_CAUSA:          "cause of death"
+  particolari:
+    RELIGIONE:             "religious faith, philosophical beliefs (e.g. refusal of transfusions)"
+    ORIENTAMENTO_SESSUALE: "sexual orientation, sex life, gender identity"
+    OPINIONE_POLITICA:     "political opinions and affiliation"
+    SINDACATO:             "trade union membership"
+    ETNIA:                 "racial or ethnic origin"
+    DATI_GIUDIZIARI:       "criminal convictions, proceedings, detention status"
+    DATO_BIOMETRICO:       "biometric data used to identify a person"
+
+# partial: categories that hold only a part of an entity. The tag of a group takes the most
+# informative category: specific (MEDICO) > generic (PERSONA) > partial (COGNOME). It only
+# changes the label of a tag, never what is redacted.
+partial: [NOME, COGNOME]
+
+# generic: the families of the categories (see the header). Required by the fallback of inactive
+# categories, the eponym filter, the NER filters and the tags: do not comment it out.
+generic:
+  PERSONA: [NOME, COGNOME, PATERNITA_MATERNITA, MEDICO, OPERATORE_SANITARIO, FAMILIARE, CONTATTO_EMERGENZA,
+            TUTORE_DELEGATO]
+  LUOGO: [LUOGO_NASCITA, CITTADINANZA, STATO, ENTE_RILASCIO]
+  DATA: [DATA_NASCITA, DATA_RILASCIO, DATA_SCADENZA, DATA_VISITA, DATA_REFERTO, DATA_RICOVERO, DATA_PRESCRIZIONE,
+         DATA_DECESSO]
+  ORGANIZZAZIONE: [STRUTTURA_SANITARIA, REPARTO, DATORE_LAVORO, SCUOLA]

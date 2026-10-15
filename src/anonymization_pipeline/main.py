@@ -12,6 +12,7 @@ from anonymization_pipeline.config import Settings, get_settings
 from anonymization_pipeline.errors import register_exception_handlers
 from anonymization_pipeline.logging_setup import setup_logging
 from anonymization_pipeline.middleware import RequestIdMiddleware
+from anonymization_pipeline.pipeline_config import load_pipeline_config
 
 logger = logging.getLogger(__name__)
 
@@ -21,9 +22,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Create shared resources on startup and release them on shutdown.
 
     Clients (httpx clients ...) live on ``app.state``, never in module-level
-    globals.
+    globals. The pipeline configuration is loaded here: an invalid file stops
+    the startup instead of failing every request.
     """
     settings: Settings = app.state.settings
+    app.state.pipeline_config = load_pipeline_config(settings)
     logger.info(
         "Service started: name=%s version=%s environment=%s",
         settings.app_name,

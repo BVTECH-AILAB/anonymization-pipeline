@@ -13,14 +13,13 @@ fa il provisioning.
 | Namespace proposto | |
 | Porta | `8000` (nome `web`) |
 | Liveness probe | `GET /healthz` |
-| Readiness probe | `GET /readyz` (controlla il DB) |
-| Serve un database? | sì / no |
+| Readiness probe | `GET /readyz` |
+| Serve un database? | no (servizio senza stato) |
 | Esposizione | solo interna (`traefik-int`) / tramite WSO2 API Manager |
 | Chi lo chiama | |
 | Chi chiama (dipendenze) | es. llm-gateway, ner-anonymizer, authz |
 | Repliche | default 2 |
 | Risorse | default requests 100m / 256Mi, limits 500m / 512Mi |
-| Migrazioni all'avvio | `ANONPIP_RUN_MIGRATIONS=true` (default) |
 
 ### Variabili d'ambiente
 
@@ -32,8 +31,13 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_ENVIRONMENT` | `prod` | `staging` | `prod` | no |
 | `ANONPIP_LOG_LEVEL` | `INFO` | `DEBUG` | `INFO` | no |
 | `ANONPIP_EXTENDED_LOG_CONTEXT` | `false` | `false` (solo per debug mirato) | ignorata | no |
-| `ANONPIP_DATABASE_URL` | nessuno (credenziale) | secret CNPG | secret CNPG | **sì** |
-| `ANONPIP_DB_POOL_SIZE` | `5` | | | no |
+| `ANONPIP_LOG_MASK_PREFIX` | `1` | | | no |
+| `ANONPIP_LOG_MASK_SUFFIX` | `1` | | | no |
+| `ANONPIP_PIPELINE_CONFIG_FILE` | vuoto (default del pacchetto) | | | no |
+
+`ANONPIP_PIPELINE_CONFIG_FILE` punta a un YAML montato da ConfigMap con le
+sole chiavi da cambiare di `resources/default.yaml`. Un file non valido
+(chiave sconosciuta, categoria protetta disattivata) blocca l'avvio del pod.
 
 ## Cosa fa il team piattaforma
 

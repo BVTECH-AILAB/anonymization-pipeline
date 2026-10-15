@@ -1,7 +1,7 @@
 """Service configuration.
 
 Every setting is read from an environment variable with the ``ANONPIP_``
-prefix (``ANONPIP_LOG_LEVEL``, ``ANONPIP_VLM_URL`` ...). Every field
+prefix (``ANONPIP_LOG_LEVEL``, ``ANONPIP_PIPELINE_CONFIG_FILE`` ...). Every field
 has a safe default: a pod must never crash on startup because a variable is
 missing from its ConfigMap.
 
@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     extended_log_context: bool = False
     log_mask_prefix: int = 1
     log_mask_suffix: int = 1
+
+    # YAML with the pipeline keys to change (resources/default.yaml); empty: packaged defaults.
+    pipeline_config_file: str = ""
 
     @field_validator("log_level")
     @classmethod

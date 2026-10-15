@@ -1,0 +1,31 @@
+# =============================================================================
+#  Pipeline configuration (defaults): only the tunable parameters.
+#
+#  Layers, from weakest to strongest:
+#    1. this file, over every category of the registry (categories.yaml) switched on
+#    2. the user file in ANONPIP_PIPELINE_CONFIG_FILE (only the keys to change)
+#    3. per-request choices (categories switched on or off), within the protection floor
+#  Unknown keys are an error: a typo is never silently ignored.
+#  Elsewhere: the vocabulary of the text detectors in detectors/*.yaml (not overridable).
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+#  Categories to anonymize (registry, groups and descriptions in categories.yaml).
+#  Every category of the registry is on: list here only the ones off by default.
+#  Here and in the user file also by group:
+#  categories: {groups: {organizzazioni: false}, DATORE_LAVORO: true};
+#  a category given in the same file wins over its group.
+#  Quasi-identifiers (dates, age, profession...) are off: PA-14 is still open.
+#  Off does not mean in clear text when the generic category is on: MEDICO is off, PERSONA is on,
+#  so a physician's name is redacted as PERSONA (categories.yaml, generic).
+# -----------------------------------------------------------------------------
+categories: {groups: {date: false, persone_correlate: false, sanitari: false}, ETA: false, STATO_CIVILE: false, PROFESSIONE: false, SESSO: false, STATO: false}
+
+# -----------------------------------------------------------------------------
+#  Protection floor: groups and categories a request can never switch off (direct identifiers).
+#  Each of them must be on in the effective configuration: switching one off in the user file is
+#  a startup error, so the floor is changed only by removing it from this list.
+# -----------------------------------------------------------------------------
+protection:
+  protected: [NOME, COGNOME, PERSONA, DATA_NASCITA, INDIRIZZO, identificativi, documenti, contatti, finanziari,
+              identificativi_sanitari]

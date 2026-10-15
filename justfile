@@ -25,7 +25,7 @@ logs:
 # --- Local (uv) ---
 
 sync:
-    uv sync
+    uv sync --all-extras
 
 # Run the API on the host
 dev:
@@ -60,6 +60,14 @@ test *args:
 # Unit tests with coverage (fails under 80%), writes coverage.xml and junit.xml for Sonar
 test-cov:
     uv run pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=junit.xml
+
+# NER models into the Hugging Face cache (the only step with network); names override the configured one
+models *names:
+    uv run python -m anonymization_pipeline.model_store {{names}}
+
+# Tests with the real NER models (`just models` with the names of tests/unit/test_ner.py first)
+test-ner:
+    uv run pytest -m ner
 
 # Known vulnerabilities in the dependencies
 audit:

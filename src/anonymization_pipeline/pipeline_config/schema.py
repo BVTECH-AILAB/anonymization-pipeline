@@ -49,10 +49,26 @@ class Propagation(_Section):
     min_token: int = Field(ge=2)
 
 
+class Ner(_Section):
+    """NER detector: a local model on CPU, loaded once at startup (``ner`` extra)."""
+
+    enabled: bool
+    engine: Literal["token_classification", "gliner"]
+    model: str = Field(min_length=1)  # Hugging Face hub name or local folder
+    revision: str | None = None
+    threshold: float = Field(ge=0, le=1)
+    window_words: int = Field(
+        ge=10
+    )  # the models read a few hundred tokens: text in windows
+    overlap_words: int = Field(ge=0)
+    threads: int | None = Field(default=None, ge=1)
+
+
 class Detection(_Section):
     anchoring: Anchoring
     detectors: Detectors
     propagation: Propagation
+    ner: Ner
 
 
 class Redaction(_Section):
@@ -107,7 +123,7 @@ class PipelineConfig(_Section):
         if off := [c for c in self.protected() if not self.categories[c]]:
             raise ValueError(f"protected categories switched off: {', '.join(off)}")
         detectors = self.detection.detectors
-        if not (detectors.rules or detectors.labels):
+        if not (detectors.rules or detectors.labels or self.detection.ner.enabled):
             raise ValueError("detection.detectors: at least one detector must be on")
         return self
 

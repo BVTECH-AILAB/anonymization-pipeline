@@ -23,6 +23,7 @@ from typing import Annotated, Literal
 from fastapi import Depends, Request
 
 from anonymization_pipeline.config import Settings
+from anonymization_pipeline.detectors import DetectorUnavailable
 from anonymization_pipeline.ingest import DocumentError
 from anonymization_pipeline.logging_setup import log_event
 from anonymization_pipeline.pipeline_config import PipelineConfig
@@ -33,6 +34,7 @@ logger = logging.getLogger(__name__)
 JobStatus = Literal["queued", "running", "done", "blocked", "failed", "cancelled"]
 TERMINAL: frozenset[str] = frozenset({"done", "blocked", "failed", "cancelled"})
 GENERIC_ERROR = "Elaborazione non riuscita. Riprova più tardi."
+NOT_READY = "Servizio non ancora pronto. Riprova tra qualche minuto."
 
 
 class QueueFull(RuntimeError):
@@ -222,6 +224,12 @@ class JobRegistry:
             return
         except DocumentError as exc:  # Italian message without document content
             job.error = str(exc)
+            self._finish(job, "failed")
+            return
+        except (
+            DetectorUnavailable
+        ):  # a configured model is not loaded: never a weaker run
+            job.error = NOT_READY
             self._finish(job, "failed")
             return
         except Exception as exc:  # the message may hold document content: type only

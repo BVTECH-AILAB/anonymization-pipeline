@@ -30,6 +30,7 @@ from pypdf.generic import (
 )
 
 from anonymization_pipeline.detection import detect
+from anonymization_pipeline.detectors.ner import Engine
 from anonymization_pipeline.layers import TextLayer
 from anonymization_pipeline.layers.native import native_layer
 from anonymization_pipeline.pdf import PDFIUM_LOCK
@@ -277,8 +278,9 @@ def _redetection(
     strong: dict[str, str],
     cfg: PipelineConfig,
     report: VerificationReport,
+    ner: Engine | None,
 ) -> None:
-    for f in detect(layers, cfg).found:
+    for f in detect(layers, cfg, ner).found:
         value = _norm(layers[f.layer].text[f.start : f.end])
         if value in strong:
             report.fail("value_detected_again", layers[f.layer].page, f.category)
@@ -289,6 +291,7 @@ def verify(
     redacted: Redacted,
     values: set[tuple[str, str]],
     cfg: PipelineConfig,
+    ner: Engine | None = None,
 ) -> VerificationReport:
     """Run every check on the redacted PDF.
 
@@ -297,6 +300,7 @@ def verify(
         redacted: The result of ``render.pdf.redact``.
         values: ``(text, category)`` that were redacted (IN CLEAR TEXT: never log them).
         cfg: Configuration of the run.
+        ner: The NER model loaded at startup, when NER is enabled.
     """
     report = VerificationReport()
     strong = strong_values(values)
@@ -305,5 +309,5 @@ def verify(
     _under_boxes(layers, redacted.boxes, report)
     _values(redacted.pdf, reader, layers, strong, report)
     _pixels(original, redacted, cfg, report)
-    _redetection(layers, strong, cfg, report)
+    _redetection(layers, strong, cfg, report, ner)
     return report

@@ -63,7 +63,7 @@ def test_failed_verification_blocks_the_document(
     tmp_path: Path, cfg: PipelineConfig, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     def failing(
-        original: bytes, redacted: Redacted, values: object, c: object
+        original: bytes, redacted: Redacted, values: object, c: object, ner: object
     ) -> VerificationReport:
         report = VerificationReport()
         report.fail("value_in_text", 0, "CODICE_FISCALE")

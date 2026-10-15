@@ -24,11 +24,14 @@ from anonymization_pipeline.detection.propagation import (
 from anonymization_pipeline.detectors import (
     ORDER,
     Detector,
+    DetectorUnavailable,
     LabelsDetector,
+    NerDetector,
     Proposal,
     RulesDetector,
     eponyms,
 )
+from anonymization_pipeline.detectors.ner import Engine
 from anonymization_pipeline.layers import TextLayer
 from anonymization_pipeline.pipeline_config import PipelineConfig, registry
 from anonymization_pipeline.text import Span, find
@@ -62,14 +65,22 @@ class Outcome:
         return {(layers[f.layer].text[f.start : f.end], f.category) for f in self.found}
 
 
-def active(cfg: PipelineConfig) -> list[Detector]:
-    """Active text detectors, in reliability order."""
+def active(cfg: PipelineConfig, ner: Engine | None = None) -> list[Detector]:
+    """Active text detectors, in reliability order.
+
+    Raises:
+        DetectorUnavailable: NER is enabled and no model was loaded.
+    """
     d = cfg.detection.detectors
     out: list[Detector] = []
     if d.rules:
         out.append(RulesDetector())
     if d.labels:
         out.append(LabelsDetector())
+    if cfg.detection.ner.enabled:
+        if ner is None:
+            raise DetectorUnavailable("NER enabled but no model loaded")
+        out.append(NerDetector(cfg.detection.ner, ner))
     return out
 
 
@@ -141,19 +152,22 @@ def _joined(
     return Found(layer, start, end, winner.category, winner.source)
 
 
-def detect(layers: list[TextLayer], cfg: PipelineConfig) -> Outcome:
+def detect(
+    layers: list[TextLayer], cfg: PipelineConfig, ner: Engine | None = None
+) -> Outcome:
     """Personal data on every text layer of a document.
 
     Args:
         layers: Text layers of all pages (native and OCR).
         cfg: Configuration of the run.
+        ner: The NER model loaded at startup, when NER is enabled.
 
     Returns:
         Merged spans per layer and the counters of the report.
     """
     outcome = Outcome()
     per_layer: list[list[Found]] = [[] for _ in layers]
-    for detector in active(cfg):
+    for detector in active(cfg, ner):
         for i, layer in enumerate(layers):
             if not layer.text.strip():
                 continue

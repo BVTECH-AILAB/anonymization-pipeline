@@ -1,0 +1,72 @@
+# =============================================================================
+#  NER detector vocabulary (anonymization_pipeline/detectors/ner). The model and its parameters
+#  (engine, threshold, windows, threads) are in default.yaml, detection.ner.
+#
+#  label_map: label of a token classification model -> category (resources/categories.yaml);
+#  labels not listed are ignored.
+#  gliner_labels: labels asked to a GLiNER model (zero-shot, in English) -> category.
+#  The filters discard the values the model takes for proper names by mistake.
+#  An unknown key or a nonexistent category stops startup.
+# =============================================================================
+
+label_map:
+  NOME: NOME
+  COGNOME: COGNOME
+  CODICE_FISCALE: CODICE_FISCALE
+  P_IVA: PARTITA_IVA
+  IBAN: IBAN
+  NUMERO_CARTA: CARTA_CREDITO
+  NUMERO_CONTO: NUMERO_CONTO
+  EMAIL: EMAIL
+  NUMERO_TELEFONO: TELEFONO
+  INDIRIZZO: INDIRIZZO
+  CODICE_POSTALE: CAP
+  LUOGO: LUOGO
+  STATO: STATO
+  DATA: DATA
+  DATA_NASCITA: DATA_NASCITA
+  DATA_MORTE: DATA_DECESSO
+  ETA: ETA
+  PROFESSIONE: PROFESSIONE
+  STATO_CIVILE: STATO_CIVILE
+  CARTELLA_CLINICA: NUMERO_CARTELLA
+  MALATTIA: DIAGNOSI
+  STORIA_CLINICA: PATOLOGIA
+  MEDICINA: FARMACO       # DOSAGGIO not mapped: "1 cpr", "mg/die" alone identify nobody
+  TARGA_VEICOLO: TARGA
+  IP: INDIRIZZO_IP
+  IPV6_1: INDIRIZZO_IP
+  MAC: ID_DISPOSITIVO
+  IMEI: ID_DISPOSITIVO
+  URL: URL_PERSONALE
+  RAGIONE_SOCIALE: ORGANIZZAZIONE
+  N_SENTENZA: DATI_GIUDIZIARI
+
+gliner_labels:
+  person: PERSONA
+  organization: ORGANIZZAZIONE
+  hospital: STRUTTURA_SANITARIA
+  hospital department: REPARTO
+  city: LUOGO
+  street address: INDIRIZZO
+  phone number: TELEFONO
+  email: EMAIL
+  date of birth: DATA_NASCITA
+  identity document number: NUMERO_CARTA_IDENTITA
+  medical record number: NUMERO_CARTELLA
+
+min_length: 3                                       # shorter values are discarded
+require_capital: [PERSONA, LUOGO, ORGANIZZAZIONE]   # proper names: at least one capitalized word
+
+# case-insensitive; words often mistaken for proper names in reports and forms (labels, headings)
+false_positives: [paziente, cognome, nome, firma, data, referto, diagnosi, terapia, esame, anamnesi,
+                  conclusioni, sesso, codice, fiscale, tessera, sanitaria, repubblica, italiana, comune,
+                  ministero, carta, identità, identita, ospedale, reparto, medico, dott, dott.ssa, dr,
+                  dr.ssa, prof, prof.ssa, sig, sig.ra, tel, email, via, piazza, allergie, intolleranze,
+                  altezza, peso, ambulatorio, indirizzo, fattori, prossimo, controllo, accertamenti,
+                  visita, esito, note, osservazioni, sinistro, polizza, protocollo, accettazione,
+                  prenotazione, ricetta, provetta, campione, vetrino, esenzione, albo, matricola,
+                  infermiera, infermiere, cittadinanza, professione,
+                  # labels and section titles of reports ("Medico di base", "Anamnesi fisiologica")
+                  di, base, referente, curante, provenienza, fisiologica, familiare, patologica,
+                  remota, prossima, obiettivo, decorso, clinico, indicazioni]

@@ -1,6 +1,7 @@
 """Liveness, readiness and version endpoints (used by the Kubernetes probes)."""
 
 from fastapi import APIRouter, Request
+from fastapi.responses import JSONResponse
 
 from anonymization_pipeline import __version__
 
@@ -15,9 +16,16 @@ async def healthz() -> dict[str, str]:
 
 
 @router.get("/readyz")
-async def readyz() -> dict[str, str]:
-    """Readiness: the service can serve traffic."""
-    return {"status": "ready"}
+async def readyz(request: Request) -> JSONResponse:
+    """Readiness: the service can serve traffic.
+
+    Not ready (503) while a configured model is not loaded: documents would be refused.
+    """
+    if not getattr(request.app.state, "models_ready", False):
+        return JSONResponse(
+            status_code=503, content={"status": "not_ready", "reason": "models"}
+        )
+    return JSONResponse(content={"status": "ready"})
 
 
 @router.get("/version")

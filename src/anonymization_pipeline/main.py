@@ -11,12 +11,18 @@ from fastapi import FastAPI
 from anonymization_pipeline import __version__
 from anonymization_pipeline.api import anonymization, catalog, health
 from anonymization_pipeline.config import Settings, get_settings
-from anonymization_pipeline.detectors import load_resources
+from anonymization_pipeline.detectors import DetectorUnavailable, load_resources
+from anonymization_pipeline.detectors.ner import load_engine
 from anonymization_pipeline.errors import register_exception_handlers
 from anonymization_pipeline.logging_setup import setup_logging
 from anonymization_pipeline.middleware import RequestIdMiddleware, UploadLimitMiddleware
-from anonymization_pipeline.pipeline_config import load_pipeline_config
-from anonymization_pipeline.services.jobs import JobRegistry
+from anonymization_pipeline.pipeline_config import PipelineConfig, load_pipeline_config
+from anonymization_pipeline.services.anonymization import (
+    Anonymized,
+    Progress,
+    anonymize,
+)
+from anonymization_pipeline.services.jobs import JobRegistry, Runner
 
 logger = logging.getLogger(__name__)
 
@@ -32,11 +38,19 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     Clients (httpx clients ...) live on ``app.state``, never in module-level
     globals. The pipeline configuration and the detector files are loaded
     here: an invalid file stops the startup instead of failing every request.
+    The models load in the background: /readyz answers 503 until they are ready.
     """
     settings: Settings = app.state.settings
-    app.state.pipeline_config = load_pipeline_config(settings)
+    cfg = load_pipeline_config(settings)
+    app.state.pipeline_config = cfg
     load_resources()
-    jobs: JobRegistry = app.state.jobs
+    app.state.ner = None
+    app.state.models_ready = False
+    models = asyncio.create_task(_load_models(app, cfg), name="models")
+    jobs: JobRegistry | None = getattr(app.state, "jobs", None)
+    if jobs is None:
+        jobs = JobRegistry(settings, run=_runner(app))
+        app.state.jobs = jobs
     await jobs.start()
     purge = asyncio.create_task(_purge_loop(jobs), name="jobs-purge")
     logger.info(
@@ -48,11 +62,32 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     try:
         yield
     finally:
-        purge.cancel()
-        with contextlib.suppress(asyncio.CancelledError):
-            await purge
+        for task in (purge, models):
+            task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await task
         await jobs.stop()
         logger.info("Service stopped")
+
+
+async def _load_models(app: FastAPI, cfg: PipelineConfig) -> None:
+    """Load the configured models off the event loop; the service is ready only after."""
+    if cfg.detection.ner.enabled:
+        try:
+            app.state.ner = await asyncio.to_thread(load_engine, cfg.detection.ner)
+        except DetectorUnavailable as exc:
+            logger.error("NER model unavailable, service not ready: %s", exc)
+            return
+    app.state.models_ready = True
+
+
+def _runner(app: FastAPI) -> Runner:
+    """The anonymization of a job, with the models loaded at startup."""
+
+    def run(data: bytes, cfg: PipelineConfig, progress: Progress) -> Anonymized:
+        return anonymize(data, cfg, progress, app.state.ner)
+
+    return run
 
 
 async def _purge_loop(jobs: JobRegistry, every_s: float = PURGE_EVERY_S) -> None:
@@ -82,7 +117,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         openapi_url="/openapi.json" if settings.docs_enabled else None,
     )
     app.state.settings = settings
-    app.state.jobs = JobRegistry(settings)
     app.add_middleware(
         UploadLimitMiddleware,
         max_bytes=int(settings.max_upload_mb * 1024 * 1024) + UPLOAD_OVERHEAD,

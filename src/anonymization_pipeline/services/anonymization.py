@@ -15,6 +15,7 @@ from typing import Literal
 import pypdfium2 as pdfium
 
 from anonymization_pipeline.detection import detect
+from anonymization_pipeline.detectors.ner import Engine
 from anonymization_pipeline.ingest import ingest
 from anonymization_pipeline.layers import TextLayer
 from anonymization_pipeline.layers.native import native_layer
@@ -72,7 +73,10 @@ def _read(data: bytes) -> tuple[list[TextLayer], list[int]]:
 
 
 def anonymize(
-    data: bytes, cfg: PipelineConfig, progress: Progress = _no_progress
+    data: bytes,
+    cfg: PipelineConfig,
+    progress: Progress = _no_progress,
+    ner: Engine | None = None,
 ) -> Anonymized:
     """Anonymize one uploaded document.
 
@@ -80,9 +84,11 @@ def anonymize(
         data: Uploaded bytes (PDF or image).
         cfg: Configuration of the request.
         progress: Called at the start of every phase.
+        ner: The NER model loaded at startup, required when NER is enabled.
 
     Raises:
         DocumentError: Empty, unsupported, unreadable, encrypted or too large file.
+        DetectorUnavailable: NER is enabled and no model was loaded (never a silent drop).
     """
     timings: dict[str, float] = {}
     t0 = t = time.perf_counter()
@@ -106,7 +112,7 @@ def anonymize(
         return result
 
     progress("detection")
-    outcome = detect(layers, cfg)
+    outcome = detect(layers, cfg, ner)
     values = outcome.values(layers)
     result.counts = dict(sorted(Counter(c for _, c in values).items()))
     mark("detection")
@@ -117,7 +123,7 @@ def anonymize(
     mark("redaction")
 
     progress("verification")
-    report = verify(source.pdf, redacted, values, cfg)
+    report = verify(source.pdf, redacted, values, cfg, ner)
     mark("verification")
     timings["total"] = round(time.perf_counter() - t0, 3)
     result.failures = report.failures

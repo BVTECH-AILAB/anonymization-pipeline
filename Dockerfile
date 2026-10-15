@@ -1,6 +1,11 @@
 # Stages:
 #   dev      - used by docker-compose (dev dependencies, editable install, --reload)
 #   runtime  - the image CI builds and pushes to Harbor (last stage = default target)
+#
+# EXTRAS selects the optional parts (pyproject.toml): "--extra ner" adds the NER libraries (torch
+# from the CPU index). Models are never in the image: they are read from the Hugging Face cache
+# (HF_HOME, a volume) filled by `python -m anonymization_pipeline.model_store`.
+ARG EXTRAS="--extra ner"
 
 FROM ghcr.io/astral-sh/uv:0.12.18 AS uv
 
@@ -16,20 +21,22 @@ RUN pip install --no-cache-dir --upgrade "pip>=25.3" \
 WORKDIR /app
 
 FROM base AS dev
+ARG EXTRAS
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-install-project
+RUN uv sync --frozen $EXTRAS --no-install-project
 COPY src ./src
-RUN uv sync --frozen && chown -R appuser:appuser /app
+RUN uv sync --frozen $EXTRAS && chown -R appuser:appuser /app
 ENV PATH="/app/.venv/bin:$PATH"
 USER appuser
 EXPOSE 8000
 CMD ["uvicorn", "anonymization_pipeline.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
 FROM base AS builder
+ARG EXTRAS
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --no-install-project
+RUN uv sync --frozen --no-dev $EXTRAS --no-install-project
 COPY src ./src
-RUN uv sync --frozen --no-dev --no-editable
+RUN uv sync --frozen --no-dev $EXTRAS --no-editable
 
 FROM python:3.12-slim AS runtime
 RUN pip install --no-cache-dir --upgrade "pip>=25.3" \
@@ -40,7 +47,9 @@ COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
 COPY --chown=appuser:appuser scripts/entrypoint.sh ./entrypoint.sh
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    HF_HOME=/models/hf \
+    HF_HUB_OFFLINE=1
 USER appuser
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \

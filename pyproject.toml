@@ -17,6 +17,17 @@ dependencies = [
     "uvicorn[standard]>=0.34",
 ]
 
+[project.optional-dependencies]
+# NER detector (detection.ner): token classification (transformers) or GLiNER, on CPU.
+# torch comes from the CPU index (see [tool.uv.sources]): no proprietary CUDA libraries.
+ner = [
+    "gliner>=0.2.20",
+    "huggingface-hub>=0.30",
+    "protobuf>=4",
+    "torch>=2.6",
+    "transformers>=4.51",
+]
+
 [dependency-groups]
 dev = [
     "pip-audit>=2.7",
@@ -66,9 +77,9 @@ testpaths = ["tests", "validation/tests"]
 pythonpath = ["validation"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
-addopts = "-m 'not integration' --strict-markers"
+addopts = "-m 'not ner' --strict-markers"
 markers = [
-    "integration: needs the compose Ollama, run with `just test-vlm`",
+    "ner: needs the 'ner' extra and the NER models in the cache (`just models`, `just test-ner`)",
 ]
 
 [tool.coverage.run]
@@ -79,3 +90,11 @@ branch = true
 fail_under = 80
 show_missing = true
 skip_covered = true
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }

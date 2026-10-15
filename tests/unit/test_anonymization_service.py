@@ -35,7 +35,7 @@ def test_letter_is_anonymized_and_verified(tmp_path: Path, cfg: PipelineConfig) 
     assert result.pdf is not None
     assert FAKE_CF.encode() not in result.pdf
     assert result.counts["CODICE_FISCALE"] == 1
-    assert result.boxes > 0 and result.strategies == {0: "flatten"}
+    assert result.boxes and result.strategies == {0: "flatten"}
     assert tuple(phases) == PHASES
     assert set(result.timings) == {*PHASES, "total"}
 

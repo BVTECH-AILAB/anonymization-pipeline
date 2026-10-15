@@ -52,12 +52,20 @@ class FailureOut(BaseModel):
     category: str | None
 
 
+class BoxOut(BaseModel):
+    page: int = Field(description="Pagina (da 1)")
+    rect: tuple[float, float, float, float] = Field(
+        description="x0, y0, x1, y1 in punti, origine in alto a sinistra della pagina mostrata"
+    )
+    category: str
+
+
 class ResultOut(BaseModel):
     pages: int
     kind: str
     scanned_pages: list[int] = Field(description="Pagine scansionate (da 1)")
     counts: dict[str, int] = Field(description="Valori distinti trovati per categoria")
-    boxes: int
+    boxes: list[BoxOut] = Field(description="Riquadri applicati, senza i valori")
     redacted_pages: list[int] = Field(description="Pagine redatte (da 1)")
     failures: list[FailureOut]
     timings: dict[str, float]
@@ -84,7 +92,10 @@ def _out(job: Job) -> JobOut:
             kind=r.kind,
             scanned_pages=[p + 1 for p in r.scanned_pages],
             counts=r.counts,
-            boxes=r.boxes,
+            boxes=[
+                BoxOut(page=b.page + 1, rect=b.rect, category=b.category)
+                for b in r.boxes
+            ],
             redacted_pages=[p + 1 for p in sorted(r.strategies)],
             failures=[
                 FailureOut(

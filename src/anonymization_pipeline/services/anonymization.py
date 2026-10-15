@@ -21,7 +21,7 @@ from anonymization_pipeline.layers.native import native_layer
 from anonymization_pipeline.pdf import PDFIUM_LOCK
 from anonymization_pipeline.pdf.pages import is_scanned
 from anonymization_pipeline.pipeline_config import PipelineConfig
-from anonymization_pipeline.render.boxes import from_outcome
+from anonymization_pipeline.render.boxes import Box, from_outcome
 from anonymization_pipeline.render.pdf import redact
 from anonymization_pipeline.verify.pdf import Failure, verify
 
@@ -41,7 +41,9 @@ class Anonymized:
     kind: str  # pdf | image
     scanned_pages: list[int] = field(default_factory=list)
     counts: dict[str, int] = field(default_factory=dict)  # distinct values per category
-    boxes: int = 0
+    boxes: list[Box] = field(
+        default_factory=list
+    )  # as applied: page, rectangle, category
     strategies: dict[int, str] = field(default_factory=dict)
     failures: list[Failure] = field(default_factory=list)
     timings: dict[str, float] = field(default_factory=dict)
@@ -111,7 +113,7 @@ def anonymize(
 
     progress("redaction")
     redacted = redact(source.pdf, from_outcome(layers, outcome), cfg.redaction)
-    result.boxes, result.strategies = len(redacted.boxes), redacted.strategies
+    result.boxes, result.strategies = redacted.boxes, redacted.strategies
     mark("redaction")
 
     progress("verification")

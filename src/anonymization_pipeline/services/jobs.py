@@ -242,7 +242,7 @@ class JobRegistry:
                     "kind": result.kind,
                     "pages": result.pages,
                     "redacted_pages": len(result.strategies),
-                    "boxes": result.boxes,
+                    "boxes": len(result.boxes),
                     "counts": result.counts,
                     "total_s": result.timings.get("total"),
                 },

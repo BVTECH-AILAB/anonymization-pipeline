@@ -78,6 +78,10 @@ def test_letter_is_anonymized_and_downloaded(
     assert body["status"] == "done"
     assert body["result"]["counts"]["CODICE_FISCALE"] == 1
     assert body["result"]["redacted_pages"] == [1]
+    cf_box = next(
+        b for b in body["result"]["boxes"] if b["category"] == "CODICE_FISCALE"
+    )
+    assert cf_box["page"] == 1 and len(cf_box["rect"]) == 4
     assert body["result"]["failures"] == []
     response = client.get(f"/anonymizations/{body['id']}/download")
     assert response.status_code == 200

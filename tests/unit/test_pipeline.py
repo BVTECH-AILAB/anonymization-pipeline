@@ -314,6 +314,18 @@ def test_invariant_sees_a_value_left_across_table_cells() -> None:
         )
 
 
+def test_a_tax_code_written_one_character_per_box_is_redacted() -> None:
+    text = (
+        "Paziente: Mario Rossi\nCodice fiscale D L L R S O 6 3 B 4 8 D 9 6 9 B\nFine\n"
+    )
+
+    result, _ = _run(IdealModel({"Mario Rossi": "PERSONA"}), data=text.encode())
+
+    assert "Codice fiscale [CODICE_FISCALE_1]\nFine" in result.markdown
+    assert result.encrypted_map is not None
+    assert restore(result.markdown, result.encrypted_map, KEY) == text
+
+
 def test_progress_and_tag_positions() -> None:
     phases: list[tuple[str, dict]] = []
     cfg = pipeline_config({"output": {"save_transcript": True}}, default_mode="tag")

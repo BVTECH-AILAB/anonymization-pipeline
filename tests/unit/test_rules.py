@@ -5,6 +5,7 @@ import pytest
 
 from anonymization_pipeline.detectors import rules as rules_module
 from anonymization_pipeline.detectors.rules import (
+    COMPACT_CATEGORIES,
     FILE,
     RulesDetector,
     fix_cf_ocr,
@@ -111,6 +112,61 @@ def test_postal_code_and_city_after_the_street_on_the_next_line() -> None:
         ("CAP", "50131"),
         ("LUOGO", "Firenze"),
     } <= found
+
+
+SPACED_CF = "D L L R S O 6 3 B 4 8 D 9 6 9 B"  # valid check character
+
+
+@pytest.mark.parametrize(
+    "written",
+    [
+        SPACED_CF,  # a VLM transcribing character boxes
+        SPACED_CF.replace(" ", "\n\n"),  # docling: one paragraph per box
+        "| " + SPACED_CF.replace(" ", " | ") + " |",  # docling: one table cell per box
+        SPACED_CF.replace("O", "0", 1),  # OCR: zero for O in a letter position
+    ],
+)
+def test_a_tax_code_one_character_per_box(written: str) -> None:
+    text = f"Codice fiscale\n\n{written}\n\nIngresso in reparto"
+
+    found = [(c, v) for c, v in _found(text) if c == "CODICE_FISCALE"]
+
+    assert len(found) == 1
+    value = found[0][1]
+    assert value in text and "".join(value.split()).replace("|", "") in {
+        "DLLRSO63B48D969B",
+        "DLLRS063B48D969B",
+    }
+
+
+def test_other_identifiers_one_character_per_box() -> None:
+    team = " ".join("80380000000000000001")
+    stp = "\n\n".join("STP0800110004872")
+
+    found = _found(f"Tessera TEAM {team}\n\nCodice STP\n\n{stp}\n\nFine")
+
+    assert ("TESSERA_SANITARIA", team) in found
+    assert ("CODICE_STP_ENI", stp) in found
+
+
+@pytest.mark.parametrize(
+    "written",
+    [
+        " ".join("0123456789"),  # a pain scale
+        "\n\n".join("0123456789"),
+        "| " + " | ".join("0123456789") + " |",
+        "| " + " | ".join("MFMFMFMFMF") + " |",  # a table of single letters
+        "\n\n".join(
+            "4111111111111111"
+        ),  # passes Luhn, but cards need their own context
+        "D L L R S O 6 3\n\nB 4 8 D 9 6 9 B",  # mixed separators: not one row of boxes
+        " ".join("DLLRSO63B48D969"),  # one box missing
+    ],
+)
+def test_no_identifier_from_other_rows_of_characters(written: str) -> None:
+    found = _found(f"Valori\n\n{written}\n\nFine")
+
+    assert not {c for c, _ in found} & COMPACT_CATEGORIES
 
 
 def test_icd10_codes() -> None:

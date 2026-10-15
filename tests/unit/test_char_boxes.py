@@ -100,3 +100,17 @@ def test_nothing_to_compact_and_counters() -> None:
         assert collector.counters["extraction.char_rows_compacted"] == 1
     finally:
         metrics.start(enabled=False)
+
+
+def test_cells_holding_two_boxes_and_a_stp_code() -> None:
+    rows = [
+        Boxes("Tessera", TEAM, 130, 700),
+        Boxes("Codice STP", "STP0800110004872", 130, 650),
+    ]
+    doc = boxed_structure(rows, kind="merged")
+
+    areas = char_boxes.compact(doc, boxed_pdf(rows))
+
+    assert [cells[0] for cells in _cells(doc)] == [TEAM, "STP0800110004872"]
+    assert all(cell == "" for cells in _cells(doc) for cell in cells[1:])
+    assert len(areas[1]) == 2

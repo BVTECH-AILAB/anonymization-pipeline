@@ -4,8 +4,8 @@ docling turns a tax code in boxes into one paragraph or one table cell per chara
 Markdown order may scatter them: no rule recognizes it and it stays in clear text. A row of at
 least ``MIN_BOXES`` single characters on the same line is read again from the text layer of the
 PDF (complete, in order, also where docling lost boxes) and, only if the string is an identifier
-the rules recognize (tax code, health card, IBAN, card, VAT number), the boxes become one text
-in the area of the row. Other rows (a pain scale 0-10) are left as they are.
+of ``COMPACT_CATEGORIES`` (the rules with a rigid format or a checksum: tax code, health card,
+IBAN, STP code), the boxes become one text in the area of the row. Other rows (a pain scale 0-10) are left as they are.
 """
 
 import statistics
@@ -25,29 +25,24 @@ from docling_core.types.doc import (
 )
 
 from anonymization_pipeline import metrics
-from anonymization_pipeline.detectors.rules import RulesDetector
+from anonymization_pipeline.detectors.rules import COMPACT_CATEGORIES, RulesDetector
 from anonymization_pipeline.layout.pdf import Box, Glyph, extract
 
 MIN_BOXES = 8
+MAX_JOINED = 3  # boxes docling may put in one element
 MAX_GAP = 1.5  # between two boxes of a row, in box widths
 PITCH_TOLERANCE = 0.35  # a glyph continues the row if its distance is the pitch +-35%
 MIN_GAP = 0.5  # points between two characters in boxes (letters of a word touch)
 CONTEXT_CHARS = 60  # of the label before the row, for the rules that need it ("P.IVA")
-IDENTIFIERS = {
-    "CODICE_FISCALE",
-    "TESSERA_SANITARIA",
-    "IBAN",
-    "CARTA_CREDITO",
-    "PARTITA_IVA",
-}
 
 
 @dataclass
 class _Char:
-    """A docling element holding one character: a text item or a table cell."""
+    """A docling element holding one character (or a few boxes): a text item or a table cell."""
 
     page: int
     box: Box
+    chars: int
     item: TextItem | None = None
     table: TableItem | None = None
     cell: int | None = None
@@ -62,27 +57,38 @@ def _bottom_left(bbox: BoundingBox, height: float) -> Box:
     return b.l, min(b.b, b.t), b.r, max(b.b, b.t)
 
 
-def _single(text: str) -> bool:
-    stripped = text.strip()
-    return len(stripped) == 1 and stripped.isalnum()
+def _boxes(text: str) -> bool:
+    """One character, or up to ``MAX_JOINED`` single characters docling put in one element
+    ("8  0": two boxes in one cell)."""
+    tokens = text.split()
+    return 0 < len(tokens) <= MAX_JOINED and all(
+        len(t) == 1 and t.isalnum() for t in tokens
+    )
 
 
 def _chars(doc: DoclingDocument) -> list[_Char]:
     out: list[_Char] = []
     for item in doc.texts:
-        if _single(item.text) and len(item.prov) == 1:
+        if _boxes(item.text) and len(item.prov) == 1:
             page = item.prov[0].page_no
             height = doc.pages[page].size.height
-            out.append(_Char(page, _bottom_left(item.prov[0].bbox, height), item=item))
+            box = _bottom_left(item.prov[0].bbox, height)
+            out.append(_Char(page, box, len(item.text.split()), item=item))
     for table in doc.tables:
         if not table.prov:
             continue
         page = table.prov[0].page_no
         height = doc.pages[page].size.height
         for i, cell in enumerate(table.data.table_cells):
-            if cell.bbox is not None and _single(cell.text):
+            if cell.bbox is not None and _boxes(cell.text):
                 out.append(
-                    _Char(page, _bottom_left(cell.bbox, height), table=table, cell=i)
+                    _Char(
+                        page,
+                        _bottom_left(cell.bbox, height),
+                        len(cell.text.split()),
+                        table=table,
+                        cell=i,
+                    )
                 )
     return out
 
@@ -92,7 +98,8 @@ def _center(box: Box) -> tuple[float, float]:
 
 
 def _rows(chars: list[_Char]) -> list[list[_Char]]:
-    """Runs of at least ``MIN_BOXES`` elements of the same kind side by side on one line."""
+    """Runs of elements of the same kind side by side on one line, holding at least
+    ``MIN_BOXES`` characters."""
     out: list[list[_Char]] = []
     groups: dict[tuple[int, str], list[_Char]] = {}
     for c in chars:
@@ -123,7 +130,7 @@ def _rows(chars: list[_Char]) -> list[list[_Char]]:
                     run = []
                 run.append(c)
             out.append(run)
-    return [run for run in out if len(run) >= MIN_BOXES]
+    return [run for run in out if sum(c.chars for c in run) >= MIN_BOXES]
 
 
 def _read(run: list[_Char], glyphs: list[Glyph]) -> tuple[str, Box, float] | None:
@@ -180,7 +187,7 @@ def _context(doc: DoclingDocument, page: int, box: Box) -> str:
     best: tuple[float, str] | None = None
     height = doc.pages[page].size.height
     for item in doc.texts:
-        if len(item.prov) != 1 or item.prov[0].page_no != page or _single(item.text):
+        if len(item.prov) != 1 or item.prov[0].page_no != page or _boxes(item.text):
             continue
         left, bottom, right, top = _bottom_left(item.prov[0].bbox, height)
         same_line = bottom < box[3] and top > box[1] and right <= box[0] + 1
@@ -194,7 +201,7 @@ def _context(doc: DoclingDocument, page: int, box: Box) -> str:
 
 def _identifier(context: str, value: str) -> bool:
     proposals = RulesDetector().detect(f"{context} {value}")
-    return any(p.value == value and p.category in IDENTIFIERS for p in proposals)
+    return any(p.value == value and p.category in COMPACT_CATEGORIES for p in proposals)
 
 
 def _parent_picture(doc: DoclingDocument, item: TextItem) -> PictureItem | None:

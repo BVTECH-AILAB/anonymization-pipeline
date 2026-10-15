@@ -160,8 +160,9 @@ def boxed_structure(
     """docling-like document of ``boxed_pdf``: the label, then one item per box.
 
     Args:
-        kind: ``text`` one paragraph per box, ``cells`` one table cell per box, ``picture``
-            the paragraphs inside a picture docling found over the row.
+        kind: ``text`` one paragraph per box, ``cells`` one table cell per box, ``merged``
+            table cells holding two boxes ("8  0"), ``picture`` the paragraphs inside a
+            picture docling found over the row.
         missing: Boxes at the end of every row docling lost.
     """
     doc = DoclingDocument(name="fake")
@@ -180,17 +181,25 @@ def boxed_structure(
             prov=ProvenanceItem(page_no=1, bbox=label, charspan=(0, len(row.label))),
         )
         chars = list(enumerate(row.value))[: len(row.value) - missing]
-        if kind == "cells":
+        if kind in ("cells", "merged"):
+            step = 2 if kind == "merged" else 1
+            groups = [chars[i : i + step] for i in range(0, len(chars), step)]
             cells = [
                 TableCell(
-                    text=char,
-                    bbox=_char_box(row, i),
+                    text="  ".join(char for _, char in group),
+                    bbox=BoundingBox(
+                        l=_char_box(row, group[0][0]).l,
+                        t=row.y + 7.5,
+                        r=_char_box(row, group[-1][0]).r,
+                        b=row.y - 0.2,
+                        coord_origin=CoordOrigin.BOTTOMLEFT,
+                    ),
                     start_row_offset_idx=0,
                     end_row_offset_idx=1,
-                    start_col_offset_idx=i,
-                    end_col_offset_idx=i + 1,
+                    start_col_offset_idx=n,
+                    end_col_offset_idx=n + 1,
                 )
-                for i, char in chars
+                for n, group in enumerate(groups)
             ]
             frame = BoundingBox(
                 l=row.x,
@@ -200,7 +209,7 @@ def boxed_structure(
                 coord_origin=CoordOrigin.BOTTOMLEFT,
             )
             doc.add_table(
-                TableData(table_cells=cells, num_rows=1, num_cols=len(chars)),
+                TableData(table_cells=cells, num_rows=1, num_cols=len(cells)),
                 prov=ProvenanceItem(page_no=1, bbox=frame, charspan=(0, 0)),
             )
             continue

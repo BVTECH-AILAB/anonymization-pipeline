@@ -75,8 +75,10 @@ phases:
       min_contrast: 12          # text whose box has no contrast in the rendered page is hidden
       # A value written one character per box (tax code, health card, IBAN in a form) becomes one
       # paragraph or cell per character in docling, and no rule recognizes it. A row of at least 8
-      # boxes is read again from the text layer and joined into one text, only if it is an
-      # identifier the rules recognize (other rows, such as a pain scale 0-9, are left as they are)
+      # boxes is read again from the text layer and joined into one text, only if it is a tax code,
+      # a health card, an IBAN or an STP code (other rows, such as a pain scale 0-9, are left as
+      # they are). The rules recognize these codes one character per box with any extractor: this
+      # option serves the layout PDF (one tag over the row of boxes)
       compact_char_boxes: true
     # Non-text elements: how they are reported in the Markdown (they end up in the extraction prompt).
     # The text inside stamps and labels must be transcribed: it often holds names and register numbers.

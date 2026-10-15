@@ -32,15 +32,19 @@ file -> ingest -> estrazione -> rilevamento -> censura -> verifica -> Markdown c
    scritto un carattere per casella (codice fiscale, tessera TEAM, IBAN in un
    modulo) diventa in docling un paragrafo o una cella per carattere: le righe
    di almeno 8 caselle vengono rilette dallo strato di testo del PDF e unite
-   in un solo testo, solo se la stringa è un identificativo riconosciuto dalle
-   regole (`native_pdf.compact_char_boxes`; metriche:
-   `extraction.char_rows`).
+   in un solo testo, solo se la stringa è uno degli stessi identificativi
+   (`native_pdf.compact_char_boxes`; metriche: `extraction.char_rows`). Serve
+   soprattutto al PDF con layout, che disegna il tag sulla riga delle caselle.
 3. **Rilevamento** (`detection/`, `detectors/`): rilevatori in unione, basta
    che uno segnali un valore. Ogni valore deve comparire davvero nel testo,
    altrimenti è un'allucinazione e si scarta. Un filtro comune ignora gli
    eponimi, le scale e i farmaci ("morbo di Parkinson", "Glasgow 15",
    "Coumadin") decidendo dal contesto di ogni occorrenza: un paziente che si
-   chiama Parkinson viene censurato.
+   chiama Parkinson viene censurato. Le regole riconoscono anche un codice
+   scritto un carattere per casella, qualunque sia l'estrattore ("D L L R S O
+   …", un carattere per riga o per cella): la sequenza unita deve essere per
+   intero un codice fiscale, una tessera TEAM, un IBAN o un codice STP/ENI
+   (formato rigido o checksum, così una scala 0-9 non diventa un codice).
 4. **Censura** (`redaction/`): i valori con la stessa forma (a meno di spazi
    e maiuscole) nella stessa famiglia di categorie hanno lo stesso tag ("Mario
    Rossi" e "MARIO ROSSI" sì, "Rossi Mario" no); la sostituzione è meccanica e

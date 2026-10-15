@@ -27,6 +27,15 @@ from anonymization_pipeline.pipeline_config import registry
 from anonymization_pipeline.pipeline_config.resources import read_yaml
 
 FILE = "detectors/rules.yaml"
+# Identifiers also recognized when written one character per box ("D L L R S O ...", one
+# paragraph or one table cell per character): only rules with a rigid format or a checksum, so a
+# row of single characters that is not a code (a pain scale 0-9) never becomes one. Cards (Luhn
+# passes one time in ten), phones and VAT numbers stay out.
+COMPACT_CATEGORIES = frozenset(
+    {"CODICE_FISCALE", "TESSERA_SANITARIA", "IBAN", "CODICE_STP_ENI"}
+)
+MIN_BOXES = 8
+_TOKEN = re.compile(r"[^\s|]+")
 
 
 @dataclass(frozen=True)
@@ -421,6 +430,56 @@ def _values(text: str, r: Rules) -> Iterable[tuple[str, str]]:
             yield text[s:e], category
 
 
+def _separator(between: str) -> str | None:
+    """Kind of separator between two characters in boxes (spaces and table borders only): on
+    one line, one per line or paragraph, one per table cell; None if it is none of them."""
+    if "|" not in between:
+        return "paragraph" if "\n" in between else "space"
+    if between.count("|") == 1 and "\n" not in between:
+        return "cell"
+    return None
+
+
+def _compact_values(text: str, r: Rules) -> Iterable[tuple[str, str]]:
+    """Identifiers written one character per box: a run of at least ``MIN_BOXES`` single
+    characters with the same separator, joined, must be a whole identifier of
+    ``COMPACT_CATEGORIES``. The value is the run as written, with its separators."""
+    tokens = list(_TOKEN.finditer(text))
+    runs: list[list[re.Match[str]]] = []
+    run: list[re.Match[str]] = []
+    kind: str | None = None
+    for i, token in enumerate(tokens):
+        if not (len(token.group()) == 1 and token.group().isalnum()):
+            runs.append(run)
+            run, kind = [], None
+            continue
+        sep = _separator(text[tokens[i - 1].end() : token.start()]) if run else None
+        if run and sep is not None and kind in (None, sep):
+            run.append(token)
+            kind = sep
+        else:
+            runs.append(run)
+            run, kind = [token], None
+    runs.append(run)
+    specs = [
+        spec
+        for spec in r.specs
+        if spec.category in COMPACT_CATEGORIES
+        and not spec.context_required
+        and spec.parts is None
+    ]
+    for run in runs:
+        if len(run) < MIN_BOXES:
+            continue
+        joined = "".join(t.group() for t in run)
+        for spec in specs:
+            if spec.regex.fullmatch(joined) and (
+                spec.validator is None or spec.validator(joined)
+            ):
+                yield text[run[0].start() : run[-1].end()], spec.category
+                break
+
+
 def _parts(
     text: str, parts: dict[str, str], match: re.Match[str], r: Rules
 ) -> Iterable[tuple[str, str]]:
@@ -446,4 +505,6 @@ class RulesDetector:
         rules()  # YAML errors now, not at the first page
 
     def detect(self, text: str) -> list[Proposal]:
-        return [Proposal(v, c) for v, c in dict.fromkeys(_values(text, rules()))]
+        r = rules()
+        found = [*_values(text, r), *_compact_values(text, r)]
+        return [Proposal(v, c) for v, c in dict.fromkeys(found)]

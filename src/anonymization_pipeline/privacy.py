@@ -28,7 +28,7 @@ REDACTED = "<redacted>"
 _DIGIT = "[0-9LMNPQRSTUV]"
 
 # Alphanumeric lookarounds instead of \b: \b treats "_" as a word character
-# and would miss "RSSMRA85M01H501U_lista.csv".
+# and would miss "RSSMRA85M01H501Q_lista.csv".
 CF_PATTERN = re.compile(
     r"(?<![A-Za-z0-9])"
     rf"[A-Z]{{6}}{_DIGIT}{{2}}[A-Z]{_DIGIT}{{2}}[A-Z]{_DIGIT}{{3}}[A-Z]"
@@ -62,7 +62,7 @@ def mask_identifier(identifier: str, prefix: int = 1, suffix: int = 1) -> str:
         suffix: Characters kept at the end.
 
     Returns:
-        ``"R***U"`` for ``"RSSMRA85M01H501U"`` with the default widths.
+        ``"R***Q"`` for ``"RSSMRA85M01H501Q"`` with the default widths.
     """
     if not identifier:
         return ""

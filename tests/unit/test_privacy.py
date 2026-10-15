@@ -14,14 +14,14 @@ from tests.conftest import FAKE_CF, make_settings
 
 
 def test_hash_identifier_is_normalised_sha256() -> None:
-    expected = "b2f136e10b99723c8d128761c8e0a812662c5a008cef5f4d88a24c443fafb0ba"
+    expected = "4f5241d8029d3b1f6eb70f3ef3f67bfbba75793830a803f0dd62258ec008c3de"
 
     assert hash_identifier(FAKE_CF) == expected
     assert hash_identifier(f"  {FAKE_CF.lower()} ") == expected
 
 
 def test_mask_identifier() -> None:
-    assert mask_identifier(FAKE_CF) == "R***U"
+    assert mask_identifier(FAKE_CF) == "R***Q"
     assert mask_identifier(FAKE_CF, prefix=2, suffix=0) == "RS***"
     assert mask_identifier("") == ""
 
@@ -55,7 +55,7 @@ def test_redact_user_text_is_redacted_by_default() -> None:
 def test_redact_user_text_in_staging_still_masks_cf() -> None:
     settings = make_settings(environment="staging", extended_log_context=True)
 
-    assert redact_user_text(f"paziente {FAKE_CF}", settings) == "paziente R***U"
+    assert redact_user_text(f"paziente {FAKE_CF}", settings) == "paziente R***Q"
 
 
 def test_filter_redacts_args_and_exceptions() -> None:

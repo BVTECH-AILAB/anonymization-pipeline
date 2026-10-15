@@ -14,7 +14,7 @@ from pydantic_settings import BaseSettings, PydanticBaseSettingsSource
 from anonymization_pipeline.config import Settings
 from anonymization_pipeline.logging_setup import setup_logging
 
-FAKE_CF = "RSSMRA85M01H501U"
+FAKE_CF = "RSSMRA85M01H501Q"
 
 
 class _ExplicitSettings(Settings):

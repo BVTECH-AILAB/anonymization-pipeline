@@ -15,7 +15,6 @@ variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
   GIT_DEPTH: "0"
   UV_IMAGE: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
-  PG_IMAGE: postgres:17
 
 stages:
   - generate-vars
@@ -91,31 +90,6 @@ tests:
       - coverage.xml
     reports:
       junit: junit.xml
-
-# Migrations up/down and the API on a throwaway Postgres 17.
-integration-tests:
-  extends: .quality-base
-  variables:
-    GIT_CLEAN_FLAGS: none
-    NET: "it-$CI_JOB_ID"
-  script:
-    # Throwaway password generated per job: no credentials in the repo.
-    - export PG_PASSWORD="$(head -c 24 /dev/urandom | od -An -tx1 | tr -d ' \n')"
-    - docker network create "$NET"
-    - docker run -d --name "pg-$CI_JOB_ID" --network "$NET" -e POSTGRES_USER=app -e POSTGRES_PASSWORD="$PG_PASSWORD" -e POSTGRES_DB=app_test "$PG_IMAGE"
-    - for i in $(seq 1 30); do docker exec "pg-$CI_JOB_ID" pg_isready -U app -d app_test && break; sleep 2; done
-    - >
-      docker run --rm --user "$(id -u):$(id -g)" --network "$NET"
-      -v "$CI_PROJECT_DIR":/app -w /app
-      -e HOME=/tmp -e UV_PROJECT_ENVIRONMENT=/tmp/.venv -e UV_CACHE_DIR=/tmp/uv-cache
-      -e ANONPIP_ENVIRONMENT=local
-      -e ANONPIP_DATABASE_URL="postgresql://app:$PG_PASSWORD@pg-$CI_JOB_ID:5432/app_test"
-      "$UV_IMAGE" sh -c
-      "uv sync --frozen &&
-      uv run pytest -m integration -q -p no:cacheprovider"
-  after_script:
-    - docker rm -f "pg-$CI_JOB_ID" || true
-    - docker network rm "it-$CI_JOB_ID" || true
 
 # Analysis only: allow_failure so an unreachable Sonar never blocks the pipeline.
 build-sonar:

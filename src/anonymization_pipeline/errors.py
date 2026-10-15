@@ -14,11 +14,27 @@ logger = logging.getLogger(__name__)
 
 
 class ServiceError(Exception):
-    """Base class for errors with a known HTTP mapping."""
+    """Base class for errors with a known HTTP mapping.
+
+    A subclass may be raised with a more specific Italian message, which must never contain
+    document content or user input.
+    """
 
     status_code: int = 500
     code: str = "INTERNAL_ERROR"
     user_message: str = "Si è verificato un errore interno. Riprova più tardi."
+    headers: dict[str, str] | None = None
+
+    def __init__(self, message: str | None = None) -> None:
+        if message:
+            self.user_message = message
+        super().__init__(self.user_message)
+
+
+class BadRequestError(ServiceError):
+    status_code = 400
+    code = "BAD_REQUEST"
+    user_message = "Richiesta non valida."
 
 
 class NotFoundError(ServiceError):
@@ -27,18 +43,62 @@ class NotFoundError(ServiceError):
     user_message = "Risorsa non trovata."
 
 
+class JobNotReadyError(ServiceError):
+    status_code = 409
+    code = "JOB_NOT_READY"
+    user_message = "Il documento non è ancora pronto."
+
+
+class DocumentBlockedError(ServiceError):
+    status_code = 409
+    code = "DOCUMENT_BLOCKED"
+    user_message = (
+        "Il documento non può essere rilasciato: la verifica dell'anonimizzazione "
+        "non è stata superata."
+    )
+
+
+class LengthRequiredError(ServiceError):
+    status_code = 411
+    code = "LENGTH_REQUIRED"
+    user_message = "Dimensione della richiesta non indicata."
+
+
+class PayloadTooLargeError(ServiceError):
+    status_code = 413
+    code = "PAYLOAD_TOO_LARGE"
+    user_message = "File troppo grande."
+
+
+class InvalidDocumentError(ServiceError):
+    status_code = 422
+    code = "INVALID_DOCUMENT"
+    user_message = "Documento non valido."
+
+
+class TooManyJobsError(ServiceError):
+    status_code = 429
+    code = "TOO_MANY_JOBS"
+    user_message = "Troppi documenti in coda. Riprova tra qualche minuto."
+    headers = {"Retry-After": "30"}
+
+
 class ServiceUnavailableError(ServiceError):
     status_code = 503
     code = "SERVICE_UNAVAILABLE"
     user_message = "Servizio temporaneamente non disponibile. Riprova più tardi."
 
 
+def error_body(error: ServiceError) -> dict[str, str]:
+    """JSON body of an error response."""
+    return {"code": error.code, "detail": error.user_message}
+
+
 async def _service_error_handler(request: Request, exc: Exception) -> JSONResponse:
     error = exc if isinstance(exc, ServiceError) else ServiceError()
     logger.warning("%s on %s %s", error.code, request.method, request.url.path)
     return JSONResponse(
-        status_code=error.status_code,
-        content={"code": error.code, "detail": error.user_message},
+        status_code=error.status_code, content=error_body(error), headers=error.headers
     )
 
 

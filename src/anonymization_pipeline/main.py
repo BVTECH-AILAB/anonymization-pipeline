@@ -1,5 +1,7 @@
 """Application factory and ASGI entry point (``anonymization_pipeline.main:app``)."""
 
+import asyncio
+import contextlib
 import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -7,15 +9,20 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from anonymization_pipeline import __version__
-from anonymization_pipeline.api import health
+from anonymization_pipeline.api import anonymization, catalog, health
 from anonymization_pipeline.config import Settings, get_settings
 from anonymization_pipeline.detectors import load_resources
 from anonymization_pipeline.errors import register_exception_handlers
 from anonymization_pipeline.logging_setup import setup_logging
-from anonymization_pipeline.middleware import RequestIdMiddleware
+from anonymization_pipeline.middleware import RequestIdMiddleware, UploadLimitMiddleware
 from anonymization_pipeline.pipeline_config import load_pipeline_config
+from anonymization_pipeline.services.jobs import JobRegistry
 
 logger = logging.getLogger(__name__)
+
+PURGE_EVERY_S = 60.0
+# multipart framing and form fields on top of the file
+UPLOAD_OVERHEAD = 256 * 1024
 
 
 @asynccontextmanager
@@ -29,6 +36,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings: Settings = app.state.settings
     app.state.pipeline_config = load_pipeline_config(settings)
     load_resources()
+    jobs: JobRegistry = app.state.jobs
+    await jobs.start()
+    purge = asyncio.create_task(_purge_loop(jobs), name="jobs-purge")
     logger.info(
         "Service started: name=%s version=%s environment=%s",
         settings.app_name,
@@ -38,7 +48,18 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     try:
         yield
     finally:
+        purge.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await purge
+        await jobs.stop()
         logger.info("Service stopped")
+
+
+async def _purge_loop(jobs: JobRegistry, every_s: float = PURGE_EVERY_S) -> None:
+    """Expired documents leave memory even when nobody asks for them."""
+    while True:
+        await asyncio.sleep(every_s)
+        jobs.purge()
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -61,10 +82,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         openapi_url="/openapi.json" if settings.docs_enabled else None,
     )
     app.state.settings = settings
+    app.state.jobs = JobRegistry(settings)
+    app.add_middleware(
+        UploadLimitMiddleware,
+        max_bytes=int(settings.max_upload_mb * 1024 * 1024) + UPLOAD_OVERHEAD,
+    )
     app.add_middleware(RequestIdMiddleware)
     register_exception_handlers(app)
 
     app.include_router(health.router)
+    app.include_router(catalog.router)
+    app.include_router(anonymization.router)
     return app
 
 

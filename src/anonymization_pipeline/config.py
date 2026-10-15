@@ -12,7 +12,7 @@ When you add a setting, add it in three places: here, ``.env.example`` and
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import field_validator, model_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 Environment = Literal["local", "staging", "prod"]
@@ -41,6 +41,16 @@ class Settings(BaseSettings):
 
     # YAML with the pipeline keys to change (resources/default.yaml); empty: packaged defaults.
     pipeline_config_file: str = ""
+
+    # Uploads and jobs (in memory: a restart loses them, one replica sees only its own jobs)
+    max_upload_mb: float = Field(default=30, gt=0, le=200)
+    max_queued_jobs: int = Field(default=20, ge=1, le=500)  # waiting or running
+    max_kept_jobs: int = Field(
+        default=50, ge=1, le=1000
+    )  # finished: the oldest go first
+    job_ttl_s: int = Field(
+        default=1800, ge=60, le=86400
+    )  # a finished job is then deleted
 
     @field_validator("log_level")
     @classmethod

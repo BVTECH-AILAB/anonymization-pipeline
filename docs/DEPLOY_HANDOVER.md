@@ -18,7 +18,7 @@ fa il provisioning.
 | Esposizione | solo interna (`traefik-int`) / tramite WSO2 API Manager |
 | Chi lo chiama | |
 | Chi chiama (dipendenze) | es. llm-gateway, ner-anonymizer, authz |
-| Repliche | default 2 |
+| Repliche | 1 (i lavori vivono in memoria: con più repliche serve affinità di sessione) |
 | Risorse | default requests 100m / 256Mi, limits 500m / 512Mi |
 
 ### Variabili d'ambiente
@@ -34,6 +34,10 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_LOG_MASK_PREFIX` | `1` | | | no |
 | `ANONPIP_LOG_MASK_SUFFIX` | `1` | | | no |
 | `ANONPIP_PIPELINE_CONFIG_FILE` | vuoto (default del pacchetto) | | | no |
+| `ANONPIP_MAX_UPLOAD_MB` | `30` | | | no |
+| `ANONPIP_MAX_QUEUED_JOBS` | `20` | | | no |
+| `ANONPIP_MAX_KEPT_JOBS` | `50` | | | no |
+| `ANONPIP_JOB_TTL_S` | `1800` | | | no |
 
 `ANONPIP_PIPELINE_CONFIG_FILE` punta a un YAML montato da ConfigMap con le
 sole chiavi da cambiare di `resources/default.yaml`. Un file non valido

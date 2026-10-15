@@ -103,6 +103,16 @@ def test_address_parts_never_cross_a_line_break() -> None:
     assert ("LUOGO", "San Donato (MI)") in _found("Via Emilia 3, 20097 San Donato (MI)")
 
 
+def test_postal_code_and_city_after_the_street_on_the_next_line() -> None:
+    found = _found("Via degli Ospedali 12\n\n50131 Firenze\n\nTel. 055 1234567")
+
+    assert {
+        ("INDIRIZZO", "Via degli Ospedali 12"),
+        ("CAP", "50131"),
+        ("LUOGO", "Firenze"),
+    } <= found
+
+
 def test_icd10_codes() -> None:
     # with the dot anywhere; without it ("J13") only when "ICD" is in the page; never the start of "E11.9"
     table = "| Tipo | Descrizione | ICD-10 |\n| Principale | Polmonite | J13 |\n| Secondaria | Diabete | E11.9 |"

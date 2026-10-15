@@ -19,7 +19,9 @@ fa il provisioning.
 | Chi lo chiama | |
 | Chi chiama (dipendenze) | es. llm-gateway, ner-anonymizer, authz |
 | Repliche | 1 (i lavori vivono in memoria: con più repliche serve affinità di sessione) |
-| Risorse | default requests 100m / 256Mi, limits 500m / 512Mi |
+| Risorse | da misurare con i modelli caricati (GLiNER su CPU: circa 1,5 GB di RAM; 4 thread torch) |
+| Modelli | volume `/models` (`HF_HOME=/models/hf`, `DOCTR_CACHE_DIR=/models/doctr`), popolato una volta con `python -m anonymization_pipeline.model_store` (unico passo con rete); a runtime `HF_HUB_OFFLINE=1` |
+| Readiness con i modelli | `/readyz` risponde 503 finché i modelli configurati (NER, OCR) non sono caricati; se mancano resta 503 e i documenti vengono rifiutati |
 
 ### Variabili d'ambiente
 

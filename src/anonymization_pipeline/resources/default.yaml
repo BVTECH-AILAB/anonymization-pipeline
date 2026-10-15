@@ -59,14 +59,18 @@ detection:
   # NER: a local model on CPU, in union with the rules (image with the 'ner' extra, model downloaded
   # by `just models`). Label map and filters: detectors/ner.yaml. When enabled and not loadable, the
   # service is not ready (/readyz 503) and refuses documents: never a silent drop in protection.
+  # Chosen with the validation (96 documents, 15/10/2026): urchade/gliner_multi_pii-v1 (Apache-2.0)
+  # took recall from 74.5% to 87.1% and the leak rate from 30.7% to 16.1% without new violated
+  # negatives; DeepMount00/Italian_NER_XXL_v2 reached 86.9% / 17.4% with 61 more violated negatives
+  # (eponyms taken for persons), knowledgator/gliner-pii-base-v1.0 82.3% / 22.1%.
   ner:
-    enabled: false
-    engine: token_classification   # token_classification (fixed labels) | gliner (zero-shot labels)
-    model: DeepMount00/Italian_NER_XXL_v2
+    enabled: true
+    engine: gliner            # gliner (zero-shot labels) | token_classification (fixed labels)
+    model: urchade/gliner_multi_pii-v1
     revision: null            # model commit (null = the last one downloaded)
-    threshold: 0.6
-    window_words: 300
-    overlap_words: 50
+    threshold: 0.5
+    window_words: 200         # GLiNER reads at most 384 tokens
+    overlap_words: 30
     threads: 4                # torch threads: with every core inference is much slower
 
 # -----------------------------------------------------------------------------

@@ -159,7 +159,7 @@ nell'output non direbbe nulla. Lo scoring (`anonval/scoring.py`) lavora sulla ge
 | Tasso di fuga | valori non protetti / attesi; protetto: le occorrenze non coperte per intero sono al massimo le sue copie non marcate (`unmarked`) |
 | Precisione | riquadri che coprono un valore atteso / (gli stessi + falsi positivi); i riquadri che coprono solo valori di categorie disattivate sono contati a parte |
 | Negativi violati | occorrenze di un negativo coperte da un riquadro di una famiglia vietata, fuori da un valore di quella famiglia |
-| Valori nel testo rilasciato | valori forti (identificativi, nomi completi) ancora presenti nel testo del PDF scaricato: deve essere 0 |
+| Valori nel testo rilasciato | valori forti (identificativi, nomi completi) coperti dai riquadri ma ancora presenti nel testo del PDF scaricato, cioè una censura non riuscita: deve essere 0. Un valore non coperto è già una fuga e, con la censura chirurgica, il suo testo resta sulla pagina |
 | Documenti bloccati | documenti che il servizio non rilascia (verifica non superata, scansioni senza OCR): esclusi da recall e fughe, elencati con il motivo |
 
 Il report scompone recall e fughe per categoria, difficoltà e tipo di documento, ed elenca i

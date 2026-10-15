@@ -168,13 +168,20 @@ def test_blocked_documents_are_not_scored(pages: list[PageText]) -> None:
     )
 
 
-def test_values_left_in_the_text_of_the_released_pdf(pages: list[PageText]) -> None:
+def test_values_covered_but_left_in_the_text_of_the_released_pdf(
+    pages: list[PageText],
+) -> None:
     gold = _gold([{"value": "Mario Rossi", "category": "PERSONA"}])
     released = page_texts(_pdf([(40, 100, "Paziente: Mario Rossi")]))
+    covered = [_box(pages, "Mario Rossi", "PERSONA")]
 
-    score = score_document(gold, pages, _status([]), {"PERSONA"}, released)
+    failed = score_document(gold, pages, _status(covered), {"PERSONA"}, released)
+    missed = score_document(gold, pages, _status([]), {"PERSONA"}, released)
 
-    assert score.text_leaks == ["Mario Rossi"]
+    # covered and still in the text: the redaction failed
+    assert failed.text_leaks == ["Mario Rossi"]
+    # not covered: an ordinary leak, already counted as such
+    assert missed.text_leaks == [] and missed.values[0].leaked
 
 
 def test_active_categories_and_generic_fallback(families: Registry) -> None:

@@ -88,7 +88,7 @@ class DocScore:
     disabled_boxes: int = 0
     false_positives: list[Hit] = field(default_factory=list)
     negatives_violated: list[Hit] = field(default_factory=list)
-    # values in the text of the released PDF
+    # values covered by the boxes and still in the text of the released PDF
     text_leaks: list[str] = field(default_factory=list)
     markdown: bool = False  # a Markdown was released and scored
     markdown_leaks: list[str] = field(
@@ -254,10 +254,13 @@ def score_document(
         score.markdown_leaks = markdown_leaks(score.values, markdown)
     if released is not None:
         text = "\n".join(p.text for p in released)
+        # covered by the boxes and still in the text: the redaction failed (a value the boxes
+        # missed is already a leak, and with surgical redaction its text stays on the page)
         score.text_leaks = [
             v.value
             for v in score.values
             if v.expected
+            and v.protected
             and _strong(v.value, v.family)
             and len(find(text, v.value)) > v.unmarked
         ]

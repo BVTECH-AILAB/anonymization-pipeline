@@ -23,7 +23,13 @@ def make_settings(**overrides: Any) -> Settings:
     the developer's environment can change the outcome of a test.
     """
     return Settings.model_validate(
-        {"environment": "local", "log_level": "DEBUG", **overrides}
+        # Model weights are never loaded in unit tests: fakes stand in for OCR and NER.
+        {
+            "environment": "local",
+            "log_level": "DEBUG",
+            "preload_models": False,
+            **overrides,
+        }
     )
 
 

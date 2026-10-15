@@ -1,25 +1,29 @@
-from unittest.mock import AsyncMock
-
 import pytest
 from fastapi.testclient import TestClient
 
 from anonmyzation_pipeline import __version__
 from anonmyzation_pipeline.config import Settings
 from anonmyzation_pipeline.main import create_app
-from tests.conftest import FAKE_CF
+from tests.conftest import FAKE_CF, make_settings
 
 
 def test_healthz(client: TestClient) -> None:
     assert client.get("/healthz").json() == {"status": "ok"}
 
 
-@pytest.mark.parametrize(("db_up", "status"), [(True, 200), (False, 503)])
-def test_readyz_reflects_database(
-    client: TestClient, monkeypatch: pytest.MonkeyPatch, db_up: bool, status: int
+@pytest.mark.parametrize(("models_ready", "status"), [(True, 200), (False, 503)])
+def test_readyz_reflects_models(
+    client: TestClient, models_ready: bool, status: int
 ) -> None:
-    monkeypatch.setattr("anonmyzation_pipeline.api.health.ping", AsyncMock(return_value=db_up))
+    app = client.app
+    app.state.pipeline.ocr._predictor = object() if models_ready else None  # type: ignore[attr-defined]
+    app.state.pipeline.ner._model = object() if models_ready else None  # type: ignore[attr-defined]
 
-    assert client.get("/readyz").status_code == status
+    response = client.get("/readyz")
+
+    assert response.status_code == status
+    if not models_ready:
+        assert response.json() == {"status": "unavailable", "reason": "models"}
 
 
 def test_version(client: TestClient) -> None:
@@ -29,26 +33,30 @@ def test_version(client: TestClient) -> None:
     }
 
 
-def test_item_crud(client: TestClient) -> None:
-    created = client.post("/items", json={"name": "a", "description": "b"})
-    item_id = created.json()["id"]
-
-    assert client.get(f"/items/{item_id}").json()["name"] == "a"
-    assert [i["id"] for i in client.get("/items").json()] == [item_id]
-
-
 def test_not_found_is_italian(client: TestClient) -> None:
-    response = client.get("/items/999")
+    response = client.get(f"/anonymizations/{'0' * 32}")
 
     assert response.status_code == 404
-    assert response.json() == {"code": "NOT_FOUND", "detail": "Risorsa non trovata."}
+    assert response.json() == {
+        "code": "JOB_NOT_FOUND",
+        "detail": "Documento non trovato o scaduto.",
+    }
 
 
 def test_validation_error_does_not_echo_input(client: TestClient) -> None:
-    response = client.post("/items", json={"name": FAKE_CF * 20})
+    response = client.post(
+        f"/anonymizations/{'0' * 32}/edits", json={"search": FAKE_CF * 20}
+    )
 
     assert response.status_code == 422
     assert response.json()["code"] == "VALIDATION_ERROR"
+    assert FAKE_CF not in response.text
+
+
+def test_job_id_must_look_like_an_id(client: TestClient) -> None:
+    response = client.get(f"/anonymizations/{FAKE_CF}")
+
+    assert response.status_code == 422
     assert FAKE_CF not in response.text
 
 
@@ -69,7 +77,9 @@ def test_unhandled_error_is_generic(settings: Settings, log_stream) -> None:
 
 
 def test_request_id_is_propagated(client: TestClient, log_stream) -> None:
-    response = client.get("/items/1", headers={"X-Request-ID": "abcdef123456"})
+    response = client.get(
+        f"/anonymizations/{'0' * 32}", headers={"X-Request-ID": "abcdef123456"}
+    )
 
     assert response.headers["x-request-id"] == "abcdef123456"
     assert "[abcdef123456]" in log_stream.getvalue()
@@ -83,29 +93,38 @@ def test_invalid_request_id_is_replaced(client: TestClient) -> None:
 
 
 def test_docs_disabled_in_prod() -> None:
-    from tests.conftest import make_settings
-
     with TestClient(create_app(make_settings(environment="prod"))) as client:
         assert client.get("/docs").status_code == 404
 
 
-def test_service_starts_without_database_url(settings: Settings) -> None:
+def test_service_starts_without_models(settings: Settings) -> None:
     with TestClient(create_app(settings), raise_server_exceptions=False) as client:
         assert client.get("/healthz").status_code == 200
         assert client.get("/readyz").json() == {
             "status": "unavailable",
-            "reason": "database",
+            "reason": "models",
         }
-        response = client.get("/items")
-
-    assert response.status_code == 503
-    assert response.json()["code"] == "SERVICE_UNAVAILABLE"
 
 
-def test_engine_is_built_when_database_url_is_set() -> None:
-    from tests.conftest import make_settings
+@pytest.mark.parametrize(("enabled", "status"), [(True, 200), (False, 404)])
+def test_ui_only_when_enabled(enabled: bool, status: int) -> None:
+    with TestClient(
+        create_app(make_settings(ui_enabled=enabled)), raise_server_exceptions=False
+    ) as client:
+        response = client.get("/")
 
-    app = create_app(make_settings(database_url="postgresql://user@localhost:1/db"))
-    with TestClient(app):
-        assert app.state.engine is not None
-        assert app.state.sessionmaker is not None
+    assert response.status_code == status
+    if enabled:
+        assert "Anonimizza un documento" in response.text
+
+
+def test_labels(client: TestClient) -> None:
+    labels = client.get("/anonymizations/labels").json()
+
+    assert labels["FISCAL_CODE"] == {
+        "it": "Codice fiscale",
+        "kind": "text",
+        "redact": True,
+    }
+    assert labels["SIGNATURE"]["kind"] == "visual"
+    assert labels["DATE"]["redact"] is False

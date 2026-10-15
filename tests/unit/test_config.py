@@ -6,28 +6,41 @@ from anonmyzation_pipeline.config import Settings
 from tests.conftest import make_settings
 
 
+def test_safe_defaults(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.chdir(tmp_path)  # no .env here
+    for var in (
+        "ANONPIP_UI_ENABLED",
+        "ANONPIP_REDACTION_STYLE",
+        "ANONPIP_PRELOAD_MODELS",
+    ):
+        monkeypatch.delenv(var, raising=False)
+
+    settings = Settings()
+
+    assert settings.ui_enabled is False
+    assert settings.redaction_style == "black"
+    assert settings.preload_models is True
+    assert settings.redaction_policy == {
+        "DATE": False,
+        "AGE": False,
+        "ORGANIZATION": False,
+    }
+
+
+def test_quasi_identifiers_can_be_redacted() -> None:
+    settings = make_settings(
+        redact_clinical_dates=True, redact_age=True, redact_organizations=True
+    )
+
+    assert set(settings.redaction_policy.values()) == {True}
+
+
 @pytest.mark.parametrize(
-    ("raw", "expected"),
-    [
-        ("postgresql://user@host:5432/db", "postgresql+asyncpg://user@host:5432/db"),
-        ("postgres://user@host:5432/db", "postgresql+asyncpg://user@host:5432/db"),
-        (
-            "postgresql+asyncpg://user@host:5432/db",
-            "postgresql+asyncpg://user@host:5432/db",
-        ),
-    ],
+    "field", ["max_upload_mb", "max_pages", "job_ttl_minutes", "ocr_dpi"]
 )
-def test_database_url_accepts_cnpg_uri(raw: str, expected: str) -> None:
-    assert make_settings(database_url=raw).database_url == expected
-
-
-def test_database_url_has_no_default(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
-    monkeypatch.chdir(tmp_path)
-    monkeypatch.delenv("ANONPIP_DATABASE_URL", raising=False)
-
-    assert Settings().database_url == ""
+def test_limits_are_validated(field: str) -> None:
+    with pytest.raises(ValueError):
+        make_settings(**{field: 0})
 
 
 def test_default_environment_is_prod(

@@ -1,47 +1,49 @@
-"""Unit-test app: real routers and middleware, in-memory item service."""
+"""Unit-test app: real routers and middleware, job manager on fake OCR and NER."""
 
-from collections.abc import Iterator, Sequence
-from datetime import UTC, datetime
+from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
 from anonmyzation_pipeline.config import Settings
-from anonmyzation_pipeline.db.models import Item
-from anonmyzation_pipeline.errors import NotFoundError
 from anonmyzation_pipeline.main import create_app
-from anonmyzation_pipeline.services.items import get_item_service
-
-
-class FakeItemService:
-    """Same interface as ItemService, no database."""
-
-    def __init__(self) -> None:
-        self._items: dict[int, Item] = {}
-
-    async def create(self, name: str, description: str) -> Item:
-        item = Item(
-            id=len(self._items) + 1,
-            name=name,
-            description=description,
-            created_at=datetime.now(UTC),
-        )
-        self._items[item.id] = item
-        return item
-
-    async def get(self, item_id: int) -> Item:
-        if item_id not in self._items:
-            raise NotFoundError()
-        return self._items[item_id]
-
-    async def list(self, limit: int) -> Sequence[Item]:
-        return list(self._items.values())[:limit]
+from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
+from anonmyzation_pipeline.services.jobs import JobManager, get_job_manager
+from tests.documents import FakeNER, FakeOCR, letter_pdf
 
 
 @pytest.fixture
-def client(settings: Settings) -> Iterator[TestClient]:
+def fake_ocr() -> FakeOCR:
+    return FakeOCR()
+
+
+@pytest.fixture
+def pipeline(fake_ocr: FakeOCR) -> Pipeline:
+    return Pipeline(fake_ocr, FakeNER())
+
+
+@pytest.fixture
+def jobs(
+    pipeline: Pipeline, settings: Settings, tmp_path: Path
+) -> Iterator[JobManager]:
+    manager = JobManager(pipeline, settings, tmp_path / "work")
+    yield manager
+    manager.shutdown()
+
+
+@pytest.fixture
+def client(settings: Settings, jobs: JobManager) -> Iterator[TestClient]:
     app = create_app(settings)
-    fake = FakeItemService()
-    app.dependency_overrides[get_item_service] = lambda: fake
+    app.dependency_overrides[get_job_manager] = lambda: jobs
     with TestClient(app, raise_server_exceptions=False) as test_client:
         yield test_client
+
+
+@pytest.fixture
+def letter(tmp_path: Path) -> Path:
+    return letter_pdf(
+        tmp_path / "lettera.pdf",
+        qr_text="https://referti.example.it/r?id=2026123456",
+        signature=True,
+    )

@@ -92,7 +92,7 @@ def test_personal_data_is_gone_from_the_whole_file(run: Run) -> None:
     for value in (FAKE_CF, PATIENT, "Richiamare", "Laura Bianchi"):
         assert value not in text
         assert value.encode() not in data
-    assert run.redacted.strategies == {0: "flatten"}
+    assert run.redacted.strategies == {0: "surgical"}
 
 
 def test_eponyms_and_clinical_text_get_no_box(run: Run) -> None:
@@ -205,7 +205,7 @@ def test_pixel_mask_uses_only_the_boxes_of_the_same_page(tmp_path: Path) -> None
     )
 
     assert ("pixels_outside_boxes", 0) in {(f.check, f.page) for f in report.failures}
-    assert result.redacted.strategies == {1: "flatten"}  # page 1 kept as it was
+    assert result.redacted.strategies == {1: "surgical"}  # page 1 kept as it was
 
 
 def test_text_outside_the_page_is_redacted(tmp_path: Path) -> None:
@@ -299,7 +299,7 @@ def test_boxes_are_shaped_by_source_and_merged() -> None:
     out = prepare(boxes, {0: (595, 842)})
 
     assert len(out) == 3
-    assert out[0].rect == pytest.approx((9.7, 11.2, 52.3, 19.8))
+    assert out[0].rect == pytest.approx((9.5, 9.5, 52.5, 21.5))
     assert out[1].rect == (98.5, 98.5, 121.5, 111.5)
     assert out[2].rect[2] < 0
 

@@ -20,6 +20,9 @@ class Token:
     line: int
     source: str
     conf: float = 1.0
+    horizontal: bool = (
+        True  # written left to right on the screen (rotated pages: vertical)
+    )
 
 
 @dataclass
@@ -69,6 +72,21 @@ class TextLayer:
             out.append((t, max(start, s) - s, min(end, e) - s))
         return out
 
+    def line_rects(self, start: int, end: int) -> list[tuple[Rect, bool]]:
+        """One rectangle per line covering the characters in ``[start, end)``, with the writing
+        direction of the line (True: horizontal on the screen)."""
+        by_line: dict[int, Rect] = {}
+        horizontal: dict[int, bool] = {}
+        for t, a, b in self.token_range(start, end):
+            r = EMPTY
+            for c in t.chars[a:b]:
+                r = union(r, c)
+            if is_empty(r):
+                continue
+            by_line[t.line] = union(by_line.get(t.line, EMPTY), r)
+            horizontal.setdefault(t.line, t.horizontal)
+        return [(r, horizontal[line]) for line, r in by_line.items()]
+
     def rects(self, start: int, end: int, pad: float = 0.0) -> list[Rect]:
         """One rectangle per line covering the characters in ``[start, end)``.
 
@@ -77,12 +95,4 @@ class TextLayer:
             end: Offset after the last character.
             pad: Points added on every side of each rectangle.
         """
-        by_line: dict[int, Rect] = {}
-        for t, a, b in self.token_range(start, end):
-            r = EMPTY
-            for c in t.chars[a:b]:
-                r = union(r, c)
-            if is_empty(r):
-                continue
-            by_line[t.line] = union(by_line.get(t.line, EMPTY), r)
-        return [grow(r, pad) for r in by_line.values()]
+        return [grow(r, pad) for r, _ in self.line_rects(start, end)]

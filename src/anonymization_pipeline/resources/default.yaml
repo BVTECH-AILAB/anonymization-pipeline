@@ -75,11 +75,15 @@ detection:
 
 # -----------------------------------------------------------------------------
 #  Redaction of the PDF
-#  A page with boxes is rasterised with the boxes painted in (nothing of the original page
-#  content survives on it); pages without boxes are kept as they are. Then the whole file is
-#  rewritten without metadata, annotations, attachments, scripts, bookmarks and history.
+#  surgical: on a native page only what lies under the boxes is removed (text stays selectable);
+#  a page it cannot handle (text inside a form, characters that cannot be written again) or that
+#  the verification refuses is rasterised instead. flatten: every page with boxes is rasterised
+#  with the boxes painted in. Scanned pages get the boxes painted into the scan image. Pages
+#  without boxes are kept as they are. Then the whole file is rewritten without metadata,
+#  annotations, attachments, scripts, bookmarks and history.
 # -----------------------------------------------------------------------------
 redaction:
+  strategy: surgical        # surgical | flatten
   style: black              # black | label (light box with the category)
   flatten_dpi: 200
   jpeg_quality: 90          # scanned pages; native pages are stored losslessly

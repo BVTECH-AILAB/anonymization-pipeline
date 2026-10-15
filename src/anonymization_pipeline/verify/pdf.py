@@ -6,7 +6,9 @@
 3. values: no strong value (identifiers, full names) is in the text of the output (invisible text
    included), in its decoded streams and strings, in its raw bytes or in its metadata;
 4. pixels: outside the boxes of each page the rendering is the same as the original;
-5. re-detection: the text detectors on the output find no redacted value.
+5. x-ray (surgical pages): rendered without the covers, the boxes no longer show what the
+   original showed there (text, images or vectors left under a cover);
+6. re-detection: the text detectors on the output find no redacted value.
 
 The report names checks, pages and categories, never values. Any failure blocks the download.
 """
@@ -38,6 +40,7 @@ from anonymization_pipeline.pdf.geometry import center, contains_point, grow
 from anonymization_pipeline.pipeline_config import PipelineConfig, registry
 from anonymization_pipeline.render.boxes import Box
 from anonymization_pipeline.render.pdf import Redacted
+from anonymization_pipeline.render.surgical import is_cover
 
 # catalog keys that must not survive the scrub
 FORBIDDEN_ROOT = (
@@ -207,7 +210,12 @@ def _under_boxes(
             continue
         x0, y0, x1, y1 = box.rect
         inset = grow(box.rect, -1.0, -(y1 - y0) * 0.3)
+        tag = set(
+            box.category.split("_")
+        )  # the label style writes the category on the cover
         for token in layers[box.page].tokens:
+            if token.text in tag:
+                continue
             if any(contains_point(inset, *center(c)) for c in token.chars):
                 report.fail("text_under_box", box.page, box.category)
                 break
@@ -273,6 +281,111 @@ def _pixels(
             report.fail("pixels_outside_boxes", page)
 
 
+XRAY_CONTENT = (
+    60  # channel distance from the background of a box that makes a pixel content
+)
+XRAY_CHANGED = 40  # channel distance that counts as removed content
+XRAY_MAX = (
+    0.05  # fraction of the original content of a box that may show without the cover
+)
+XRAY_DPI = 144
+XRAY_GLYPH_PAD = 0.5  # points around a kept glyph (anti-aliasing)
+XRAY_SIDE = (
+    1.5  # points left out at the sides of a box: glyphs of the next words overhang
+)
+
+
+_CONTENT_TYPES = (
+    pdfium_c.FPDF_PAGEOBJ_TEXT,
+    pdfium_c.FPDF_PAGEOBJ_IMAGE,
+    pdfium_c.FPDF_PAGEOBJ_FORM,
+)
+
+
+def _render_content(data: bytes, page: int, scale: float, covers: bool) -> np.ndarray:
+    """The page with only its text, images and forms (vector paths and shadings hidden), without
+    the covers of the surgical redaction unless ``covers``."""
+    with PDFIUM_LOCK:
+        pdf = pdfium.PdfDocument(data)
+        try:
+            p = pdf[page]
+            for obj in p.get_objects(max_depth=1):
+                if obj.type not in _CONTENT_TYPES or (not covers and is_cover(obj.raw)):
+                    pdfium_c.FPDFPageObj_SetIsActive(obj.raw, 0)
+            bitmap = p.render(scale=scale, draw_annots=False, may_draw_forms=False)
+            image = np.asarray(bitmap.to_pil().convert("RGB"), dtype=np.int16)
+            bitmap.close()
+            return image
+        finally:
+            pdf.close()
+
+
+def _kept_glyphs(
+    layer: TextLayer, box: Box, scale: float, shape: tuple[int, int]
+) -> np.ndarray:
+    """Pixels of the glyphs the redactor kept on purpose near a box: characters of the output
+    whose centre is outside the box (a tilted neighbouring line, a line touched by a visual box).
+    A character centred inside the box is never excused."""
+    mask = np.zeros(shape, dtype=bool)
+    for token in layer.tokens:
+        for rect in token.chars:
+            if contains_point(box.rect, *center(rect)):
+                continue
+            x0, y0, x1, y1 = grow(rect, XRAY_GLYPH_PAD, XRAY_GLYPH_PAD)
+            mask[
+                max(0, int(y0 * scale)) : max(0, int(y1 * scale) + 1),
+                max(0, int(x0 * scale)) : max(0, int(x1 * scale) + 1),
+            ] = True
+    return mask
+
+
+def _xray(
+    original: bytes,
+    redacted: Redacted,
+    layers: list[TextLayer],
+    report: VerificationReport,
+) -> None:
+    """Surgical pages without their covers: the boxes must no longer show the text and images
+    the original showed there.
+
+    Both pages are rendered with only their text, images and forms: vector frames, rules and
+    bands partly under a box stay on purpose (they are layout). Content is what differs from the
+    background of the box, taken from the output (in a tight box around bold text the original is
+    half ink); it must have changed once the cover is taken away. When nothing was removed, the
+    output is the original and the content shows up unchanged. The ink of the characters kept
+    beside the box (centred outside it) is not content under the box.
+    """
+    scale = XRAY_DPI / 72
+    for page in sorted(p for p, s in redacted.strategies.items() if s == "surgical"):
+        before = _render_content(original, page, scale, covers=True)
+        after = _render_content(redacted.pdf, page, scale, covers=False)
+        h, w = (
+            min(before.shape[0], after.shape[0]),
+            min(before.shape[1], after.shape[1]),
+        )
+        for box in redacted.boxes:
+            if box.page != page:
+                continue
+            kept = _kept_glyphs(layers[page], box, scale, (h, w))
+            x0, y0, x1, y1 = box.rect
+            region = (
+                slice(max(0, int(y0 * scale)), min(h, int(y1 * scale) + 1)),
+                slice(
+                    max(0, int((x0 + XRAY_SIDE) * scale)),
+                    min(w, int((x1 - XRAY_SIDE) * scale) + 1),
+                ),
+            )
+            a, b = before[region], after[region]
+            if a.size == 0:
+                continue
+            background = np.median(b.reshape(-1, 3), axis=0)
+            content = np.abs(a - background).max(axis=2) > XRAY_CONTENT
+            unchanged = np.abs(a - b).max(axis=2) <= XRAY_CHANGED
+            left = content & unchanged & ~kept[region]
+            if content.sum() >= 4 and left.sum() > XRAY_MAX * content.sum():
+                report.fail("content_under_box", page, box.category)
+
+
 def _redetection(
     layers: list[TextLayer],
     strong: dict[str, str],
@@ -309,5 +422,6 @@ def verify(
     _under_boxes(layers, redacted.boxes, report)
     _values(redacted.pdf, reader, layers, strong, report)
     _pixels(original, redacted, cfg, report)
+    _xray(original, redacted, layers, report)
     _redetection(layers, strong, cfg, report, ner)
     return report

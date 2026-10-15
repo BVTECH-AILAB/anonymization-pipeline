@@ -31,8 +31,10 @@ def test_native_layer_has_a_box_per_character(tmp_path: Path) -> None:
     assert len(rects) == 1
     assert all(len(t.chars) == len(t.text) for t in layer.tokens)
     x0, y0, x1, y1 = rects[0]
-    # "Codice fiscale: " is drawn at x=40 on the baseline y=188 (display space)
-    assert x0 == pytest.approx(40 + string_width("Codice fiscale: "), abs=0.5)
+    # "Codice fiscale: " is drawn at x=40 on the baseline y=188 (display space); the boxes are the
+    # ink of the glyphs, which starts a little after the origin of the first letter
+    origin = 40 + string_width("Codice fiscale: ")
+    assert origin <= x0 < origin + 1.5
     assert y0 < 188 < y1
 
 

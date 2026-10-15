@@ -1,11 +1,13 @@
 """Native text layer of a PDF page, read from the PDFium text page.
 
-Every character keeps its loose box (full ascent to descent, like a text selection), converted
-to display space. Invisible text (render mode 3, white text, text outside the page) is kept: it
+Every character keeps the box of its ink (the glyph), converted to display space: redaction
+boxes made of them never spill onto the next line. Words and lines are told apart on the loose
+boxes (full ascent to descent), where the gaps between letters are regular. Invisible text (render mode 3, white text, text outside the page) is kept: it
 is in the file, so it must be found and redacted like visible text. The caller holds
 ``PDFIUM_LOCK``.
 """
 
+import ctypes
 import math
 from typing import Any
 
@@ -30,8 +32,11 @@ class _Builder:
         self.tokens: list[Token] = []
         self.line = 0
         self.text: list[str] = []
-        self.chars: list[Rect] = []
-        self.last: Rect | None = None  # box of the last character of the current line
+        self.chars: list[Rect] = []  # glyph boxes: what redaction covers
+        self.loose: list[Rect] = []  # line boxes: how words and lines are told apart
+        self.last: Rect | None = (
+            None  # loose box of the last character of the current line
+        )
         self.horizontal = True
 
     def flush(self) -> None:
@@ -41,10 +46,18 @@ class _Builder:
         for c in self.chars:
             rect = union(rect, c)
         self.tokens.append(
-            Token("".join(self.text), rect, list(self.chars), self.line, "native")
+            Token(
+                "".join(self.text),
+                rect,
+                list(self.chars),
+                self.line,
+                "native",
+                horizontal=self.horizontal,
+            )
         )
         self.text.clear()
         self.chars.clear()
+        self.loose.clear()
 
     def new_line(self) -> None:
         self.flush()
@@ -52,19 +65,26 @@ class _Builder:
             self.line += 1
         self.last = None
 
-    def add(self, ch: str, box: Rect, size: float, horizontal: bool) -> None:
+    def add(
+        self, ch: str, loose: Rect, glyph: Rect, size: float, horizontal: bool
+    ) -> None:
+        """Add a character: ``loose`` (ascent to descent) decides words and lines, ``glyph``
+        (the ink of the character) is what a redaction box covers."""
         size = max(size, 1.0)
         if self.last is not None:
-            if horizontal != self.horizontal or _jump(self.last, box, horizontal) > (
+            if horizontal != self.horizontal or _jump(self.last, loose, horizontal) > (
                 LINE_JUMP * size
             ):
                 self.new_line()
-            elif self.chars and _gap(self.chars[-1], box, horizontal) > WORD_GAP * size:
+            elif (
+                self.loose and _gap(self.loose[-1], loose, horizontal) > WORD_GAP * size
+            ):
                 self.flush()
         self.horizontal = horizontal
         self.text.append(ch)
-        self.chars.append(box)
-        self.last = box
+        self.chars.append(glyph)
+        self.loose.append(loose)
+        self.last = loose
 
 
 def _gap(prev: Rect, box: Rect, horizontal: bool) -> float:
@@ -79,6 +99,16 @@ def _jump(prev: Rect, box: Rect, horizontal: bool) -> float:
     if horizontal:
         return abs((prev[1] + prev[3]) / 2 - (box[1] + box[3]) / 2)
     return abs((prev[0] + prev[2]) / 2 - (box[0] + box[2]) / 2)
+
+
+def _glyph_box(textpage: Any, i: int, geo: Geometry, loose: Rect) -> Rect:
+    """The box of the ink of a character (its loose box when the glyph has no extent)."""
+    left, right, bottom, top = (ctypes.c_double() for _ in range(4))
+    if not pdfium_c.FPDFText_GetCharBox(textpage, i, left, right, bottom, top):
+        return loose
+    if right.value <= left.value or top.value <= bottom.value:
+        return loose
+    return geo.to_display(left.value, bottom.value, right.value, top.value)
 
 
 def _horizontal(textpage: Any, i: int, rotation: int) -> bool:
@@ -122,19 +152,20 @@ def native_layer(page: Any, page_no: int) -> TextLayer:
             elif not ch or ch.isspace():
                 builder.flush()
             elif pdfium_c.FPDFText_GetLooseCharBox(raw, i, box):
-                rect = geo.to_display(box.left, box.bottom, box.right, box.top)
+                loose = geo.to_display(box.left, box.bottom, box.right, box.top)
+                glyph = _glyph_box(raw, i, geo, loose)
                 if step == 2:
                     second = pdfium_c.FS_RECTF()
                     if pdfium_c.FPDFText_GetLooseCharBox(raw, i + 1, second):
-                        rect = union(
-                            rect,
-                            geo.to_display(
-                                second.left, second.bottom, second.right, second.top
-                            ),
+                        other = geo.to_display(
+                            second.left, second.bottom, second.right, second.top
                         )
+                        loose = union(loose, other)
+                        glyph = union(glyph, _glyph_box(raw, i + 1, geo, other))
                 builder.add(
                     ch,
-                    rect,
+                    loose,
+                    glyph,
                     pdfium_c.FPDFText_GetFontSize(raw, i),
                     _horizontal(raw, i, rotation),
                 )

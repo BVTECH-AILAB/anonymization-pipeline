@@ -243,6 +243,16 @@ def anonymize(
 
     progress("verification")
     report = verify(source.pdf, redacted, values, cfg, ner)
+    surgical = {p for p, s in redacted.strategies.items() if s == "surgical"}
+    if not report.ok and surgical:
+        # a surgical page the verification refused is flattened and everything checked again;
+        # a failure that names no page sends every surgical page to flatten
+        pages = {f.page for f in report.failures}
+        retry = surgical if None in pages else surgical & pages
+        if retry:
+            redacted = redact(source.pdf, boxes, cfg.redaction, set(scanned), retry)
+            result.boxes, result.strategies = redacted.boxes, redacted.strategies
+            report = verify(source.pdf, redacted, values, cfg, ner)
     for leftover in left:  # the Markdown: no replaced value left in clear text
         report.fail("markdown_leftover", leftover.page - 1, leftover.category)
     mark("verification")

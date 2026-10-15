@@ -75,6 +75,9 @@ class ResultOut(BaseModel):
     counts: dict[str, int] = Field(description="Valori distinti trovati per categoria")
     boxes: list[BoxOut] = Field(description="Riquadri applicati, senza i valori")
     redacted_pages: list[int] = Field(description="Pagine redatte (da 1)")
+    strategies: dict[int, str] = Field(
+        description="Pagina (da 1) -> surgical | flatten | scan: come è stata redatta"
+    )
     failures: list[FailureOut]
     timings: dict[str, float]
 
@@ -109,6 +112,7 @@ def _out(job: Job) -> JobOut:
                 for b in r.boxes
             ],
             redacted_pages=[p + 1 for p in sorted(r.strategies)],
+            strategies={p + 1: s for p, s in sorted(r.strategies.items())},
             failures=[
                 FailureOut(
                     check=f.check,

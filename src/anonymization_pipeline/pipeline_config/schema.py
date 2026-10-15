@@ -92,6 +92,9 @@ class Redaction(_Section):
     """How the values are removed: boxes on the PDF, replacements in the Markdown."""
 
     style: Literal["black", "label"]
+    # surgical: only what lies under the boxes leaves a native page (text stays text);
+    # flatten: every page with boxes is rasterised. Surgical falls back to flatten page by page.
+    strategy: Literal["surgical", "flatten"]
     flatten_dpi: int = Field(ge=100, le=600)  # resolution of a rasterised page
     jpeg_quality: int = Field(ge=50, le=100)  # scanned pages; native ones are lossless
     # Markdown: tag ([PERSONA_1]), pseudonym (tags + encrypted map), redaction (one symbol)

@@ -25,11 +25,11 @@ from PIL import Image, ImageDraw, ImageFont
 from anonymization_pipeline.pdf import PDFIUM_LOCK
 from anonymization_pipeline.pdf.geometry import Geometry
 from anonymization_pipeline.pipeline_config.schema import Redaction
-from anonymization_pipeline.render.boxes import Box, prepare
+from anonymization_pipeline.render.boxes import Box, PageFallback, Strategy, prepare
 from anonymization_pipeline.render.scrub import scrub
+from anonymization_pipeline.render.surgical import SurgicalRedactor
 
 Style = Literal["black", "label"]
-Strategy = Literal["flatten", "scan"]
 PixelRect = tuple[int, int, int, int]
 # a scan is one image covering at least this fraction of the page
 SCAN_COVERAGE = 0.9
@@ -46,10 +46,6 @@ class Redacted:
     pdf: bytes
     boxes: list[Box]  # as applied, after shaping and merging
     strategies: dict[int, str]  # page -> strategy, only pages with boxes
-
-
-class PageFallback(Exception):
-    """The strategy cannot redact this page: the next one is used."""
 
 
 class Redactor(Protocol):
@@ -225,38 +221,66 @@ class ScanRedactor:
         pdf.del_page(index + 1)
 
 
+def _restore_page(pdf: Any, original: Any, index: int) -> None:
+    """Put page ``index`` back as it is in the original, after a strategy gave up on it."""
+    pdf.del_page(index)
+    pdf.import_pages(original, [index], index)
+
+
 def redact(
-    src: bytes, boxes: list[Box], cfg: Redaction, scanned: set[int] | None = None
+    src: bytes,
+    boxes: list[Box],
+    cfg: Redaction,
+    scanned: set[int] | None = None,
+    flatten_pages: set[int] | None = None,
 ) -> Redacted:
     """Apply ``boxes`` to the PDF ``src`` and clean the document.
+
+    Each page with boxes tries its strategies in order: scans ``scan`` then ``flatten``, native
+    pages ``surgical`` (when ``cfg.strategy`` is surgical) then ``flatten``. A strategy that gives
+    up leaves the page as in the original for the next one.
 
     Args:
         src: Original PDF.
         boxes: Boxes of the whole document (display space), before shaping.
         cfg: ``redaction`` section of the configuration.
-        scanned: Pages that are scans (stored as JPEG once redacted).
+        scanned: Pages that are scans.
+        flatten_pages: Pages flattened whatever the strategy (a surgical result the verification
+            refused).
     """
     scanned = scanned or set()
+    flatten_pages = flatten_pages or set()
     flatten: Redactor = FlattenRedactor(cfg)
     scan: Redactor = ScanRedactor(cfg)
+    surgical: Redactor = SurgicalRedactor(cfg)
     strategies: dict[int, str] = {}
     with PDFIUM_LOCK:
         pdf = pdfium.PdfDocument(src)
+        original = pdfium.PdfDocument(src)
         try:
             sizes = {i: pdf.get_page_size(i) for i in range(len(pdf))}
             applied = prepare(boxes, sizes)
             for index in sorted({b.page for b in applied}):
                 page_boxes = [b for b in applied if b.page == index]
-                order = [scan, flatten] if index in scanned else [flatten]
+                if index in flatten_pages:
+                    order = [flatten]
+                elif index in scanned:
+                    order = [scan, flatten]
+                elif cfg.strategy == "surgical":
+                    order = [surgical, flatten]
+                else:
+                    order = [flatten]
                 for redactor in order:
                     try:
                         redactor.redact_page(pdf, index, page_boxes, index in scanned)
                     except PageFallback:
+                        _restore_page(pdf, original, index)
                         continue
                     strategies[index] = redactor.name
                     break
             out = io.BytesIO()
             pdf.save(out, flags=pdfium_c.FPDF_NO_INCREMENTAL)
         finally:
+            original.close()
             pdf.close()
     return Redacted(scrub(out.getvalue()), applied, strategies)

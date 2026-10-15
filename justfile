@@ -64,3 +64,7 @@ test-cov:
 # Known vulnerabilities in the dependencies
 audit:
     uv run pip-audit --skip-editable
+
+# Runtime dependency licences: fails outside the permissive allow-list (Apache, MIT, BSD, ...)
+licences:
+    ./scripts/check-licences.sh

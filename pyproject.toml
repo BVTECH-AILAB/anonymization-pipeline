@@ -1,17 +1,27 @@
 [project]
 name = "anonmyzation-pipeline"
 version = "0.1.0"
-description = "AGENAS MIA platform service (generated from agenas-python-template)"
+description = "AGENAS MIA service: surgical anonymization of clinical documents (C1), generated from agenas-python-template"
 requires-python = ">=3.12,<3.13"
 dependencies = [
-    "alembic>=1.14",
-    "asyncpg>=0.30",
     "fastapi>=0.115",
     "httpx>=0.28",
     "pydantic>=2.10",
     "pydantic-settings>=2.7",
-    "sqlalchemy[asyncio]>=2.0.36",
     "uvicorn[standard]>=0.34",
+    "python-multipart>=0.0.20",
+    # Anonymization engine
+    "pymupdf>=1.28",
+    "numpy>=2.0",
+    "pillow>=11.0",
+    "opencv-python-headless>=4.10",
+    "zxing-cpp>=2.3",
+    "python-codicefiscale>=0.12",
+    "python-docx>=1.1",
+    "torch>=2.7",
+    "torchvision>=0.22",
+    "python-doctr>=1.0",
+    "gliner>=0.2",
 ]
 
 [dependency-groups]
@@ -23,7 +33,28 @@ dev = [
     "pytest-cov>=6.0",
     "ruff>=0.15",
     "ty>=0.0.1a0",
+    # tools/: synthetic dataset, evaluation, OCR benchmark
+    "faker>=30.0",
+    "python-barcode>=0.15",
+    "qrcode>=8.0",
+    "reportlab>=4.2",
+    "rapidfuzz>=3.10",
+    "accelerate>=1.0",
+    "typer>=0.27.3",
+    "scikit-learn>=1.9.1",
+    "torchmetrics>=1.9.0",
+    "pycocotools>=2.0.11",
 ]
+
+# PyTorch with CUDA 12.8 (Blackwell GPUs included); the same wheels run on CPU.
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
 
 [build-system]
 requires = ["hatchling"]
@@ -34,7 +65,7 @@ packages = ["src/anonmyzation_pipeline"]
 
 [tool.ruff]
 target-version = "py312"
-src = ["src", "tests"]
+src = ["src", "tests", "tools"]
 
 [tool.ruff.lint]
 # Same base as ai-platform / llm-gateway, plus:
@@ -46,6 +77,8 @@ ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "S105", "S106", "ARG"]
+# Synthetic data generation uses non-cryptographic randomness on purpose.
+"tools/**" = ["S311"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "logging.basicConfig".msg = "Use anonmyzation_pipeline.logging_setup.setup_logging: it installs the PII redaction filter."
@@ -55,10 +88,7 @@ ignore = ["E501"]
 testpaths = ["tests"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
-addopts = "-m 'not integration' --strict-markers"
-markers = [
-    "integration: needs the compose Postgres, run with `just test-int`",
-]
+addopts = "--strict-markers"
 
 [tool.coverage.run]
 source = ["anonmyzation_pipeline"]

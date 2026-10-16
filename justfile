@@ -15,7 +15,7 @@ up:
 down:
     docker compose down
 
-# Stop the stack and delete the database volume
+# Stop the stack and delete the volumes (the cached model weights)
 down-v:
     docker compose down -v
 
@@ -37,7 +37,7 @@ start:
 
 # Download the OCR and NER weights into the local caches (run once, before an offline start)
 models:
-    uv run python -c "from anonmyzation_pipeline.config import get_settings; from anonmyzation_pipeline.main import build_pipeline, load_models; load_models(build_pipeline(get_settings()))"
+    uv run python -c "from anonmyzation_pipeline.config import get_settings; from anonmyzation_pipeline.main import build_pipeline, load_models; import sys; sys.exit(0 if load_models(build_pipeline(get_settings())) else 1)"
 
 # --- Synthetic dataset and evaluation (tools/, dev only) ---
 
@@ -49,9 +49,9 @@ dataset *args:
 evaluate *args:
     uv run python -m tools evaluate {{args}}
 
-# Compare OCR engines on the scanned dataset (lighton needs a GPU and is slow)
-bench-ocr *args:
-    uv run python -m tools bench-ocr {{args}}
+# Evaluation viewer: ground truth vs predictions per document, live while evaluating
+eval-ui *args:
+    uv run python -m tools viewer {{args}}
 
 # --- Quality ---
 

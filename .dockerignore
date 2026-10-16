@@ -20,3 +20,14 @@ tools
 dataset
 dataset_*
 reports
+dataset*.zip
+.claude
+# development and CI only: the image needs src/, pyproject.toml, uv.lock, scripts/entrypoint.sh
+tests
+scripts/start.sh
+justfile
+README.md
+.gitlab-ci.yml
+.pre-commit-config.yaml
+sonar-project.properties
+docker-compose.yml

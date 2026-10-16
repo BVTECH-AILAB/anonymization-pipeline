@@ -16,10 +16,12 @@ build/
 .idea/
 .vscode/
 
-# Synthetic dataset and evaluation output (regenerate with `just dataset` / `just evaluate`)
-dataset/
-dataset_*/
-reports/
+# Evaluation dataset and output (anchored: tools/dataset/ is source code)
+/dataset/
+/dataset_*/
+/dataset*.zip
+/reports/
 
 # Local only, never committed
 CLAUDE.md
+.claude/

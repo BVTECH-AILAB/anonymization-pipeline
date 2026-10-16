@@ -10,6 +10,7 @@ file names) is ever logged: events carry only ids, counters and timings.
 import asyncio
 import io
 import logging
+import os
 import shutil
 import tempfile
 import threading
@@ -43,14 +44,18 @@ from anonmyzation_pipeline.services.anonymization.pipeline import (
     Analysis,
     Box,
     Pipeline,
+    from_display,
+    to_display,
 )
-from anonmyzation_pipeline.services.anonymization.redact import redact
-from anonmyzation_pipeline.services.anonymization.verify import verify
+from anonmyzation_pipeline.services.anonymization.release import redact_and_verify
+from anonmyzation_pipeline.services.anonymization.verify import verify_docx
 
 logger = logging.getLogger(__name__)
 
 PDF_SUFFIXES = {".pdf"}
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".tif", ".tiff"}
+# a phone photo is about 12-50 megapixels; larger frames or pages are refused before decoding
+MAX_FRAME_PIXELS = 120_000_000
 # Share of the progress bar covered by each step.
 WEIGHTS = {
     "read": (0, 45),
@@ -116,7 +121,9 @@ class Job:
         return out
 
 
-def to_pdf(data: bytes, suffix: str, dest: Path, max_pages: int) -> int:
+def to_pdf(
+    data: bytes, suffix: str, dest: Path, max_pages: int, render_dpi: int = 300
+) -> int:
     """Store the upload as a PDF; images become one page per frame.
 
     Args:
@@ -124,6 +131,8 @@ def to_pdf(data: bytes, suffix: str, dest: Path, max_pages: int) -> int:
         suffix: Lower-case file extension.
         dest: Where to write the PDF.
         max_pages: Page limit.
+        render_dpi: Resolution pages are rendered at (OCR): a page too large to
+            render at it is refused.
 
     Returns:
         Number of pages.
@@ -143,41 +152,52 @@ def to_pdf(data: bytes, suffix: str, dest: Path, max_pages: int) -> int:
             if doc.needs_pass:
                 raise PasswordProtectedError()
             pages = len(doc)
-        if pages == 0:
-            raise UnreadableDocumentError()
-        if pages > max_pages:
-            raise TooManyPagesError()
+            if pages == 0:
+                raise UnreadableDocumentError()
+            if pages > max_pages:
+                raise TooManyPagesError()
+            scale = (render_dpi / 72) ** 2
+            try:
+                too_large = any(
+                    p.rect.width * p.rect.height * scale > MAX_FRAME_PIXELS for p in doc
+                )
+            except Exception as exc:
+                raise UnreadableDocumentError() from exc
+            if too_large:
+                raise UnreadableDocumentError()
         dest.write_bytes(data)
         return pages
     if suffix not in IMAGE_SUFFIXES:
         raise UnsupportedFormatError()
     try:
         img = Image.open(io.BytesIO(data))
-        frames = []
-        while True:
-            # phone photos: apply the EXIF rotation before anything else
-            frames.append(ImageOps.exif_transpose(img.copy()).convert("RGB"))
-            if len(frames) > max_pages:
-                raise TooManyPagesError()
-            try:
-                img.seek(img.tell() + 1)
-            except EOFError:
-                break
-    except TooManyPagesError:
-        raise
+        n_frames = getattr(img, "n_frames", 1)
     except Exception as exc:
         raise UnreadableDocumentError() from exc
+    if n_frames > max_pages:
+        raise TooManyPagesError()
     with pymupdf.open() as doc:
-        for frame in frames:
-            dpi = (frame.info.get("dpi") or (200, 200))[0] or 200
-            buf = io.BytesIO()
-            frame.save(buf, "JPEG", quality=92)
-            page = doc.new_page(
-                width=frame.width * 72 / dpi, height=frame.height * 72 / dpi
-            )
-            page.insert_image(page.rect, stream=buf.getvalue())
+        try:
+            for i in range(n_frames):
+                img.seek(i)
+                # size is read from the header: refuse before decoding (decompression bomb)
+                if img.width * img.height > MAX_FRAME_PIXELS:
+                    raise UnreadableDocumentError()
+                # phone photos: apply the EXIF rotation before anything else
+                frame = ImageOps.exif_transpose(img.copy()).convert("RGB")
+                dpi = (frame.info.get("dpi") or (200, 200))[0] or 200
+                buf = io.BytesIO()
+                frame.save(buf, "JPEG", quality=92)
+                page = doc.new_page(
+                    width=frame.width * 72 / dpi, height=frame.height * 72 / dpi
+                )
+                page.insert_image(page.rect, stream=buf.getvalue())
+        except UnreadableDocumentError:
+            raise
+        except Exception as exc:
+            raise UnreadableDocumentError() from exc
         doc.save(dest)
-    return len(frames)
+    return n_frames
 
 
 class JobManager:
@@ -198,6 +218,8 @@ class JobManager:
         self.work_dir = work_dir or Path(tempfile.mkdtemp(prefix="anonpip-"))
         self.work_dir.mkdir(parents=True, exist_ok=True)
         self.jobs: dict[str, Job] = {}
+        # the worker thread, request threads and the purge task all touch ``jobs``
+        self._jobs_lock = threading.RLock()
         # One worker: one document at a time on the GPU, edits included.
         self._executor = ThreadPoolExecutor(
             max_workers=1, thread_name_prefix="anonymizer"
@@ -216,27 +238,32 @@ class JobManager:
             raise ServiceUnavailableError()
         if len(data) > self.settings.max_upload_mb * 1024 * 1024:
             raise FileTooLargeError()
-        active = [j for j in self.jobs.values() if j.status not in TERMINAL]
-        if (
-            len(self.jobs) >= self.settings.max_jobs
-            or len(active) >= self.settings.max_jobs
-        ):
-            self.purge_expired()
+        with self._jobs_lock:
             if len(self.jobs) >= self.settings.max_jobs:
-                raise TooManyJobsError()
+                self.purge_expired()
+                if len(self.jobs) >= self.settings.max_jobs:
+                    raise TooManyJobsError()
         suffix = Path(filename).suffix.lower()
         jid = uuid.uuid4().hex
         job_dir = self.work_dir / jid
         job_dir.mkdir(mode=0o700)
         try:
             pages = to_pdf(
-                data, suffix, job_dir / "original.pdf", self.settings.max_pages
+                data,
+                suffix,
+                job_dir / "original.pdf",
+                self.settings.max_pages,
+                self.settings.ocr_dpi,
             )
         except Exception:
             shutil.rmtree(job_dir, ignore_errors=True)
             raise
         job = Job(jid, job_dir, filename, len(data), pages, suffix.lstrip("."))
-        self.jobs[jid] = job
+        with self._jobs_lock:
+            if len(self.jobs) >= self.settings.max_jobs:  # filled while converting
+                shutil.rmtree(job_dir, ignore_errors=True)
+                raise TooManyJobsError()
+            self.jobs[jid] = job
         log_event(
             logger,
             "anonymization_job_created",
@@ -256,7 +283,8 @@ class JobManager:
         Raises:
             JobNotFoundError: Unknown or expired id.
         """
-        job = self.jobs.get(jid)
+        with self._jobs_lock:
+            job = self.jobs.get(jid)
         if job is None:
             raise JobNotFoundError()
         return job
@@ -274,12 +302,15 @@ class JobManager:
         return job
 
     def cancel(self, jid: str) -> None:
-        """Ask the worker to stop the job at the next step."""
-        self.get(jid).cancel.set()
+        """Ask the worker to stop the job at the next step; a finished job is left as it is."""
+        job = self.get(jid)
+        if job.status not in TERMINAL:
+            job.cancel.set()
 
     def delete(self, jid: str) -> None:
         """Forget a job and delete its files now."""
-        job = self.jobs.pop(jid, None)
+        with self._jobs_lock:
+            job = self.jobs.pop(jid, None)
         if job is not None:
             job.cancel.set()
             shutil.rmtree(job.dir, ignore_errors=True)
@@ -294,9 +325,11 @@ class JobManager:
             Number of jobs deleted.
         """
         limit = time.monotonic() - self.settings.job_ttl_minutes * 60
-        expired = [j for j in self.jobs.values() if j.created < limit]
+        with self._jobs_lock:
+            expired = [j for j in self.jobs.values() if j.created < limit]
+            for job in expired:
+                self.jobs.pop(job.id, None)
         for job in expired:
-            self.jobs.pop(job.id, None)
             job.cancel.set()
             shutil.rmtree(job.dir, ignore_errors=True)
             log_event(
@@ -308,12 +341,14 @@ class JobManager:
 
     def shutdown(self) -> None:
         """Stop the worker and delete every document."""
-        for job in self.jobs.values():
+        with self._jobs_lock:
+            jobs = list(self.jobs.values())
+            self.jobs.clear()
+        for job in jobs:
             job.cancel.set()
         self._executor.shutdown(wait=False, cancel_futures=True)
-        for job in list(self.jobs.values()):
+        for job in jobs:
             shutil.rmtree(job.dir, ignore_errors=True)
-        self.jobs.clear()
         if self._owns_dir:
             shutil.rmtree(self.work_dir, ignore_errors=True)
 
@@ -325,6 +360,7 @@ class JobManager:
         return queue
 
     def unsubscribe(self, job: Job, queue: asyncio.Queue) -> None:
+        """Stop sending progress events to ``queue``."""
         job.subscribers[:] = [
             (loop, q) for loop, q in job.subscribers if q is not queue
         ]
@@ -368,7 +404,8 @@ class JobManager:
             job.status = "cancelled"
             self._publish(job)
             shutil.rmtree(job.dir, ignore_errors=True)
-            self.jobs.pop(job.id, None)
+            with self._jobs_lock:
+                self.jobs.pop(job.id, None)
             log_event(logger, "anonymization_cancelled", {"job_id": job.id})
         except Exception as exc:
             # Only the exception type: messages can contain document text.
@@ -383,35 +420,55 @@ class JobManager:
                 {"job_id": job.id, "error": type(exc).__name__},
             )
 
-    def _finish(self, job: Job, t_start: float, timings: dict[str, float]) -> None:
-        """Redact, verify, export; shared by the first run and every edit."""
+    def _finish(
+        self,
+        job: Job,
+        t_start: float,
+        timings: dict[str, float],
+        edited: bool = False,
+    ) -> None:
+        """Redact, verify, export; shared by the first run and every edit.
+
+        Fail-closed: nothing is downloadable while a new version is produced, and a
+        version that fails verification replaces the files but stays blocked.
+        """
         analysis = job.analysis
         if analysis is None:
             raise JobNotReadyError()
         report = self._progress(job)
+        job.verified = False
+        pdf_next = job.anonymized.with_name("anonymized.next.pdf")
+        docx_next = job.docx.with_name("anonymized.next.docx")
         report("redact", 0)
-        t1 = time.perf_counter()
-        redact(
-            job.original, analysis, job.anonymized, style=self.settings.redaction_style
-        )
-        t2 = time.perf_counter()
-        report("preview", 0)
-        rep = verify(
+        release = redact_and_verify(
             job.original,
-            job.anonymized,
             analysis,
+            pdf_next,
+            style=self.settings.redaction_style,
             tol=self.settings.verify_pixel_tolerance,
         )
-        t3 = time.perf_counter()
-        export_docx(analysis, job.docx)
+        report("preview", 0)
+        t1 = time.perf_counter()
+        export_docx(analysis, docx_next)
+        docx_issues = verify_docx(
+            docx_next, analysis
+        )  # the Word file is downloadable too
+        verification = release.seconds["verification"] + time.perf_counter() - t1
+        os.replace(pdf_next, job.anonymized)
+        os.replace(docx_next, job.docx)
+        if edited:
+            # only now: a preview cached under the new count shows the new file
+            job.edits += 1
         for cached in job.dir.glob("anonymized-*.png"):
             cached.unlink()
         timings = timings | {
-            "redaction": round(t2 - t1, 2),
-            "verification": round(t3 - t2, 2),
+            "redaction": release.seconds["redaction"],
+            "verification": round(verification, 2),
         }
         total = round(time.perf_counter() - t_start, 2)
-        job.verified = rep.ok
+        rep, flattened = release.report, release.flattened
+        ok = rep.ok and not docx_issues
+        job.verified = ok
         job.result = {
             "id": job.id,
             "filename": job.name,
@@ -422,10 +479,20 @@ class JobManager:
             "seconds_per_page": round(total / max(len(analysis.pages), 1), 2),
             "timings": timings,
             "counts": analysis.counts(),
-            "verified": rep.ok,
-            "issues": rep.issues[:20],
+            "verified": ok,
+            "issues": (rep.issues + docx_issues)[:20],
+            # pages released as images: a surgical check failed and the page was rendered
+            "flattened_pages": [p + 1 for p in flattened],
             "edits": job.edits,
-            "boxes": [{"id": i, **asdict(b)} for i, b in enumerate(analysis.boxes)],
+            # boxes as shown on the rendered pages (page space differs on rotated pages)
+            "boxes": [
+                {
+                    "id": i,
+                    **asdict(b),
+                    "rect": to_display(b.rect, analysis.pages[b.page]),
+                }
+                for i, b in enumerate(analysis.boxes)
+            ],
         }
         job.percent, job.status = 100, "done"
         self._publish(job)
@@ -499,7 +566,8 @@ class JobManager:
         added = 0
         for page, rect in add:
             if 0 <= page < n_pages:
-                snapped = analysis.snap(page, rect)
+                # drawn on the rendered page: back to page space
+                snapped = analysis.snap(page, from_display(rect, analysis.pages[page]))
                 analysis.boxes.append(
                     Box(
                         page,
@@ -515,9 +583,20 @@ class JobManager:
                 added += 1
         found = analysis.search(search) if search else []
         analysis.boxes += found
-        job.edits += 1
         timings = dict(job.result["timings"])
-        self._finish(job, t0, timings)
+        try:
+            self._finish(job, t0, timings, edited=True)
+        except Cancelled:
+            raise JobNotFoundError() from None  # deleted while the edit was running
+        except Exception as exc:
+            # nothing released: the job stays blocked and says so
+            for tmp in job.dir.glob("anonymized.next.*"):
+                tmp.unlink(missing_ok=True)
+            job.result = job.result | {"verified": False}
+            job.percent, job.status = 100, "done"
+            self._publish(job)
+            logger.error("Edit failed: job=%s error=%s", job.id, type(exc).__name__)
+            raise
         result = job.result
         result["edit_seconds"] = round(time.perf_counter() - t0, 2)
         result["search_hits"] = len(found)
@@ -539,7 +618,9 @@ class JobManager:
     def render_page(self, jid: str, which: str, page: int, dpi: int) -> Path:
         """PNG of one page of the original or the anonymized document (cached)."""
         job = self.ready_job(jid)
-        cache = job.dir / f"{which}-{page}-{dpi}.png"
+        # the anonymized version changes with every edit: the edit count is in its name
+        version = job.edits if which == "anonymized" else 0
+        cache = job.dir / f"{which}-{page}-{dpi}-{version}.png"
         if not cache.exists():
             src = job.original if which == "original" else job.anonymized
             with pymupdf.open(src) as doc:

@@ -45,15 +45,26 @@ class Settings(BaseSettings):
     # --- Models ---
     # "auto" uses the GPU when one is available, otherwise the CPU.
     device: str = "auto"
-    # Load OCR and NER at startup; /readyz reports 503 until they are loaded.
+    # Load OCR and NER at startup; /readyz reports 503 until they are loaded
+    # (retried every 30 s).
     preload_models: bool = True
-    ocr_det_arch: str = "db_resnet50"
-    ocr_reco_arch: str = "parseq"
+    # PaddleOCR PP-OCRv5 (via RapidOCR): "mobile" or "server" text detector, on the GPU
+    # (PyTorch) when ``device`` resolves to cuda; recognition: the Latin model (ONNX Runtime).
+    # Stored in ocr_model_dir (empty: inside the package; in the image: /models/rapidocr)
+    ocr_model_type: Literal["mobile", "server"] = "server"
+    ocr_model_dir: str = ""
+    # Pages read at the same time, one OCR engine each. More than 1 only with GPU memory
+    # to spare (two server detectors at 300 dpi need about 6 GB): measure before raising it.
+    ocr_workers: int = Field(default=1, ge=1, le=16)
     ocr_dpi: int = Field(default=300, ge=100, le=600)
     # Width of the side strips read again rotated by 90 degrees (vertical text).
     ocr_margin_pt: float = Field(default=60, ge=0, le=200)
     ner_enabled: bool = True
     ner_model: str = "urchade/gliner_multi_pii-v1"
+    # Second NER model (GLiNER2), run together with the first: its findings are added.
+    # Off: GLiNER only (faster, about 1 point of recall less).
+    ner2_enabled: bool = True
+    ner2_model: str = "fastino/gliner2-privacy-filter-PII-multi"
     ner_threshold: float = Field(default=0.5, ge=0, le=1)
     ner_person_threshold: float = Field(default=0.4, ge=0, le=1)
 

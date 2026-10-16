@@ -15,30 +15,40 @@ from anonmyzation_pipeline.config import Settings, get_settings
 from anonmyzation_pipeline.errors import register_exception_handlers
 from anonmyzation_pipeline.logging_setup import setup_logging
 from anonmyzation_pipeline.middleware import RequestIdMiddleware
-from anonmyzation_pipeline.services.anonymization.detect.ner import GlinerNER
-from anonmyzation_pipeline.services.anonymization.ocr import DoctrOCR
+from anonmyzation_pipeline.services.anonymization.detect.ner import (
+    CombinedNER,
+    Gliner2NER,
+    GlinerNER,
+    NerEngine,
+)
+from anonmyzation_pipeline.services.anonymization.ocr import RapidOcrEngine
 from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
 from anonmyzation_pipeline.services.jobs import JobManager
 
 logger = logging.getLogger(__name__)
 
 PURGE_INTERVAL_SECONDS = 60
+MODEL_RETRY_SECONDS = 30
 
 
 def build_pipeline(settings: Settings) -> Pipeline:
     """OCR and NER engines from the settings. No weights are loaded here."""
-    ocr = DoctrOCR(
-        det_arch=settings.ocr_det_arch,
-        reco_arch=settings.ocr_reco_arch,
+    ocr = RapidOcrEngine(
         dpi=settings.ocr_dpi,
         margin_pt=settings.ocr_margin_pt,
+        model_type=settings.ocr_model_type,
+        model_dir=settings.ocr_model_dir,
         device=settings.device,
+        workers=settings.ocr_workers,
     )
-    ner = (
-        GlinerNER(model_id=settings.ner_model, device=settings.device)
-        if settings.ner_enabled
-        else None
-    )
+    ner: NerEngine | None = None
+    if settings.ner_enabled:
+        # the models keep everything above the lower threshold; the pipeline applies both
+        threshold = min(settings.ner_threshold, settings.ner_person_threshold)
+        ner = GlinerNER(settings.ner_model, threshold, device=settings.device)
+        if settings.ner2_enabled:
+            second = Gliner2NER(settings.ner2_model, threshold, device=settings.device)
+            ner = CombinedNER(ner, second)
     return Pipeline(
         ocr,
         ner,
@@ -48,21 +58,42 @@ def build_pipeline(settings: Settings) -> Pipeline:
     )
 
 
-def load_models(pipeline: Pipeline) -> None:
-    """Load the model weights. A failure leaves /readyz at 503 (fail-closed)."""
-    try:
-        pipeline.ocr.load()
-        if pipeline.ner is not None:
-            pipeline.ner.load()
-    except Exception as exc:
-        logger.error("Model loading failed: %s", type(exc).__name__)
+def load_models(pipeline: Pipeline) -> bool:
+    """Load every engine that is not loaded yet; each one independently.
+
+    A failure leaves ``/readyz`` at 503 (fail-closed) and is retried by the
+    lifespan, so a model server that starts after the pod is picked up.
+
+    Returns:
+        True when every engine is ready.
+    """
+    engines = [("ocr", pipeline.ocr), ("ner", pipeline.ner)]
+    for name, engine in engines:
+        if engine is None or engine.ready:
+            continue
+        try:
+            engine.load()
+        except Exception as exc:
+            logger.error(
+                "Model loading failed: engine=%s error=%s", name, type(exc).__name__
+            )
+    return pipeline.ready
+
+
+async def _load_loop(pipeline: Pipeline) -> None:
+    """Load the models, retrying until every engine is ready."""
+    while not await asyncio.to_thread(load_models, pipeline):
+        await asyncio.sleep(MODEL_RETRY_SECONDS)
 
 
 async def _purge_loop(jobs: JobManager) -> None:
-    """Delete expired documents periodically."""
+    """Delete expired documents periodically; an error never stops the loop."""
     while True:
         await asyncio.sleep(PURGE_INTERVAL_SECONDS)
-        jobs.purge_expired()
+        try:
+            jobs.purge_expired()
+        except Exception as exc:
+            logger.error("Purge of expired documents failed: %s", type(exc).__name__)
 
 
 @asynccontextmanager
@@ -82,7 +113,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.jobs = jobs
     tasks = [asyncio.create_task(_purge_loop(jobs))]
     if settings.preload_models:
-        tasks.append(asyncio.create_task(asyncio.to_thread(load_models, pipeline)))
+        tasks.append(asyncio.create_task(_load_loop(pipeline)))
     logger.info(
         "Service started: name=%s version=%s environment=%s",
         settings.app_name,

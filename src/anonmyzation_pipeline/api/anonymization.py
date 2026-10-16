@@ -52,9 +52,12 @@ class JobStatus(BaseModel):
     result: dict[str, Any] | None = None
 
 
+Coordinate = Annotated[float, Field(ge=-100, le=20000, allow_inf_nan=False)]
+
+
 class AreaEdit(BaseModel):
     page: int = Field(ge=0, le=500)
-    rect: tuple[float, float, float, float]
+    rect: tuple[Coordinate, Coordinate, Coordinate, Coordinate]
 
 
 class EditRequest(BaseModel):
@@ -80,7 +83,8 @@ async def create(
     jobs: JobManagerDep, file: Annotated[UploadFile, File()]
 ) -> JobCreated:
     """Upload a document (PDF, scanned PDF, JPG, PNG, TIFF) and start the anonymization."""
-    data = await file.read()
+    # never more than the limit in memory: one byte over is enough to refuse it
+    data = await file.read(jobs.settings.max_upload_mb * 1024 * 1024 + 1)
     job = await asyncio.to_thread(jobs.create, data, file.filename or "documento")
     return JobCreated(id=job.id, pages=job.pages, size=job.size)
 

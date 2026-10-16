@@ -27,4 +27,5 @@ async def readyz(request: Request) -> dict[str, str] | JSONResponse:
 
 @router.get("/version")
 async def version(request: Request) -> dict[str, str]:
+    """Name and version of the service, from the package metadata."""
     return {"name": request.app.state.settings.app_name, "version": __version__}

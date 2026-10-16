@@ -9,9 +9,18 @@ from docx import Document
 from fastapi.testclient import TestClient
 from PIL import Image
 
+from anonmyzation_pipeline.errors import (
+    FileTooLargeError,
+    ServiceUnavailableError,
+    TooManyJobsError,
+    TooManyPagesError,
+)
+from anonmyzation_pipeline.services.anonymization.ocr import RapidOcrEngine
+from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
+from anonmyzation_pipeline.services.anonymization.verify import verify
 from anonmyzation_pipeline.services.jobs import JobManager
 from tests.conftest import FAKE_CF
-from tests.documents import PATIENT, PHONE, letter_pdf
+from tests.documents import PATIENT, PHONE, letter_pdf, native_words, scanned_pdf
 
 
 def upload(
@@ -115,14 +124,40 @@ def test_download_docx(client: TestClient, letter: Path) -> None:
     assert "Crohn" in text
 
 
-def test_download_refused_when_verification_fails(
+def never_redact(src: Path, analysis, out: Path, style: str = "black") -> dict:
+    """A redaction that silently changes nothing."""
+    out.write_bytes(src.read_bytes())
+    return {"boxes": 0}
+
+
+def test_failed_pages_are_flattened_and_released_clean(
     client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    def never_redact(src: Path, analysis, out: Path, style: str = "black") -> dict:
-        out.write_bytes(src.read_bytes())
-        return {"boxes": 0}
+    monkeypatch.setattr(
+        "anonmyzation_pipeline.services.anonymization.release.redact", never_redact
+    )
+    created = upload(client, letter)
+    state = wait_done(client, created["id"])
 
-    monkeypatch.setattr("anonmyzation_pipeline.services.jobs.redact", never_redact)
+    assert state["result"]["verified"] is True
+    assert state["result"]["flattened_pages"]
+    pdf = client.get(f"/anonymizations/{created['id']}/download/pdf").content
+    with pymupdf.open(stream=pdf) as doc:
+        assert PATIENT not in " ".join(p.get_text() for p in doc)
+        pix = doc[0].get_pixmap(dpi=72)  # rendered page: still a document, not blank
+        assert pix.width > 0
+
+
+def test_download_refused_when_the_fallback_cannot_fix_it(
+    client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        "anonmyzation_pipeline.services.anonymization.release.redact", never_redact
+    )
+    monkeypatch.setattr(
+        "anonmyzation_pipeline.services.anonymization.release.flatten_pages",
+        lambda *args, **kwargs: None,
+    )
     created = upload(client, letter)
     state = wait_done(client, created["id"])
 
@@ -131,6 +166,46 @@ def test_download_refused_when_verification_fails(
     response = client.get(f"/anonymizations/{created['id']}/download/pdf")
     assert response.status_code == 409
     assert response.json()["code"] == "VERIFICATION_FAILED"
+
+
+def test_verification_time_is_measured(
+    client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def slow_verify(*args, **kwargs):
+        time.sleep(0.05)
+        return verify(*args, **kwargs)
+
+    monkeypatch.setattr(
+        "anonmyzation_pipeline.services.anonymization.release.verify", slow_verify
+    )
+    created = upload(client, letter)
+    timings = wait_done(client, created["id"])["result"]["timings"]
+
+    assert timings["verification"] >= 0.05
+
+
+def test_a_failed_edit_leaves_the_job_blocked_and_clean(
+    client: TestClient, jobs: JobManager, letter: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    created = upload(client, letter)
+    wait_done(client, created["id"])
+
+    def broken(*args, **kwargs):
+        raise RuntimeError("redaction failed")
+
+    monkeypatch.setattr("anonmyzation_pipeline.services.jobs.redact_and_verify", broken)
+    response = client.post(
+        f"/anonymizations/{created['id']}/edits", json={"remove": [0]}
+    )
+
+    assert response.status_code == 500
+    state = client.get(f"/anonymizations/{created['id']}").json()
+    assert state["result"]["verified"] is False
+    assert state["result"]["edits"] == 0
+    assert (
+        client.get(f"/anonymizations/{created['id']}/download/pdf").status_code == 409
+    )
+    assert not list(jobs.get(created["id"]).dir.glob("anonymized.next.*"))
 
 
 def test_page_previews(client: TestClient, letter: Path) -> None:
@@ -278,12 +353,6 @@ def test_password_protected_pdf(client: TestClient, tmp_path: Path) -> None:
 
 
 def test_limits(jobs: JobManager, letter: Path, tmp_path: Path) -> None:
-    from anonmyzation_pipeline.errors import (
-        FileTooLargeError,
-        TooManyJobsError,
-        TooManyPagesError,
-    )
-
     jobs.settings = jobs.settings.model_copy(update={"max_upload_mb": 1})
     with pytest.raises(FileTooLargeError):
         jobs.create(b"x" * (1024 * 1024 + 1), "big.pdf")
@@ -334,8 +403,6 @@ def test_image_upload_becomes_a_pdf(
 
 
 def test_image_with_too_many_frames(jobs: JobManager) -> None:
-    from anonmyzation_pipeline.errors import TooManyPagesError
-
     jobs.settings = jobs.settings.model_copy(update={"max_pages": 1})
     frames = [Image.new("RGB", (40, 40), c) for c in ("white", "black")]
     buf = io.BytesIO()
@@ -353,8 +420,6 @@ def test_letter_fixture_contains_the_pii(letter: Path) -> None:
 
 
 def test_scanned_upload_uses_ocr(client: TestClient, fake_ocr, tmp_path: Path) -> None:
-    from tests.documents import native_words, scanned_pdf
-
     native = letter_pdf(tmp_path / "native.pdf")
     scan = scanned_pdf(native, tmp_path / "scan.pdf")
     fake_ocr.words = native_words(native)
@@ -371,12 +436,8 @@ def test_scanned_upload_uses_ocr(client: TestClient, fake_ocr, tmp_path: Path) -
 def test_upload_refused_while_models_load(
     settings, tmp_path: Path, letter: Path
 ) -> None:
-    from anonmyzation_pipeline.errors import ServiceUnavailableError
-    from anonmyzation_pipeline.services.anonymization.ocr import DoctrOCR
-    from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
-
     loading = JobManager(
-        Pipeline(DoctrOCR(), None),
+        Pipeline(RapidOcrEngine(), None),
         settings.model_copy(update={"preload_models": True}),
         tmp_path / "w",
     )

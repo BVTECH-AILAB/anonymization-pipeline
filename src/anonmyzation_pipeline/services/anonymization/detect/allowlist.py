@@ -5,88 +5,12 @@ clinical vocabulary. Decisions are contextual: "riflesso di Babinski" is kept,
 import re
 import unicodedata
 
-EPONYMS = {
-    "addison",
-    "alzheimer",
-    "apgar",
-    "babinski",
-    "barré",
-    "basedow",
-    "bell",
-    "blumberg",
-    "brudzinski",
-    "child",
-    "corti",
-    "crohn",
-    "cushing",
-    "down",
-    "fazekas",
-    "fleischner",
-    "forlanini",
-    "giordano",
-    "glasgow",
-    "golgi",
-    "graves",
-    "guillain",
-    "hashimoto",
-    "hodgkin",
-    "his",
-    "kaposi",
-    "karnofsky",
-    "kerley",
-    "kernig",
-    "killip",
-    "lasègue",
-    "lasegue",
-    "malpighi",
-    "mallampati",
-    "morgagni",
-    "murphy",
-    "nyha",
-    "pacini",
-    "parkinson",
-    "pugh",
-    "rankin",
-    "raynaud",
-    "riva-rocci",
-    "romberg",
-    "ruffini",
-    "santorini",
-    "sjögren",
-    "valsalva",
-    "wells",
-    "willis",
-    "wilson",
-    "wirsung",
-    "gold",
-    "kdigo",
-    "ckd-epi",
-    "fanconi",
-    "korsakoff",
-    "wernicke",
-    "broca",
-    "tourette",
-    "huntington",
-    "menière",
-    "paget",
-    "pott",
-    "reiter",
-    "still",
-    "takayasu",
-    "horton",
-    "dupuytren",
-}
+from anonmyzation_pipeline.services.anonymization.detect import eponyms, labels
 
 # words before an eponym: "segno di Murphy", "morbo di Crohn", "organo del Corti"
-_TRIGGER = re.compile(
-    r"(?:morbo|malattia|sindrome|segn[oi]|manovra|riflesso|scala|criteri[oa]?|classificazione|metodo|organo|dott[oi]|"
-    r"ernia|corpuscol[oi]|apparato|tiroidite|poligono|test|punteggio|score|line[ae]|angolo|ansa|legamento|tumore|"
-    r"linfoma|frattura|triade|cellule|fascio|paralisi|demenza|anemia|cisti|diverticolo|sec\.|secondo)"
-    r"\s+(?:di|del|dello|della|dei|degli|delle|de|d')?\s*$",
-    re.I,
-)
-# words after an eponym: "Glasgow Coma Scale", "Fazekas 1", "Child-Pugh B"
-_SUFFIX = re.compile(r"^\s*(?:coma|scale|score|-pugh|test|\d)", re.I)
+# a stray symbol, or a word made only of digits: "emb T $ Esa", "paz NGUY Q 3". A digit
+# inside a word is an OCR misreading of a letter ("Cerul1o"): still a name.
+_NOT_A_NAME_CHAR = re.compile(r"[^\w\s'’.,^()\-]|(?<![\w])\d+(?![\w])")
 _SAINT = re.compile(
     r"(?:\b(?:san|santa|sant'|santo|santi|santissima|ss\.|s\.)\s*)$", re.I
 )
@@ -95,54 +19,8 @@ _HONORIFIC = re.compile(
     re.I,
 )
 
-DRUGS = {
-    "metformina",
-    "ramipril",
-    "bisoprololo",
-    "atorvastatina",
-    "furosemide",
-    "warfarin",
-    "apixaban",
-    "pantoprazolo",
-    "salbutamolo",
-    "tiotropio",
-    "levotiroxina",
-    "prednisone",
-    "metilprednisolone",
-    "levodopa",
-    "carbidopa",
-    "insulina",
-    "glargine",
-    "lispro",
-    "allopurinolo",
-    "amlodipina",
-    "dapagliflozin",
-    "sacubitril",
-    "valsartan",
-    "mesalazina",
-    "adalimumab",
-    "ustekinumab",
-    "alteplase",
-    "fondaparinux",
-    "nitroglicerina",
-    "ketoprofene",
-    "ibuprofene",
-    "colecalciferolo",
-    "salmeterolo",
-    "fluticasone",
-    "piperacillina",
-    "tazobactam",
-    "iopamidolo",
-    "gadobutrolo",
-    "acido acetilsalicilico",
-    "eutirox",
-    "coumadin",
-    "tachipirina",
-    "lasix",
-    "eliquis",
-    "xarelto",
-    "rivaroxaban",
-}
+# drug names, active ingredients and brands: never a person (eponyms.yaml)
+DRUGS = eponyms.lists().drugs
 
 # clinical / document vocabulary that NER sometimes tags as person or place
 STOP = {
@@ -228,37 +106,48 @@ STOP = {
 
 
 def norm(s: str) -> str:
+    """Lower case, NFKC, single spaces, without surrounding punctuation."""
     s = unicodedata.normalize("NFKC", s).strip(" .,;:()[]'\"").lower()
     return re.sub(r"\s+", " ", s)
 
 
 def is_eponym_use(text: str, start: int, end: int) -> bool:
-    """True if text[start:end] is an eponym used as such (not a person)."""
-    word = norm(text[start:end])
-    before = text[max(0, start - 40) : start]
-    if _HONORIFIC.search(before):
+    """True if text[start:end] is an eponym used as such (not a person).
+
+    Only words of the eponym lists qualify, and only in a clinical context
+    (``eponyms.is_excluded``): a surname after "test" or "metodo" stays a person.
+    """
+    if _HONORIFIC.search(text[max(0, start - 40) : start]):
         return False
-    if _TRIGGER.search(before):
-        return True
-    # "Fazekas 1", "Glasgow Coma Scale": the suffix only counts for known eponyms
-    return word in EPONYMS and len(word.split()) == 1
+    return bool(norm(text[start:end])) and eponyms.is_excluded(text, start, end)
 
 
 def is_saint(text: str, start: int) -> bool:
+    """True if the word at ``start`` follows San / Santa / S. (a facility or street, not a person)."""
     return bool(_SAINT.search(text[max(0, start - 12) : start]))
 
 
 def is_not_pii(text: str, start: int, end: int, label: str) -> bool:
-    """Filter for NER-style spans (PERSON, LOCATION, ORGANIZATION)."""
-    val = norm(text[start:end])
+    """Filter for NER-style spans (PERSON, LOCATION, ORGANIZATION, ADDRESS)."""
+    raw = text[start:end]
+    val = norm(raw)
+    if label == "PERSON" and _HONORIFIC.search(text[max(0, start - 40) : start]):
+        return False  # "Sig.ra Gentile", "Dott. Bruno": a title makes it a person
     if not val or val in STOP or val in DRUGS:
         return True
     if all(w in STOP or w in DRUGS for w in val.split()):
         return True
+    if label in ("PERSON", "LOCATION"):
+        # a name or a place has no digits nor stray symbols: "paz NGUY Q 3" and
+        # "emb T $ Esa" are OCR fragments ("^" separates DICOM name parts)
+        if _NOT_A_NAME_CHAR.search(raw):
+            return True
+        if labels.rules().any_label.fullmatch(raw.strip(" .:")):
+            return True  # a field label: "Telefono", "Nome"
+        if is_eponym_use(text, start, end):
+            return True  # "Glasgow 15", "unità Hounsfield"
     if label == "PERSON":
         if is_saint(text, start):
-            return True
-        if is_eponym_use(text, start, end):
             return True
         if not any(c.isalpha() for c in val) or len(val) < 2:
             return True

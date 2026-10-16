@@ -17,6 +17,10 @@ import zxingcpp
 
 from anonmyzation_pipeline.services.anonymization.layers import Rect, page_number
 
+# share of ink pixels above which an image is a picture, not marks on paper
+PICTURE_INK = 0.5
+# mean HSV saturation above which a picture is in colour (a photo, not a clinical image)
+COLOUR_SATURATION = 40
 _2D = {"QRCode", "MicroQRCode", "RMQRCode", "DataMatrix", "Aztec", "PDF417", "MaxiCode"}
 
 
@@ -42,6 +46,7 @@ def _render(page: pymupdf.Page, dpi: int, clip=None) -> np.ndarray:
 def codes(
     page: pymupdf.Page, img: np.ndarray | None = None, dpi: int = 200
 ) -> list[VisualFinding]:
+    """Barcodes and QR codes decoded on the rendered page (display space)."""
     img = _render(page, dpi) if img is None else img
     s = img.shape[1] / page.rect.width  # px per point
     out = []
@@ -92,16 +97,68 @@ def _ink_class(img: np.ndarray) -> tuple[str, float]:
     return "SIGNATURE", frac
 
 
-def embedded_images(page: pymupdf.Page) -> list[VisualFinding]:
+def _image_regions(page: pymupdf.Page) -> list[pymupdf.Rect]:
+    """Embedded images in page space, without page-sized backgrounds and header logos."""
+    area = page.rect * page.derotation_matrix  # page space, where image positions are
+    W, H = area.width, area.height
     out = []
-    W, H = page.rect.width, page.rect.height
-    for info in page.get_image_info(xrefs=True):
-        r = pymupdf.Rect(info["bbox"]) & page.rect
+    for info in page.get_image_info():
+        r = pymupdf.Rect(info["bbox"]) & area
         if r.is_empty or r.width * r.height > 0.5 * W * H:
             continue  # page-sized background = scanned page, handled elsewhere
         if r.y1 < 0.12 * H and r.width < 0.35 * W:
             continue  # header logo
-        img = _render(page, 200, clip=r)
+        out.append(r)
+    return out
+
+
+def _is_picture(img: np.ndarray) -> bool:
+    """A photographic image (X-ray, ultrasound, photo, embedded scan): mostly ink, not marks on paper.
+
+    Stamps and signatures are a little ink on a white background.
+    """
+    hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+    return float(((hsv[..., 2] < 200) | (hsv[..., 1] > 70)).mean()) > PICTURE_INK
+
+
+def _picture_kind(page: pymupdf.Page, r: pymupdf.Rect) -> bool | None:
+    """``None`` for marks on paper, else ``True`` for a colour picture, ``False`` for a grayscale one.
+
+    The one decision shared by ``pictures`` (OCR of grayscale pictures) and
+    ``embedded_images`` (redaction of the rest): taken once, at one resolution, an
+    image is never left both unread and unredacted.
+    """
+    img = _render(page, 72, clip=r * page.rotation_matrix)  # clip in display space
+    if not _is_picture(img):
+        return None
+    sat = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)[..., 1]
+    return float(sat.mean()) > COLOUR_SATURATION
+
+
+def pictures(page: pymupdf.Page) -> list[tuple[pymupdf.Rect, bool]]:
+    """Photographic images of a native page in page space, each with ``True`` when in colour.
+
+    A grayscale picture is a clinical image (X-ray, CT, ultrasound, scan): it stays
+    visible and the text burned into it is read by OCR. A colour picture may show a
+    person: it is redacted whole (``embedded_images`` labels it FACE).
+    """
+    out = []
+    for r in _image_regions(page):
+        kind = _picture_kind(page, r)
+        if kind is not None:
+            out.append((r, kind))
+    return out
+
+
+def embedded_images(page: pymupdf.Page) -> list[VisualFinding]:
+    """Codes, signatures, stamps and colour photos among the embedded images of a native page.
+
+    Grayscale clinical images are left to OCR (``pictures``): their burned-in text is
+    redacted, the image is not.
+    """
+    out = []
+    for r in _image_regions(page):
+        img = _render(page, 200, clip=r * page.rotation_matrix)  # clip in display space
         found = zxingcpp.read_barcodes(img)
         if found:
             fmt = found[0].format.name
@@ -116,12 +173,71 @@ def embedded_images(page: pymupdf.Page) -> list[VisualFinding]:
                 )
             )
             continue
+        kind = _picture_kind(page, r)
+        if kind is not None:
+            if kind:  # a colour photo: it may show a person
+                out.append(
+                    VisualFinding(page_number(page), _rect(r), "FACE", 0.6, "image")
+                )
+            continue
         label, _ = _ink_class(img)
-        out.append(
+        out.append(VisualFinding(page_number(page), _rect(r), label, 0.8, "image"))
+    return out
+
+
+def vector_marks(page: pymupdf.Page) -> list[VisualFinding]:
+    """Signatures and stamps drawn as vector paths on a native page.
+
+    A handwritten signature is an open stroke made of curves; a stamp frame is a
+    thick stroked rounded rectangle or ellipse (often doubled). Filled curves are
+    logos, rectangles are tables and form fields: both are ignored.
+    """
+    sigs: list[pymupdf.Rect] = []
+    stamps: list[pymupdf.Rect] = []
+    for d in page.get_drawings():
+        if d.get("fill") is not None or "s" not in d["type"]:
+            continue
+        kinds = [it[0] for it in d["items"]]
+        r = pymupdf.Rect(d["rect"])
+        curves = kinds.count("c")
+        if not curves:
+            continue
+        if curves >= 3 and curves >= 0.75 * len(kinds) and "re" not in kinds:
+            if (
+                20 <= r.width <= 320
+                and 6 <= r.height <= 120
+                and r.width > 1.2 * r.height
+            ):
+                sigs.append(r)
+                continue
+        frame = ("l" in kinds and curves >= 4) or (curves == 4 and len(kinds) <= 5)
+        if (
+            frame
+            and (d.get("width") or 0) >= 0.45
+            and 40 <= r.width <= 340
+            and 20 <= r.height <= 220
+        ):
+            stamps.append(r)
+    out = []
+    for label, rects, pad in (("SIGNATURE", sigs, 3), ("STAMP", stamps, 2)):
+        merged: list[pymupdf.Rect] = []
+        for r in sorted(rects, key=lambda r: (r.x0, r.y0)):
+            for i, m in enumerate(merged):
+                if (m + (-6, -6, 6, 6)).intersects(r):
+                    merged[i] = m | r
+                    break
+            else:
+                merged.append(pymupdf.Rect(r))
+        out += [
             VisualFinding(
-                page_number(page), (r.x0, r.y0, r.x1, r.y1), label, 0.8, "image"
+                page_number(page),
+                _rect(m + (-pad, -pad, pad, pad)),
+                label,
+                0.85,
+                "vector",
             )
-        )
+            for m in merged
+        ]
     return out
 
 

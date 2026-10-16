@@ -2,9 +2,29 @@ import pytest
 
 from anonmyzation_pipeline.services.anonymization.detect import allowlist
 from anonmyzation_pipeline.services.anonymization.detect.ensemble import analyze_layers
-from anonmyzation_pipeline.services.anonymization.layers import TextLayer, Token
+from anonmyzation_pipeline.services.anonymization.layers import Span, TextLayer, Token
 from tests.conftest import FAKE_CF
 from tests.documents import FakeNER
+
+
+class FakeAddressNER:
+    """NER stand-in that proposes one value with one label wherever it appears."""
+
+    def __init__(self, value: str, label: str = "ADDRESS") -> None:
+        self.value, self.label = value, label
+
+    @property
+    def ready(self) -> bool:
+        return True
+
+    def load(self) -> None:
+        return None
+
+    def detect(self, text: str) -> list[Span]:
+        i = text.find(self.value)
+        if i < 0:
+            return []
+        return [Span(i, i + len(self.value), self.label, 0.9, "gliner", self.value)]
 
 
 def layer(text: str, page: int = 0) -> TextLayer:
@@ -96,6 +116,123 @@ def test_common_word_first_name_is_not_propagated() -> None:
     assert "bianca" not in texts(findings, "PERSON")
 
 
+def test_acronyms_and_field_labels_inside_a_name_are_not_spread() -> None:
+    # a wrong span that swallowed "HIV" or a label must not mark every occurrence
+    doc = layer(
+        "Paziente: Mario Rossi HIV Recapito\ntest HIV negativo\nRecapito: ufficio"
+    )
+
+    findings = analyze_layers([doc], FakeNER(("Mario Rossi HIV Recapito",)))
+
+    spread = [f.text for f in findings if f.label == "PERSON" and f.start > 40]
+    assert "HIV" not in spread and "Recapito" not in spread
+
+
+def test_short_and_ambiguous_words_are_spread_only_with_the_full_name() -> None:
+    doc = layer(
+        "Paziente: UGO NAPOLI\nfirma: Napoli Ugo\nnato a Napoli\nvisto Ugo\nRossi Govoni"
+    )
+
+    findings = analyze_layers([doc], FakeNER(("UGO NAPOLI", "Rossi Govoni")))
+
+    persons = texts(findings, "PERSON")
+    assert "Napoli Ugo" in persons  # the full name, in any order
+    assert "Napoli" not in persons and "Ugo" not in persons  # never alone
+    assert "Rossi Govoni" in persons
+
+
+def test_ocr_fragments_and_labels_are_not_names_or_places() -> None:
+    for text, label in [
+        ("paz NGUY Q 3", "PERSON"),
+        ("emb T $ Esa Neuro", "PERSON"),
+        ("Telefono", "LOCATION"),
+    ]:
+        assert allowlist.is_not_pii(text, 0, len(text), label)
+    for text in ("ROSSI^MARIO", "D'Amico Rosa", "Rossi, Mario", "I. Cerul1o"):
+        assert not allowlist.is_not_pii(text, 0, len(text), "PERSON")
+
+
+@pytest.mark.parametrize(
+    ("value", "kept"),
+    [
+        ("Via Gaspare Nadi 55", True),
+        ("Udine, Via Santa Caterina, 19", True),
+        ("San Giovanni in Fiore", True),
+        ("Vico Lungo Gelso 9", True),
+        ("3150 Calle Del Sol", True),
+        ("35028", True),
+        ("ACC dx 68 16", False),
+        ("AV sX 38 10", False),
+    ],
+)
+def test_an_address_from_ner_needs_the_shape_of_one(value: str, kept: bool) -> None:
+    doc = layer(f"Nota: {value}")
+
+    findings = analyze_layers([doc], FakeAddressNER(value))
+
+    assert (value in texts(findings, "ADDRESS")) is kept
+
+
+def test_a_facility_is_not_a_place() -> None:
+    doc = layer("Sistema Socio Sanitario Regionale ASST Parma")
+
+    findings = analyze_layers(
+        [doc], FakeAddressNER("Sistema Socio Sanitario Regionale", "LOCATION")
+    )
+
+    assert not texts(findings, "LOCATION")
+
+
+@pytest.mark.parametrize(
+    ("text", "name", "spread"),
+    [
+        # hidden OCR layer of a scanner: words glued, letters misread as digits
+        (
+            "Paziente: Linda Marsh\nprevpt:LindaMarshRX-550-2877",
+            "Linda Marsh",
+            "LindaMarsh",
+        ),
+        (
+            "Sig. Adebayo Okafor\nrichiamare Sig. Adebay0 ce11",
+            "Adebayo Okafor",
+            "Adebay0",
+        ),
+        # a surname glued to an initial in a code in capitals
+        (
+            "Dott. Thomas J. Okafor\nLIC/RPT/TOKAFOR/print",
+            "Thomas J. Okafor",
+            "TOKAFOR",
+        ),
+    ],
+)
+def test_names_are_found_glued_and_misread_by_ocr(
+    text: str, name: str, spread: str
+) -> None:
+    findings = analyze_layers([layer(text)], FakeNER((name,)))
+
+    assert spread in texts(findings, "PERSON")
+
+
+def test_a_longer_word_is_not_taken_for_a_glued_name() -> None:
+    findings = analyze_layers(
+        [layer("Dott. Mario Rossi\nla TROSSA cucina\nMarshall")],
+        FakeNER(("Mario Rossi",)),
+    )
+
+    assert texts(findings, "PERSON") == {"Mario Rossi"}
+
+
+def test_codes_of_the_same_scheme_and_misread_numbers_are_found() -> None:
+    doc = layer(
+        "Nosologico RX-550-2913\nprev pt: RX-550-2877\nTel. 389 555 7731\nrichiamare 389 555 773l"
+    )
+
+    found = {(f.label, f.text) for f in analyze_layers([doc], FakeNER(()))}
+
+    assert ("MEDICAL_RECORD", "RX-550-2877") in found
+    assert ("PHONE", "389 555 773l") in found
+
+
 def test_identifiers_are_propagated_without_context() -> None:
     doc = layer("Nosologico 2026123456\nfooter 2026123456")
 
@@ -109,8 +246,6 @@ def test_overlapping_spans_merge_into_the_most_specific_label() -> None:
 
     class GreedyNER(FakeNER):
         def detect(self, text: str):
-            from anonmyzation_pipeline.services.anonymization.layers import Span
-
             i = text.index(FAKE_CF)
             return [Span(i, i + len(FAKE_CF), "PERSON", 0.9, "fake-ner", FAKE_CF)]
 
@@ -120,18 +255,16 @@ def test_overlapping_spans_merge_into_the_most_specific_label() -> None:
 
 
 def test_ner_threshold_filters_weak_entities() -> None:
-    doc = layer("visto da Gino Bartali oggi")
+    doc = layer("visto da Gino Verdani oggi")
 
     class WeakNER(FakeNER):
         def detect(self, text: str):
-            from anonmyzation_pipeline.services.anonymization.layers import Span
-
             i = text.index("Gino")
-            return [Span(i, i + 12, "PERSON", 0.3, "fake-ner", "Gino Bartali")]
+            return [Span(i, i + 12, "PERSON", 0.3, "fake-ner", "Gino Verdani")]
 
     assert texts(analyze_layers([doc], WeakNER()), "PERSON") == set()
     assert texts(analyze_layers([doc], WeakNER(), person_threshold=0.2), "PERSON") == {
-        "Gino Bartali"
+        "Gino Verdani"
     }
 
 

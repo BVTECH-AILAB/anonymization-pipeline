@@ -67,3 +67,21 @@ LABELS: dict[str, Label] = {
         Label("HANDWRITING", "visual", True, "Note manoscritte", "MANOSCRITTO", "MS"),
     ]
 }
+
+# identifiers that are never quasi-identifiers: every redacted value of these labels
+# is searched across the whole document and must not survive anywhere in the output
+STRONG_LABELS = frozenset(
+    {
+        "URL",
+        "FISCAL_CODE",
+        "HEALTH_CARD",
+        "PHONE",
+        "EMAIL",
+        "MEDICAL_RECORD",
+        "ID_DOCUMENT",
+        "PRESCRIPTION_ID",
+        "PROFESSIONAL_ID",
+        "IBAN",
+        "DATE_OF_BIRTH",
+    }
+)

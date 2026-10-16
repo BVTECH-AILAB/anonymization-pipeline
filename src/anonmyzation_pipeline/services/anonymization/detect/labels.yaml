@@ -1,0 +1,303 @@
+# =============================================================================
+#  Label -> value detector (detect/labels.py), ported from the anonimizzatore
+#  vocabulary of feat/reconstructed-architecture.
+#
+#  Each label ("Cognome:", "Paziente:", "Nato a", "N. accettazione") tells which
+#  label of the taxonomy the value after it has (after ":", or on the next line)
+#  and what shape it has. Regexes are Python ones in single quotes (a quote is
+#  doubled); ${name} is replaced with a fragment; a list is an alternation.
+#  An invalid regex, unknown key, kind or label stops the first detection with a
+#  message naming the label.
+# =============================================================================
+
+fragments:
+  # word with a capital initial (proper names, also with an apostrophe or hyphen)
+  name_token: '[A-ZÀ-Ü][A-Za-zÀ-ÿ''’\-]+'
+  # courtesy and professional titles before a person's name
+  titles: '(?:sig\.?(?:ra|na)?|signor[ae]?|dott\.?(?:ssa)?|dr\.?(?:ssa)?|prof\.?(?:ssa)?|avv\.?|ing\.?)'
+  # optional "n." after the label ("Protocollo n.", "Ricetta numero")
+  n: '(?:\s*n\.?|\s+nr\.?|\s+numero)?'
+
+# a label never touches a letter ("cap" must not fire inside "capelli")
+letter: '[A-Za-zÀ-ÿ]'
+
+# between label and value: ":" "=" "." or "n." "nr."
+separator: '[ \t]*(?:[:=#]|\.(?!\w)|n\.|nr\.)?[ \t]*'
+
+defaults:
+  kind: value
+  need_sep: false               # true: needs ":" or the value on the next line ("Nome")
+  stop: '[\n;|]| {3,}|\t|\s[-–]\s'
+  max_len: 60
+  min_len: 2
+
+# value shapes; the kinds are fixed by the code
+shapes:
+  name:
+    max_words: 6
+    particles: [de, di, da, del, della, la, lo]
+  place:
+    max_words: 5
+    consecutive_digits: 2
+    end: '\s+(?:il|in data)\s+|\(|,|\s+-\s+|\s+\d'
+  address:
+    max_words: 14
+    # a street type, or "c/o" / "presso" (care of), which introduce an address
+    street: '\b(?:c/o|presso|via|vico|traversa|salita|discesa|rampa|calle|piazzetta|circonvallazione|lungotevere|viale|v\.le|piazza|p\.zza|p\.za|piazzale|corso|c\.so|largo|vicolo|strada|str\.|localit[aà]|loc\.|contrada|c\.da|borgo|frazione|fraz\.|lungomare|street|st\.|road|rd\.|avenue|ave\.|lane|drive)(?![A-Za-zÀ-ÿ])'
+  org:
+    max_words: 8
+    particles: [di, de, da, del, della, dei, degli, delle, e, '&', per, la, il, lo, san, s.]
+    symbols: ['&', '-']
+  id:
+    pattern: '\s*[A-Za-z0-9][A-Za-z0-9/.\-]*(?:\s\d[\d/.\-]*)*'
+    max_len: 25
+    max_prefix_letters: 4
+    min_chars: 3
+  date:
+    pattern: '\s*(?:\d{1,2}[/.\-]\d{1,2}[/.\-]\d{2,4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+[A-Za-zÀ-ÿ]+\.?\s+\d{4})'
+    max_len: 25
+  phone:
+    pattern: '\s*[+\d][\d ./()\-]*\d'
+    max_len: 40
+    min_digits: 6
+  value: {}
+
+# words that cannot be a value (labels themselves or function words)
+stop_values: [
+  nome, cognome, name, surname, data, nascita, sesso, sex, luogo, indirizzo,
+  codice, fiscale, firma, signature, e, il, la, di, del, della, n, n.,
+  paziente, cittadinanza, statura, height, comune, residenza, date, of,
+  birth, given, names, tel, telefono, nato, nata, il/la, sottoscritto, id,
+  terapia, diagnosi, medico, stato, civile, professione, reparto,
+  padre, madre, fax, pec, cap, scadenza, rilascio, ricovero, referto, visita]
+
+# -----------------------------------------------------------------------------
+#  Labels, tried in order. label: taxonomy label of the value; kind: shape.
+# -----------------------------------------------------------------------------
+labels:
+  persone:
+    - label: PERSON
+      kind: name
+      regex: ['cognome\s+e\s+nome', 'nome\s+e\s+cognome', 'nominativo', 'nome\s+paziente', 'intestatario',
+              'titolare', 'richiedente', 'assistit[oa]', 'referente', 'paziente', 'patient']
+    - label: PERSON
+      kind: name
+      regex: ['cognome\s*/\s*surname', 'cognome\s+da\s+nubile', 'cognome\s+(?:da\s+)?coniugat[oa]', 'surname',
+              'last\s+name']
+    - label: PERSON
+      kind: name
+      regex: ['nome\s*/\s*name', 'nomi\s*/\s*given\s+names?', 'given\s+names?', 'first\s+name']
+    - label: PERSON
+      kind: name
+      regex: ['cognome']
+      need_sep: true
+    - label: PERSON
+      kind: name
+      regex: ['nome']
+      need_sep: true
+    - label: PERSON
+      kind: name
+      regex: ['(?:(?:il|la|lo)(?:\s*/\s*la)?\s+)?sottoscritt[oa](?:\s*/\s*[oa])?', 'i\s+sottoscritti', 'mi\s+chiamo']
+      stop: '[\n,;:()]'
+    - label: PERSON
+      kind: name
+      regex: ['cordiali\s+saluti', 'distinti\s+saluti', 'cordialmente', 'in\s+fede']
+      need_sep: true
+    - label: PERSON
+      kind: name
+      regex: ['${titles}']
+      stop: '[\n,;:()]'
+    - label: PERSON
+      kind: name
+      regex: ['firmato(?:\s+digitalmente\s+da)?', 'a\s+cura\s+di', 'stampato\s+da', 'redatto\s+da', 'compilato\s+da',
+              'electronically\s+signed', 'signed\s+by', 'seen\s+by']
+    - label: PERSON
+      kind: name
+      regex: ['padre', 'madre', 'paternit[aà]', 'maternit[aà]', 'figli[oa]\s+di']
+    - label: PERSON
+      kind: name
+      regex: ['medico\s+curante', 'medico\s+refertante', 'medico\s+referente', 'medico\s+di\s+riferimento',
+              'medico\s+prescrittore', 'medico\s+di\s+(?:base|famiglia)', 'medico\s+di\s+medicina\s+generale',
+              'medico\s+responsabile', 'medico\s+richiedente', 'dirigente\s+medico', 'medico\s+di\s+guardia', 'medico',
+              'mmg', 'pls', 'pediatra(?:\s+di\s+libera\s+scelta)?', 'primario', 'refertante', 'ordering\s+provider',
+              'referring(?:\s+physician)?']
+    - label: PERSON
+      kind: name
+      regex: ['infermier[ea]', 'inf\.', 'coordinat(?:ore|rice)\s+infermieristic[oa]', 'tecnico\s+sanitario',
+              'tecnico\s+di\s+(?:radiologia|laboratorio)', 'tsrm', 'specializzand[oa]', 'ostetric[ao]',
+              'fisioterapista', 'operatore\s+sanitario', 'mediatore(?:\s+linguistico)?', 'interprete']
+    - label: PERSON
+      kind: name
+      regex: ['coniuge', 'marito', 'moglie', 'convivente', 'figli[oa]?(?!\s+di)', 'fratello', 'sorella', 'partner']
+    - label: PERSON
+      kind: name
+      regex: ['persona\s+da\s+(?:avvisare|informare)', 'contatto\s+(?:di|in\s+caso\s+di)\s+emergenza',
+              'in\s+caso\s+di\s+emergenza\s+contattare', 'caregiver', 'emergency\s+contact', 'next\s+of\s+kin']
+    - label: PERSON
+      kind: name
+      regex: ['tutore', 'amministratore\s+di\s+sostegno', 'amministratrice\s+di\s+sostegno', 'delegat[oa]', 'genitore',
+              'esercente\s+la\s+(?:potest[aà]|responsabilit[aà])\s+genitoriale']
+
+  anagrafica:
+    - label: LOCATION
+      kind: place
+      regex: ['luogo\s+di\s+nascita', 'place\s+of\s+birth', 'nat[oaie](?:\s*/\s*[aeo]+)?\s+a', 'nat[oaie]/aa',
+              'comune\s+di\s+nascita', 'luogo\s+e\s+data\s+di\s+nascita']
+    - label: LOCATION
+      kind: place
+      regex: ['comune\s+di\s+residenza', 'residente\s+a', 'comune\s+di\s+domicilio', 'domiciliat[oa]\s+a']
+    - label: LOCATION
+      kind: place
+      regex: ['citt[aà]''?', 'comune', 'prov(?:incia)?\.?', 'city']
+      need_sep: true
+    - label: DATE_OF_BIRTH
+      kind: date
+      regex: ['data\s+di\s+nascita', 'nat[oaie](?:\s*/\s*[aeo]+)?\s+il', 'date\s+of\s+birth', 'data\s+nascita', 'dob']
+    - label: DATE
+      kind: date
+      regex: ['data\s+(?:del\s+)?decesso', 'data\s+di\s+morte', 'decedut[oa]\s+il']
+    - label: AGE
+      regex: ['et[aà]', 'age']
+      need_sep: true
+      max_len: 12
+      pattern: '\s*~?\d{1,3}(?:\s*(?:anni|aa|y))?'
+    - label: ADDRESS
+      kind: address
+      regex: ['indirizzo(?:\s+di\s+residenza)?', 'residenza', 'residente\s+in', 'domicilio', 'domiciliat[oa]\s+in',
+              'street\s+address', 'address']
+      max_len: 90
+    - label: ADDRESS
+      kind: id
+      regex: ['c\.a\.p\.?', 'cap', 'codice\s+postale', 'zip']
+      need_sep: true
+      pattern: '\s*\d{5}'
+
+  identificativi:
+    - label: FISCAL_CODE
+      kind: id
+      regex: ['codice\s+fiscale', 'cod\.?\s*fisc\.?', 'c\.\s?f\.', 'fiscal\s+code']
+      max_len: 20
+    - label: ORGANIZATION
+      kind: id
+      regex: ['p\.?\s?iva', 'partita\s+iva']
+      pattern: '\s*(?:IT\s?)?\d{11}'
+    - label: HEALTH_CARD
+      kind: id
+      regex: ['tessera\s+sanitaria', 'n\.?\s*tessera', 'tessera\s+n\.?', 't\.e\.a\.m\.?', 'tessera\s+team',
+              'codice\s+ssn', 'codice\s+asl', 'nhs\s+(?:no\.?|number)']
+    - label: FISCAL_CODE
+      kind: id
+      regex: ['codice\s+(?:stp|eni)', 'tesserino\s+(?:stp|eni)', 'cod\.\s+(?:stp|eni)(?:\s+prec\.)?']
+    - label: MEDICAL_RECORD
+      kind: id
+      regex: ['polizza${n}', 'n\.?\s*polizza', 'numero\s+(?:di\s+)?polizza', 'sinistro${n}', 'n\.?\s*sinistro',
+              'member\s+id', 'group\s+(?:no\.?|#)']
+    - label: MEDICAL_RECORD
+      kind: id
+      regex: ['protocollo${n}', 'prot\.?${n}', 'n\.?\s*protocollo', 'n\.?\s*pratica', 'pratica\s+n\.?',
+              'verbale${n}', 'rif\.${n}']
+
+  documenti:
+    - label: ID_DOCUMENT
+      kind: id
+      regex: ['n\.?\s*documento', 'numero\s+documento', 'documento\s+n\.?', 'carta\s+d.identit[aà]${n}',
+              'n\.?\s*carta\s+d.identit[aà]', 'cie${n}', 'document\s+(?:no\.?|number)',
+              'identity\s+card\s+(?:no\.?|number)', 'social\s+security\s+(?:no\.?|number)', 'ssn']
+      max_len: 20
+    - label: ID_DOCUMENT
+      kind: id
+      regex: ['passaporto${n}', 'n\.?\s*passaporto', 'passport\s+(?:no\.?|number)']
+      max_len: 20
+    - label: ID_DOCUMENT
+      kind: id
+      regex: ['patente(?:\s+di\s+guida)?${n}', 'n\.?\s*patente', 'driving\s+licen[cs]e\s+(?:no\.?|number)']
+      max_len: 20
+    - label: ID_DOCUMENT
+      kind: id
+      regex: ['(?:permesso|carta)\s+di\s+soggiorno${n}', 'permesso\s+sogg\.${n}', 'n\.?\s*permesso(?:\s+di\s+soggiorno)?',
+              'residence\s+permit\s+(?:no\.?|number)']
+      max_len: 20
+    - label: ORGANIZATION
+      kind: org
+      regex: ['rilasciat[oa]\s+da', 'ente\s+di\s+rilascio', 'issuing\s+authority']
+    - label: DATE
+      kind: date
+      regex: ['data\s+(?:di\s+)?rilascio', 'rilasciat[oa]\s+il', 'date\s+of\s+issue', 'data\s+(?:di\s+)?scadenza',
+              'scadenza', 'valid[oa]\s+fino\s+al', 'date\s+of\s+expiry']
+
+  contatti:
+    - label: PHONE
+      kind: phone
+      regex: ['tel\.?', 'telefono', 'cell\.?', 'cellulare', 'mob\.?', 'phone', 'recapito(?:\s+telefonico)?']
+    - label: PHONE
+      kind: phone
+      regex: ['fax']
+    - label: EMAIL
+      regex: ['pec', 'posta\s+(?:elettronica\s+)?certificata', 'e-?mail']
+      need_sep: true
+      max_len: 80
+      pattern: '\s*[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}'
+    - label: IBAN
+      kind: id
+      regex: ['conto\s+corrente${n}', 'c/c${n}', 'n\.?\s*conto', 'conto\s+postale${n}']
+
+  identificativi_sanitari:
+    - label: MEDICAL_RECORD
+      kind: id
+      regex: ['codice\s+paziente', 'cod\.\s+paziente', 'id\s+paziente', 'codice\s+sanitario', 'codice\s+anagrafico',
+              'id\s+anagrafico', 'mrn', 'hospital\s+(?:no\.?|number)']
+    - label: MEDICAL_RECORD
+      kind: id
+      regex: ['n\.?\s*cartella(?:\s+clinica)?', 'cartella\s+clinica(?:\s+n\.?)?', 'cartella\s+n\.?',
+              'n\.?\s*nosologico', 'nosologico', 'n\.?\s*sdo']
+    - label: MEDICAL_RECORD
+      kind: id
+      regex: ['n\.?\s*accettazione', 'accettazione${n}', 'n\.?\s*ricovero', 'ricovero\s+n\.?',
+              'n\.?\s*pronto\s+soccorso', 'verbale\s+(?:di\s+)?pronto\s+soccorso${n}', 'n\.?\s*p\.?s\.', 'acc\.']
+    - label: MEDICAL_RECORD
+      kind: id
+      regex: ['n\.?\s*referto', 'referto${n}', 'numero\s+(?:del\s+)?referto', 'n\.?\s*esame', 'id\s+esame']
+    - label: PRESCRIPTION_ID
+      kind: id
+      regex: ['nre', 'n\.?\s*ricetta', 'ricetta${n}', 'numero\s+(?:di\s+)?ricetta(?:\s+elettronica)?',
+              'piano\s+terapeutico${n}']
+    - label: MEDICAL_RECORD
+      kind: id
+      regex: ['n\.?\s*prenotazione', 'codice\s+(?:di\s+)?prenotazione', 'prenotazione(?:\s+cup)?${n}', 'codice\s+cup',
+              'n\.?\s*cup', 'cup\s+n\.?', 'pren\.']
+    - label: MEDICAL_RECORD
+      kind: id
+      regex: ['accession(?:\s+number|\s+no\.?|\s+n\.?)?', 'n\.?\s*accesso']
+    - label: MEDICAL_RECORD
+      kind: id
+      regex: ['codice\s+campione', 'n\.?\s*campione', 'campione${n}', 'id\s+campione', 'provetta${n}',
+              'n\.?\s*provetta', 'n\.?\s*vetrino', 'vetrino${n}', '(?:codice|n\.?)\s*biopsia', 'camp\.',
+              'n\.?\s*istologico', 'ist\.', 'specimen(?:\s+id)?', 'sample(?:\s+id)?']
+
+  operatori:
+    - label: PROFESSIONAL_ID
+      kind: id
+      regex: ['iscrizione\s+(?:all.)?albo(?:\s+n\.?)?', 'n\.?\s*albo', 'albo(?:\s+dei\s+medici)?${n}',
+              'ordine\s+dei\s+medici(?:\s+(?:di|della\s+provincia\s+di)\s+[A-Za-zÀ-ÿ]+)?${n}', 'matricola',
+              'omceo(?:\s+[A-Za-z]{2})?${n}', 'cod(?:ice|\.)?\s+regionale${n}', 'codice\s+medico']
+
+  date:
+    - label: DATE
+      kind: date
+      regex: ['data\s+(?:della\s+)?visita', 'data\s+(?:della\s+)?prestazione', 'data\s+(?:dell.)?esame',
+              'data\s+(?:del\s+)?referto', 'refertato\s+il', 'data\s+(?:di\s+)?refertazione',
+              'data\s+(?:di\s+|del\s+)?ricovero', 'data\s+(?:di\s+|della\s+)?dimissione', 'ricoverat[oa]\s+il',
+              'dimess[oa]\s+il', 'data\s+(?:di\s+|della\s+)?prescrizione', 'data\s+(?:della\s+)?ricetta',
+              'prescritt[oa]\s+il']
+
+  organizzazioni:
+    - label: ORGANIZATION
+      kind: org
+      regex: ['datore\s+di\s+lavoro', 'azienda(?!\s+(?:ospedalier|sanitari|socio|u\.?s\.?l|unit))', 'ditta',
+              'dipendente\s+(?:della|presso)', 'presso\s+la\s+ditta', 'employer']
+      need_sep: true
+    - label: ORGANIZATION
+      kind: org
+      regex: ['scuola\s+frequentata(?:\s+da(?:ll.|l|lla)\s*[a-zà-ù]+)?', 'scuola', 'istituto\s+scolastico',
+              'istituto\s+frequentato']
+      need_sep: true

@@ -14,31 +14,33 @@ flowchart TD
     IN["Uploaded document<br/>native PDF · scanned PDF · JPG/PNG/TIFF"] --> CONV["Convert to PDF<br/>images: EXIF rotation applied"]
     CONV --> PAGE{"For each page:<br/>image covers &gt; 50% of the page?"}
 
-    PAGE -- "no: native page" --> NAT["Native text layer<br/>words + per-character boxes<br/>(including invisible / white text)"]
-    PAGE -- "yes: scanned page" --> OCR["docTR OCR<br/>words + boxes"]
-    OCR --> ROT["OCR of margins rotated 90°<br/>(vertical text)"]
+    PAGE -- "no: native page" --> NAT["Native text layer<br/>words + per-character boxes<br/>(invisible / white text included,<br/>rotated pages in unrotated coordinates)"]
+    PAGE -- "yes: scanned page" --> OCR["PaddleOCR PP-OCRv5 (RapidOCR)<br/>words + boxes, detector on the GPU<br/>(margins re-read rotated 90°)"]
     PAGE -- "yes, with hidden OCR text" --> NAT
 
-    NAT --> LAYERS[("Text layers<br/>text ↔ character boxes")]
-    ROT --> LAYERS
+    NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…"]
+    OCR --> CELLS
+    CELLS --> LAYERS[("Text layers<br/>text ↔ character boxes")]
 
     subgraph DET["PII detection (on text)"]
-        RULES["Italian rules<br/>tax code with checksum, health card, phones,<br/>email, IBAN, NRE, record numbers, addresses, dates, places"]
-        NER["GLiNER NER<br/>persons, places, addresses, organizations"]
-        NAMES["Contextual name rules<br/>Sig.ra X, Dott. X Y, Paziente: X"]
-        ALLOW["Contextual allowlist<br/>eponyms (morbo di Crohn), drugs, saints"]
-        PROP["Document-wide propagation<br/>every name / ID found is searched everywhere:<br/>ROSSI M., Sig. Rossi, ROSSIMARIO"]
+        RULES["Format rules<br/>tax code with checksum, health card, phones (IT, foreign, US),<br/>email, IBAN, NRE, dates, addresses, registrations, DICOM fields"]
+        LABELS["Label → value (labels.yaml)<br/>Cognome: X · N. accettazione: Y · nato a Z"]
+        NER["NER: GLiNER + GLiNER2, findings joined<br/>persons, places, addresses, organizations"]
+        CLEAN["Person spans cleaned<br/>titles trimmed · 'la paziente' dropped ·<br/>institutions → organisation"]
+        ALLOW["Eponym filter per occurrence (eponyms.yaml)<br/>segno di Giordano ≠ Sig. Giordano · drugs · saints"]
+        PROP["Document-wide propagation<br/>every value found is searched everywhere: wrapped,<br/>glued, misread by OCR, same numbering scheme"]
         MERGE["Merge overlapping spans<br/>most specific label wins"]
-        RULES --> ALLOW
-        NER --> ALLOW
-        NAMES --> ALLOW
-        ALLOW --> PROP --> MERGE
+        RULES --> CLEAN
+        LABELS --> CLEAN
+        NER --> CLEAN
+        CLEAN --> ALLOW --> PROP --> MERGE
     end
     LAYERS --> DET
 
-    subgraph VIS["Visual detection (on pixels)"]
+    subgraph VIS["Visual detection (on pixels and drawings)"]
         CODES["Barcodes and QR codes<br/>zxing"]
         IMGS["Embedded images<br/>signature / stamp (logos excluded)"]
+        VEC["Vector drawings on native pages<br/>signature strokes, stamp frames"]
         INK["Ink not explained by OCR<br/>signatures on scans"]
         STAMP["Stamps: framed or coloured ink,<br/>or OMCeO / Medico Chirurgo text"]
     end
@@ -52,14 +54,17 @@ flowchart TD
     subgraph RED["Surgical redaction (PyMuPDF)"]
         R1["Under each box:<br/>glyphs removed from the content stream,<br/>pixels blanked, covered vector art removed"]
         R2["Black box"]
-        R3["Scrub: metadata, XMP, annotations,<br/>links, attachments, JavaScript"]
+        R3["Scrub: metadata, XMP, annotations, links,<br/>attachments, JavaScript, bookmarks, structure tree"]
         R4["Full clean rewrite<br/>(no incremental history)"]
         R1 --> R2 --> R3 --> R4
     end
 
     RED --> VER{"Fail-closed verification<br/>· no text left under boxes<br/>· no value in text, bytes, metadata<br/>· pixels identical outside boxes"}
     VER -- passed --> OUT["Anonymized PDF (identical layout)<br/>+ Word with the text"]
-    VER -- failed --> BLOCK["Document BLOCKED<br/>not downloadable, reasons shown"]
+    VER -- "failed" --> FLAT["Failing pages only: rendered with every box painted,<br/>replaced by that image, file scrubbed again"]
+    FLAT --> VER2{"Verified again<br/>(those pages compared as images)"}
+    VER2 -- passed --> OUT
+    VER2 -- failed --> BLOCK["Document BLOCKED<br/>not downloadable, reasons shown"]
     BLOCK -.-> EDIT
 ```
 
@@ -72,14 +77,28 @@ A detected span `(start, end)` becomes one rectangle per line.
 - **Native pages**: words and per-character boxes from the PDF text layer
   (`rawdict`). Invisible text (white, render mode 3) is included because it
   must be redacted too. Words written without space characters (scanner OCR
-  layers) are split on visual gaps between characters.
-- **Scanned pages** (images cover more than half of the page): docTR
-  (`db_resnet50` + `parseq`, 300 DPI) gives word boxes. The per-crop orientation
-  classifier is off (it flipped short lines by 180 degrees); vertical text in
-  the side margins (print traces, protocol numbers) is read by a second pass on
-  the margin strips rotated by 90 degrees.
+  layers) are split on visual gaps between characters, and words glued by a
+  scanner's OCR layer are split where a capitalised word starts inside them
+  ("prevpt:LindaMarshRX-550-2877" -> "Linda", "Marsh", "RX-550-2877"; "McDonald",
+  "HbA1c", "SerD" stay whole).
+- **Scanned pages** (images cover more than half of the page): PaddleOCR
+  PP-OCRv5 (text detector plus the Latin recogniser, 300 DPI), run through
+  RapidOCR without the Paddle framework (detector on the GPU through PyTorch
+  when there is one, recogniser on ONNX Runtime; `ANONPIP_OCR_WORKERS` pages
+  at a time), gives word boxes;
+  vertical text in the side margins (print traces, protocol numbers, wristband
+  labels) is read by a second pass on the margin strips rotated by 90 degrees.
 - A scan that also carries a hidden OCR layer gets both layers: the hidden text
   is redacted where it overlaps the findings.
+- Characters printed one per box (codice fiscale or tessera sanitaria on forms,
+  "R S S M R A ...") are joined into one word whose character boxes are the
+  cells (`merge_cells`), on native and OCR layers, so the rules see the code.
+  Only capitals and digits are joined: the single-letter words of prose stay apart.
+- Grayscale pictures embedded in a native page (X-ray, CT, ultrasound, an
+  embedded scan) stay visible; the text burned into them (patient name, ID,
+  date of birth, operator, accession number) is read by OCR and redacted line
+  by line like on a scan. Colour photos may show a person and are redacted whole
+  (FACE).
 
 ### 2. Detection (`services/anonymization/detect/`)
 
@@ -87,11 +106,12 @@ Recall first: one detector is enough to redact.
 
 | Detector | What it finds |
 |---|---|
-| `rules.py` | Codice fiscale (strict with checksum, plus an OCR-tolerant pattern), tessera sanitaria, phones (mobile, landline, fax; dates excluded), email, IBAN, URLs with personal tokens, dates (date of birth from context), age, street addresses, CAP + municipality, OMCeO and regional codes, NRE, record numbers after a keyword (nosologico, campione, accesso, accession, protocollo...), ID documents, places after "nato a", "residente in", "Città:", "a/in + municipality", names after honorifics and form fields ("Sig.ra X", "Paziente: X", "Stampato da X") |
-| `ner.py` | GLiNER `urchade/gliner_multi_pii-v1`, zero-shot labels mapped to the taxonomy; chunks of whole lines |
-| `allowlist.py` | Eponyms used as such ("morbo di Crohn", "riflesso di Babinski", "organo del Corti"), drugs, saints in facility names, clinical vocabulary. Context decides: "Sig. Corti" and "Concetta Corti" are persons |
-| `ensemble.py` | Document-wide propagation: every name token and identifier found anywhere is searched in every layer (spaced, glued, with initials, both orders, capitalised forms only); overlapping spans merge into the most specific label |
-| `visual.py` | Barcodes and QR codes (zxing), embedded images (signature or stamp, header logos excluded), on scans the ink that OCR does not explain (signatures), stamps (frame, coloured ink, or a cluster of words around "OMCeO" / "Medico Chirurgo") |
+| `rules.py` | Formats: codice fiscale (strict with checksum, plus an OCR-tolerant pattern), tessera sanitaria, phones (Italian, foreign "+234 ...", North American, extensions; never across lines, dates excluded), email, IBAN, URLs with personal tokens, dates (date of birth from context, also ISO, compact and "30-Nov-1966"), age, street addresses, CAP + municipality, professional registrations ("OMCeO MI n.", "Ord. Med. RN n.", "Albo PE n."), NRE, DICOM header fields ("(0010,0010) PatientName", also with the keyword split into words), places and names in typical phrasings |
+| `labels.py` + `labels.yaml` | The value after a label: about 60 groups of Italian and English form and report labels ("Cognome:", "COGNOME / SURNAME" with the value below, "N. accettazione", "Prenotazione CUP", "Medicaid ID", "Permesso di soggiorno", "Medico curante", "Mediatore linguistico") with the shape of the value (name, place, address, organisation, identifier, date, phone). A single word after a generic role label ("Medico Ostetrico") needs ":" or capitals. A label with no value on its line takes the next line only if that line is not a sentence ("Mediatore linguistico:" followed by "Acconsento al test HIV" is not a name). An address needs a street type, "c/o" or "presso", a number, or the shape of a place name ("San Giovanni in Fiore"), so prose after "domicilio" is not one. Vocabulary ported from feat/reconstructed-architecture |
+| `ner.py` | Two multilingual PII models run together, their findings joined: GLiNER `urchade/gliner_multi_pii-v1` and GLiNER2 `fastino/gliner2-privacy-filter-PII-multi`, labels mapped to the taxonomy, chunks of whole lines. Chosen against four other PII models, see "NER choice" |
+| `eponyms.py` + `eponyms.yaml`, `allowlist.py` | Per occurrence: eponyms and scales are not persons only in a clinical context ("segno di Giordano negativo", "Glasgow 15", "Wolff-Parkinson-White"), drug brands never are, common words only in lowercase ("globuli rossi"); "Sig. Giordano" stays a person. About 400 eponyms, 50 scales, 200 drug brands. Plus saints in facility names and clinical vocabulary |
+| `ensemble.py` | Person spans lose leading titles, references without a name ("la paziente") are dropped, institution names become organisations. Document-wide propagation: every name token and every redacted identifier found anywhere is searched in every layer (spaced, glued, with initials, both orders, wrapped on two lines); words ambiguous on their own (three letters or fewer, acronyms, field labels, eponyms, scales, Italian municipalities: "Ugo", "HIV", "Masson", "Napoli") are spread only as part of the full name, never alone. Also found: a surname glued to an initial in capitals ("TOKAFOR"), a full name glued to what follows ("LindaMarshRX-550"), OCR confusions 0/o, 1/l, 5/s in names and numbers ("Adebay0", "389 555 773l"), and other codes of the numbering scheme of a found identifier ("RX-550-2913" -> "RX-550-2877"). Names and places with stray symbols or numbers-only words are OCR fragments; addresses from NER need the shape of an address; facility names are organisations. Overlapping spans merge into the most specific label |
+| `visual.py` | Barcodes and QR codes (zxing), embedded images (signature or stamp; grayscale clinical pictures left to OCR, colour photos redacted whole; header logos excluded), vector signatures and stamp frames on native pages, on scans the ink that OCR does not explain (signatures), stamps (frame, coloured ink, or a cluster of words around "OMCeO" / "Medico Chirurgo") |
 
 ### 3. PII taxonomy (`services/anonymization/taxonomy.py`)
 
@@ -142,7 +162,8 @@ PyMuPDF redaction annotations, applied page by page:
 - native boxes are inset vertically so neighbouring lines are never clipped;
   hand-drawn areas are snapped to the full box of every character they touch;
 - annotations and form fields are deleted, then `scrub()` removes metadata,
-  XMP, links, attachments, JavaScript and thumbnails;
+  XMP, links, attachments, JavaScript and thumbnails, and the bookmarks, named
+  destinations and structure tree are dropped (they can quote the text);
 - the file is rewritten from scratch (`garbage=4`), so earlier incremental
   versions (a note added and deleted, for example) are gone.
 
@@ -150,16 +171,36 @@ PyMuPDF redaction annotations, applied page by page:
 
 A document is released only if all checks pass:
 
-1. no original text is readable under any box;
-2. no redacted value (codici fiscali, phones, emails, IDs, full names...) is
+1. no original text is readable under any box (horizontal and vertical text);
+2. no text is left outside the visible page area (it would never be detected
+   nor shown, but it would stay in the file);
+3. no redacted value (codici fiscali, phones, emails, IDs, full names...) is
    found in the output text, in the decompressed file bytes or in the metadata;
    occurrences the user explicitly chose to keep are not leaks;
-3. no annotation is left;
-4. rendered pages are identical outside the boxes (more than
-   `ANONPIP_VERIFY_PIXEL_TOLERANCE` changed pixels fails).
+4. no annotation is left;
+5. rendered pages are identical outside the boxes (more than
+   `ANONPIP_VERIFY_PIXEL_TOLERANCE` changed pixels fails; on rotated pages the
+   boxes are turned to the rendering first);
+6. the Word export contains none of the redacted values either.
 
-A failed verification blocks the download (409 `VERIFICATION_FAILED`) and the
-reasons are shown to the uploader.
+**Flatten fallback** (`release.py`). When a page fails a check, surgical
+redaction is not trusted on it: the original page is rendered at 200 dpi with
+every box to redact painted in (also the ones the surgical step could not
+apply) and replaced by that image, so nothing of its content survives but the
+pixels; the file is scrubbed again and verified again, the flattened pages
+compared with the original as images at the same resolution. The other pages
+stay native (selectable text, identical layout). The result reports which
+pages were flattened (`flattened_pages`).
+
+A document that still fails is blocked (409 `VERIFICATION_FAILED`) and the
+reasons are shown to the uploader. An edit marks the job unverified at once: nothing
+is downloadable until the new version has passed every check (a version that
+fails stays blocked; a failed edit leaves the job blocked and says so).
+
+Coordinates: text, image positions and drawings live in page space (unrotated);
+anything read from a rendering (OCR words, barcodes, ink) is in display space
+and is turned into page space before detection and redaction, so `/Rotate`
+pages are redacted where the text really is.
 
 ## API
 
@@ -218,7 +259,7 @@ in the platform the doctor-facing frontend is `fe`.
 
 ## Synthetic dataset and evaluation (`tools/`)
 
-Dev-only tools, not part of the image (`just dataset`, `just evaluate`, `just bench-ocr`).
+Dev-only tools, not part of the image (`just dataset`, `just evaluate`, `just eval-ui`).
 
 **Dataset** (`tools/dataset/`): seven Italian document types (discharge
 letter, lab report, radiology report, ER report, referral letter, sick-leave
@@ -239,17 +280,49 @@ that both copies have identical words and positions. Ground truth lives in
 `dataset/ground_truth/`, separate from the inputs.
 
 ```bash
-just dataset                                   # 21 documents x 3 variants -> dataset/
+just dataset --out dataset_new                 # 21 documents x 3 variants in a new folder
 just dataset --n 7 --append                    # add 7 new documents after the existing ones
-just dataset --n 21 --seed 42 --out dataset_test --overwrite
+just dataset --n 42 --overwrite                # regenerate the 42 NNN_ documents of dataset/
 just evaluate                                  # -> reports/evaluation.md
 ```
+
+**Evaluation dataset** (`dataset/`): 200 documents (326 pages), each in the
+three variants above with ground truth in the same format: 600 PDFs, scored
+with `just evaluate`. 185 are Italian and 15 English. `just evaluate --split test`
+scores only the held-out documents: the split is fixed by template family
+(about 30% of the 50 families, 77 documents), so no sibling of a test document
+is ever seen while tuning; `--split dev` is the rest (123 documents). The `doc_id` prefix tells
+the sources apart (`just dataset --overwrite` replaces only the `NNN_` documents):
+
+| Prefix | Documents | Content |
+|---|---|---|
+| `NNN_` | 42 | the generator above, 6 of each of its 7 types |
+| none | 96 | eight Italian report types in three difficulty levels (facile, media, complessa): repeated headers and footers, codice fiscale in character boxes, stamps, signatures, barcodes and QR codes, eponyms. Boxes recovered from a value-level ground truth; clinical content (diagnoses, drugs, lab values) is not PII, so redacting it counts as over-redaction |
+| `eNNN_` | 56 | edge cases: fax with the codice fiscale in character boxes, phone photo with perspective and handwritten PII, landscape table on a `/Rotate 90` page, PII in AcroForm fields, X-ray with PII burned into the pixels and a DICOM header dump, handwritten note on a scan plus the same scan with an OCR layer, PII in metadata, attachments, sticky notes, white text, text under an image and a 2 pt footer, surnames that are cities or words, foreign patients (STP/ENI, passports, diacritics), US and UK documents |
+| `d3_` | 6 | hand-annotated worst cases: mixed scanned and native pages, phone photo, fax, hidden channels, US forms |
+
+The dataset is not regenerable as a whole (only the `NNN_` documents are), so
+back up `dataset/` before deleting it. On the documents whose native PDF is
+already an image (fax, photo, scans) the `scan_ocr` variant has no OCR layer.
+
+**Viewer** (`just eval-ui`, `tools/viewer.py`, `http://127.0.0.1:8765`, dev only): the
+same layout as the demo page, ground truth on the left (found, missed,
+quasi-identifiers, hidden, terms that must stay) and the pipeline's boxes on the
+right (correct, false positives, on quasi-identifiers, found but not redacted),
+or the redacted output. Every document of a variant is listed with its result;
+← → move between documents, PagSu/PagGiù between pages, E jumps to the next
+document with errors, and the errors of a document are listed and clickable.
+`tools/evaluate.py` writes each document's result to
+`reports/docs_<variant>/<doc_id>.json` as soon as it is scored, so an evaluation
+started from the page ("Avvia valutazione") or with `just evaluate` shows up live,
+with running recall, precision and F1; AP/mAP and accuracy appear when the
+variant is complete.
 
 **Evaluation** (`tools/evaluate.py`, metrics from standard libraries in `tools/metrics.py`):
 
 | Metric | Definition | Library |
 |---|---|---|
-| Recall, precision, F1 (box) | Every required ground-truth box is a positive, found when redaction boxes cover at least 60% of it (honorific excluded); every redaction box touching no ground truth is a false positive; boxes on quasi-identifiers only (clinical dates, facility data) are ignored | scikit-learn |
+| Recall, precision, F1 (box) | Every required ground-truth box is a positive, found when redaction boxes cover at least 75% of it (honorific excluded; below that part of the value may stay readable); every redaction box touching no ground truth is a false positive; boxes on quasi-identifiers only (clinical dates, facility data) are ignored | scikit-learn |
 | Precision, recall, F1, accuracy (word) | Every word of the page: PII or not, redacted or not; quasi-identifiers skipped. The only level with true negatives, hence the only meaningful accuracy. On scans the words of the native twin are mapped through the transform the generator applied | scikit-learn |
 | AP@0.5 (PII) | COCO average precision, IoU 0.5, detections ranked by their confidence score, label-agnostic (PII vs not), quasi-identifiers as `iscrowd` ignore regions, each page an image | torchmetrics (pycocotools) |
 | mAP@0.5 | Mean of the per-label AP@0.5 (the predicted label must match) | torchmetrics (pycocotools) |
@@ -257,22 +330,29 @@ just evaluate                                  # -> reports/evaluation.md
 Plus hidden PII leaked (white text, metadata, deleted notes), eponyms wrongly
 redacted, verified documents and seconds per page.
 
-Results on the default dataset (`just dataset`: 21 documents x 3 variants,
-27 pages each; laptop RTX 5070):
+Results on the whole evaluation set (`just evaluate`: 200 documents x 3
+variants, 600 PDFs; 16/10/2026):
 
 | | native | scan | scan + OCR layer |
 |---|---|---|---|
-| Recall (box) | 0.998 | 0.937 | 0.986 |
-| Precision (box) | 0.949 | 0.961 | 0.903 |
-| F1 (box) | 0.973 | 0.949 | 0.943 |
-| Precision / recall / F1 (word) | 0.925 / 0.990 / 0.956 | 0.888 / 0.920 / 0.903 | 0.860 / 0.983 / 0.917 |
-| Accuracy (word) | 0.987 | 0.973 | 0.976 |
-| AP@0.5 (PII, label-agnostic) | 0.951 | 0.756 | 0.522 |
-| mAP@0.5 (mean over labels) | 0.954 | 0.776 | 0.781 |
-| Hidden PII leaked (white text, metadata, deleted notes) | 0/98 | 0/98 | 0/98 |
-| Eponyms wrongly redacted | 0/36 | 0/36 | 0/36 |
-| Documents passing verification | 21/21 | 21/21 | 21/21 |
-| Seconds per page | 0.35 | 1.8 | 1.9 |
+| Recall (box, required PII) | 0.948 | 0.915 | 0.943 |
+| Precision (box) | 0.971 | 0.938 | 0.906 |
+| F1 (box) | 0.959 | 0.926 | 0.924 |
+| Precision / recall / F1 (word) | 0.946 / 0.959 / 0.952 | 0.743 / 0.932 / 0.827 | 0.698 / 0.960 / 0.808 |
+| Accuracy (word) | 0.988 | 0.950 | 0.942 |
+| AP@0.5 (PII, label-agnostic) | 0.689 | 0.582 | 0.508 |
+| mAP@0.5 (mean over PII types) | 0.680 | 0.565 | 0.558 |
+| Hidden PII leaked (white text, metadata, OCR layers) | 2/324, fixed since | n/a | 4/324, fixed since |
+| Eponyms wrongly redacted | 23/415 | 44/415 | 49/415 |
+| Documents passing verification | 200/200 | 200/200 | 200/200 |
+| Seconds per page (laptop RTX 5070, 8 GB) | 1.2 | 7.6 | 8.0 |
+
+The 6 hidden values left in that run (two hand-annotated worst cases: white
+text, a 4 pt footer, a scanner's OCR layer with glued and misread words) are
+fixed since: codes of the same numbering scheme, surnames glued to an initial,
+glued words split in the text layer, OCR confusions (0/o, 1/l) in propagation.
+Run `just evaluate` again to refresh the table; `--split test` scores only the
+77 held-out documents.
 
 Reading the numbers:
 
@@ -285,25 +365,105 @@ Reading the numbers:
   boxes that overlap less than 0.5). On scans signatures are covered by an ink
   box smaller than the image box of the ground truth. Address, CAP and city are
   annotated separately but often detected as one box.
-- Per-type recall on plain scans: persons 98%, codici fiscali 92%, phones 93%,
-  signatures 89%, professional IDs 58% (OCR misreads of "OMCeO MI n. ...");
-  on native PDFs every type is at 100% except one birthplace. Every miss, and
-  AP per type, is listed in `reports/evaluation.md`.
+- Per-type recall, every miss and AP per type are listed in
+  `reports/evaluation.md`; `just eval-ui` shows each of them on the page.
 
 ## OCR choice
 
-docTR is the default. LightOnOCR-3 (0.8B) was evaluated as well
-(`just bench-ocr --engines doctr,lighton`): its transcription is clearly better
-(it read a phone number and an email that docTR got wrong, and its grounding
-mode labels signatures), but its boxes are per block, not per word, and through
-`transformers` on a laptop RTX 5070 it took about 670 s per page against 1-2 s
-for docTR. Serving it with vLLM, and aligning its text to docTR word boxes,
-are the next steps if its quality is needed.
+Measured end to end on the 120 scanned documents of the first dev split, with
+the current pipeline (a box is found when redaction covers 75% of it), only the
+OCR changing, on a laptop RTX 5070 (8 GB) with nothing else running:
+
+| OCR | Recall | Missed PII boxes | Precision | F1 | AP@0.5 / mAP@0.5 | s/page |
+|---|---|---|---|---|---|---|
+| docTR (db_resnet50 + parseq), the former default | 0.875 | 535 | 0.947 | 0.909 | 0.597 / 0.512 | 1.8 |
+| **PaddleOCR PP-OCRv5, server detector (RapidOCR)** | **0.900** | **426** | 0.947 | **0.923** | 0.584 / **0.571** | 4.0 |
+| PaddleOCR PP-OCRv6 medium (official package), first 90 documents | 0.750 | | 0.897 | | | 2.4 |
+
+PaddleOCR PP-OCRv5 with the server detector is the default: one missed value
+in five fewer than docTR at the same precision, for about 2 more seconds per
+page. Its label-agnostic AP is slightly lower because AP also scores box
+tightness and ranking, which redaction does not need. It is Apache 2.0 and
+installs as two ordinary packages (`rapidocr`, `onnxruntime`), without the
+Paddle framework. PP-OCRv5 has a larger "server" model only for detection; the
+Latin recogniser is the mobile one either way. `ANONPIP_OCR_MODEL_TYPE=mobile`
+halves the detection time at some loss of accuracy (recall 0.886 against 0.890
+in an earlier run at 60% coverage).
+
+PP-OCRv6 scores higher than v5 in PaddleOCR's own benchmarks, but those are
+in-house sets, largely Chinese, compared with the Chinese v5 recogniser. Its
+recogniser has one dictionary for 50 languages (18,708 characters, 15,565 of
+them Chinese, against 836 Latin characters for the v5 Latin model) and on our
+Italian documents it drops the spaces after punctuation ("Salerno,15/03/2026",
+"Cod.regionale724932") and adds accents ("Gaglíardǐ"): values glued to their
+neighbours are no longer recognised. The official package also returns line
+boxes only, so word boxes have to be estimated.
+
+### Speed
+
+- **Detector on the GPU**: when `ANONPIP_DEVICE` resolves to cuda the text
+  detector runs on PyTorch with the same weights: on a test page it gave the
+  same 409 words as on CPU, in 3.4 s instead of 19 s (CPU busy at the time).
+  The recogniser stays on ONNX Runtime (CPU), the only format of the Latin model.
+- **Pages in parallel** (`ANONPIP_OCR_WORKERS`): each worker holds its own
+  engine. Two server detectors on 300 dpi pages need about 6 GB of GPU memory:
+  on the 8 GB laptop two workers filled it and ran 3.6 times slower (13.2 s per
+  page against 3.7), so the default is 1. On a larger GPU (L40S, 48 GB) measure
+  before raising it.
+- Native pages are not read by OCR, except the grayscale clinical images on
+  them (X-rays), whose burned-in text is read.
+- **GPU memory**: the OCR detector, GLiNER and GLiNER2 together need about 7.5 GB.
+  On the 8 GB laptop GPU that leaves the detector no room for 300 dpi pages and
+  it spills into system memory: scanned pages take about 12 s instead of 4 (with
+  GLiNER alone). On a larger GPU (L40S, 48 GB) everything stays resident; on a
+  small one `ANONPIP_NER2_ENABLED=false` brings scans back to about 4 s per page,
+  for about 1 point of recall less.
+
+Not adopted:
+
+- **GLM-OCR** (via Ollama) reads stamps and faded fax lines better than docTR
+  (0.7 s per crop), but it returns text without boxes: aligned to docTR's word
+  boxes on the uncertain lines it changed nothing measurable, for +50% time.
+- **LightOnOCR-3** (Apache 2.0, 0.8B): block-level boxes only; text-only use
+  would sit in the same place as GLM-OCR.
+- **Chandra OCR 2** (5B): block-level layout, and its weights need a commercial
+  licence for self-hosting.
+- **A contextual LLM detector** (qwen3-vl 8B via Ollama) raised F1 on native
+  PDFs from 0.949 to 0.965 on a sample, at about 30 times the time per page.
+- **Docling**: document structure (tables, reading order), with OCR delegated
+  to an engine like the one above and no word boxes.
+
+## NER choice
+
+Six on-premise PII models (open weights, run in the pod, no external call) in
+place of the default, on the 108 native documents of the dev split (179-document set), every other
+part of the pipeline identical (75% coverage, laptop RTX 5070):
+
+| NER model | Recall | Precision | F1 | AP@0.5 / mAP@0.5 | s/page |
+|---|---|---|---|---|---|
+| `urchade/gliner_multi_pii-v1` | 0.937 | **0.973** | **0.955** | 0.648 / 0.653 | 0.65 |
+| `fastino/gliner2-privacy-filter-PII-multi` (GLiNER2, 2026) | **0.942** | 0.962 | 0.952 | **0.664 / 0.671** | 0.62 |
+| `DeepMount00/GLiNER_PII_ITA` (Italian only) | 0.932 | 0.970 | 0.950 | 0.659 / 0.669 | 0.65 |
+| `knowledgator/gliner-pii-large-v1.0` | 0.925 | 0.967 | 0.946 | 0.647 / 0.665 | 0.73 |
+| `nvidia/gliner-PII` | 0.920 | 0.959 | 0.939 | 0.628 / 0.668 | 0.73 |
+| `openai/privacy-filter` (mainly English) | 0.925 | 0.940 | 0.933 | 0.616 / 0.638 | 1.36 |
+
+| **GLiNER + GLiNER2 together** (default) | **0.948** | 0.961 | **0.954** | 0.654 / 0.653 | 0.7 |
+
+No single model beats GLiNER on F1; the two best together find 1.1 points more
+recall than GLiNER alone (17% fewer missed values) at the same F1: the extra
+boxes are over-redaction, the safe error. Both are multilingual: on the English
+documents of the dev split they tie the best (recall 0.964), while the
+Italian-only model drops there (0.945). `ANONPIP_NER2_ENABLED=false` keeps
+GLiNER only (precision 0.973, recall 0.937). Recall depends far more on the
+rules, the labels and propagation than on the NER: the models differ by 2
+points at most. GLiNER2 (`gliner2`, Apache 2.0, Fastino) is loaded with
+`from_pretrained`, like GLiNER; its API client for Fastino's cloud is never used.
 
 ## Known limits
 
-- Phone photos, handwritten notes, face photos and IBANs are in the taxonomy
-  but not yet in the synthetic dataset; DOCX/TXT input is not supported.
+- Handwritten PII on scans is not detected (0 of 12 handwritten boxes in the
+  scanned dev documents): the UI edits cover it. DOCX/TXT input is not supported.
 - Reversible mode (encrypted mapping, reconstruction of the original) is out of scope.
 - Professional IDs and some phones on plain scans depend on OCR quality; the
   UI edits cover the misses.

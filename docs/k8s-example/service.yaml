@@ -49,7 +49,7 @@ spec:
         - configMapRef:
             name: anonmyzation-pipeline-config-env
         volumeMounts:
-        - name: models          # docTR and GLiNER weights (HF_HOME, DOCTR_CACHE_DIR)
+        - name: models          # PaddleOCR models, GLiNER and GLiNER2 weights (HF_HOME, ANONPIP_OCR_MODEL_DIR)
           mountPath: /models
         - name: work            # documents, deleted after ANONPIP_JOB_TTL_MINUTES
           mountPath: /work

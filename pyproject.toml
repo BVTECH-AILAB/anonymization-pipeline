@@ -20,8 +20,11 @@ dependencies = [
     "python-docx>=1.1",
     "torch>=2.7",
     "torchvision>=0.22",
-    "python-doctr>=1.0",
     "gliner>=0.2",
+    "pyyaml>=6.0",
+    "rapidocr>=3.10",
+    "onnxruntime>=1.20",
+    "gliner2>=1.0",
 ]
 
 [dependency-groups]
@@ -72,7 +75,8 @@ src = ["src", "tests", "tools"]
 #   UP  - modern 3.12 syntax
 #   T20 - no print(): everything goes through logging
 #   S   - bandit security checks
-select = ["E", "F", "B", "I", "ARG", "UP", "T20", "S", "TID251"]
+#   PLC0415 - imports at module level only (CLAUDE.md)
+select = ["E", "F", "B", "I", "ARG", "UP", "T20", "S", "TID251", "PLC0415"]
 ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]

@@ -11,12 +11,11 @@ from docx.shared import Pt, RGBColor
 from anonmyzation_pipeline.services.anonymization.pipeline import Analysis
 
 
-def export_docx(analysis: Analysis, out: Path, title: str = "") -> None:
+def export_docx(analysis: Analysis, out: Path) -> None:
+    """Write the anonymized text of ``analysis`` to ``out``; redacted parts become black blocks."""
     doc = Document()
     style = doc.styles["Normal"]
     style.font.name, style.font.size = "Arial", Pt(10)
-    if title:
-        doc.core_properties.title = title
     doc.core_properties.author = ""
     red = {}
     for b in analysis.boxes:

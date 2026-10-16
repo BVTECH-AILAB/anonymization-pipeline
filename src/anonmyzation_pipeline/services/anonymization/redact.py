@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pymupdf
 
-from anonmyzation_pipeline.services.anonymization.layers import Rect
+from anonmyzation_pipeline.services.anonymization.layers import Rect, is_vertical
 from anonmyzation_pipeline.services.anonymization.pipeline import Analysis, Box
 from anonmyzation_pipeline.services.anonymization.taxonomy import LABELS
 
@@ -84,65 +84,26 @@ def _layout(boxes: list[Box]) -> list[tuple[pymupdf.Rect, str, bool, str]]:
     return out
 
 
-def redact(
-    src: Path, analysis: Analysis, out: Path, style: str = "black"
-) -> dict[str, int]:
-    """Write ``out``: ``src`` with every redacted box removed and covered.
+# document-level and page-level entries that can carry text outside the page content:
+# bookmarks, the accessibility tree (alt texts), name trees, private application data
+CATALOG_KEYS = (
+    "Outlines",
+    "StructTreeRoot",
+    "MarkInfo",
+    "Names",
+    "PieceInfo",
+    "Metadata",
+)
+PAGE_KEYS = ("PieceInfo", "Metadata", "Thumb", "AA", "StructParents")
 
-    Args:
-        src: Original PDF.
-        analysis: Boxes to redact (``redact=True``).
-        out: Destination PDF.
-        style: ``black`` (solid box) or ``label`` (light box with the PII type).
 
-    Returns:
-        ``{"boxes": n}``, the number of rectangles applied. The rectangles are
-        also stored in ``analysis.applied`` for the verification.
+def scrub_document(doc: pymupdf.Document) -> None:
+    """Remove everything outside the page content that can carry personal data.
+
+    Annotations and form fields (notes, values), metadata and XMP, attachments,
+    JavaScript, links, thumbnails, bookmarks and the structure tree.
     """
-    fill, border, txt = STYLES[style]
-    doc = pymupdf.open(src)
-    applied: list[tuple[int, Rect, str]] = []
-    for pno in range(doc.page_count):
-        page = doc[pno]
-        page_boxes = []
-        for b in analysis.boxes:
-            if b.page != pno or not b.redact:
-                continue
-            r = pymupdf.Rect(b.rect)
-            if b.layer == "native":
-                # char boxes include line-gap; inset vertically so neighbours are not clipped
-                inset = r.height * 0.12
-                r = pymupdf.Rect(r.x0 - 0.3, r.y0 + inset, r.x1 + 0.3, r.y1 - inset)
-            elif b.layer in ("ocr", "manual"):
-                r = r + (-1.5, -1.5, 1.5, 1.5)
-            r &= page.rect
-            if not r.is_empty:
-                b2 = dataclasses.replace(b, rect=(r.x0, r.y0, r.x1, r.y1))
-                page_boxes.append(b2)
-        for r, label, show, _layer in _layout(page_boxes):
-            tag, fs = _tag(label, r) if show and txt is not None else ("", 0)
-            page.add_redact_annot(
-                r,
-                text=tag or None,
-                fontname="helv",
-                fontsize=fs or 4,
-                align=pymupdf.TEXT_ALIGN_CENTER,
-                fill=fill,
-                text_color=txt or (0, 0, 0),
-                cross_out=False,
-            )
-            applied.append((pno, (r.x0, r.y0, r.x1, r.y1), label))
-        if page_boxes:
-            page.apply_redactions(
-                images=REDACT_IMAGE_PIXELS,
-                graphics=REDACT_LINE_ART_IF_COVERED,
-                text=REDACT_TEXT_REMOVE,
-            )
-            if border:
-                for apno, rect, _ in applied:
-                    if apno == pno:
-                        page.draw_rect(rect, color=border, width=0.4)
-        # annotations can carry PII (notes, form values): remove them all
+    for page in doc:
         for annot in list(page.annots() or []):
             page.delete_annot(annot)
         for w in list(page.widgets() or []):
@@ -161,11 +122,98 @@ def redact(
         thumbnails=True,
         xml_metadata=True,
     )
+    _drop_structure(doc)
     doc.set_metadata({"producer": "anonmyzation-pipeline"})
-    doc.save(
-        out, garbage=4, deflate=True, clean=True
-    )  # full rewrite: no incremental history
-    doc.close()
+
+
+def _drop_structure(doc: pymupdf.Document) -> None:
+    """Remove bookmarks, structure tree and page private data (not covered by ``scrub``)."""
+    doc.set_toc([])
+    cat = doc.pdf_catalog()
+    for key in CATALOG_KEYS:
+        if doc.xref_get_key(cat, key)[0] != "null":
+            doc.xref_set_key(cat, key, "null")
+    for page in doc:
+        for key in PAGE_KEYS:
+            if doc.xref_get_key(page.xref, key)[0] != "null":
+                doc.xref_set_key(page.xref, key, "null")
+
+
+def redact(
+    src: Path, analysis: Analysis, out: Path, style: str = "black"
+) -> dict[str, int]:
+    """Write ``out``: ``src`` with every redacted box removed and covered.
+
+    Args:
+        src: Original PDF.
+        analysis: Boxes to redact (``redact=True``).
+        out: Destination PDF.
+        style: ``black`` (solid box) or ``label`` (light box with the PII type).
+
+    Returns:
+        ``{"boxes": n}``, the number of rectangles applied. The rectangles are
+        also stored in ``analysis.applied`` for the verification.
+    """
+    fill, border, txt = STYLES[style]
+    doc = pymupdf.open(src)
+    try:
+        applied: list[tuple[int, Rect, str]] = []
+        for pno in range(doc.page_count):
+            page = doc[pno]
+            page_boxes = []
+            for b in analysis.boxes:
+                if b.page != pno or not b.redact:
+                    continue
+                r = pymupdf.Rect(b.rect)
+                if b.layer == "native":
+                    # char boxes include line-gap; inset across the line so neighbours are not clipped
+                    if is_vertical(r, b.text):
+                        inset = r.width * 0.12
+                        r = pymupdf.Rect(
+                            r.x0 + inset, r.y0 - 0.3, r.x1 - inset, r.y1 + 0.3
+                        )
+                    else:
+                        inset = r.height * 0.12
+                        r = pymupdf.Rect(
+                            r.x0 - 0.3, r.y0 + inset, r.x1 + 0.3, r.y1 - inset
+                        )
+                elif b.layer in ("ocr", "manual"):
+                    r = r + (-1.5, -1.5, 1.5, 1.5)
+                r &= (
+                    page.rect * page.derotation_matrix
+                )  # boxes are in unrotated coordinates
+                if not r.is_empty:
+                    b2 = dataclasses.replace(b, rect=(r.x0, r.y0, r.x1, r.y1))
+                    page_boxes.append(b2)
+            for r, label, show, _layer in _layout(page_boxes):
+                tag, fs = _tag(label, r) if show and txt is not None else ("", 0)
+                page.add_redact_annot(
+                    r,
+                    text=tag or None,
+                    fontname="helv",
+                    fontsize=fs or 4,
+                    align=pymupdf.TEXT_ALIGN_CENTER,
+                    fill=fill,
+                    text_color=txt or (0, 0, 0),
+                    cross_out=False,
+                )
+                applied.append((pno, (r.x0, r.y0, r.x1, r.y1), label))
+            if page_boxes:
+                page.apply_redactions(
+                    images=REDACT_IMAGE_PIXELS,
+                    graphics=REDACT_LINE_ART_IF_COVERED,
+                    text=REDACT_TEXT_REMOVE,
+                )
+                if border:
+                    for apno, rect, _ in applied:
+                        if apno == pno:
+                            page.draw_rect(rect, color=border, width=0.4)
+        scrub_document(doc)
+        doc.save(
+            out, garbage=4, deflate=True, clean=True
+        )  # full rewrite: no incremental history
+    finally:
+        doc.close()
     analysis.applied = (
         applied  # what verification must exclude from the pixel comparison
     )

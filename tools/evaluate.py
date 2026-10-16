@@ -11,7 +11,9 @@ Per variant (native, scan, scan_ocr):
 * eponyms wrongly redacted, verification outcome, seconds per page.
 """
 
+import hashlib
 import json
+import logging
 import re
 import time
 from collections import defaultdict
@@ -22,11 +24,12 @@ import pymupdf
 
 from anonmyzation_pipeline.config import get_settings
 from anonmyzation_pipeline.main import build_pipeline
-from anonmyzation_pipeline.services.anonymization.redact import redact
+from anonmyzation_pipeline.services.anonymization.release import redact_and_verify
 from anonmyzation_pipeline.services.anonymization.taxonomy import LABELS
-from anonmyzation_pipeline.services.anonymization.verify import verify
 from tools.dataset.scan import _transform_rect
 from tools.metrics import DetectionMAP, binary_scores, coverage, word_labels
+
+logger = logging.getLogger(__name__)
 
 _HON = re.compile(r"^(?:Sig\.(?:ra|na)?|Dott\.(?:ssa)?|Prof\.(?:ssa)?|Dr\.)\s+")
 
@@ -43,28 +46,134 @@ def _norm(s: str) -> str:
     return re.sub(r"\s+", "", s).lower()
 
 
-def _words(
-    dataset: Path, gt: dict, variant: str
-) -> dict[int, list[pymupdf.Rect]] | None:
+def _words(dataset: Path, gt: dict) -> dict[int, list[pymupdf.Rect]]:
     """Word boxes of every page, in the coordinates of the evaluated file.
 
     Scans have no text layer of their own: the words of the native twin are
-    mapped through the transform the generator applied. Older datasets without
-    transforms return None (no word-level metrics).
+    mapped through the transform the generator applied.
     """
     native = dataset / "native" / f"{gt['doc_id']}.pdf"
     scan = gt.get("scan")
-    if variant != "native" and not (scan and scan.get("transforms")):
-        return None
     out: dict[int, list[pymupdf.Rect]] = {}
     with pymupdf.open(native) as doc:
         for pno in range(doc.page_count):
             rects = [pymupdf.Rect(w[:4]) for w in doc[pno].get_text("words")]
             if scan:
+                rects = [r * doc[pno].rotation_matrix for r in rects]
                 m, s = np.array(scan["transforms"][pno]), scan["dpi"] / 72
                 rects = [pymupdf.Rect(_transform_rect(tuple(r), m, s)) for r in rects]
             out[pno] = rects
     return out
+
+
+TEST_SHARE = 0.3
+
+
+def family(doc_id: str) -> str:
+    """The template a document was made from: siblings must stay on the same side of the split.
+
+    ``e011_consegne_turno`` -> ``consegne_turno``, ``003_verbale_ps`` -> ``verbale_ps``,
+    ``referto_esterno_media_02`` -> ``referto_esterno_media``; a hand-annotated
+    document is its own family.
+    """
+    for pattern in (r"e\d{3}_(.+)", r"\d{3}_(.+)", r"(?!d3_)(.+)_\d{2}"):
+        m = re.fullmatch(pattern, doc_id)
+        if m:
+            return m.group(1)
+    return doc_id
+
+
+def in_split(doc_id: str, split: str) -> bool:
+    """Fixed dev/test split by template family: ``test`` is about 30% of the families.
+
+    The test documents are never inspected while tuning the detectors, and no
+    sibling of a test document is in dev, so their scores show whether a change
+    generalises.
+    """
+    h = int(hashlib.sha256(family(doc_id).encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
+    return (h < TEST_SHARE) == (split == "test")
+
+
+def _view(m: dict, bx: dict, status: str, covered: float | None = None) -> dict:
+    """One ground-truth box as the viewer shows it."""
+    return {
+        "page": bx["page"],
+        "rect": bx["rect"],
+        "label": m["label"],
+        "text": bx.get("text", m["text"]),
+        "kind": m["kind"],
+        "status": status,
+        "covered": covered,
+    }
+
+
+def _pred_view(a, gt: dict) -> list[dict]:
+    """Every pipeline box, matched against the ground truth of its page.
+
+    ``tp``: redacted and touching required PII; ``quasi``: redacted, touching only
+    quasi-identifiers; ``fp``: redacted, touching no ground truth; ``kept``: found
+    but not redacted by policy.
+    """
+    required: dict[int, list[pymupdf.Rect]] = defaultdict(list)
+    other: dict[int, list[pymupdf.Rect]] = defaultdict(list)
+    for m in gt["mentions"]:
+        for bx in m["boxes"]:
+            (required if m["required"] else other)[bx["page"]].append(
+                pymupdf.Rect(bx["rect"])
+            )
+    out = []
+    for b in a.boxes:
+        r = pymupdf.Rect(b.rect) + (-1, -1, 1, 1)
+        if not b.redact:
+            match = "kept"
+        elif any(r.intersects(g) for g in required[b.page]):
+            match = "tp"
+        elif any(r.intersects(g) for g in other[b.page]):
+            match = "quasi"
+        else:
+            match = "fp"
+        out.append(
+            {
+                "page": b.page,
+                "rect": [round(v, 2) for v in b.rect],
+                "label": b.label,
+                "text": b.text,
+                "score": round(float(b.score), 3),
+                "sources": b.sources,
+                "layer": b.layer,
+                "match": match,
+            }
+        )
+    return out
+
+
+def _write_doc(
+    path: Path, gt: dict, gt_view: list, preds: list, keep: list, stats: dict
+) -> None:
+    """Per-document result for the viewer (``tools/viewer.py``), written as soon as it is scored."""
+    scored = [g for g in gt_view if g["status"] in ("hit", "miss")]
+    hits = sum(g["status"] == "hit" for g in scored)
+    fp = sum(p["match"] == "fp" for p in preds)
+    doc = {
+        "doc_id": gt["doc_id"],
+        "doc_type": gt["doc_type"],
+        "variant": gt["variant"],
+        "pages": gt["pages"],
+        "gt": gt_view,
+        "pred": preds,
+        "keep": keep,
+        "stats": {
+            "required": len(scored),
+            "hits": hits,
+            "misses": len(scored) - hits,
+            "fp": fp,
+            "keep_lost": sum(k["lost"] for k in keep),
+            **stats,
+        },
+    }
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(doc, ensure_ascii=False))
+    tmp.replace(path)
 
 
 def evaluate(
@@ -72,12 +181,18 @@ def evaluate(
     variant: str,
     out_dir: Path,
     limit: int | None = None,
-    cover: float = 0.6,
+    cover: float = 0.75,
+    split: str = "all",
     nms_iou: float | None = 0.5,
 ) -> dict:
     """Run the pipeline on every document of a variant and score it."""
-    pipe = build_pipeline(get_settings())
-    gts = sorted((dataset / "ground_truth" / variant).glob("*.json"))[:limit]
+    settings = get_settings()
+    pipe = build_pipeline(settings)
+    gts = [
+        f
+        for f in sorted((dataset / "ground_truth" / variant).glob("*.json"))
+        if split == "all" or in_split(f.stem, split)
+    ][:limit]
     tot: dict[str, int] = defaultdict(int)
     hit: dict[str, int] = defaultdict(int)
     misses: list[dict] = []
@@ -85,21 +200,29 @@ def evaluate(
     box_pred: list[int] = []
     word_true: list[int] = []
     word_pred: list[int] = []
-    word_metrics = True
     detection = DetectionMAP(list(LABELS), nms_iou=nms_iou)
     fp_boxes = keep_lost = keep_tot = hidden_tot = hidden_leak = 0
     pages = verified = 0
     seconds = 0.0
     work = out_dir / f"anonymized_{variant}"
     work.mkdir(parents=True, exist_ok=True)
-    for gtf in gts:
+    docs_dir = out_dir / f"docs_{variant}"
+    docs_dir.mkdir(parents=True, exist_ok=True)
+    for old in docs_dir.glob("*.json"):
+        old.unlink()
+    for n, gtf in enumerate(gts, 1):
         gt = json.loads(gtf.read_text())
         src = dataset / variant / f"{gt['doc_id']}.pdf"
         dst = work / f"{gt['doc_id']}.pdf"
         t0 = time.perf_counter()
         a = pipe.analyze(src)
-        redact(src, a, dst)
-        rep = verify(src, dst, a)
+        rep = redact_and_verify(
+            src,
+            a,
+            dst,
+            style=settings.redaction_style,
+            tol=settings.verify_pixel_tolerance,
+        ).report
         seconds += time.perf_counter() - t0
         pages += len(a.pages)
         verified += rep.ok
@@ -111,6 +234,7 @@ def evaluate(
             if b.redact:
                 red[b.page].append(pymupdf.Rect(b.rect) + (-1, -1, 1, 1))
                 preds[b.page].append((pymupdf.Rect(b.rect), b.label, b.score))
+        gt_view: list[dict] = []
         all_gt: dict[int, list[pymupdf.Rect]] = defaultdict(list)
         truths: dict[int, list[tuple[pymupdf.Rect, str]]] = defaultdict(list)
         ignore: dict[int, list[tuple[pymupdf.Rect, str]]] = defaultdict(list)
@@ -135,6 +259,8 @@ def evaluate(
                 or m["kind"] not in ("text", "image")
                 or not m["visible"]
             ):
+                status = "quasi" if not m["required"] else "hidden"
+                gt_view += [_view(m, bx, status) for bx in m["boxes"]]
                 continue
             for bx in m["boxes"]:
                 text = bx.get("text", m["text"])
@@ -142,6 +268,9 @@ def evaluate(
                 tot[m["label"]] += 1
                 truths[bx["page"]].append((target, m["label"]))
                 c = coverage(target, red[bx["page"]])
+                gt_view.append(
+                    _view(m, bx, "hit" if c >= cover else "miss", round(c, 2))
+                )
                 box_true.append(1)
                 box_pred.append(int(c >= cover))
                 if c >= cover:
@@ -166,21 +295,17 @@ def evaluate(
         for pno in range(len(a.pages)):
             detection.add_page(preds[pno], truths[pno], ignore[pno])
 
-        words = _words(dataset, gt, variant)
-        if words is None:
-            word_metrics = False
-        else:
-            for pno, page_words in words.items():
-                visible = [
-                    w
-                    for w in page_words
-                    if not any(w.intersects(h) for h in hidden_words[pno])
-                ]
-                y_true, y_pred = word_labels(
-                    visible, pii_words[pno], [g for g, _ in ignore[pno]], red[pno]
-                )
-                word_true += y_true
-                word_pred += y_pred
+        for pno, page_words in _words(dataset, gt).items():
+            visible = [
+                w
+                for w in page_words
+                if not any(w.intersects(h) for h in hidden_words[pno])
+            ]
+            y_true, y_pred = word_labels(
+                visible, pii_words[pno], [g for g, _ in ignore[pno]], red[pno]
+            )
+            word_true += y_true
+            word_pred += y_pred
 
         # hidden PII: invisible text, metadata, annotation history must not survive
         with pymupdf.open(dst) as d:
@@ -192,7 +317,9 @@ def evaluate(
                 " ".join(str(v) for v in (d.metadata or {}).values() if v)
                 + (d.get_xml_metadata() or "")
             )
-        for m in gt["mentions"]:
+        for m in (
+            gt["mentions"] if variant != "scan" else []
+        ):  # a raster has no hidden layer
             if (
                 m["required"]
                 and (not m["visible"] or m["kind"] in ("metadata", "annotation"))
@@ -215,19 +342,51 @@ def evaluate(
                             "covered": "hidden",
                         }
                     )
+        keep_view = []
         for k in gt["keep"]:
+            lost = coverage(pymupdf.Rect(k["rect"]), red[k["page"]]) >= 0.5
             keep_tot += 1
-            keep_lost += coverage(pymupdf.Rect(k["rect"]), red[k["page"]]) >= 0.5
+            keep_lost += lost
+            keep_view.append({**k, "lost": bool(lost)})
+        _write_doc(
+            docs_dir / f"{gt['doc_id']}.json",
+            gt,
+            gt_view,
+            _pred_view(a, gt),
+            keep_view,
+            {
+                "seconds": round(time.perf_counter() - t0, 2),
+                "verified": rep.ok,
+                "issues": rep.issues,
+                "leaked": [
+                    x["text"]
+                    for x in misses
+                    if x["doc"] == gt["doc_id"] and x["covered"] == "hidden"
+                ],
+            },
+        )
+        tp = sum(t and p for t, p in zip(box_true, box_pred, strict=True))
+        logger.info(
+            "%s %d/%d %s: recall %.3f, precision %.3f, %.1f s/page",
+            variant,
+            n,
+            len(gts),
+            gt["doc_id"],
+            tp / max(sum(box_true), 1),
+            tp / max(sum(box_pred), 1),
+            seconds / max(pages, 1),
+        )
 
     total = sum(tot.values())
     ap = detection.compute()
     report = {
         "variant": variant,
+        "split": split,
         "documents": len(gts),
         "pages": pages,
         "recall_overall": round(sum(hit.values()) / max(total, 1), 4),
         "box": binary_scores(box_true, box_pred),
-        "word": binary_scores(word_true, word_pred) if word_metrics else None,
+        "word": binary_scores(word_true, word_pred),
         "ap_pii_50": ap["ap_pii"],
         "map_50": ap["map"],
         "recall_per_label": {
@@ -239,7 +398,9 @@ def evaluate(
             }
             for k in sorted(tot, key=lambda k: -tot[k])
         },
-        "hidden_pii_leaked": f"{hidden_leak}/{hidden_tot}",
+        "hidden_pii_leaked": f"{hidden_leak}/{hidden_tot}"
+        if variant != "scan"
+        else "n/a",
         "boxes_without_ground_truth": fp_boxes,
         "eponyms_wrongly_redacted": f"{keep_lost}/{keep_tot}",
         "verified_documents": f"{verified}/{len(gts)}",
@@ -247,9 +408,9 @@ def evaluate(
         "misses": misses,
     }
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / f"eval_{variant}.json").write_text(
-        json.dumps(report, indent=1, ensure_ascii=False)
-    )
+    tmp = out_dir / f"eval_{variant}.json.tmp"  # the viewer may read it meanwhile
+    tmp.write_text(json.dumps(report, indent=1, ensure_ascii=False))
+    tmp.replace(out_dir / f"eval_{variant}.json")
     return report
 
 
@@ -315,7 +476,7 @@ def to_markdown(reports: list[dict]) -> str:
         lines.append(f"| {lab} | " + " | ".join(cells) + " |")
     lines += [
         "",
-        "Definitions: box level = every required ground-truth box (covered >= 60% by redaction is a hit) plus every",
+        "Definitions: box level = every required ground-truth box (covered >= 75% by redaction is a hit) plus every",
         "redaction box touching no ground truth (false positive); word level = every word of the page, PII or not,",
         "redacted or not (quasi-identifiers skipped); AP/mAP = COCO protocol (torchmetrics), IoU 0.5, quasi-identifiers",
         "and invisible text as ignore regions, duplicates collapsed by NMS (torchvision, IoU 0.5).",

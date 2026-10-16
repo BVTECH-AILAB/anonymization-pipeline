@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIA · Valutazione</title>
+<style>
+  :root {
+    --navy: #0e1f4f; --ink: #16234a; --muted: #5c6787; --blue: #1a5fd8; --blue-h: #2b6ee6;
+    --line: #dfe5f0; --dark: #4a4d55; --dark-2: #3c3f46; --ok: #1f8a4c; --bad: #c43a31; --warn: #e08a1e;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { font-family: "Fira Sans", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; color: var(--ink);
+         display: grid; grid-template-columns: 280px 1fr; background: #fff; }
+  button, select, input { font-family: inherit; }
+  .hidden { display: none !important; }
+
+  /* sidebar: document list */
+  aside { background: linear-gradient(180deg, #0c1a47 0%, #13328f 45%, #1d55d2 100%); color: #fff; padding: 18px 12px 12px;
+          display: flex; flex-direction: column; gap: 10px; height: 100vh; position: sticky; top: 0; min-height: 0; }
+  .logo { display: flex; align-items: center; gap: 8px; margin: 2px 6px 6px; }
+  .logo .dots { display: grid; grid-template-columns: 9px 9px; gap: 2px; }
+  .logo .dots i { width: 9px; height: 9px; border-radius: 50%; background: #fff; }
+  .logo b { font-size: 24px; letter-spacing: .3px; }
+  .logo small { font-size: 8px; line-height: 1.05; font-weight: 600; }
+  .side-title { font-size: 12px; opacity: .9; margin: 4px 4px 0; display: flex; justify-content: space-between; }
+  .filters { display: flex; flex-direction: column; gap: 6px; }
+  .filters input[type=search] { border: 0; border-radius: 8px; padding: 7px 10px; font-size: 13px; }
+  .filters label { font-size: 12.5px; display: flex; gap: 6px; align-items: center; }
+  .list { flex: 1; overflow: auto; min-height: 0; display: flex; flex-direction: column; gap: 4px; padding-right: 2px; }
+  .doc { border: 1.5px solid rgba(255,255,255,.35); border-radius: 9px; padding: 7px 10px; font-size: 12.5px; cursor: pointer;
+         display: grid; grid-template-columns: 10px 1fr; gap: 2px 8px; align-items: center; }
+  .doc:hover { border-color: #fff; }
+  .doc.active { background: #dce8ff; color: var(--navy); border-color: #dce8ff; }
+  .doc .st { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.35); }
+  .doc .st.ok { background: #3ccf7a; } .doc .st.err { background: #ff6b5e; } .doc .st.warn { background: #f2b544; }
+  .doc b { font-weight: 600; word-break: break-all; }
+  .doc small { grid-column: 2; opacity: .8; font-size: 11.5px; }
+
+  /* main */
+  main { min-width: 0; height: 100vh; display: flex; flex-direction: column; }
+  .banner { background: linear-gradient(90deg, #c4d7f6, #e2eaf8); padding: 10px 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .banner .title { font-weight: 700; font-size: 18px; margin-right: 4px; }
+  .chip { background: #fff; border-radius: 999px; padding: 5px 12px; font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .chip b { color: var(--blue); margin-right: 5px; }
+  .chip.bad b { color: var(--bad); } .chip.good b { color: var(--ok); }
+  .sp { flex: 1; }
+  .btn { background: var(--blue); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px; font-weight: 600; font-size: 13px;
+         cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .btn:hover { background: var(--blue-h); } .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.outline { background: #fff; color: var(--blue); border: 1.5px solid var(--blue); }
+  select { border: 1px solid #c9d6ef; border-radius: 8px; padding: 6px 8px; font-size: 13px; background: #fff; }
+  .runbox { position: relative; }
+  .runmenu { position: absolute; right: 0; top: 40px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+             box-shadow: 0 10px 28px rgba(0,0,0,.16); z-index: 15; min-width: 230px; font-size: 13px; display: flex; flex-direction: column; gap: 8px; }
+  .docbar { background: #fff; padding: 9px 18px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+  .docbar .name { font-weight: 700; font-size: 15px; margin-right: 6px; word-break: break-all; }
+  .docbar .nav button { background: #eef2f8; border: 0; border-radius: 7px; padding: 6px 10px; cursor: pointer; font-size: 14px; color: var(--navy); }
+  .docbar .nav button:disabled { opacity: .35; cursor: default; }
+  .errors { background: #fff8f7; border-bottom: 1px solid #f3d6d3; padding: 6px 18px; font-size: 12.5px; display: flex; gap: 6px; flex-wrap: wrap; max-height: 74px; overflow: auto; }
+  .errors span { background: #fff; border: 1px solid #efc9c5; border-radius: 6px; padding: 2px 7px; cursor: pointer; }
+  .errors span.fp { border-color: #f0cfa0; }
+  .errors span:hover { border-color: var(--bad); }
+  .panes { flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+  .pane { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+  .pane + .pane { border-left: 1px solid #2d3036; }
+  .phead { padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; min-height: 58px; gap: 10px; }
+  .pane.gt .phead { background: #e8eef9; } .pane.pred .phead { background: #fff; }
+  .phead small { display: block; color: var(--muted); font-size: 12px; }
+  .phead b { font-size: 16px; }
+  .legend { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .legend i { display: inline-block; width: 14px; height: 10px; vertical-align: -1px; margin-right: 3px; border-radius: 2px; }
+  .toolbar { background: var(--dark-2); color: #e9ecf3; display: flex; gap: 14px; align-items: center; padding: 8px 18px; font-size: 13.5px; }
+  .toolbar button { background: transparent; border: 0; color: #cfd5e2; cursor: pointer; font-size: 15px; padding: 0 4px; }
+  .toolbar button:disabled { opacity: .3; cursor: default; }
+  .toolbar label { font-size: 12.5px; display: flex; gap: 5px; align-items: center; }
+  .toolbar .tsp { flex: 1; }
+  .viewer { flex: 1; overflow: auto; background: var(--dark); padding: 24px; min-height: 0; position: relative; }
+  .page { position: relative; margin: 0 auto; background: #fff; box-shadow: 0 3px 16px rgba(0,0,0,.4); user-select: none; }
+  .page img { display: block; width: 100%; height: auto; }
+  .pending { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; background: rgba(40,44,52,.45); font-size: 14px; text-align: center; }
+  .box { position: absolute; cursor: help; }
+  /* ground truth */
+  .g-hit { background: rgba(31,138,76,.22); border: 1.5px solid #1f8a4c; }
+  .g-miss { background: rgba(196,58,49,.28); border: 2px solid var(--bad); }
+  .g-pending { background: rgba(26,95,216,.15); border: 1.5px solid var(--blue); }
+  .g-quasi { border: 1.3px dashed #8c96a8; }
+  .g-hidden { border: 1.5px dotted #8a3fc4; background: rgba(138,63,196,.08); }
+  /* predictions */
+  .p-tp { background: rgba(31,138,76,.22); border: 1.5px solid #1f8a4c; }
+  .p-fp { background: rgba(224,138,30,.3); border: 2px solid var(--warn); }
+  .p-quasi { background: rgba(140,150,168,.2); border: 1.3px solid #8c96a8; }
+  .p-kept { border: 1.3px dashed var(--blue); }
+  .k-keep { border: 1.5px dashed var(--warn); }
+  .k-lost { border: 2px solid var(--warn); background: rgba(224,138,30,.35); }
+  .flash { animation: flash 1.2s ease-out 2; }
+  @keyframes flash { 50% { outline: 4px solid #ffeb3b; outline-offset: 2px; } }
+  .hide-quasi .g-quasi, .hide-quasi .p-quasi, .hide-quasi .p-kept { display: none; }
+  .tip { position: fixed; pointer-events: none; background: var(--navy); color: #fff; font-size: 12.5px; padding: 7px 10px; border-radius: 8px; z-index: 30; max-width: 360px; }
+  .tip small { color: #b4c2e4; display: block; margin-top: 2px; }
+  .help { font-size: 11.5px; opacity: .85; margin: 0 4px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo"><span class="dots"><i></i><i></i><i></i><i></i></span><b>MIA</b><small>Valutazione<br>anonimizzazione</small></div>
+  <div class="filters">
+    <input type="search" id="q" placeholder="Filtra documenti (es. fax, d3_, complessa)">
+    <label><input type="checkbox" id="onlyErr"> solo documenti con errori</label>
+    <label><input type="checkbox" id="follow"> segui la valutazione in corso</label>
+  </div>
+  <div class="side-title"><span>Documenti</span><span id="listCount"></span></div>
+  <div class="list" id="list"></div>
+  <div class="help">← → documento · PagSu PagGiù pagina · E prossimo errore</div>
+</aside>
+
+<main>
+  <div class="banner">
+    <span class="title">Valutazione</span>
+    <select id="variant"><option value="native">Nativi</option><option value="scan">Scansioni</option><option value="scan_ocr">Scansioni + OCR</option></select>
+    <span class="chip" id="cDone"></span>
+    <span class="chip good" id="cRecall"></span>
+    <span class="chip good" id="cPrec"></span>
+    <span class="chip" id="cF1"></span>
+    <span class="chip" id="cFinal"></span>
+    <span class="sp"></span>
+    <span class="chip hidden" id="cRun"></span>
+    <span class="runbox">
+      <button class="btn" id="runBtn">▶ Avvia valutazione</button>
+      <div class="runmenu hidden" id="runMenu">
+        <b>Varianti da valutare</b>
+        <label><input type="checkbox" value="native" checked> Nativi</label>
+        <label><input type="checkbox" value="scan" checked> Scansioni</label>
+        <label><input type="checkbox" value="scan_ocr" checked> Scansioni + OCR</label>
+        <span style="color:var(--muted);font-size:12px">Sostituisce i risultati precedenti delle varianti scelte.</span>
+        <button class="btn" id="runGo">Avvia</button>
+      </div>
+    </span>
+  </div>
+  <div class="docbar">
+    <span class="nav"><button id="prevDoc" title="Documento precedente (←)">‹ Prec.</button> <button id="nextDoc" title="Documento successivo (→)">Succ. ›</button></span>
+    <span class="name" id="docName"></span>
+    <span id="docChips" style="display:flex;gap:6px;flex-wrap:wrap"></span>
+  </div>
+  <div class="errors hidden" id="errors"></div>
+  <div class="panes">
+    <div class="pane gt">
+      <div class="phead"><div><small>Riferimento</small><b>Ground truth</b></div>
+        <div class="legend"><span><i class="g-hit"></i>trovato</span><span><i class="g-miss"></i>mancato</span><span><i class="g-quasi"></i>quasi-identificativo</span><span><i class="g-hidden"></i>nascosto</span><span><i class="k-keep"></i>da non oscurare</span></div></div>
+      <div class="toolbar"><span>Pagina</span><button class="prev">‹</button><span class="pageno"></span><button class="next">›</button>
+        <span class="tsp"></span><label><input type="checkbox" id="showQuasi" checked> quasi-identificativi</label><button class="zout">−</button><span class="zoomv"></span><button class="zin">+</button></div>
+      <div class="viewer" id="vGt"><div class="page" id="pGt"><img alt="pagina originale"></div></div>
+    </div>
+    <div class="pane pred">
+      <div class="phead"><div><small>Pipeline</small><b>Predizioni</b></div>
+        <div class="legend"><span><i class="p-tp"></i>corretto</span><span><i class="p-fp"></i>falso positivo</span><span><i class="p-quasi"></i>su quasi-id.</span><span><i class="p-kept"></i>non oscurato</span><span><i class="k-lost"></i>oscurato per errore</span></div></div>
+      <div class="toolbar"><span>Pagina</span><button class="prev">‹</button><span class="pageno"></span><button class="next">›</button>
+        <span class="tsp"></span><label><input type="checkbox" id="showAnon"> documento anonimizzato</label><button class="zout">−</button><span class="zoomv"></span><button class="zin">+</button></div>
+      <div class="viewer" id="vPred"><div class="page" id="pPred"><img alt="pagina con predizioni"><div class="pending hidden" id="predPending"></div></div></div>
+    </div>
+  </div>
+</main>
+<div class="tip hidden" id="tip"></div>
+
+<script>
+const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pct = x => x == null ? "–" : (100 * x).toLocaleString("it-IT", { maximumFractionDigits: 1 }) + "%";
+const num = (x, d = 3) => x == null ? "–" : Number(x).toLocaleString("it-IT", { minimumFractionDigits: d, maximumFractionDigits: d });
+const LABELS = { PERSON: "Nome", FISCAL_CODE: "Codice fiscale", HEALTH_CARD: "Tessera sanitaria", ID_DOCUMENT: "Documento", DATE_OF_BIRTH: "Data di nascita",
+  AGE: "Età", ADDRESS: "Indirizzo", LOCATION: "Luogo", PHONE: "Telefono", EMAIL: "Email", MEDICAL_RECORD: "ID sanitario", PRESCRIPTION_ID: "NRE",
+  PROFESSIONAL_ID: "ID professionale", IBAN: "IBAN", URL: "URL", ORGANIZATION: "Struttura", DATE: "Data", SIGNATURE: "Firma", STAMP: "Timbro",
+  BARCODE: "Codice a barre", QRCODE: "QR", FACE: "Volto", HANDWRITING: "Manoscritto" };
+const lab = l => LABELS[l] || l;
+const VARIANTS = ["native", "scan", "scan_ocr"];
+let variant = VARIANTS.includes(localStorage.getItem("ev.variant")) ? localStorage.getItem("ev.variant") : "native", DOCS = [], TOT = null, cur = null, D = null, page = 0, zoom = 1, version = 0;
+$("#variant").value = variant;
+
+// ---------------- list and running totals ----------------
+async function refresh() {
+  let j;
+  try { j = await (await fetch(`/api/docs?variant=${variant}`)).json(); } catch { return; }
+  const prevDone = new Set(DOCS.filter(d => d.stats).map(d => d.doc_id));
+  DOCS = j.documents; TOT = j.totals;
+  const t = j.totals;
+  $("#cDone").innerHTML = `<b>${t.done}/${t.total}</b>documenti valutati`;
+  $("#cRecall").innerHTML = `<b>${pct(t.recall)}</b>recall`;
+  $("#cPrec").innerHTML = `<b>${pct(t.precision)}</b>precision`;
+  $("#cF1").innerHTML = `<b>${num(t.f1)}</b>F1 · ${t.hits}/${t.required} trovati · ${t.fp} FP`;
+  $("#cFinal").classList.toggle("hidden", !j.final);
+  if (j.final) $("#cFinal").innerHTML = `<b>${num(j.final.ap_pii_50)}</b>AP@0.5 · mAP ${num(j.final.map_50)} · accuracy ${num(j.final.word?.accuracy)}`;
+  const run = j.run;
+  $("#runBtn").disabled = !run || run.running;
+  $("#cRun").classList.toggle("hidden", !(run && (run.running || run.error)));
+  if (run?.running) $("#cRun").innerHTML = `<b>●</b>in corso: ${esc(run.variant)}`;
+  else if (run?.error) $("#cRun").innerHTML = `<b style="color:var(--bad)">!</b>errore: ${esc(run.error)}`;
+  renderList();
+  if (!cur && DOCS.length) open(DOCS[0].doc_id);
+  const newly = DOCS.filter(d => d.stats && !prevDone.has(d.doc_id));
+  if ($("#follow").checked && newly.length) open(newly[newly.length - 1].doc_id);
+  else if (cur && newly.some(d => d.doc_id === cur)) open(cur, true);
+}
+function status(d) {
+  if (!d.stats) return "";
+  if (d.stats.misses || d.stats.keep_lost || !d.stats.verified) return "err";
+  return d.stats.fp ? "warn" : "ok";
+}
+function visibleDocs() {
+  const q = $("#q").value.trim().toLowerCase(), onlyErr = $("#onlyErr").checked;
+  return DOCS.filter(d => (!q || d.doc_id.toLowerCase().includes(q)) && (!onlyErr || ["err", "warn"].includes(status(d))));
+}
+function renderList() {
+  const docs = visibleDocs();
+  $("#listCount").textContent = docs.length === DOCS.length ? DOCS.length : `${docs.length}/${DOCS.length}`;
+  $("#list").innerHTML = docs.map(d => {
+    const s = d.stats;
+    const sub = s ? `${s.hits}/${s.required} trovati` + (s.misses ? ` · ${s.misses} mancati` : "") + (s.fp ? ` · ${s.fp} FP` : "") + (s.verified ? "" : " · verifica KO")
+                  : "in attesa";
+    return `<div class="doc${d.doc_id === cur ? " active" : ""}" data-id="${esc(d.doc_id)}"><span class="st ${status(d)}"></span><b>${esc(d.doc_id)}</b><small>${sub}</small></div>`;
+  }).join("");
+  $("#list .doc.active")?.scrollIntoView({ block: "nearest" });
+}
+$("#list").onclick = e => { const d = e.target.closest(".doc"); if (d) open(d.dataset.id); };
+$("#q").oninput = renderList; $("#onlyErr").onchange = renderList;
+$("#variant").onchange = () => { variant = $("#variant").value; localStorage.setItem("ev.variant", variant); cur = null; DOCS = []; refresh(); };
+
+// ---------------- one document ----------------
+let request = 0;
+async function open(id, keepPage = false) {
+  const mine = ++request;  // a later click or refresh wins over a slow earlier answer
+  const r = await fetch(`/api/doc/${variant}/${encodeURIComponent(id)}`);
+  if (!r.ok || mine !== request) return;
+  const doc = await r.json();
+  if (mine !== request) return;
+  const changed = id !== cur;
+  cur = id; D = doc; version++;
+  if (changed && !keepPage) page = 0;
+  page = Math.min(page, D.pages.length - 1);
+  renderList(); renderDoc();
+}
+function step(delta) {
+  const docs = visibleDocs(), i = docs.findIndex(d => d.doc_id === cur);
+  const j = i < 0 ? 0 : i + delta;
+  if (j >= 0 && j < docs.length) open(docs[j].doc_id);
+}
+$("#prevDoc").onclick = () => step(-1); $("#nextDoc").onclick = () => step(1);
+
+function renderDoc() {
+  const s = D.stats, docs = visibleDocs(), i = docs.findIndex(d => d.doc_id === cur);
+  $("#prevDoc").disabled = i <= 0; $("#nextDoc").disabled = i < 0 || i >= docs.length - 1;
+  $("#docName").textContent = `${D.doc_id}`;
+  $("#docChips").innerHTML = (s ? [
+    `<span class="chip ${s.misses ? "bad" : "good"}"><b>${s.hits}/${s.required}</b>trovati</span>`,
+    s.misses ? `<span class="chip bad"><b>${s.misses}</b>mancati</span>` : "",
+    `<span class="chip ${s.fp ? "bad" : ""}"><b>${s.fp}</b>falsi positivi</span>`,
+    s.keep_lost ? `<span class="chip bad"><b>${s.keep_lost}</b>eponimi oscurati</span>` : "",
+    s.leaked?.length ? `<span class="chip bad"><b>${s.leaked.length}</b>PII nascosti non rimossi</span>` : "",
+    `<span class="chip ${s.verified ? "good" : "bad"}"><b>${s.verified ? "✓" : "✗"}</b>verifica</span>`,
+    `<span class="chip"><b>${num(s.seconds, 1)} s</b>${D.pages.length} pag.</span>`,
+  ] : [`<span class="chip"><b>…</b>non ancora valutato</span>`]).join("") + `<span class="chip">${esc(D.doc_type)}</span>`;
+  const errs = [
+    ...D.gt.filter(g => g.status === "miss").map(g => ({ k: "miss", g, t: `p${g.page + 1} · ${lab(g.label)}: ${g.text}` })),
+    ...D.pred.filter(p => p.match === "fp").map(g => ({ k: "fp", g, t: `p${g.page + 1} · FP ${lab(g.label)}: ${g.text}` })),
+    ...D.keep.filter(k => k.lost).map(g => ({ k: "fp", g, t: `p${g.page + 1} · eponimo oscurato: ${g.term}` })),
+    ...(s?.leaked || []).map(t => ({ k: "miss", g: null, t: `nascosto non rimosso: ${t}` })),
+  ];
+  $("#errors").classList.toggle("hidden", !errs.length);
+  $("#errors").innerHTML = errs.map((e, n) => `<span class="${e.k}" data-n="${n}">${esc(e.t.slice(0, 70))}</span>`).join("");
+  $("#errors").onclick = ev => {
+    const e = errs[ev.target.dataset?.n]; if (!e?.g) return;
+    page = e.g.page; render();
+    requestAnimationFrame(() => {
+      const r = e.g.rect, el = [...$$(".box")].find(b => b.dataset.r === r.join(","));
+      if (el) { el.classList.add("flash"); el.scrollIntoView({ block: "center", inline: "center" }); }
+    });
+  };
+  render();
+}
+
+function render() {
+  const p = D.pages[page], n = D.pages.length;
+  $$(".pageno").forEach(e => e.textContent = `${page + 1} / ${n}`);
+  $$(".prev").forEach(b => b.disabled = page === 0);
+  $$(".next").forEach(b => b.disabled = page >= n - 1);
+  const dpi = zoom > 1.2 ? 170 : 110, anon = $("#showAnon").checked && D.anonymized;
+  for (const [pid, which] of [["#pGt", "original"], ["#pPred", anon ? "anonymized" : "original"]]) {
+    const el = $(pid);
+    el.style.width = `${zoom * 92}%`; el.style.maxWidth = `${zoom * 820}px`;
+    el.querySelector("img").src = `/api/page/${variant}/${encodeURIComponent(D.doc_id)}/${page}?which=${which}&dpi=${dpi}&v=${version}`;
+    el.querySelectorAll(".box").forEach(b => b.remove());
+  }
+  requestAnimationFrame(() => { const w = $("#pGt").clientWidth; $$(".zoomv").forEach(e => e.textContent = Math.round(100 * w / (p.width * 96 / 72)) + "%"); });
+  const place = (cls, r, tip) => {
+    const d = document.createElement("div"); d.className = "box " + cls; d.dataset.tip = tip; d.dataset.r = r.join(",");
+    Object.assign(d.style, { left: `${100 * r[0] / p.width}%`, top: `${100 * r[1] / p.height}%`,
+      width: `${100 * (r[2] - r[0]) / p.width}%`, height: `${100 * (r[3] - r[1]) / p.height}%` });
+    return d;
+  };
+  const STATUS = { hit: "trovato", miss: "mancato", pending: "in attesa di valutazione", quasi: "quasi-identificativo (non obbligatorio)", hidden: "invisibile o non nel testo" };
+  for (const g of D.gt.filter(g => g.page === page))
+    $("#pGt").appendChild(place("g-" + g.status, g.rect,
+      `<b>${esc(lab(g.label))}</b> · ${STATUS[g.status]}<br>${esc(String(g.text).slice(0, 140))}` + (g.covered != null ? `<small>coperto al ${Math.round(100 * g.covered)}% (soglia 60%)</small>` : "")));
+  const MATCH = { tp: "corretto", fp: "falso positivo", quasi: "su un quasi-identificativo", kept: "rilevato ma non oscurato" };
+  for (const b of D.pred.filter(b => b.page === page))
+    $("#pPred").appendChild(place("p-" + b.match, b.rect,
+      `<b>${esc(lab(b.label))}</b> · ${MATCH[b.match]}<br>${esc(String(b.text).slice(0, 140))}<small>${esc(b.sources.join(", "))} · ${esc(b.layer)} · score ${num(b.score, 2)}</small>`));
+  for (const k of D.keep.filter(k => k.page === page)) {
+    $("#pGt").appendChild(place("k-keep", k.rect, `<b>Da non oscurare</b><br>${esc(k.term)}`));
+    if (k.lost) $("#pPred").appendChild(place("k-lost", k.rect, `<b>Oscurato per errore</b><br>${esc(k.term)}`));
+  }
+  const pend = $("#predPending");
+  pend.classList.toggle("hidden", !!D.stats);
+  pend.textContent = "Predizioni non ancora disponibili: avvia la valutazione (o just evaluate) e il documento si aggiornerà da solo.";
+}
+$$(".prev").forEach(b => b.onclick = () => { page = Math.max(0, page - 1); render(); });
+$$(".next").forEach(b => b.onclick = () => { page = Math.min(D.pages.length - 1, page + 1); render(); });
+$$(".zin").forEach(b => b.onclick = () => { zoom = Math.min(2.5, zoom + 0.25); render(); });
+$$(".zout").forEach(b => b.onclick = () => { zoom = Math.max(0.5, zoom - 0.25); render(); });
+$("#showAnon").onchange = render;
+$("#showQuasi").onchange = e => $$(".panes").forEach(p => p.classList.toggle("hide-quasi", !e.target.checked));
+let syncing = false;
+for (const [a, b] of [["#vGt", "#vPred"], ["#vPred", "#vGt"]])
+  $(a).addEventListener("scroll", () => { if (syncing) return; syncing = true; $(b).scrollTop = $(a).scrollTop; $(b).scrollLeft = $(a).scrollLeft; requestAnimationFrame(() => syncing = false); });
+
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input, select")) return;
+  if (e.key === "ArrowLeft") step(-1);
+  else if (e.key === "ArrowRight") step(1);
+  else if (e.key === "PageDown" && D) { e.preventDefault(); page = Math.min(D.pages.length - 1, page + 1); render(); }
+  else if (e.key === "PageUp" && D) { e.preventDefault(); page = Math.max(0, page - 1); render(); }
+  else if (e.key.toLowerCase() === "e") {
+    const docs = visibleDocs(), i = docs.findIndex(d => d.doc_id === cur);
+    const next = docs.slice(i + 1).find(d => status(d) === "err" || status(d) === "warn");
+    if (next) open(next.doc_id);
+  }
+});
+
+// ---------------- run ----------------
+$("#runBtn").onclick = () => $("#runMenu").classList.toggle("hidden");
+$("#runGo").onclick = async () => {
+  const variants = [...$$("#runMenu input:checked")].map(i => i.value);
+  if (!variants.length) return;
+  $("#runMenu").classList.add("hidden");
+  await fetch("/api/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ variants }) });
+  if (!variants.includes(variant)) { variant = variants[0]; $("#variant").value = variant; }
+  $("#follow").checked = true; refresh();
+};
+
+// tooltip
+const tip = $("#tip");
+document.addEventListener("mousemove", e => {
+  const t = e.target.closest?.(".box");
+  if (!t) { tip.classList.add("hidden"); return; }
+  tip.innerHTML = t.dataset.tip; tip.classList.remove("hidden");
+  tip.style.left = Math.min(e.clientX + 14, innerWidth - 380) + "px"; tip.style.top = e.clientY + 14 + "px";
+});
+
+refresh();
+setInterval(refresh, 2000);
+</script>
+</body>
+</html>

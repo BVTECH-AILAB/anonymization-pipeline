@@ -6,6 +6,7 @@ Everything here is invented. The only codice fiscale is the textbook
 
 import io
 import re
+from collections.abc import Callable, Sequence
 from pathlib import Path
 
 import numpy as np
@@ -134,8 +135,12 @@ class FakeOCR:
     def load(self) -> None:
         return None
 
-    def page_words(self, page: pymupdf.Page) -> list[Word]:
-        return list(self.words.get(page.number, []))
+    def pages_words(
+        self,
+        pages: Sequence[pymupdf.Page],
+        done: Callable[[int], None] | None = None,
+    ) -> list[list[Word]]:
+        return [list(self.words.get(p.number, [])) for p in pages]
 
 
 class FakeNER:

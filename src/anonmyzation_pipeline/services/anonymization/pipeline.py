@@ -1,5 +1,6 @@
 """End-to-end analysis of a PDF: text layers -> findings -> redaction boxes."""
 
+import dataclasses
 import re
 import time
 from collections.abc import Callable
@@ -185,25 +186,56 @@ class Pipeline:
             pages: list[dict] = []
             vis: list[visual.VisualFinding] = []
             ocr_words: dict[int, list[Word]] = {}
+            native: list[TextLayer | None] = []
+            # pages to OCR: scans, and native pages with grayscale clinical images
+            # (the text burned into them is read, the rest of the page is not)
+            to_read: dict[int, list[pymupdf.Rect] | None] = {}
             for page in doc:
-                progress("read", page_number(page) / len(doc))
+                pno = page_number(page)
                 scanned = is_scanned(page)
+                unrotated = page.rect * page.derotation_matrix
                 pages.append(
                     {
-                        "width": page.rect.width,
+                        "width": page.rect.width,  # as displayed
                         "height": page.rect.height,
                         "scanned": scanned,
+                        "rotation": page.rotation,
+                        # page space, where boxes live (differs on rotated pages)
+                        "page_width": unrotated.width,
+                        "page_height": unrotated.height,
                     }
                 )
+                # includes hidden OCR layers of scans: they must be redacted too
                 nl = native_layer(page)
-                if nl.tokens:
-                    layers.append(
-                        nl
-                    )  # includes hidden OCR layers of scans: they must be redacted too
+                native.append(nl if nl.tokens else None)
                 if scanned:
-                    words = self.ocr.page_words(page)
-                    ocr_words[page_number(page)] = words
-                    layers.append(ocr_layer(page_number(page), words))
+                    to_read[pno] = None
+                elif inside := [r for r, colour in visual.pictures(page) if not colour]:
+                    to_read[pno] = inside
+            progress("read", 0.0)
+            read = self.ocr.pages_words(
+                [doc[pno] for pno in to_read],
+                lambda n: progress("read", n / max(len(to_read), 1)),
+            )
+            picture_words: dict[int, list[Word]] = {}
+            for (pno, inside), words in zip(to_read.items(), read, strict=True):
+                if inside is None:
+                    ocr_words[pno] = words  # display (rotated) space
+                else:
+                    picture_words[pno] = [
+                        w
+                        for w in (_derotate_word(doc[pno], x) for x in words)
+                        if any(pymupdf.Rect(w.rect).intersects(r) for r in inside)
+                    ]
+            for page in doc:
+                pno = page_number(page)
+                if (nl := native[pno]) is not None:
+                    layers.append(nl)
+                if pno in picture_words:
+                    layers.append(ocr_layer(pno, picture_words[pno]))
+                if pno in ocr_words:
+                    words = [_derotate_word(page, w) for w in ocr_words[pno]]
+                    layers.append(ocr_layer(pno, words))
             t1 = time.perf_counter()
             progress("detect", 0.0)
             findings: list[Finding] = analyze_layers(
@@ -212,14 +244,20 @@ class Pipeline:
             t2 = time.perf_counter()
             for page in doc:
                 progress("detect", 0.6 + 0.4 * page_number(page) / len(doc))
-                vis += visual.codes(page)
+                # found on the rendering: display space, turned into page space
+                rendered = visual.codes(page)
                 if pages[page_number(page)]["scanned"]:
-                    vis += visual.unexplained_ink(page, ocr_words[page_number(page)])
-                    vis += visual.stamp_from_text(
+                    rendered += visual.unexplained_ink(
+                        page, ocr_words[page_number(page)]
+                    )
+                    rendered += visual.stamp_from_text(
                         page_number(page), ocr_words[page_number(page)]
                     )
                 else:
+                    # image and drawing positions are already in page space
                     vis += visual.embedded_images(page)
+                    vis += visual.vector_marks(page)
+                vis += [_derotate_finding(page, v) for v in rendered]
             t3 = time.perf_counter()
 
         a = Analysis(
@@ -262,10 +300,76 @@ class Pipeline:
         return a
 
 
+def to_display(rect: Rect, info: dict) -> Rect:
+    """A page-space box as shown on the rendered page (``info``: an ``Analysis.pages`` item)."""
+    x0, y0, x1, y1 = rect
+    w, h = (
+        info.get("page_width", info["width"]),
+        info.get("page_height", info["height"]),
+    )
+    rotation = info.get("rotation", 0)
+    if rotation == 90:
+        return (h - y1, x0, h - y0, x1)
+    if rotation == 180:
+        return (w - x1, h - y1, w - x0, h - y0)
+    if rotation == 270:
+        return (y0, w - x1, y1, w - x0)
+    return rect
+
+
+def from_display(rect: Rect, info: dict) -> Rect:
+    """The inverse of ``to_display``: an area drawn on the rendered page, in page space."""
+    x0, y0, x1, y1 = rect
+    w, h = (
+        info.get("page_width", info["width"]),
+        info.get("page_height", info["height"]),
+    )
+    rotation = info.get("rotation", 0)
+    if rotation == 90:
+        return (y0, h - x1, y1, h - x0)
+    if rotation == 180:
+        return (w - x1, h - y1, w - x0, h - y0)
+    if rotation == 270:
+        return (w - y1, x0, w - y0, x1)
+    return rect
+
+
+_DIRECTIONS = {"ltr": (1, 0), "rtl": (-1, 0), "ttb": (0, 1), "btt": (0, -1)}
+
+
+def _derotate_rect(page: pymupdf.Page, rect: Rect) -> Rect:
+    """A rectangle of the rendered (rotated) page in page space, where text and redaction live."""
+    if not page.rotation:
+        return rect
+    r = pymupdf.Rect(rect) * page.derotation_matrix
+    return (r.x0, r.y0, r.x1, r.y1)
+
+
+def _derotate_word(page: pymupdf.Page, w: Word) -> Word:
+    """An OCR word in page space; its reading direction turns with the page."""
+    if not page.rotation:
+        return w
+    m = page.derotation_matrix
+    dx, dy = _DIRECTIONS[w.direction]
+    vx, vy = dx * m.a + dy * m.c, dx * m.b + dy * m.d
+    direction = next(
+        k for k, (a, b) in _DIRECTIONS.items() if (a, b) == (round(vx), round(vy))
+    )
+    return dataclasses.replace(
+        w, rect=_derotate_rect(page, w.rect), direction=direction
+    )
+
+
+def _derotate_finding(
+    page: pymupdf.Page, v: visual.VisualFinding
+) -> visual.VisualFinding:
+    return dataclasses.replace(v, rect=_derotate_rect(page, v.rect))
+
+
 def _dedupe(vis: list[visual.VisualFinding]) -> list[visual.VisualFinding]:
     """Codes found by zxing win over generic image/ink findings covering the same area."""
     out: list[visual.VisualFinding] = []
-    rank = {"zxing": 0, "image": 1, "stamp-text": 2, "colour": 3, "ink": 4}
+    rank = {"zxing": 0, "image": 1, "vector": 2, "stamp-text": 3, "colour": 4, "ink": 5}
     for v in sorted(vis, key=lambda v: rank.get(v.source, 9)):
         r = pymupdf.Rect(v.rect)
         if any(

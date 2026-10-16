@@ -1,50 +1,41 @@
 """OCR, NER and visual detectors with fake models: no weights, no network."""
 
+import threading
+import time
 from pathlib import Path
-from types import SimpleNamespace
 
 import numpy as np
 import pymupdf
 import pytest
 
 from anonmyzation_pipeline.services.anonymization.detect import visual
-from anonmyzation_pipeline.services.anonymization.detect.ner import GlinerNER
+from anonmyzation_pipeline.services.anonymization.detect.ner import (
+    CombinedNER,
+    Gliner2NER,
+    GlinerNER,
+)
+from anonmyzation_pipeline.services.anonymization.device import resolve_device
+from anonmyzation_pipeline.services.anonymization.layers import Word
 from anonmyzation_pipeline.services.anonymization.ocr import (
-    DoctrOCR,
+    RapidOcrEngine,
+    parse_words,
     render_page,
-    resolve_device,
 )
 from tests.documents import letter_pdf, native_words, scanned_pdf
 
 
-def doctr_result(
-    words: list[tuple[str, float, tuple[float, float, float, float]]],
-) -> SimpleNamespace:
-    """The shape of a docTR document: pages -> blocks -> lines -> words (relative geometry)."""
-    line = SimpleNamespace(
-        words=[
-            SimpleNamespace(
-                value=t, confidence=c, geometry=((g[0], g[1]), (g[2], g[3]))
-            )
-            for t, c, g in words
-        ]
-    )
-    return SimpleNamespace(
-        pages=[SimpleNamespace(blocks=[SimpleNamespace(lines=[line])])]
-    )
-
-
-def test_doctr_words_are_mapped_to_pdf_points(tmp_path: Path) -> None:
+def test_words_are_mapped_to_pdf_points() -> None:
     calls = []
 
-    def predictor(images: list[np.ndarray]) -> SimpleNamespace:
-        calls.append(images[0].shape)
-        return doctr_result([("Rossi", 0.98, (0.1, 0.2, 0.3, 0.25))])
+    def reader(img: np.ndarray) -> list:
+        calls.append(img.shape)
+        h, w = img.shape[:2]
+        return [("Rossi", 0.98, (0.1 * w, 0.2 * h, 0.3 * w, 0.25 * h), 0)]
 
-    ocr = DoctrOCR(dpi=72, margin_pt=0, predictor=predictor)
+    ocr = RapidOcrEngine(dpi=72, margin_pt=0, reader=reader)
     with pymupdf.open() as doc:
         page = doc.new_page(width=600, height=800)
-        words = ocr.page_words(page)
+        words = ocr.pages_words([page])[0]
 
     assert ocr.ready
     assert len(calls) == 1
@@ -52,32 +43,108 @@ def test_doctr_words_are_mapped_to_pdf_points(tmp_path: Path) -> None:
     assert words[0].rect == pytest.approx((60, 160, 180, 200))
 
 
-def test_doctr_reads_rotated_margins(tmp_path: Path) -> None:
-    def predictor(images: list[np.ndarray]) -> SimpleNamespace:
-        h, w = images[0].shape[:2]
-        if w > h:  # a rotated margin strip
-            return doctr_result([("Majorana", 0.95, (0.1, 0.2, 0.4, 0.8))])
-        return doctr_result([])
+def test_pages_are_read_in_parallel_and_returned_in_order() -> None:
+    active, peak, lock = [0], [0], threading.Lock()
 
-    ocr = DoctrOCR(dpi=72, margin_pt=40, predictor=predictor)
+    def reader(img: np.ndarray) -> list:
+        with lock:
+            active[0] += 1
+            peak[0] = max(peak[0], active[0])
+        time.sleep(0.05)
+        with lock:
+            active[0] -= 1
+        return [(str(img.shape[1]), 0.9, (1, 1, 5, 5), 0)]  # width tells the page
+
+    ocr = RapidOcrEngine(dpi=72, margin_pt=0, workers=3, reader=reader)
+    progress: list[int] = []
     with pymupdf.open() as doc:
-        words = ocr.page_words(doc.new_page(width=600, height=800))
+        for i in range(7):
+            doc.new_page(width=100 + i, height=200)
+        words = ocr.pages_words(list(doc), progress.append)
 
-    vertical = [w for w in words if w.source == "doctr-vertical"]
+    assert [w[0].text for w in words] == [str(100 + i) for i in range(7)]
+    assert peak[0] > 1
+    assert progress[-1] == 7
+
+
+def test_rotated_margins_are_read() -> None:
+    def reader(img: np.ndarray) -> list:
+        h, w = img.shape[:2]
+        if w > h:  # a rotated margin strip
+            return [("Majorana", 0.95, (0.1 * w, 0.2 * h, 0.4 * w, 0.8 * h), 0)]
+        return []
+
+    ocr = RapidOcrEngine(dpi=72, margin_pt=40, reader=reader)
+    with pymupdf.open() as doc:
+        words = ocr.pages_words([doc.new_page(width=600, height=800)])[0]
+
+    vertical = [w for w in words if w.source == "ocr-vertical"]
     assert {w.text for w in vertical} == {"Majorana"}
     assert all(w.rect[2] - w.rect[0] < w.rect[3] - w.rect[1] for w in vertical)
+    assert {w.line for w in vertical} <= set(range(10_000, 30_000))
 
 
 def test_low_confidence_margin_words_are_dropped() -> None:
-    ocr = DoctrOCR(
-        dpi=72,
-        margin_pt=40,
-        predictor=lambda images: doctr_result([("x", 0.2, (0.1, 0.1, 0.2, 0.2))]),
-    )
-    with pymupdf.open() as doc:
-        words = ocr.page_words(doc.new_page(width=600, height=800))
+    def reader(img: np.ndarray) -> list:
+        h, w = img.shape[:2]
+        return [("x", 0.2, (0.1 * w, 0.1 * h, 0.2 * w, 0.2 * h), 0)]
 
-    assert all(w.source == "doctr" for w in words)
+    ocr = RapidOcrEngine(dpi=72, margin_pt=40, reader=reader)
+    with pymupdf.open() as doc:
+        words = ocr.pages_words([doc.new_page(width=600, height=800)])[0]
+
+    assert all(w.source == "ocr" for w in words)
+
+
+def test_parse_words_skips_the_empty_entries_of_a_blank_image() -> None:
+    quad = ((10, 20), (50, 20), (50, 40), (10, 40))
+    lines = ((("ROSSI", 0.9, quad),), ((),))
+
+    assert parse_words(lines) == [("ROSSI", 0.9, (10.0, 20.0, 50.0, 40.0), 0)]
+    assert parse_words(((),)) == []
+    assert parse_words((("", 1.0, None),)) == []  # RapidOCR on a blank strip
+
+
+class FakeGliner2:
+    """GLiNER2 stand-in: the shape of ``extract_entities`` with spans and confidence."""
+
+    def extract_entities(self, text: str, labels: list[str], **kwargs) -> dict:
+        start = text.index("Verdani")
+        return {
+            "entities": {
+                "person": [
+                    {
+                        "text": "Verdani",
+                        "start": start,
+                        "end": start + 7,
+                        "confidence": 0.9,
+                    }
+                ],
+                "card_cvv": [{"text": "123", "start": 0, "end": 3, "confidence": 0.9}],
+            }
+        }
+
+
+def test_gliner2_spans_are_mapped_and_unknown_labels_ignored() -> None:
+    ner = Gliner2NER(model=FakeGliner2())
+    text = "123 visita del Sig. Verdani"
+
+    spans = ner.detect(text)
+
+    assert [(s.label, text[s.start : s.end], s.source) for s in spans] == [
+        ("PERSON", "Verdani", "gliner2")
+    ]
+
+
+def test_combined_ner_joins_the_spans_and_is_ready_only_when_all_are() -> None:
+    first = Gliner2NER(model=FakeGliner2())
+    second = Gliner2NER()  # not loaded
+    combined = CombinedNER(first, second)
+
+    assert not combined.ready
+    second._model = FakeGliner2()
+    assert combined.ready
+    assert len(combined.detect("Sig. Verdani")) == 2
 
 
 def test_resolve_device() -> None:
@@ -168,8 +235,6 @@ def test_unexplained_ink_finds_a_signature_on_a_scan(tmp_path: Path) -> None:
 
 
 def test_stamp_from_text() -> None:
-    from anonmyzation_pipeline.services.anonymization.ocr import Word
-
     words = [
         Word("Dott.", (400, 100, 425, 110)),
         Word("Bianchi", (428, 100, 470, 110)),

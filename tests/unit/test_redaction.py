@@ -78,7 +78,7 @@ def test_glued_words_are_split_on_gaps(tmp_path: Path) -> None:
 
 
 def test_ocr_layer_interpolates_vertical_words() -> None:
-    layer = ocr_layer(0, [Word("ROSSI", (10, 100, 20, 150), 0.9, "doctr-vertical", 1)])
+    layer = ocr_layer(0, [Word("ROSSI", (10, 100, 20, 150), 0.9, "ocr-vertical", 1)])
 
     chars = layer.tokens[0].chars
     assert chars[0][3] == 150  # first character at the bottom

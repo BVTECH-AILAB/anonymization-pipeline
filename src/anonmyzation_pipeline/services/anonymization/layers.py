@@ -5,11 +5,25 @@ A page can have several layers (native text layer, OCR). Detection runs on
 one rectangle per line, which is what redaction needs.
 """
 
+import re
 from dataclasses import dataclass, field
 
 import pymupdf
 
 Rect = tuple[float, float, float, float]
+
+
+@dataclass
+class Word:
+    """One OCR word in PDF points (top-left origin)."""
+
+    text: str
+    rect: Rect
+    conf: float = 1.0
+    source: str = "native"
+    line: int = 0
+    # reading direction inside ``rect``: ltr, rtl, ttb (top to bottom), btt (bottom to top)
+    direction: str = "ltr"
 
 
 @dataclass
@@ -42,6 +56,7 @@ class TextLayer:
 
     @classmethod
     def build(cls, page: int, source: str, tokens: list[Token]) -> "TextLayer":
+        """Join the tokens into the layer text: a space within a line, a newline between lines."""
         parts, starts, pos, prev_line = [], [], 0, None
         for t in tokens:
             if prev_line is not None:
@@ -107,6 +122,115 @@ def _flush(
     chars.clear()
 
 
+def _cell(text: str) -> str:
+    """The character of a one-character cell ("A", "7", "1." -> "1", "|"), or ""."""
+    c = text.rstrip(".,") if len(text) == 2 else text
+    return c if len(c) == 1 and (c.isdigit() or c.isupper() or c == "|") else ""
+
+
+def merge_cells(tokens: list[Token], min_run: int = 5) -> list[Token]:
+    """Join characters written one per box ("R S S M R A ...") into one word.
+
+    Forms print the codice fiscale or the tessera sanitaria one character per
+    cell: each character is a separate word, so no rule sees the code. A run of
+    at least ``min_run`` single-character words on the same row, of similar
+    height and close together, becomes one token whose character boxes are the
+    original cells. OCR noise on a cell is tolerated: boxes of neighbouring
+    cells that overlap slightly, a trailing dot ("1."), and a cell read as "|"
+    (an "I" or a "1", resolved by the neighbouring character; codes with a check
+    character are repaired later by the rules).
+    """
+
+    def joinable(a: Token, b: Token) -> bool:
+        ax0, ay0, ax1, ay1 = a.rect
+        bx0, by0, bx1, by1 = b.rect
+        ha, hb = ay1 - ay0, by1 - by0
+        overlap = min(ay1, by1) - max(ay0, by0)
+        gap = bx0 - ax1
+        width = min(ax1 - ax0, bx1 - bx0)
+        return (
+            overlap >= 0.5 * min(ha, hb)
+            and abs(ha - hb) <= 0.35 * max(ha, hb)
+            and -max(0.5, 0.3 * width) <= gap <= 2.5 * max(ha, bx1 - bx0)
+        )
+
+    # codes are capitals and digits; single-letter words of prose ("e", "a", "o") are lowercase
+    cells = [_cell(t.text) for t in tokens]
+    out: list[Token] = []
+    i = 0
+    while i < len(tokens):
+        j = i + 1
+        if cells[i] and cells[i] != "|":
+            while (
+                j < len(tokens)
+                and cells[j]
+                and not (cells[j] == "|" and cells[j - 1] == "|")
+                and joinable(tokens[j - 1], tokens[j])
+            ):
+                j += 1
+        if j - i >= min_run:
+            run = tokens[i:j]
+            text = ""
+            for c in cells[i:j]:
+                if c == "|":
+                    c = "1" if text[-1:].isdigit() else "I"
+                text += c
+            r = pymupdf.Rect()
+            for t in run:
+                r |= t.rect
+            out.append(
+                Token(
+                    text,
+                    (r.x0, r.y0, r.x1, r.y1),
+                    [t.chars[0] if len(t.chars) == 1 else t.rect for t in run],
+                    run[0].line,
+                    run[0].source,
+                    min(t.conf for t in run),
+                )
+            )
+        else:
+            j = i + 1
+            out.append(tokens[i])
+        i = j
+    return out
+
+
+# inside a word: a capitalised word right after lower-case letters, or after a colon
+_GLUED = re.compile(
+    r"(?<=[a-zà-ÿ]{3})(?=[A-ZÀ-Ü][\wÀ-ÿ-]{2})|(?<=\w:)(?=[A-ZÀ-Ü][a-zà-ÿ]{2})"
+)
+
+
+def split_glued(tokens: list[Token]) -> list[Token]:
+    """Split words glued without spaces by a scanner's OCR layer, keeping the character boxes.
+
+    "prevpt:LindaMarshRX-550-2877" becomes "prevpt:", "Linda", "Marsh",
+    "RX-550-2877", so no detector misses a name hidden inside one word. Both parts
+    need three characters: "McDonald" and "DiMaio" stay whole.
+    """
+    out: list[Token] = []
+    for t in tokens:
+        cuts = [m.start() for m in _GLUED.finditer(t.text)]
+        if not cuts or len(t.chars) != len(t.text):
+            out.append(t)
+            continue
+        for a, b in zip([0, *cuts], [*cuts, len(t.text)], strict=True):
+            r = pymupdf.Rect()
+            for c in t.chars[a:b]:
+                r |= c
+            out.append(
+                Token(
+                    t.text[a:b],
+                    (r.x0, r.y0, r.x1, r.y1),
+                    t.chars[a:b],
+                    t.line,
+                    t.source,
+                    t.conf,
+                )
+            )
+    return out
+
+
 def native_layer(page: pymupdf.Page) -> TextLayer:
     """Tokens from the PDF text layer, with exact per-character boxes.
     Includes invisible text (white, render mode 3), which must be redacted too."""
@@ -141,26 +265,35 @@ def native_layer(page: pymupdf.Page) -> TextLayer:
                     cur_chars.append(tuple(ch["bbox"]))
             _flush(tokens, cur_txt, cur_chars, line_no)
             line_no += 1
-    return TextLayer.build(page_number(page), "native", tokens)
+    return TextLayer.build(
+        page_number(page), "native", merge_cells(split_glued(tokens))
+    )
 
 
-def ocr_layer(page_no: int, words) -> TextLayer:
-    """Tokens from OCR words; character boxes are interpolated inside the word box."""
+def is_vertical(rect: Rect | pymupdf.Rect, text: str) -> bool:
+    """True for a box of text written top-down or bottom-up (taller than wide, a real word)."""
+    r = pymupdf.Rect(rect)
+    return r.height > 1.5 * r.width and len(text) > 2
+
+
+def char_boxes(rect: Rect, n: int, direction: str) -> list[Rect]:
+    """``n`` character boxes inside a word box, in reading order."""
+    x0, y0, x1, y1 = rect
+    k = max(n, 1)
+    if direction in ("ttb", "btt"):
+        step = (y1 - y0) / k
+        boxes = [(x0, y0 + i * step, x1, y0 + (i + 1) * step) for i in range(n)]
+    else:
+        step = (x1 - x0) / k
+        boxes = [(x0 + i * step, y0, x0 + (i + 1) * step, y1) for i in range(n)]
+    return boxes[::-1] if direction in ("btt", "rtl") else boxes
+
+
+def ocr_layer(page_no: int, words: list[Word]) -> TextLayer:
+    """Tokens from OCR words; character boxes are interpolated inside the word box
+    along its reading direction."""
     tokens = []
     for w in words:
-        x0, y0, x1, y1 = w.rect
-        n = max(len(w.text), 1)
-        if (y1 - y0) > 1.5 * (
-            x1 - x0
-        ) and n > 2:  # vertical word: characters run bottom to top
-            step = (y1 - y0) / n
-            chars = [
-                (x0, y1 - (i + 1) * step, x1, y1 - i * step) for i in range(len(w.text))
-            ]
-        else:
-            step = (x1 - x0) / n
-            chars = [
-                (x0 + i * step, y0, x0 + (i + 1) * step, y1) for i in range(len(w.text))
-            ]
+        chars = char_boxes(w.rect, len(w.text), w.direction)
         tokens.append(Token(w.text, w.rect, chars, w.line, w.source, w.conf))
-    return TextLayer.build(page_no, "ocr", tokens)
+    return TextLayer.build(page_no, "ocr", merge_cells(tokens))

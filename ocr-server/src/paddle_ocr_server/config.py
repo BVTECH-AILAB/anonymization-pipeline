@@ -13,23 +13,18 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="OCRSRV_", extra="ignore")
 
     log_level: str = "INFO"
-    # rapidocr: PP-OCRv5 on ONNX Runtime, word boxes from the recogniser's character
-    # positions (best recall and precision on the gold set); paddle: PaddleOCR 3.x
-    engine: Literal["paddle", "rapidocr"] = "rapidocr"
-    # PP-OCRv5: server detector (as in the RapidOCR baseline), Latin recogniser
+    # PP-OCRv5 detector: server (default) or mobile; the recogniser is the Latin one
     det_model: str = "PP-OCRv5_server_det"
-    rec_model: str = "latin_PP-OCRv5_mobile_rec"
-    # One sub-folder per model name; empty: the PaddleX cache (downloads on first use)
+    # Where RapidOCR keeps its models; empty: its own cache (downloads on first use)
     model_dir: str = ""
     device: Literal["auto", "gpu", "cpu"] = "auto"
-    # rapidocr: CPU threads of ONNX Runtime; 0 = one per core
+    # CPU threads of ONNX Runtime; 0 = one per core
     cpu_threads: int = Field(default=4, ge=0, le=64)
-    # rapidocr on the GPU: how cuDNN picks its convolution algorithms
+    # On the GPU: memory cap of each model, in MiB (0 = none). The real peak of a
+    # 300 dpi page is about 4 GB: memory is released after every run
+    gpu_mem_limit_mb: int = Field(default=0, ge=0, le=81920)
+    # On the GPU: how cuDNN picks its convolution algorithms
     cudnn_search: Literal["HEURISTIC", "EXHAUSTIVE", "DEFAULT"] = "HEURISTIC"
-    # Long side of the image the detector sees; recognition crops the full image.
-    # paddle: without a cap, 300 dpi pages take about 20 s each on the detector.
-    # 0: no cap (the full page).
-    det_limit_side_len: int = Field(default=2400, ge=0, le=8000)
     # Side strips read again rotated by 90 degrees both ways (vertical text); 0 = off
     margin_pt: float = Field(default=60, ge=0, le=200)
     # Margin words below this confidence are dropped (as in the RapidOCR baseline)

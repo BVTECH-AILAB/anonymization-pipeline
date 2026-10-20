@@ -1,7 +1,7 @@
 [project]
 name = "paddle-ocr-server"
 version = "0.1.0"
-description = "PaddleOCR behind the LiteParse OCR API (POST /ocr), one result per word"
+description = "PP-OCRv5 (RapidOCR) behind the LiteParse OCR API (POST /ocr), one result per word"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.115",
@@ -10,15 +10,16 @@ dependencies = [
     "pydantic-settings>=2.7",
     "numpy>=2.0",
     "pillow>=11.0",
-    "paddleocr>=3.7",
+    # the version of the measured run (OpenCV 5 drops the cv2.rotate constants)
+    "opencv-python-headless>=4.10,<4.11",
+    "rapidocr>=3.10",
 ]
 
 [project.optional-dependencies]
-cpu = ["paddlepaddle>=3.3"]
-# CUDA 12.9 wheels, needed for Blackwell GPUs (sm_120)
-gpu = ["paddlepaddle-gpu>=3.3"]
-# RapidOCR engine (OCRSRV_ENGINE=rapidocr): the same PP-OCRv5 models on ONNX Runtime
-rapid = ["rapidocr>=3.10", "onnxruntime-gpu>=1.22,<1.24"]
+# ONNX Runtime: exactly one of the two
+cpu = ["onnxruntime>=1.22,<1.24"]
+# CUDA 12 and cuDNN 9 come as wheels: the host needs only the NVIDIA driver
+gpu = ["onnxruntime-gpu[cuda,cudnn]>=1.22,<1.24"]
 
 [dependency-groups]
 dev = [
@@ -29,20 +30,6 @@ dev = [
 
 [tool.uv]
 conflicts = [[{ extra = "cpu" }, { extra = "gpu" }]]
-
-[[tool.uv.index]]
-name = "paddle-cu129"
-url = "https://www.paddlepaddle.org.cn/packages/stable/cu129/"
-explicit = true
-
-[[tool.uv.index]]
-name = "paddle-cpu"
-url = "https://www.paddlepaddle.org.cn/packages/stable/cpu/"
-explicit = true
-
-[tool.uv.sources]
-paddlepaddle-gpu = { index = "paddle-cu129", extra = "gpu" }
-paddlepaddle = { index = "paddle-cpu", extra = "cpu" }
 
 [build-system]
 requires = ["hatchling"]

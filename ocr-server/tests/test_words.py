@@ -102,35 +102,3 @@ def test_rotate_back_keeps_reading_direction() -> None:
     assert tr[1] < tl[1] and tr[0] == tl[0]
     tl, tr, _, _ = rotate_back(quad, False, 20, 200, 0)
     assert tr[1] > tl[1]
-
-
-def test_recogniser_boxes_are_widened_to_whole_characters() -> None:
-    # PaddleX word boxes span CTC columns (about h/6 wide each), not glyph edges:
-    # a single digit in a 1.4 pt box. As in RapidOCR, each word covers from half a
-    # character before its first column centre to half a character after its last.
-    line_quad = ((100.0, 0.0), (130.0, 0.0), (130.0, 36.0), (100.0, 36.0))
-    ctc = ((112.0, 0.0), (118.0, 0.0), (118.0, 36.0), (112.0, 36.0))
-    (word,) = line_words(Line("8", 1.0, line_quad, [("8", ctc)]))
-    assert word[0] == "8"
-    (x0, _), (x1, _), _, _ = word[1]
-    assert (x0, x1) == (100.0, 130.0)  # the whole line: one character
-
-    line_quad = ((0.0, 0.0), (220.0, 0.0), (220.0, 30.0), (0.0, 30.0))
-    a = ((10.0, 0.0), (95.0, 0.0), (95.0, 30.0), (10.0, 30.0))
-    b = ((125.0, 0.0), (210.0, 0.0), (210.0, 30.0), (125.0, 30.0))
-    w1, w2 = line_words(
-        Line("Mario Rossi", 0.9, line_quad, [("Mario", a), ("Rossi", b)])
-    )
-    pitch = 220 / 11
-    assert w1[1][0][0] == 10 + 2.5 - pitch / 2 and w1[1][1][0] == 95 - 2.5 + pitch / 2
-    assert w2[1][1][0] == 210 - 2.5 + pitch / 2
-    assert w1[1][1][0] <= w2[1][0][0]  # no overlap
-
-
-def test_widened_boxes_stay_inside_the_line_and_apart() -> None:
-    line_quad = ((0.0, 0.0), (40.0, 0.0), (40.0, 12.0), (0.0, 12.0))
-    a = ((0.0, 0.0), (12.0, 0.0), (12.0, 12.0), (0.0, 12.0))
-    b = ((14.0, 0.0), (40.0, 0.0), (40.0, 12.0), (14.0, 12.0))
-    w1, w2 = line_words(Line("ab cde", 0.9, line_quad, [("ab", a), ("cde", b)]))
-    assert w1[1][0][0] >= 0 and w2[1][1][0] <= 40
-    assert w1[1][1][0] == w2[1][0][0]  # overlap split in the middle

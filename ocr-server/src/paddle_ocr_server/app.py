@@ -1,4 +1,4 @@
-"""LiteParse OCR API over PaddleOCR (see LiteParse ``OCR_API_SPEC.md``).
+"""LiteParse OCR API over PP-OCRv5 on RapidOCR (see LiteParse ``OCR_API_SPEC.md``).
 
 Derived from the reference server of run-llama/liteparse
 (``ocr/paddleocr/server.py``, Apache-2.0). The main difference: one result
@@ -21,7 +21,7 @@ from fastapi.responses import JSONResponse
 from PIL import Image, UnidentifiedImageError
 
 from paddle_ocr_server.config import Settings, get_settings
-from paddle_ocr_server.engine import make_engine
+from paddle_ocr_server.engine import RapidEngine
 
 logger = logging.getLogger(__name__)
 
@@ -48,10 +48,10 @@ def create_app(
 
     Args:
         settings: Server settings (default: from the environment).
-        engine: OCR engine (default: PaddleOCR, loaded at startup).
+        engine: OCR engine (default: RapidOCR, loaded at startup).
     """
     settings = settings or get_settings()
-    ocr: Engine = engine or make_engine(settings)
+    ocr: Engine = engine or RapidEngine(settings)
     max_bytes = settings.max_upload_mb * 1024 * 1024
 
     @asynccontextmanager

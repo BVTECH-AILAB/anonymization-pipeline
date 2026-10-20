@@ -6,16 +6,14 @@ import pytest
 from fastapi.testclient import TestClient
 from PIL import Image
 
+from paddle_ocr_server import engine
 from paddle_ocr_server.app import create_app
 from paddle_ocr_server.config import Settings
 from paddle_ocr_server.engine import (
-    PaddleEngine,
     RapidEngine,
-    make_engine,
     margin_results,
     page_results,
     parse_rapid,
-    parse_result,
 )
 from paddle_ocr_server.words import Line, results
 
@@ -107,23 +105,6 @@ def test_bad_image_and_engine_failure(caplog: pytest.LogCaptureFixture) -> None:
     assert SECRET not in caplog.text
 
 
-def test_parse_result_reads_paddle_mapping() -> None:
-    poly = np.array([[0, 0], [100, 0], [100, 10], [0, 10]])
-    word = ((0, 0), (40, 0), (40, 10), (0, 10))
-    res = {
-        "rec_texts": ["Mario Rossi", "x"],
-        "rec_scores": [0.9, 0.8],
-        "rec_polys": [poly, poly],
-        "text_word": [["Mario", " ", "Rossi"], ["x"]],
-        "text_word_region": [[word, word, word], []],
-    }
-    lines = parse_result(res)
-    assert [x.text for x in lines] == ["Mario Rossi", "x"]
-    assert len(lines[0].words) == 3
-    assert lines[1].words == []  # counts do not match: no word boxes
-    assert lines[0].quad[2] == (100.0, 10.0)
-
-
 def test_margin_pass_keeps_the_confident_rotation() -> None:
     img = np.zeros((300, 200, 3), np.uint8)
     upright = ((0.0, 0.0), (100.0, 0.0), (100.0, 10.0), (0.0, 10.0))
@@ -178,13 +159,147 @@ def test_rapid_result_keeps_its_word_boxes() -> None:
 
     lines = parse_rapid(Res())
     assert [line.text for line in lines] == ["Mario Rossi", "x"]
-    assert not lines[0].widen and len(lines[0].words) == 2
+    assert len(lines[0].words) == 2
     out = results(lines)
-    # recogniser boxes used as they are: no widening
+    # recogniser boxes used as they are
     assert out[0]["bbox"] == [0.0, 0.0, 45.0, 10.0]
     assert out[1]["bbox"] == [52.0, 0.0, 100.0, 10.0]
 
 
-def test_engine_chosen_by_setting() -> None:
-    assert isinstance(make_engine(Settings()), RapidEngine)  # the default
-    assert isinstance(make_engine(Settings(engine="paddle")), PaddleEngine)
+class _FakeRapid:
+    calls: list[tuple[int, ...]] = []
+    reads = ("Referto",)
+
+    def __init__(self, params: dict) -> None:
+        self.params = params
+        _FakeRapid.last_params = params
+
+    def __call__(self, img: np.ndarray, **_: object) -> object:
+        _FakeRapid.calls.append(img.shape)
+        return type("Res", (), {"txts": _FakeRapid.reads})()
+
+
+def test_load_reads_a_sample_so_health_waits_for_every_model(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # RapidOCR loads its models on the first image: without a first read /health
+    # said ready before any model was loaded or downloaded
+    monkeypatch.setattr(engine, "RapidOCR", _FakeRapid)
+    _FakeRapid.calls, _FakeRapid.reads = [], ("Referto",)
+    ocr = RapidEngine(Settings(device="cpu"))
+    ocr.load()
+    assert len(_FakeRapid.calls) == 1 and ocr.ready
+
+
+def test_load_fails_when_the_sample_reads_nothing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(engine, "RapidOCR", _FakeRapid)
+    _FakeRapid.calls, _FakeRapid.reads = [], ()
+    ocr = RapidEngine(Settings(device="cpu"))
+    with pytest.raises(RuntimeError):
+        ocr.load()
+    assert not ocr.ready
+
+
+class _FakeOrtSession:
+    def __init__(self, providers: tuple[str, ...] = ("CUDAExecutionProvider",)) -> None:
+        self.options: list[object] = []
+        self.providers = list(providers)
+
+    def get_providers(self) -> list[str]:
+        return self.providers
+
+    def run(self, names: list[str], feed: dict, run_options: object) -> list:
+        self.options.append(run_options)
+        return [names, feed]
+
+    def get_inputs(self) -> list[str]:
+        return ["x"]
+
+
+def _rapid_with_sessions(
+    providers: tuple[str, ...] = ("CUDAExecutionProvider", "CPUExecutionProvider"),
+) -> tuple[object, list[_FakeOrtSession]]:
+    sessions = [_FakeOrtSession(providers) for _ in range(3)]
+
+    def model(s: _FakeOrtSession) -> object:
+        inner = type("Inner", (), {"session": s})()
+        return type("Model", (), {"session": inner})()
+
+    ocr = type("Ocr", (), {})()
+    ocr.text_det, ocr.text_cls, ocr.text_rec = (model(s) for s in sessions)  # type: ignore[attr-defined]
+    return ocr, sessions
+
+
+def test_gpu_memory_is_released_after_every_run() -> None:
+    # without it ONNX Runtime keeps the peak of every page size: 7.8 GB on an 8 GB
+    # card for a 4 GB real peak, and nothing left for the NER models
+    ocr, sessions = _rapid_with_sessions()
+    assert engine.release_gpu_memory_after_runs(ocr) is True
+    for s, model in zip(
+        sessions, (ocr.text_det, ocr.text_cls, ocr.text_rec), strict=True
+    ):
+        assert model.session.session.run(["y"], {"x": 1}) == [["y"], {"x": 1}]
+        assert model.session.session.get_inputs() == ["x"]
+        (options,) = s.options
+        assert (
+            options.get_run_config_entry("memory.enable_memory_arena_shrinkage")
+            == "gpu:0"
+        )
+
+
+def test_gpu_memory_limit_setting() -> None:
+    assert Settings().gpu_mem_limit_mb == 0  # no cap: the real peak is about 4 GB
+    with pytest.raises(ValueError):
+        Settings(gpu_mem_limit_mb=-1)
+
+
+def test_models_that_fell_back_to_the_cpu_are_left_alone() -> None:
+    # no GPU on the node: ONNX Runtime falls back to the CPU, where a "gpu:0"
+    # shrinkage request fails every run
+    ocr, sessions = _rapid_with_sessions(("CPUExecutionProvider",))
+    assert engine.release_gpu_memory_after_runs(ocr) is False
+    assert ocr.text_det.session.session is sessions[0]
+
+
+def _no_gpu(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(engine, "RapidOCR", _FakeRapid)
+    monkeypatch.setattr(engine, "gpu_count", lambda: 0)
+    monkeypatch.setattr(
+        engine.onnxruntime,
+        "get_available_providers",
+        lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"],
+    )
+    _FakeRapid.calls, _FakeRapid.reads = [], ("Referto",)
+
+
+def test_without_a_gpu_the_cpu_is_chosen_before_loading(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    # asking ONNX Runtime for CUDA on a node without a GPU prints three
+    # "EP Error" blocks outside the log format before it falls back to the CPU
+    _no_gpu(monkeypatch)
+    caplog.set_level(logging.INFO)
+    ocr = RapidEngine(Settings(device="auto"))
+    ocr.load()
+    assert ocr.ready
+    assert "EngineConfig.onnxruntime.use_cuda" not in _FakeRapid.last_params
+    warnings = [r for r in caplog.records if r.levelno == logging.WARNING]
+    assert len(warnings) == 1 and "No usable GPU" in warnings[0].getMessage()
+
+
+def test_device_gpu_without_a_gpu_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    _no_gpu(monkeypatch)
+    ocr = RapidEngine(Settings(device="gpu"))
+    with pytest.raises(RuntimeError):
+        ocr.load()
+    assert not ocr.ready
+
+
+def test_gpu_count_without_the_nvidia_driver(monkeypatch: pytest.MonkeyPatch) -> None:
+    def missing(_: str) -> None:
+        raise OSError("libcuda.so.1: cannot open shared object file")
+
+    monkeypatch.setattr(engine.ctypes, "CDLL", missing)
+    assert engine.gpu_count() == 0

@@ -57,11 +57,11 @@ eval-ui *args:
 eval-compare *args:
     uv run python -m tools compare {{args}}
 
-# PaddleOCR server on the host, port 8829 (extra: gpu | cpu); `just dev` and `just evaluate` need it
+# OCR server on the host, port 8829 (extra: gpu | cpu); `just dev` and `just evaluate` need it
 ocr-server extra="gpu":
     cd ocr-server && VIRTUAL_ENV= uv run --extra {{extra}} python -m paddle_ocr_server
 
-# Unit tests of the OCR server (its own venv: Paddle stays out of the service)
+# Unit tests of the OCR server (its own venv: ONNX Runtime stays out of the service)
 ocr-server-test extra="gpu":
     cd ocr-server && VIRTUAL_ENV= uv run --extra {{extra}} pytest -q
 

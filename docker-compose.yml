@@ -58,29 +58,28 @@ services:
     command: >
       uvicorn anonmyzation_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src
 
-  # PaddleOCR server (LiteParse OCR API): the service reads scanned pages through it
+  # OCR server (PP-OCRv5 on RapidOCR, LiteParse OCR API): the service reads scanned pages through it
   paddle-ocr:
     build:
       context: ./ocr-server
       args:
-        # cpu works everywhere; gpu (CUDA 12.9 wheels) needs the deploy block below
-        PADDLE_EXTRA: ${PADDLE_EXTRA:-cpu}
+        # cpu works everywhere; gpu (CUDA 12 wheels) needs the deploy block below
+        OCR_EXTRA: ${OCR_EXTRA:-cpu}
     environment:
       OCRSRV_LOG_LEVEL: ${OCRSRV_LOG_LEVEL:-INFO}
       OCRSRV_DEVICE: ${OCRSRV_DEVICE:-auto}
       OCRSRV_DET_MODEL: ${OCRSRV_DET_MODEL:-PP-OCRv5_server_det}
-      OCRSRV_REC_MODEL: ${OCRSRV_REC_MODEL:-latin_PP-OCRv5_mobile_rec}
-      OCRSRV_DET_LIMIT_SIDE_LEN: ${OCRSRV_DET_LIMIT_SIDE_LEN:-2400}
       OCRSRV_MARGIN_PT: ${OCRSRV_MARGIN_PT:-60}
       OCRSRV_MARGIN_MIN_SCORE: ${OCRSRV_MARGIN_MIN_SCORE:-0.5}
       OCRSRV_MAX_UPLOAD_MB: ${OCRSRV_MAX_UPLOAD_MB:-40}
-      # empty: weights download into the PaddleX cache on first start
-      OCRSRV_MODEL_DIR: ${OCRSRV_MODEL_DIR:-}
+      OCRSRV_GPU_MEM_LIMIT_MB: ${OCRSRV_GPU_MEM_LIMIT_MB:-0}
+      # weights download there on the first start (about 90 MB)
+      OCRSRV_MODEL_DIR: ${OCRSRV_MODEL_DIR:-/models/rapidocr}
     ports:
       - "127.0.0.1:${OCR_PORT:-8829}:8829"
     volumes:
       - models:/models
-    # GPU (NVIDIA Container Toolkit, PADDLE_EXTRA=gpu): uncomment to run OCR on the GPU.
+    # GPU (NVIDIA Container Toolkit, OCR_EXTRA=gpu): uncomment to run OCR on the GPU.
     # deploy:
     #   resources:
     #     reservations:

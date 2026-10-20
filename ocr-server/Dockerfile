@@ -1,20 +1,20 @@
-# PaddleOCR behind the LiteParse OCR API (POST /ocr, GET /health), port 8829.
-# PADDLE_EXTRA=gpu (CUDA 12.9 wheels, Blackwell included; the CUDA runtime comes with
-# the wheels, the host needs only the NVIDIA driver) or cpu.
-# Model weights are read from /models/paddleocr/<model name>: mount a volume there.
+# PP-OCRv5 (RapidOCR, ONNX Runtime) behind the LiteParse OCR API (POST /ocr, GET /health),
+# port 8829. OCR_EXTRA=gpu (CUDA 12 and cuDNN 9 come with the wheels, the host needs
+# only the NVIDIA driver) or cpu.
+# Model weights are read from /models/rapidocr: mount a volume there.
 # The cluster has no internet access.
 
 FROM ghcr.io/astral-sh/uv:0.12.18 AS uv
 
 FROM python:3.12-slim AS builder
 COPY --from=uv /uv /usr/local/bin/
-ARG PADDLE_EXTRA=gpu
+ARG OCR_EXTRA=gpu
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PYTHON_DOWNLOADS=never
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --extra ${PADDLE_EXTRA} --no-install-project
+RUN uv sync --frozen --no-dev --extra ${OCR_EXTRA} --no-install-project
 COPY src ./src
-RUN uv sync --frozen --no-dev --extra ${PADDLE_EXTRA} --no-editable
+RUN uv sync --frozen --no-dev --extra ${OCR_EXTRA} --no-editable
 
 FROM python:3.12-slim AS runtime
 RUN apt-get update && apt-get upgrade -y \
@@ -27,8 +27,7 @@ COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    OCRSRV_MODEL_DIR=/models/paddleocr \
-    PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True
+    OCRSRV_MODEL_DIR=/models/rapidocr
 USER appuser
 EXPOSE 8829
 HEALTHCHECK --interval=30s --timeout=5s --start-period=120s \

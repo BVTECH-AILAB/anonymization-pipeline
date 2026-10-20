@@ -17,8 +17,8 @@ flowchart TD
     IN["Uploaded document<br/>native PDF · scanned PDF · JPG/PNG/TIFF"] --> CONV["Convert to PDF<br/>images: EXIF rotation applied"]
     CONV --> PAGE{"For each page:<br/>image covers &gt; 50% of the page?"}
 
-    PAGE -- "no: native page" --> NAT["Native text layer (LiteParse, OCR off)<br/>word boxes, character boxes interpolated<br/>(invisible / white text included,<br/>rotated pages in unrotated coordinates)"]
-    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PaddleOCR PP-OCRv5, one box per word<br/>(margins re-read rotated 90°)"]
+    PAGE -- "no: native page" --> NAT["Native text layer (pypdfium2)<br/>exact character boxes<br/>(invisible / white text and form fields included,<br/>rotated pages in unrotated coordinates)"]
+    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°)"]
     PAGE -- "yes, with hidden OCR text" --> NAT
 
     NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…"]
@@ -77,18 +77,18 @@ Detection runs on plain text; redaction runs on the PDF. The link is the
 **text layer**: page text in which every character keeps its box on the page.
 A detected span `(start, end)` becomes one rectangle per line.
 
-- **Native pages**: LiteParse (Apache-2.0, PDFium) reads the PDF text layer
-  with OCR off, so a hidden layer is never replaced by what OCR sees. It gives
-  word boxes; character boxes are interpolated inside them. Invisible text
-  (white, render mode 3) is included because it must be redacted too. Words
-  that LiteParse splits on text written at 90 degrees are rebuilt from their
-  fragments, and words glued by a scanner's OCR layer are split where a
+- **Native pages**: pypdfium2 (PDFium) reads the PDF text layer with one exact
+  box per character, from the font descender to its ascender. Invisible text
+  (white, render mode 3) is included because it must be redacted too, and so
+  are form-field values and visible annotations (read from a flattened copy).
+  Words and lines are built on the page as displayed, so a table on a rotated
+  page reads row by row. Words glued by a scanner's OCR layer are split where a
   capitalised word starts inside them ("prevpt:LindaMarshRX-550-2877" ->
   "Linda", "Marsh", "RX-550-2877"; "McDonald", "HbA1c", "SerD" stay whole).
-- **Scanned pages** (a full-page image, or images over half of the page): read
-  whole by the OCR server of `ocr-server/`, PaddleOCR PP-OCRv5 (server
-  detector, Latin recogniser, 300 DPI) behind the LiteParse OCR API. It returns
-  one box per word, widened to whole characters; vertical text in the side
+- **Scanned pages** (a full-page image, or images over half of the page, as
+  LiteParse classifies them): read whole by the OCR server of `ocr-server/`,
+  PP-OCRv5 on RapidOCR (server detector, Latin recogniser, 300 DPI) behind the
+  LiteParse OCR API. It returns one box per word; vertical text in the side
   margins (print traces, protocol numbers, wristband labels) is read by a
   second pass on the margin strips rotated by 90 degrees.
 - A scan that also carries a hidden OCR layer gets both layers: the hidden text
@@ -102,8 +102,8 @@ A detected span `(start, end)` becomes one rectangle per line.
   Only capitals and digits are joined: the single-letter words of prose stay apart.
 - Grayscale pictures embedded in a native page (X-ray, CT, ultrasound, an
   embedded scan) stay visible; the text burned into them (patient name, ID,
-  date of birth, operator, accession number) is read through LiteParse's OCR
-  call to the same server and redacted line by line like on a scan. Colour
+  date of birth, operator, accession number) is read by the same server, only
+  the words inside the picture are kept, and they are redacted like on a scan. Colour
   photos may show a person and are redacted whole (FACE).
 
 The visual detectors work on pypdfium2 page views (`pdf_pages.py`). Measured
@@ -395,7 +395,7 @@ five fewer than docTR at the same precision. Its label-agnostic AP is slightly
 lower because AP also scores box tightness and ranking, which redaction does
 not need. It is Apache 2.0. PP-OCRv5 has a larger "server" model only for
 detection; the Latin recogniser is the mobile one either way. The same models
-now run in the OCR server of `ocr-server/` (PaddleOCR 3.x), where
+now run in the OCR server of `ocr-server/` (RapidOCR on ONNX Runtime), where
 `OCRSRV_DET_MODEL=PP-OCRv5_mobile_det` trades some accuracy for speed.
 
 PP-OCRv6 scores higher than v5 in PaddleOCR's own benchmarks, but those are
@@ -409,17 +409,17 @@ boxes only, so word boxes have to be estimated.
 
 ### Speed
 
-- **Detector input size**: the OCR server caps the long side of the image the
-  detector sees at 2400 px (`OCRSRV_DET_LIMIT_SIDE_LEN`); recognition crops the
-  full 300 dpi image. Without the cap a 300 dpi page took about 20 s on the
-  detector, with it 0.7 s. The cap is the suspected cause of the remaining gap
-  on long codes in scans ([PDF_BACKEND_GAPS.md](PDF_BACKEND_GAPS.md)).
-- Measured on the 600-PDF gold set (RTX 5070 8 GB, OCR server and NER on the
-  same GPU): 1.4 s per native page, 3.0 s per scanned page, 3.3 s per scan with
-  an OCR layer, verification included.
+- **Detector input size**: RapidOCR shrinks every image to a long side of 2000
+  px before detection (its `Global.max_side_len`), so a 300 dpi A4 page reaches
+  the detector at 1984 x 1408.
+- Measured on 12 documents per variant (RTX 5070 8 GB, OCR server and NER on
+  the same GPU): 0.7 s per native page, 2.4 s per scanned page, 2.5 s per scan
+  with an OCR layer, verification included.
 - Native pages are not read by OCR, except the pictures on them (X-rays), whose
   burned-in text is read.
-- **GPU memory**: GLiNER and GLiNER2 need about 4 GB, the OCR server about 3 GB.
+- **GPU memory**: GLiNER and GLiNER2 need about 4 GB; the OCR server peaks at
+  about 4 GB per page and releases it after every run (0.3 GB idle); an
+  optional cap is `OCRSRV_GPU_MEM_LIMIT_MB` (0 = none).
   On a small GPU `ANONPIP_NER2_ENABLED=false` saves time for about 1 point of
   recall less.
 

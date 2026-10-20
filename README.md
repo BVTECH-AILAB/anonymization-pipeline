@@ -8,7 +8,7 @@ themselves with black boxes painted in (layout, colours and tables look the
 same, an invisible text layer keeps them searchable), the other pages stay as
 they are. Every output is verified before it can be downloaded (fail-closed).
 All models run on-prem, on open-source components with permissive licences
-(LiteParse, PaddleOCR, pypdfium2, pypdf; no PyMuPDF). OCR runs in a second
+(pypdfium2, pypdf, LiteParse, RapidOCR with PP-OCRv5 models; no PyMuPDF). OCR runs in a second
 service, `ocr-server/`.
 
 Generated from `agenas-python-template`: same stack, logging and privacy rules
@@ -24,8 +24,8 @@ flowchart TD
     IN["Uploaded document<br/>native PDF · scanned PDF · JPG/PNG/TIFF"] --> CONV["Convert to PDF<br/>images: EXIF rotation applied"]
     CONV --> PAGE{"For each page:<br/>image covers &gt; 50% of the page?"}
 
-    PAGE -- "no: native page" --> NAT["Native text layer (LiteParse, OCR off)<br/>word boxes, character boxes interpolated<br/>(invisible / white text included,<br/>rotated pages in unrotated coordinates)"]
-    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PaddleOCR PP-OCRv5, one box per word<br/>(margins re-read rotated 90°)"]
+    PAGE -- "no: native page" --> NAT["Native text layer (pypdfium2)<br/>exact character boxes<br/>(invisible / white text and form fields included,<br/>rotated pages in unrotated coordinates)"]
+    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°)"]
     PAGE -- "yes, with hidden OCR text" --> NAT
 
     NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…"]
@@ -79,8 +79,8 @@ flowchart TD
 ```
 
 1. **Text layers.** Every page becomes text in which each character keeps its
-   box on the page: from the PDF text layer read by LiteParse on native pages
-   (invisible text included), from the OCR server (PaddleOCR PP-OCRv5) on
+   box on the page: from the PDF text layer read by pypdfium2 on native pages
+   (invisible text and form fields included), from the OCR server (PP-OCRv5) on
    scanned pages (side margins read again rotated by 90 degrees). Lines are
    rebuilt from geometry; characters printed one per box are joined into one word.
 2. **Detection on the text.** Format rules (codice fiscale with checksum,
@@ -124,7 +124,7 @@ free port) once `/readyz` is ready. OpenAPI on `/docs` (off in prod).
 
 With Docker: `just up` starts both services (weights cached in the `models`
 volume; uncomment the GPU blocks in `docker-compose.yml` and set
-`PADDLE_EXTRA=gpu` to use an NVIDIA GPU).
+`OCR_EXTRA=gpu` to use an NVIDIA GPU).
 
 ## Commands
 
@@ -134,7 +134,7 @@ volume; uncomment the GPU blocks in `docker-compose.yml` and set
 | `just dev` | API on the host with reload |
 | `just up` / `just down` / `just logs` | Compose stack |
 | `just models` | Download the NER weights (before an offline start; the OCR server must answer) |
-| `just ocr-server [cpu]` / `just ocr-server-test` | PaddleOCR server on the host, port 8829 / its unit tests |
+| `just ocr-server [cpu]` / `just ocr-server-test` | OCR server on the host, port 8829 / its unit tests |
 | `just lint` | ruff fix + format + ty: before every commit |
 | `just check` | Same checks without fixes (what CI runs) |
 | `just test` / `just test-cov` | Unit tests / with coverage (at least 80%) |
@@ -160,7 +160,7 @@ src/anonmyzation_pipeline/
   api/anonymization.py    upload, SSE progress, edits, previews, downloads
   api/web.py              demo web page (ANONPIP_UI_ENABLED)
   services/jobs.py        job lifecycle: worker, SSE, edits, expiry, KPI events
-  services/anonymization/ engine: reader (LiteParse + OCR server), layers,
+  services/anonymization/ engine: reader (pypdfium2 text, LiteParse + OCR server), layers,
                           geometry, pdf_pages (pypdfium2 page views), pipeline,
                           release (flatten pages with boxes + pypdf rewrite),
                           verify, export_docx, device
@@ -170,7 +170,7 @@ src/anonmyzation_pipeline/
 tools/                    dev only: dataset/ generator, evaluate.py (dev/test split),
                           viewer.py (evaluation UI)
 tests/unit/               no network, no model weights (fake OCR server and NER)
-ocr-server/               PaddleOCR behind the LiteParse OCR API (own pyproject, image)
+ocr-server/               PP-OCRv5 (RapidOCR) behind the LiteParse OCR API (own pyproject, image)
 docs/                     ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
                           deploy handover
 ```
@@ -179,7 +179,7 @@ docs/                     ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and pri
 
 `just evaluate` on the whole evaluation set (`dataset/`: 200 documents, 326
 pages, each as native PDF, scan and scan with a hidden OCR layer: 600 PDFs;
-GLiNER + GLiNER2, LiteParse, PaddleOCR PP-OCRv5 server, pypdfium2 + pypdf;
+GLiNER + GLiNER2, pypdfium2 + pypdf, LiteParse, PP-OCRv5 server on RapidOCR;
 20/10/2026):
 
 | | native | scan | scan + OCR layer |

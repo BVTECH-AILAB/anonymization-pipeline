@@ -58,17 +58,17 @@ Il servizio non ha credenziali: nessun segreto da Vault.
 
 ## Secondo servizio: `paddle-ocr`
 
-Server OCR (PaddleOCR PP-OCRv5 dietro l'API OCR di LiteParse), immagine costruita
+Server OCR (modelli PP-OCRv5 su RapidOCR e ONNX Runtime, dietro l'API OCR di LiteParse), immagine costruita
 da `ocr-server/Dockerfile`. Lo chiama solo questo servizio: nessuna esposizione.
 
 | Voce | Valore |
 |---|---|
-| Immagine | `harbor.agenas.oci/agenas/paddle-ocr-server` (build arg `PADDLE_EXTRA=gpu` su nodo GPU, `cpu` altrimenti) |
+| Immagine | `harbor.agenas.oci/agenas/paddle-ocr-server` (build arg `OCR_EXTRA=gpu` su nodo GPU, `cpu` altrimenti) |
 | Porta | `8829` (nome `ocr`), Service `paddle-ocr` nello stesso namespace |
 | Liveness / readiness | `GET /health` (503 finché i modelli non sono caricati) |
-| Risorse | con GPU: 1 GPU NVIDIA (circa 3 GB), requests 1 CPU / 3Gi, limits 2 CPU / 6Gi. Su CPU funziona, più lento |
-| Modelli | volume su `/models`, sottocartelle `/models/paddleocr/PP-OCRv5_server_det` e `/models/paddleocr/latin_PP-OCRv5_mobile_rec` (`OCRSRV_MODEL_DIR=/models/paddleocr`, già nell'immagine); vanno copiate dalla cache PaddleX dopo un primo avvio con internet |
-| Variabili | `OCRSRV_DET_LIMIT_SIDE_LEN` (`2400`), `OCRSRV_MARGIN_PT` (`60`), `OCRSRV_MARGIN_MIN_SCORE` (`0.5`), `OCRSRV_MAX_UPLOAD_MB` (`40`), `OCRSRV_DEVICE` (`auto`), `OCRSRV_LOG_LEVEL` (`INFO`); nessun segreto |
+| Risorse | con GPU: 1 GPU NVIDIA (picco circa 4 GB per una pagina a 300 dpi, 0,3 GB a riposo: la memoria viene rilasciata dopo ogni lettura; tetto opzionale `OCRSRV_GPU_MEM_LIMIT_MB`, almeno 4500 se usato), requests 1 CPU / 3Gi, limits 2 CPU / 6Gi. Può condividere la GPU con il servizio (NER circa 4 GB) |
+| Modelli | volume su `/models`, cartella `/models/rapidocr` (`OCRSRV_MODEL_DIR`, già nell'immagine) con `ch_PP-OCRv5_det_server.onnx`, `latin_PP-OCRv5_rec_mobile.onnx` e `ch_ppocr_mobile_v2.0_cls_mobile.onnx` (circa 90 MB). il server li carica all'avvio leggendo un'immagine di prova e, se mancano, li scarica: popolare il volume con un primo avvio con internet, poi copiarlo. Senza modelli e senza internet il container termina all'avvio |
+| Variabili | `OCRSRV_MARGIN_PT` (`60`), `OCRSRV_MARGIN_MIN_SCORE` (`0.5`), `OCRSRV_MAX_UPLOAD_MB` (`40`), `OCRSRV_DEVICE` (`auto`: GPU se utilizzabile, altrimenti CPU con un WARNING all'avvio; `gpu`: senza GPU il container termina; `cpu`), `OCRSRV_GPU_MEM_LIMIT_MB` (`0` = nessun tetto, in MiB), `OCRSRV_LOG_LEVEL` (`INFO`); nessun segreto |
 | Dati | riceve immagini di pagine (dati sanitari): non scrive su disco e non registra il testo letto |
 
 ## Cosa fa il team piattaforma

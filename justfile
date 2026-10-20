@@ -35,7 +35,7 @@ dev:
 start:
     bash scripts/start.sh
 
-# Download the OCR and NER weights into the local caches (run once, before an offline start)
+# Download the NER weights into the local cache (run once, before an offline start; the OCR server must answer)
 models:
     uv run python -c "from anonmyzation_pipeline.config import get_settings; from anonmyzation_pipeline.main import build_pipeline, load_models; import sys; sys.exit(0 if load_models(build_pipeline(get_settings())) else 1)"
 
@@ -52,6 +52,18 @@ evaluate *args:
 # Evaluation viewer: ground truth vs predictions per document, live while evaluating
 eval-ui *args:
     uv run python -m tools viewer {{args}}
+
+# Two evaluations side by side: `just eval-compare reports_a reports_b` -> reports/comparison.md
+eval-compare *args:
+    uv run python -m tools compare {{args}}
+
+# PaddleOCR server on the host, port 8829 (extra: gpu | cpu); `just dev` and `just evaluate` need it
+ocr-server extra="gpu":
+    cd ocr-server && VIRTUAL_ENV= uv run --extra {{extra}} python -m paddle_ocr_server
+
+# Unit tests of the OCR server (its own venv: Paddle stays out of the service)
+ocr-server-test extra="gpu":
+    cd ocr-server && VIRTUAL_ENV= uv run --extra {{extra}} pytest -q
 
 # --- Quality ---
 

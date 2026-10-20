@@ -38,14 +38,13 @@ RUN pip install --no-cache-dir --upgrade "pip>=25.3" \
 WORKDIR /app
 COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
 COPY --chown=appuser:appuser scripts/entrypoint.sh ./entrypoint.sh
-# Model weights (PaddleOCR ONNX models, GLiNER) are read from /models: mount a volume there,
+# Model weights (GLiNER, GLiNER2) are read from /models: mount a volume there,
 # or pre-populate it in a derived image. The cluster has no internet access.
 RUN mkdir -p /models && chown appuser:appuser /models
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    HF_HOME=/models/huggingface \
-    ANONPIP_OCR_MODEL_DIR=/models/rapidocr
+    HF_HOME=/models/huggingface
 USER appuser
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s \

@@ -4,16 +4,22 @@ import json
 import random
 from pathlib import Path
 
-import pymupdf
+import pypdfium2 as pdfium
+from pypdf import PdfWriter
+from pypdf.annotations import Text
+from pypdf.generic import NameObject, TextStringObject
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate
 
+from anonmyzation_pipeline.services.anonymization.geometry import intersects
+from anonmyzation_pipeline.services.anonymization.pdf_pages import PageView
 from tools.dataset import scan
 from tools.dataset.docs import BUILDERS, Built
 from tools.dataset.identities import IdentityFactory
 from tools.dataset.layout import decorate
 from tools.dataset.registry import Registry, rgb_to_id
+from tools.pdf import color_spans, images, search, words
 
 # Terms that look like names but must survive anonymization.
 KEEP_TERMS = [
@@ -93,57 +99,64 @@ def add_annotation_history(path: Path, reg: Registry, built: Built) -> None:
     if p is None:
         return
     note = f"Richiamare {p.last} al {p.phone} per ritiro"
-    doc = pymupdf.open(path)
-    a = doc[0].add_text_annot((500, 120), note)
-    a.set_info(title="operatore")
-    doc.saveIncr()
-    doc[0].delete_annot(doc[0].first_annot)
-    doc.saveIncr()
-    doc.close()
+    writer = PdfWriter(path, incremental=True)
+    top = float(writer.pages[0].mediabox.top)
+    annot = Text(rect=(500, top - 140, 520, top - 120), text=note)
+    annot[NameObject("/T")] = TextStringObject("operatore")
+    writer.add_annotation(page_number=0, annotation=annot)
+    with path.open("wb") as fh:
+        writer.write(fh)
+    writer = PdfWriter(path, incremental=True)
+    del writer.pages[0][NameObject("/Annots")]
+    with path.open("wb") as fh:
+        writer.write(fh)
     reg.hidden(p.last, "PERSON", "annotation")
     reg.hidden(p.phone, "PHONE", "annotation")
 
 
 def extract_ground_truth(path: Path, reg: Registry) -> dict:
-    doc = pymupdf.open(path)
     pages, keep = [], []
-    for pno, page in enumerate(doc):
-        pages.append({"width": page.rect.width, "height": page.rect.height})
-        for block in page.get_text("dict")["blocks"]:
-            for line in block.get("lines", []):
-                for span in line["spans"]:
-                    mid = rgb_to_id(span["color"])
-                    if not mid or not span["text"].strip():
-                        continue
-                    m = reg.by_id(mid)
-                    if m is None:
-                        raise ValueError(f"unknown mention id {mid} in {path}")
-                    m.boxes.append(
-                        {
-                            "page": pno,
-                            "rect": [round(v, 2) for v in span["bbox"]],
-                            "text": span["text"],
-                        }
-                    )
-        for info in page.get_image_info(xrefs=True):
-            mid = reg.image_id(info["width"], info["height"])
-            if mid:
-                reg.by_id(mid).boxes.append(
-                    {"page": pno, "rect": [round(v, 2) for v in info["bbox"]]}
+    doc = pdfium.PdfDocument(path)
+    try:
+        for pno in range(len(doc)):
+            page = doc[pno]
+            view = PageView(page, pno)
+            pages.append({"width": view.width, "height": view.height})
+            for rect, text, rgb in color_spans(page):
+                mid = rgb_to_id(rgb)
+                if not mid or not text.strip():
+                    continue
+                m = reg.by_id(mid)
+                if m is None:
+                    raise ValueError(f"unknown mention id {mid} in {path}")
+                m.boxes.append(
+                    {"page": pno, "rect": [round(v, 2) for v in rect], "text": text}
                 )
-        pii_rects = [
-            pymupdf.Rect(b["rect"])
-            for m in reg.mentions
-            for b in m.boxes
-            if b["page"] == pno
-        ]
-        for term in KEEP_TERMS:
-            for r in page.search_for(term):
-                if not any(r.intersects(pr) for pr in pii_rects):
-                    keep.append(
-                        {"term": term, "page": pno, "rect": [round(v, 2) for v in r]}
+            for rect, width, height in images(page):
+                mid = reg.image_id(width, height)
+                if mid:
+                    reg.by_id(mid).boxes.append(
+                        {"page": pno, "rect": [round(v, 2) for v in rect]}
                     )
-    doc.close()
+            pii_rects = [
+                tuple(b["rect"])
+                for m in reg.mentions
+                for b in m.boxes
+                if b["page"] == pno
+            ]
+            for term in KEEP_TERMS:
+                for r in search(page, term):
+                    if not any(intersects(r, pr) for pr in pii_rects):
+                        keep.append(
+                            {
+                                "term": term,
+                                "page": pno,
+                                "rect": [round(v, 2) for v in r],
+                            }
+                        )
+            page.close()
+    finally:
+        doc.close()
     missing = [
         m.text for m in reg.mentions if m.kind in ("text", "image") and not m.boxes
     ]
@@ -156,18 +169,31 @@ def extract_ground_truth(path: Path, reg: Registry) -> dict:
     }
 
 
-def _layout_signature(path: Path) -> list:
-    with pymupdf.open(path) as doc:
+def _layout(path: Path) -> list[list[tuple[str, tuple[float, ...]]]]:
+    """Per page: every word and every image (by pixel size) with its box."""
+    doc = pdfium.PdfDocument(path)
+    try:
         return [
-            (
-                page.get_text("words"),
-                sorted(
-                    (i["width"], i["height"], tuple(round(v, 1) for v in i["bbox"]))
-                    for i in page.get_image_info()
-                ),
-            )
-            for page in doc
+            [(text, rect) for rect, text in words(doc[i])]
+            + sorted((f"image {w}x{h}", rect) for rect, w, h in images(doc[i]))
+            for i in range(len(doc))
         ]
+    finally:
+        doc.close()
+
+
+def same_layout(a: Path, b: Path, tol: float = 0.05) -> bool:
+    """True when ``a`` and ``b`` place the same words and images at the same
+    boxes, within ``tol`` points (pdfium positions are single precision)."""
+    la, lb = _layout(a), _layout(b)
+    return len(la) == len(lb) and all(
+        len(pa) == len(pb)
+        and all(
+            ta == tb and all(abs(x - y) <= tol for x, y in zip(ra, rb, strict=True))
+            for (ta, ra), (tb, rb) in zip(pa, pb, strict=True)
+        )
+        for pa, pb in zip(la, lb, strict=True)
+    )
 
 
 def remove_documents(out: Path, pattern: str) -> None:
@@ -232,7 +258,7 @@ def generate(
         render(built, reg, encoded)
         clean_reg, clean_built = _build(dtype, seed, i, clean=True)
         render(clean_built, clean_reg, pdf)
-        if _layout_signature(encoded) != _layout_signature(pdf):
+        if not same_layout(encoded, pdf):
             raise RuntimeError(f"clean and encoded renders differ for {doc_id}")
         if built.ctx and random.Random(seed * 13 + i).random() < 0.35:
             add_annotation_history(pdf, reg, clean_built)

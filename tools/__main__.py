@@ -17,13 +17,15 @@ import sys
 from pathlib import Path
 from typing import Annotated
 
-import pymupdf
+import pypdfium2 as pdfium
 import typer
 import uvicorn
+from PIL import Image
 
 from anonmyzation_pipeline.config import get_settings
 from anonmyzation_pipeline.logging_setup import setup_logging
 from anonmyzation_pipeline.main import build_pipeline
+from anonmyzation_pipeline.services.anonymization.pdf_pages import open_pages
 from anonmyzation_pipeline.services.anonymization.release import redact_and_verify
 from tools import evaluate as evaluation
 from tools import viewer as eval_viewer
@@ -135,12 +137,19 @@ def evaluate(
             help="all, dev or test: test (about 30% of the template families) is never used for tuning."
         ),
     ] = "all",
+    ocr_server_url: Annotated[
+        str | None,
+        typer.Option(help="OCR server (default: ANONPIP_OCR_SERVER_URL)."),
+    ] = None,
 ) -> None:
-    """Score the pipeline against the ground truth -> reports/evaluation.md."""
+    """Score the pipeline against the ground truth -> <out>/evaluation.md."""
     if split not in ("all", "dev", "test"):
         raise typer.BadParameter("split must be all, dev or test")
+    settings = get_settings()
+    if ocr_server_url:
+        settings = settings.model_copy(update={"ocr_server_url": ocr_server_url})
     reports = [
-        evaluation.evaluate(dataset, v, out, limit, split=split)
+        evaluation.evaluate(dataset, v, out, limit, split=split, settings=settings)
         for v in variants.split(",")
     ]
     (out / "evaluation.md").write_text(evaluation.to_markdown(reports))
@@ -157,6 +166,20 @@ def evaluate(
             r["seconds_per_page"],
         )
     logger.info("Full report: %s", out / "evaluation.md")
+
+
+@app.command()
+def compare(
+    baseline: Annotated[Path, typer.Argument(help="Report folder of the baseline.")],
+    candidate: Annotated[Path, typer.Argument(help="Report folder to compare.")],
+    out: Annotated[Path, typer.Option(help="Markdown file.")] = Path(
+        "reports/comparison.md"
+    ),
+) -> None:
+    """Side by side of two evaluations: deltas per variant, per type, worst documents."""
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(evaluation.compare(baseline, candidate))
+    logger.info("Comparison: %s", out)
 
 
 @app.command()
@@ -196,9 +219,12 @@ def preview(
     """Render a PDF to PNG pages."""
     out = out or pdf.with_suffix("")
     out.mkdir(parents=True, exist_ok=True)
-    with pymupdf.open(pdf) as doc:
-        for i, page in enumerate(doc):
-            page.get_pixmap(dpi=dpi).save(out / f"p{i + 1}.png")
+    doc = pdfium.PdfDocument(pdf)
+    try:
+        for view in open_pages(doc):
+            Image.fromarray(view.render(dpi)).save(out / f"p{view.number + 1}.png")
+    finally:
+        doc.close()
     logger.info("PNG pages in %s", out)
 
 

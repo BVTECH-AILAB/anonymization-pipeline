@@ -3,23 +3,63 @@ noise, blur and JPEG artefacts. Optionally adds an invisible OCR text layer,
 as scanner software does. Ground-truth boxes follow the same transform."""
 
 import copy
+import io
 import random
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 import cv2
 import numpy as np
-import pymupdf
+import pypdfium2 as pdfium
+from reportlab import rl_config
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfgen import canvas
+
+from anonmyzation_pipeline.services.anonymization.geometry import (
+    Rect,
+    intersection,
+    to_display,
+)
+from anonmyzation_pipeline.services.anonymization.pdf_pages import PageView
+from tools.pdf import words
+
+OCR_FONT = "Helvetica"
 
 
-def _transform_rect(rect, M, s: float) -> list[float]:
+def transform_rect(rect: Rect, M: np.ndarray, s: float) -> Rect:
+    """A display-space box (points) through the affine transform ``M`` of the
+    rendering at scale ``s`` (pixels per point): the bound of its four corners."""
     x0, y0, x1, y1 = (v * s for v in rect)
     pts = np.array([[x0, y0, 1], [x1, y0, 1], [x0, y1, 1], [x1, y1, 1]]) @ M.T
-    return [
+    return (
         round(float(pts[:, 0].min()) / s, 2),
         round(float(pts[:, 1].min()) / s, 2),
         round(float(pts[:, 0].max()) / s, 2),
         round(float(pts[:, 1].max()) / s, 2),
-    ]
+    )
+
+
+@contextmanager
+def _binary_streams() -> Iterator[None]:
+    """JPEG pages stored as they are, not ASCII85-encoded (a quarter smaller)."""
+    previous = rl_config.useA85  # ty: ignore[unresolved-attribute]
+    rl_config.useA85 = 0  # ty: ignore[unresolved-attribute]
+    try:
+        yield
+    finally:
+        rl_config.useA85 = previous  # ty: ignore[unresolved-attribute]
+
+
+def _ocr_text(c: canvas.Canvas, word: str, r: Rect, height: float) -> None:
+    """One invisible word (text render mode 3) on its box, baseline at 80% of it."""
+    size = max(2.0, (r[3] - r[1]) * 0.8)
+    text = c.beginText()
+    text.setTextRenderMode(3)
+    text.setFont(OCR_FONT, size)
+    text.setTextOrigin(r[0], height - (r[3] - (r[3] - r[1]) * 0.2))
+    text.textOut(word)
+    c.drawText(text)
 
 
 def _degrade(img: np.ndarray, rnd: random.Random) -> np.ndarray:
@@ -62,47 +102,56 @@ def make_scan(
         The ground truth with moved boxes and a ``scan`` entry (dpi, OCR layer,
         per-page affine transforms).
     """
-    src = pymupdf.open(native)
-    rotations = [page.rotation_matrix for page in src]  # page space -> rendering
-    out = pymupdf.open()
     dpi = rnd.choice([200, 240, 300])
     s = dpi / 72
     transforms = []
     sizes = []
-    for page in src:
-        pix = page.get_pixmap(dpi=dpi, colorspace=pymupdf.csRGB, alpha=False)
-        img = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.width, 3)
-        h, w = img.shape[:2]
-        M = cv2.getRotationMatrix2D((w / 2, h / 2), rnd.uniform(-1.6, 1.6), 1.0)
-        M[:, 2] += (rnd.uniform(-0.01, 0.01) * w, rnd.uniform(-0.01, 0.01) * h)
-        img = cv2.warpAffine(
-            img, M, (w, h), flags=cv2.INTER_LINEAR, borderValue=(250, 250, 248)
-        )
-        img = _degrade(img, rnd)
-        ok, jpg = cv2.imencode(
-            ".jpg",
-            cv2.cvtColor(img, cv2.COLOR_RGB2BGR),
-            [cv2.IMWRITE_JPEG_QUALITY, rnd.randint(55, 85)],
-        )
-        np_page = out.new_page(width=w / s, height=h / s)
-        sizes.append((np_page.rect.width, np_page.rect.height))
-        np_page.insert_image(np_page.rect, stream=jpg.tobytes())
-        if ocr_layer:
-            for x0, y0, x1, y1, word, *_ in page.get_text("words"):
-                shown = pymupdf.Rect(x0, y0, x1, y1) * page.rotation_matrix
-                r = _transform_rect(tuple(shown), M, s)
-                size = max(2.0, (r[3] - r[1]) * 0.8)
-                np_page.insert_text(
-                    (r[0], r[3] - (r[3] - r[1]) * 0.2),
-                    word,
-                    fontsize=size,
-                    render_mode=3,
+    infos = []
+    with _binary_streams():
+        c = canvas.Canvas(str(out_path), pageCompression=1)
+        c.setProducer("ScanSnap Manager 7.2")
+        c.setCreator("ScanSnap")
+        c.setTitle("")
+        c.setAuthor("")
+        src = pdfium.PdfDocument(native)
+        try:
+            for pno in range(len(src)):
+                page = src[pno]
+                view = PageView(page, pno)
+                infos.append(view.info)
+                img = view.render(dpi)
+                h, w = img.shape[:2]
+                M = cv2.getRotationMatrix2D((w / 2, h / 2), rnd.uniform(-1.6, 1.6), 1.0)
+                M[:, 2] += (rnd.uniform(-0.01, 0.01) * w, rnd.uniform(-0.01, 0.01) * h)
+                img = cv2.warpAffine(
+                    img, M, (w, h), flags=cv2.INTER_LINEAR, borderValue=(250, 250, 248)
                 )
-        transforms.append(M)
-    out.set_metadata({"producer": "ScanSnap Manager 7.2", "creator": "ScanSnap"})
-    out.save(out_path, garbage=3, deflate=True)
-    out.close()
-    src.close()
+                img = _degrade(img, rnd)
+                ok, jpg = cv2.imencode(
+                    ".jpg",
+                    cv2.cvtColor(img, cv2.COLOR_RGB2BGR),
+                    [cv2.IMWRITE_JPEG_QUALITY, rnd.randint(55, 85)],
+                )
+                width, height = w / s, h / s
+                sizes.append((width, height))
+                c.setPageSize((width, height))
+                c.drawImage(
+                    ImageReader(io.BytesIO(jpg.tobytes())),
+                    0,
+                    0,
+                    width=width,
+                    height=height,
+                )
+                if ocr_layer:
+                    for rect, word in words(page):
+                        r = transform_rect(to_display(rect, view.info), M, s)
+                        _ocr_text(c, word, r, height)
+                c.showPage()
+                transforms.append(M)
+                page.close()
+        finally:
+            src.close()
+        c.save()
 
     sgt = copy.deepcopy(gt)
     for p, (width, height) in zip(sgt["pages"], sizes, strict=True):
@@ -111,14 +160,14 @@ def make_scan(
         if m["kind"] in ("metadata", "annotation"):
             m["kind"] = "dropped"  # not carried into a scan
         for b in m["boxes"]:
-            shown = tuple(pymupdf.Rect(b["rect"]) * rotations[b["page"]])
-            moved = pymupdf.Rect(_transform_rect(shown, transforms[b["page"]], s))
+            shown = to_display(tuple(b["rect"]), infos[b["page"]])
+            moved = transform_rect(shown, transforms[b["page"]], s)
             # skew can push a box at the edge partly outside the scanned page
-            page = pymupdf.Rect(0, 0, *sizes[b["page"]])
-            b["rect"] = [round(v, 2) for v in moved & page]
+            page_rect = (0.0, 0.0, *sizes[b["page"]])
+            b["rect"] = [round(v, 2) for v in intersection(moved, page_rect)]
     for k in sgt["keep"]:
-        shown = tuple(pymupdf.Rect(k["rect"]) * rotations[k["page"]])
-        k["rect"] = _transform_rect(shown, transforms[k["page"]], s)
+        shown = to_display(tuple(k["rect"]), infos[k["page"]])
+        k["rect"] = list(transform_rect(shown, transforms[k["page"]], s))
     # per-page affine transform (pixels at `dpi`), to map native coordinates onto the scan
     sgt["scan"] = {
         "dpi": dpi,

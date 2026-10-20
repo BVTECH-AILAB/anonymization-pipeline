@@ -21,33 +21,42 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import TypedDict
 
-import pymupdf
 import torch
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from torchmetrics.detection import MeanAveragePrecision
 from torchvision.ops import nms
 
+from anonmyzation_pipeline.services.anonymization.geometry import (
+    Rect,
+    area,
+    intersects,
+    is_empty,
+    overlap_area,
+)
 
-def coverage(target: pymupdf.Rect, rects: Iterable[pymupdf.Rect]) -> float:
-    """Share of ``target`` covered by the union of ``rects`` (sampled on a 24x24 grid)."""
-    rects = list(rects)
-    if target.is_empty:
+
+def coverage(target: Rect, rects: Iterable[Rect]) -> float:
+    """Share of ``target`` covered by the union of ``rects`` (sampled on a 24x24 grid).
+
+    A sample on the right or bottom edge of a rectangle is outside it.
+    """
+    rects = [r for r in rects if not is_empty(r)]
+    if is_empty(target):
         return 1.0
+    x0, y0, x1, y1 = target
     n, hit = 24, 0
     for i in range(n):
         for j in range(n):
-            p = pymupdf.Point(
-                target.x0 + (i + 0.5) * target.width / n,
-                target.y0 + (j + 0.5) * target.height / n,
-            )
-            hit += any(r.contains(p) for r in rects)
+            x = x0 + (i + 0.5) * (x1 - x0) / n
+            y = y0 + (j + 0.5) * (y1 - y0) / n
+            hit += any(r[0] <= x < r[2] and r[1] <= y < r[3] for r in rects)
     return hit / (n * n)
 
 
-def overlap(a: pymupdf.Rect, b: pymupdf.Rect) -> float:
+def overlap(a: Rect, b: Rect) -> float:
     """Intersection area divided by the area of ``a``."""
-    area = a.get_area()
-    return (a & b).get_area() / area if area else 0.0
+    whole = area(a)
+    return overlap_area(a, b) / whole if whole else 0.0
 
 
 def binary_scores(y_true: list[int], y_pred: list[int]) -> dict[str, float | int]:
@@ -73,10 +82,10 @@ def binary_scores(y_true: list[int], y_pred: list[int]) -> dict[str, float | int
 
 
 def word_labels(
-    words: list[pymupdf.Rect],
-    pii: list[pymupdf.Rect],
-    ignore: list[pymupdf.Rect],
-    redacted: list[pymupdf.Rect],
+    words: list[Rect],
+    pii: list[Rect],
+    ignore: list[Rect],
+    redacted: list[Rect],
 ) -> tuple[list[int], list[int]]:
     """Binary labels of the words of one page.
 
@@ -93,7 +102,9 @@ def word_labels(
         if not is_pii and any(overlap(w, g) >= 0.5 for g in ignore):
             continue
         y_true.append(int(is_pii))
-        y_pred.append(int(coverage(w, [r for r in redacted if r.intersects(w)]) >= 0.5))
+        y_pred.append(
+            int(coverage(w, [r for r in redacted if intersects(r, w)]) >= 0.5)
+        )
     return y_true, y_pred
 
 
@@ -136,16 +147,16 @@ class DetectionMAP:
 
     def add_page(
         self,
-        preds: list[tuple[pymupdf.Rect, str, float]],
-        truths: list[tuple[pymupdf.Rect, str]],
-        ignore: list[tuple[pymupdf.Rect, str]],
+        preds: list[tuple[Rect, str, float]],
+        truths: list[tuple[Rect, str]],
+        ignore: list[tuple[Rect, str]],
     ) -> None:
         """One page: predictions ``(rect, label, score)``, required truths and ignore regions ``(rect, label)``."""
 
-        def boxes(rects: list[pymupdf.Rect]) -> torch.Tensor:
-            return torch.tensor(
-                [[r.x0, r.y0, r.x1, r.y1] for r in rects], dtype=torch.float32
-            ).reshape(-1, 4)
+        def boxes(rects: list[Rect]) -> torch.Tensor:
+            return torch.tensor([list(r) for r in rects], dtype=torch.float32).reshape(
+                -1, 4
+            )
 
         ids = {name: i for i, name in enumerate(self.labels)}
         if preds and self.nms_iou is not None:

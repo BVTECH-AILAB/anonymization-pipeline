@@ -3,7 +3,7 @@ import threading
 from pathlib import Path
 from types import SimpleNamespace
 
-import pymupdf
+import pypdfium2 as pdfium
 import pytest
 from fastapi.testclient import TestClient
 from tools.evaluate import _pred_view, _write_doc
@@ -43,11 +43,11 @@ def dirs(tmp_path: Path) -> tuple[Path, Path]:
     dataset, reports = tmp_path / "dataset", tmp_path / "reports"
     (dataset / "native").mkdir(parents=True)
     (dataset / "ground_truth" / "native").mkdir(parents=True)
-    doc = pymupdf.open()
-    doc.new_page()
+    doc = pdfium.PdfDocument.new()
+    doc.new_page(595, 842)
     doc.save(dataset / "native" / "e000_test.pdf")
-    rotated = pymupdf.open()
-    rotated.new_page().set_rotation(90)
+    rotated = pdfium.PdfDocument.new()
+    rotated.new_page(595, 842).set_rotation(90)
     rotated.save(dataset / "native" / "e001_rot.pdf")
     (dataset / "ground_truth" / "native" / "e000_test.json").write_text(json.dumps(GT))
     (dataset / "ground_truth" / "native" / "e001_rot.json").write_text(

@@ -6,6 +6,7 @@ per-document results that ``tools/evaluate.py`` writes to
 started here or with ``just evaluate`` shows up live. Binds to localhost.
 """
 
+import io
 import json
 import logging
 import threading
@@ -14,11 +15,15 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Annotated, Literal
 
-import pymupdf
+import pypdfium2 as pdfium
 from fastapi import FastAPI, HTTPException, Query
 from fastapi import Path as PathParam
 from fastapi.responses import HTMLResponse, Response
+from PIL import Image
 from pydantic import BaseModel, Field
+
+from anonmyzation_pipeline.services.anonymization.geometry import to_display
+from anonmyzation_pipeline.services.anonymization.pdf_pages import PageView, open_pages
 
 logger = logging.getLogger(__name__)
 
@@ -59,9 +64,10 @@ class Runner:
             self.state["running"] = False
 
 
-def _display(rect: list[float], matrix: pymupdf.Matrix) -> list[float]:
+def _display(rect: list[float], info: dict) -> list[float]:
     """Text coordinates are unrotated; the rendered page is rotated."""
-    return [round(v, 2) for v in pymupdf.Rect(rect) * matrix]
+    x0, y0, x1, y1 = rect
+    return [round(v, 2) for v in to_display((x0, y0, x1, y1), info)]
 
 
 def create_app(
@@ -101,10 +107,16 @@ def create_app(
     @lru_cache(maxsize=256)
     def render(path: Path, _mtime: float, page: int, dpi: int) -> bytes:
         """PNG of one page; ``_mtime`` keys the cache so a re-evaluated output is re-rendered."""
-        with pymupdf.open(path) as doc:
-            if not 0 <= page < doc.page_count:
+        pdf = pdfium.PdfDocument(path)
+        try:
+            if not 0 <= page < len(pdf):
                 raise HTTPException(404, "Pagina non trovata")
-            return doc[page].get_pixmap(dpi=dpi).tobytes("png")
+            img = PageView(pdf[page], page).render(dpi)
+        finally:
+            pdf.close()
+        buf = io.BytesIO()
+        Image.fromarray(img).save(buf, format="PNG")
+        return buf.getvalue()
 
     @app.get("/", response_class=HTMLResponse, include_in_schema=False)
     def index() -> HTMLResponse:
@@ -169,7 +181,7 @@ def create_app(
         gt_file = dataset / "ground_truth" / variant / f"{doc_id}.json"
         if not gt_file.is_file():
             raise HTTPException(404, "Documento non trovato")
-        rec = record(variant, doc_id)
+        rec: dict | None = record(variant, doc_id)
         if rec is None:
             gt = json.loads(gt_file.read_text())
             rec = {
@@ -194,14 +206,15 @@ def create_app(
                 "keep": [{**k, "lost": False} for k in gt["keep"]],
                 "stats": None,
             }
-        with pymupdf.open(pdf_path(variant, doc_id)) as pdf:
-            matrices = [p.rotation_matrix for p in pdf]
-            rec["pages"] = [
-                {"width": p.rect.width, "height": p.rect.height} for p in pdf
-            ]
+        pdf = pdfium.PdfDocument(pdf_path(variant, doc_id))
+        try:
+            infos = [view.info for view in open_pages(pdf)]
+        finally:
+            pdf.close()
+        rec["pages"] = [{"width": i["width"], "height": i["height"]} for i in infos]
         for key in ("gt", "pred", "keep"):
             for item in rec[key]:
-                item["rect"] = _display(item["rect"], matrices[item["page"]])
+                item["rect"] = _display(item["rect"], infos[item["page"]])
         rec["anonymized"] = (
             reports / f"anonymized_{variant}" / f"{doc_id}.pdf"
         ).is_file() and rec["stats"] is not None

@@ -1,10 +1,11 @@
-import pymupdf
 import pytest
 from tools.metrics import DetectionMAP, binary_scores, coverage, overlap, word_labels
 
+from anonmyzation_pipeline.services.anonymization.geometry import Rect
 
-def R(x0: float, y0: float, x1: float, y1: float) -> pymupdf.Rect:
-    return pymupdf.Rect(x0, y0, x1, y1)
+
+def R(x0: float, y0: float, x1: float, y1: float) -> Rect:
+    return (x0, y0, x1, y1)
 
 
 def test_binary_scores_with_true_negatives() -> None:

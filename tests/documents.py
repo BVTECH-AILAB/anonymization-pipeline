@@ -387,7 +387,6 @@ class FakeReader(LiteparseReader):
             "http://ocr.test",
             dpi=dpi,
             parser=_parser(dpi),
-            ocr_parser=lambda _: _parser(dpi),
             client=httpx.Client(
                 transport=httpx.MockTransport(lambda _: httpx.Response(200, json={}))
             ),

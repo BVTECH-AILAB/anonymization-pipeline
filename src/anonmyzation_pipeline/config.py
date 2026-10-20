@@ -48,17 +48,10 @@ class Settings(BaseSettings):
     # Check the OCR server and load NER at startup; /readyz reports 503 until both are ready
     # (retried every 30 s).
     preload_models: bool = True
-    # Text layers: LiteParse; OCR: the PaddleOCR server of ocr-server/ (LiteParse OCR
-    # API). Base URL of that server; empty: /readyz stays 503, no document is read
-    # without OCR.
+    # Native text: pypdfium2; OCR: the server of ocr-server/ (PP-OCRv5 on RapidOCR,
+    # LiteParse OCR API). Base URL of that server; empty: /readyz stays 503, no
+    # document is read without OCR.
     ocr_server_url: str = ""
-    # Native text layer: "liteparse" (word boxes, character boxes interpolated) or
-    # "pdfium" (exact character boxes from pypdfium2, glyph height as drawn).
-    native_text: Literal["liteparse", "pdfium"] = "pdfium"
-    # OCR on native pages: "liteparse" (every page with images, as LiteParse decides)
-    # or "grayscale" (only the grayscale clinical pictures, X-ray or CT, and only the
-    # words inside them; codes, signatures and photos go to the visual detectors)
-    picture_ocr: Literal["liteparse", "grayscale"] = "grayscale"
     # Resolution of the pages sent to OCR (side margins are read by the server).
     ocr_dpi: int = Field(default=300, ge=100, le=600)
     ner_enabled: bool = True

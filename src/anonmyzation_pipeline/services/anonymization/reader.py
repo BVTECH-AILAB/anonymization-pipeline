@@ -1,10 +1,10 @@
 """Text of a PDF behind one interface: per page, its geometry and text layers.
 
-``LiteparseReader``: LiteParse (PDFium) for the text layer, with word boxes,
-and its OCR integration: pages that need OCR are rendered by LiteParse and sent
-to the OCR server (``ocr-server/``, PaddleOCR behind the LiteParse OCR API).
-LiteParse skips OCR on a scan that already has a text layer: such pages are
-read here too, so a wrong scanner layer never hides the visible text.
+``LiteparseReader``: native text with exact character boxes from pypdfium2;
+LiteParse (PDFium) tells scanned pages apart and renders them for the OCR
+server (``ocr-server/``, PP-OCRv5 behind the LiteParse OCR API). A scan that
+already has a text layer is read by OCR too, so a wrong scanner layer never
+hides the visible text.
 
 Boxes of the layers are in page space (unrotated), where redaction works.
 OCR words of scanned pages are also returned in display space, for the
@@ -18,12 +18,12 @@ import math
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal, Protocol
+from typing import Any, Protocol
 
 import httpx
 import pypdfium2 as pdfium
 import pypdfium2.raw as pdfium_c
-from liteparse import LiteParse, ParsedPage, TextItem
+from liteparse import LiteParse, ParsedPage
 
 from anonmyzation_pipeline.services.anonymization.detect import visual
 from anonmyzation_pipeline.services.anonymization.geometry import (
@@ -50,14 +50,10 @@ logger = logging.getLogger(__name__)
 
 Fraction = Callable[[float], None]
 
-# LiteParse rotation -> reading direction on the display. Native text items count
-# degrees clockwise; OCR items take the counter-clockwise angle of their polygon.
 # a gap wider than this many word heights starts a new line (another cell or column):
 # measured on the native gold set against the lines of the PDF text layer: it cuts
 # 0.2% of the gaps inside a line and keeps 1.6% of the gaps between lines
 LINE_GAP = 0.8
-_NATIVE_ROTATIONS = {0: "ltr", 90: "ttb", 180: "rtl", 270: "btt"}
-_OCR_ROTATIONS = {0: "ltr", 90: "btt", 180: "rtl", 270: "ttb"}
 
 
 @dataclass
@@ -147,74 +143,6 @@ def split_words(w: Word) -> list[Word]:
         pos = b
         out.append(dataclasses.replace(w, text=part, rect=union(chars[a:b]) or w.rect))
     return out
-
-
-def _item_direction(item: TextItem) -> str:
-    if item.confidence is not None and len(item.text.strip()) < 3:
-        return "ltr"  # OCR glyphs: same rule as polygon_direction
-    table = _NATIVE_ROTATIONS if item.confidence is None else _OCR_ROTATIONS
-    return table.get(round(item.rotation) % 360, "ltr")
-
-
-def regroup_rotated(
-    boxes: list[tuple[str, Rect]], direction: str, gap: float = 0.15
-) -> list[tuple[str, Rect]]:
-    """Words of rotated text, rebuilt from the geometry of its fragments.
-
-    On text written at 90 degrees LiteParse splits words into single glyphs or
-    pieces ("RS", "SMRA85M01H501U"), and its item text has the same breaks.
-    Consecutive fragments are joined when the gap along the reading axis is
-    below ``gap`` times the line thickness.
-
-    Args:
-        boxes: Fragments ``(text, rect)`` of one text item, display space.
-        direction: Reading direction of the item.
-        gap: Largest gap between two glyphs of a word, in line thicknesses.
-
-    Returns:
-        One ``(word, rect)`` per word, in reading order.
-    """
-    vertical = direction in ("ttb", "btt")
-    reverse = direction in ("btt", "rtl")
-
-    def start(r: Rect) -> float:
-        if vertical:
-            return -r[3] if reverse else r[1]
-        return -r[2] if reverse else r[0]
-
-    def end(r: Rect) -> float:
-        if vertical:
-            return -r[1] if reverse else r[3]
-        return -r[0] if reverse else r[2]
-
-    out: list[tuple[str, Rect]] = []
-    for text, rect in sorted(boxes, key=lambda b: start(b[1])):
-        thickness = (rect[2] - rect[0]) if vertical else (rect[3] - rect[1])
-        if out and start(rect) - end(out[-1][1]) < gap * max(thickness, 1.0):
-            t, r = out[-1]
-            joined = (
-                min(r[0], rect[0]),
-                min(r[1], rect[1]),
-                max(r[2], rect[2]),
-                max(r[3], rect[3]),
-            )
-            out[-1] = (t + text, joined)
-        else:
-            out.append((text, rect))
-    return out
-
-
-def _item_words(item: TextItem) -> list[tuple[str, Rect]]:
-    """Word boxes of a text item; rotated items are regrouped from their fragments."""
-    boxes = [
-        (wb.text.strip(), (wb.x, wb.y, wb.x + wb.width, wb.y + wb.height))
-        for wb in item.words
-        if wb.text.strip()
-    ]
-    direction = _item_direction(item)
-    if direction == "ltr" or item.confidence is not None:
-        return boxes
-    return regroup_rotated(boxes, direction)
 
 
 def _next_gap(a: Word | Token, b: Word | Token) -> float | None:
@@ -411,43 +339,6 @@ class _Placed:
     direction: str
 
 
-def native_tokens(items: list[TextItem]) -> list[Token]:
-    """Tokens of the native text items of a page, in display space.
-
-    LiteParse gives one box per word; character boxes are interpolated inside
-    it, along the reading direction.
-    """
-    words = [
-        Word(text, rect, 1.0, "native", 0, _item_direction(item))
-        for item in items
-        for text, rect in _item_words(item)
-    ]
-    tokens = [
-        Token(
-            w.text,
-            w.rect,
-            char_boxes(w.rect, len(w.text), w.direction),
-            w.line,
-            "native",
-        )
-        for w in group_lines(words)
-    ]
-    return merge_cells(split_glued(tokens))
-
-
-def ocr_words(items: list[TextItem]) -> list[Word]:
-    """OCR words of a page in display space, one per LiteParse word box."""
-    out: list[Word] = []
-    for item in items:
-        direction = _item_direction(item)
-        conf = float(item.confidence or 0.0)
-        for wb in item.words:
-            rect = (wb.x, wb.y, wb.x + wb.width, wb.y + wb.height)
-            w = Word(wb.text, rect, conf, "ocr", 0, direction)
-            out += [x for x in split_words(w) if x.text]
-    return group_lines(out)
-
-
 def server_words(results: list[dict], scale: float) -> list[Word]:
     """Words of an OCR API response (pixels) in PDF points, display space."""
     out: list[Word] = []
@@ -484,14 +375,13 @@ def is_scanned_page(parsed: ParsedPage) -> bool:
 
 
 class LiteparseReader:
-    """LiteParse text layer and OCR through the LiteParse OCR API.
+    """Exact native text (pypdfium2) and OCR through the LiteParse OCR API.
 
-    The native text always comes from a parse without OCR: with OCR on,
-    LiteParse replaces a hidden text layer with what OCR sees on the scan, and
-    the hidden values would never reach the detectors (a leak). Scanned pages
-    are read whole by the OCR server; native pages
-    with pictures go through LiteParse's own OCR, which keeps only the text
-    that the text layer does not already have.
+    LiteParse parses without OCR, to tell scanned pages apart and render them:
+    with OCR on, it replaces a hidden text layer with what OCR sees on the scan,
+    and the hidden values would never reach the detectors (a leak). Scanned
+    pages are read whole by the OCR server; on native pages only the grayscale
+    clinical pictures are.
 
     Args:
         server_url: Base URL of the OCR server (``http://paddle-ocr:8829``); empty:
@@ -500,8 +390,6 @@ class LiteparseReader:
         language: Language sent to the OCR server.
         timeout: Seconds for one OCR request made here (health, scanned pages).
         parser: Injected parser without OCR (tests).
-        ocr_parser: Injected factory of OCR parsers for some pages (tests); it gets
-            LiteParse's ``target_pages`` (``"2,5"``, 1-based).
         client: Injected HTTP client (tests).
     """
 
@@ -512,9 +400,6 @@ class LiteparseReader:
         language: str = "it",
         timeout: float = 120.0,
         parser: Any = None,
-        native: Literal["liteparse", "pdfium"] = "pdfium",
-        picture_ocr: Literal["liteparse", "grayscale"] = "grayscale",
-        ocr_parser: Callable[[str], Any] | None = None,
         client: httpx.Client | None = None,
     ) -> None:
         self.server_url = server_url.rstrip("/")
@@ -522,39 +407,12 @@ class LiteparseReader:
         self.language = language
         self._client = client or httpx.Client(timeout=timeout)
         self._parser = parser
-        self.native = native
-        self.picture_ocr = picture_ocr
-        self._ocr_parser = ocr_parser or self._make_ocr_parser
         self._ready = False
 
     @property
     def ready(self) -> bool:
         """True once the OCR server has answered its health check."""
         return self._ready
-
-    def _options(self) -> dict[str, Any]:
-        return {
-            "dpi": float(self.dpi),
-            "emit_word_boxes": True,
-            "keep_headers_footers": True,
-            "preserve_very_small_text": True,
-            "skip_diagonal_text": False,
-            "include_complexity": True,
-            "max_pages": 1000,
-            "quiet": True,
-        }
-
-    def _make_ocr_parser(self, target_pages: str) -> LiteParse:
-        return LiteParse(
-            ocr_enabled=True,
-            ocr_server_url=f"{self.server_url}/ocr",
-            ocr_server_headers={"X-Render-DPI": str(self.dpi)},
-            ocr_language=self.language,
-            ocr_failure_fatal=True,
-            num_workers=1,
-            target_pages=target_pages,
-            **self._options(),
-        )
 
     def load(self) -> None:
         """Check the OCR server and build the parser.
@@ -568,7 +426,14 @@ class LiteparseReader:
         if r.status_code != 200:
             raise RuntimeError(f"OCR server not ready: status={r.status_code}")
         if self._parser is None:
-            self._parser = LiteParse(ocr_enabled=False, **self._options())
+            # page complexity (scan detection) and screenshots: its text is not used
+            self._parser = LiteParse(
+                ocr_enabled=False,
+                dpi=float(self.dpi),
+                include_complexity=True,
+                max_pages=1000,
+                quiet=True,
+            )
         self._ready = True
         logger.info("LiteParse reader ready: dpi=%d", self.dpi)
 
@@ -609,17 +474,6 @@ class LiteparseReader:
             ]
         return out
 
-    def _picture_words(self, path: Path, pages: list[int]) -> dict[int, list[Word]]:
-        """Text in the pictures of native pages, through LiteParse's OCR."""
-        if not pages:
-            return {}
-        result = self._ocr_parser(",".join(str(p + 1) for p in pages)).parse(str(path))
-        out: dict[int, list[Word]] = {}
-        for parsed in result.pages:
-            read = [i for i in parsed.text_items if i.confidence is not None]
-            out[parsed.page_num - 1] = ocr_words(read)
-        return out
-
     def read(
         self, path: Path, views: list[PageView], progress: Fraction
     ) -> list[PageText]:
@@ -633,27 +487,14 @@ class LiteparseReader:
         progress(0.0)
         result = self._parser.parse(str(path))
         scanned = [is_scanned_page(p) for p in result.pages]
-        if self.picture_ocr == "grayscale":
-            pictures = self._grayscale_picture_words(path, views, scanned)
-        else:
-            with_pictures = [
-                n
-                for n, p in enumerate(result.pages)
-                if not scanned[n]
-                and p.complexity is not None
-                and p.complexity.has_substantial_images
-            ]
-            pictures = self._picture_words(path, with_pictures)
+        pictures = self._grayscale_picture_words(path, views, scanned)
+        exact = flattened_tokens(path, views)
         out: list[PageText] = []
-        exact = flattened_tokens(path, views) if self.native == "pdfium" else {}
-        for view, parsed in zip(views, result.pages, strict=True):
+        for view in views:
             pno = view.number
             info = view.info | {"scanned": scanned[pno]}
             layers: list[TextLayer] = []
-            if self.native == "pdfium":
-                tokens = exact[pno]
-            else:
-                tokens = _to_page_space(info, native_tokens(parsed.text_items))
+            tokens = exact[pno]
             if tokens:
                 layers.append(TextLayer.build(pno, "native", tokens))
             words = self._ocr_page(path, pno) if scanned[pno] else pictures.get(pno, [])

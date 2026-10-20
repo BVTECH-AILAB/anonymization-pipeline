@@ -43,15 +43,7 @@ DPI = 150
 
 def _parser() -> LiteParse:
     # no OCR inside LiteParse: scanned pages go through the reader's own OCR call
-    return LiteParse(
-        ocr_enabled=False,
-        emit_word_boxes=True,
-        keep_headers_footers=True,
-        preserve_very_small_text=True,
-        include_complexity=True,
-        dpi=DPI,
-        quiet=True,
-    )
+    return LiteParse(ocr_enabled=False, include_complexity=True, dpi=DPI, quiet=True)
 
 
 def _client(
@@ -249,7 +241,6 @@ def test_server_words_scale_pixels_to_points() -> None:
 
 
 def test_vertical_native_text_keeps_whole_words(tmp_path: Path) -> None:
-    # LiteParse breaks text written at 90 degrees into glyphs ("RS SMRA85..."): regrouped here
     def draw(p: Page) -> None:
         p.text(30, 700, "Stampato da Mario Rossi", size=8, rotate=90)
         p.text(560, 100, f"Copia conforme {FAKE_CF}", size=8, rotate=270)
@@ -310,29 +301,6 @@ def test_hidden_layer_of_a_scan_is_kept_next_to_the_ocr(tmp_path: Path) -> None:
     assert native.source == "native" and FAKE_CF in native.text
     assert ocr.source == "ocr" and "QUALITA" in ocr.text
     assert page.info["scanned"] is True
-
-
-def test_pictures_of_native_pages_go_through_liteparse_ocr(tmp_path: Path) -> None:
-    src = letter_pdf(tmp_path / "l.pdf", qr_text="https://example.it/r", signature=True)
-    asked: list[str] = []
-
-    def factory(target_pages: str) -> LiteParse:
-        asked.append(target_pages)
-        return _parser()
-
-    reader = LiteparseReader(
-        "http://ocr.test",
-        dpi=DPI,
-        parser=_parser(),
-        ocr_parser=factory,
-        client=_client([]),
-        picture_ocr="liteparse",
-    )
-    reader.load()
-    (page,) = _read(reader, src)
-    assert asked == ["1"]
-    assert page.info["scanned"] is False and page.ocr_words is None
-    assert [layer.source for layer in page.layers] == ["native"]
 
 
 def test_overlapping_rows_of_a_form_keep_their_cells_together() -> None:
@@ -469,17 +437,9 @@ def test_exact_native_tokens_of_vertical_and_glued_text(tmp_path: Path) -> None:
     assert "Stampato da Mario Rossi" in layer.text
 
 
-def test_reader_uses_exact_native_tokens_when_asked(tmp_path: Path) -> None:
+def test_reader_reads_exact_native_tokens(tmp_path: Path) -> None:
     src = letter_pdf(tmp_path / "l.pdf")
-    reader = LiteparseReader(
-        "http://ocr.test",
-        dpi=DPI,
-        parser=_parser(),
-        client=_client([]),
-        native="pdfium",
-    )
-    reader.load()
-    (page,) = _read(reader, src)
+    (page,) = _read(_reader(), src)
     (layer,) = page.layers
     assert all(len(t.chars) == len(t.text) for t in layer.tokens)
     assert "Paziente: Mario Rossi" in layer.text
@@ -536,7 +496,6 @@ def test_grayscale_pictures_of_native_pages_are_read_inside_only(
     inside = Word(FAKE_CF, (80, 220, 200, 232), 0.9, "ocr", 0)
     outside = Word("Rossi", (400, 600, 440, 612), 0.9, "ocr", 1)
     reader = FakeReader({0: [inside, outside]})
-    reader.picture_ocr = "grayscale"
 
     (page,) = _read(reader, src)
 

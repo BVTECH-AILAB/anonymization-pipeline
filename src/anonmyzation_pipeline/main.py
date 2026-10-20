@@ -39,8 +39,6 @@ def build_reader(settings: Settings) -> TextReader:
     return LiteparseReader(
         settings.ocr_server_url,
         dpi=settings.ocr_dpi,
-        native=settings.native_text,
-        picture_ocr=settings.picture_ocr,
     )
 
 

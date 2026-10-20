@@ -1,11 +1,14 @@
-# Surgical anonymization of clinical documents
+# Anonymization of clinical documents
 
 This service implements chapter **C1 · Anonimizzazione** of the MIA AI evolutions:
 a doctor uploads a document (native PDF, scanned PDF, phone photo), the service
-finds the personal data and removes it **inside the original file**. Header,
-colours, tables, fonts and layout stay identical; only the personal data is
-replaced by black boxes. Every output is verified before it can be downloaded
-(fail-closed). Everything runs on-prem: no external service is called.
+finds the personal data and removes it from the file. Pages with personal data
+are replaced by an image of themselves with black boxes painted in (layout,
+colours and tables look identical; an invisible text layer keeps them
+searchable); pages without it stay as they are. Every output is verified before
+it can be downloaded (fail-closed). Everything runs on-prem, on open-source
+components with permissive licences (no PyMuPDF): the only other service is
+the OCR server of `ocr-server/`, deployed next to this one.
 
 ## How it works
 
@@ -14,8 +17,8 @@ flowchart TD
     IN["Uploaded document<br/>native PDF · scanned PDF · JPG/PNG/TIFF"] --> CONV["Convert to PDF<br/>images: EXIF rotation applied"]
     CONV --> PAGE{"For each page:<br/>image covers &gt; 50% of the page?"}
 
-    PAGE -- "no: native page" --> NAT["Native text layer<br/>words + per-character boxes<br/>(invisible / white text included,<br/>rotated pages in unrotated coordinates)"]
-    PAGE -- "yes: scanned page" --> OCR["PaddleOCR PP-OCRv5 (RapidOCR)<br/>words + boxes, detector on the GPU<br/>(margins re-read rotated 90°)"]
+    PAGE -- "no: native page" --> NAT["Native text layer (LiteParse, OCR off)<br/>word boxes, character boxes interpolated<br/>(invisible / white text included,<br/>rotated pages in unrotated coordinates)"]
+    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PaddleOCR PP-OCRv5, one box per word<br/>(margins re-read rotated 90°)"]
     PAGE -- "yes, with hidden OCR text" --> NAT
 
     NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…"]
@@ -51,54 +54,61 @@ flowchart TD
     BOXES --> EDIT["User edits (UI)<br/>draw area · un-redact box · search and redact"]
     EDIT --> RED
 
-    subgraph RED["Surgical redaction (PyMuPDF)"]
-        R1["Under each box:<br/>glyphs removed from the content stream,<br/>pixels blanked, covered vector art removed"]
-        R2["Black box"]
-        R3["Scrub: metadata, XMP, annotations, links,<br/>attachments, JavaScript, bookmarks, structure tree"]
-        R4["Full clean rewrite<br/>(no incremental history)"]
+    subgraph RED["Redaction (pypdfium2 + pypdf)"]
+        R1["Every occurrence of a redacted value<br/>gets a box (propagation)"]
+        R2["Pages with boxes: rendered, boxes painted,<br/>replaced by the image + invisible text<br/>of the words left"]
+        R3["Pages without boxes: copied as they are"]
+        R4["File rebuilt from the pages alone: no metadata,<br/>XMP, annotations, attachments, JavaScript,<br/>bookmarks, structure tree, history"]
         R1 --> R2 --> R3 --> R4
     end
 
     RED --> VER{"Fail-closed verification<br/>· no text left under boxes<br/>· no value in text, bytes, metadata<br/>· pixels identical outside boxes"}
-    VER -- passed --> OUT["Anonymized PDF (identical layout)<br/>+ Word with the text"]
-    VER -- "failed" --> FLAT["Failing pages only: rendered with every box painted,<br/>replaced by that image, file scrubbed again"]
-    FLAT --> VER2{"Verified again<br/>(those pages compared as images)"}
+    VER -- passed --> OUT["Anonymized PDF (identical look)<br/>+ Word with the text"]
+    VER -- "failed" --> FLAT["Values left: boxed where the check found them;<br/>failing pages without boxes: flattened too"]
+    FLAT --> VER2{"Verified again"}
     VER2 -- passed --> OUT
     VER2 -- failed --> BLOCK["Document BLOCKED<br/>not downloadable, reasons shown"]
     BLOCK -.-> EDIT
 ```
 
-### 1. Text layers (`services/anonymization/layers.py`, `ocr.py`)
+### 1. Text layers (`services/anonymization/reader.py`, `layers.py`)
 
 Detection runs on plain text; redaction runs on the PDF. The link is the
 **text layer**: page text in which every character keeps its box on the page.
 A detected span `(start, end)` becomes one rectangle per line.
 
-- **Native pages**: words and per-character boxes from the PDF text layer
-  (`rawdict`). Invisible text (white, render mode 3) is included because it
-  must be redacted too. Words written without space characters (scanner OCR
-  layers) are split on visual gaps between characters, and words glued by a
-  scanner's OCR layer are split where a capitalised word starts inside them
-  ("prevpt:LindaMarshRX-550-2877" -> "Linda", "Marsh", "RX-550-2877"; "McDonald",
-  "HbA1c", "SerD" stay whole).
-- **Scanned pages** (images cover more than half of the page): PaddleOCR
-  PP-OCRv5 (text detector plus the Latin recogniser, 300 DPI), run through
-  RapidOCR without the Paddle framework (detector on the GPU through PyTorch
-  when there is one, recogniser on ONNX Runtime; `ANONPIP_OCR_WORKERS` pages
-  at a time), gives word boxes;
-  vertical text in the side margins (print traces, protocol numbers, wristband
-  labels) is read by a second pass on the margin strips rotated by 90 degrees.
+- **Native pages**: LiteParse (Apache-2.0, PDFium) reads the PDF text layer
+  with OCR off, so a hidden layer is never replaced by what OCR sees. It gives
+  word boxes; character boxes are interpolated inside them. Invisible text
+  (white, render mode 3) is included because it must be redacted too. Words
+  that LiteParse splits on text written at 90 degrees are rebuilt from their
+  fragments, and words glued by a scanner's OCR layer are split where a
+  capitalised word starts inside them ("prevpt:LindaMarshRX-550-2877" ->
+  "Linda", "Marsh", "RX-550-2877"; "McDonald", "HbA1c", "SerD" stay whole).
+- **Scanned pages** (a full-page image, or images over half of the page): read
+  whole by the OCR server of `ocr-server/`, PaddleOCR PP-OCRv5 (server
+  detector, Latin recogniser, 300 DPI) behind the LiteParse OCR API. It returns
+  one box per word, widened to whole characters; vertical text in the side
+  margins (print traces, protocol numbers, wristband labels) is read by a
+  second pass on the margin strips rotated by 90 degrees.
 - A scan that also carries a hidden OCR layer gets both layers: the hidden text
   is redacted where it overlaps the findings.
+- Lines are rebuilt from geometry (`group_lines`): each word is chained to its
+  nearest neighbour on the same line, and lines are ordered in reading order,
+  so table cells stay apart and a label comes before its value.
 - Characters printed one per box (codice fiscale or tessera sanitaria on forms,
   "R S S M R A ...") are joined into one word whose character boxes are the
   cells (`merge_cells`), on native and OCR layers, so the rules see the code.
   Only capitals and digits are joined: the single-letter words of prose stay apart.
 - Grayscale pictures embedded in a native page (X-ray, CT, ultrasound, an
   embedded scan) stay visible; the text burned into them (patient name, ID,
-  date of birth, operator, accession number) is read by OCR and redacted line
-  by line like on a scan. Colour photos may show a person and are redacted whole
-  (FACE).
+  date of birth, operator, accession number) is read through LiteParse's OCR
+  call to the same server and redacted line by line like on a scan. Colour
+  photos may show a person and are redacted whole (FACE).
+
+The visual detectors work on pypdfium2 page views (`pdf_pages.py`). Measured
+against the former PyMuPDF + RapidOCR pipeline, and what is left to do:
+[PDF_BACKEND_GAPS.md](PDF_BACKEND_GAPS.md).
 
 ### 2. Detection (`services/anonymization/detect/`)
 
@@ -151,21 +161,23 @@ What each label covers (detectors and reviewers apply the same definition):
 | `FACE` | Photos of the patient's face. |
 | `HANDWRITING` | Handwritten notes. |
 
-### 4. Surgical redaction (`services/anonymization/redact.py`)
+### 4. Redaction (`services/anonymization/release.py`)
 
-PyMuPDF redaction annotations, applied page by page:
-
-- text: the glyphs under the box are deleted from the content stream;
-- images: only the pixels under the box are blanked;
-- vector art fully inside the box is removed (covered table backgrounds stay);
-- a black box is drawn (`ANONPIP_REDACTION_STYLE=label` writes the PII type instead);
-- native boxes are inset vertically so neighbouring lines are never clipped;
-  hand-drawn areas are snapped to the full box of every character they touch;
-- annotations and form fields are deleted, then `scrub()` removes metadata,
-  XMP, links, attachments, JavaScript and thumbnails, and the bookmarks, named
-  destinations and structure tree are dropped (they can quote the text);
-- the file is rewritten from scratch (`garbage=4`), so earlier incremental
-  versions (a note added and deleted, for example) are gone.
+- **Propagation**: every occurrence of a redacted identifier or full name gets a
+  box, also where detection missed it (glued to a label, broken by OCR, in a
+  fax header), matched as the output check matches it (whitespace ignored).
+  Occurrences the user chose to keep stay visible.
+- **Pages with a box** are rendered (pypdfium2, 200 dpi, lossless) as they are
+  displayed, the boxes painted in (`ANONPIP_REDACTION_STYLE=label` writes the
+  PII type instead of a black box), and replaced by that image on an upright
+  page: nothing of their content survives but pixels. An invisible text layer
+  with the words that touch no box keeps them searchable.
+- **Pages without boxes** are copied as they are.
+- **pypdf rebuilds the file from the pages alone**: a fresh catalog, so no
+  metadata, XMP, bookmarks, structure tree, named destinations, forms,
+  attachments, JavaScript, annotations, page extras or earlier incremental
+  versions (a note added and deleted, for example).
+- Hand-drawn areas are snapped to the full box of every character they touch.
 
 ### 5. Verification (`services/anonymization/verify.py`)
 
@@ -183,14 +195,12 @@ A document is released only if all checks pass:
    boxes are turned to the rendering first);
 6. the Word export contains none of the redacted values either.
 
-**Flatten fallback** (`release.py`). When a page fails a check, surgical
-redaction is not trusted on it: the original page is rendered at 200 dpi with
-every box to redact painted in (also the ones the surgical step could not
-apply) and replaced by that image, so nothing of its content survives but the
-pixels; the file is scrubbed again and verified again, the flattened pages
-compared with the original as images at the same resolution. The other pages
-stay native (selectable text, identical layout). The result reports which
-pages were flattened (`flattened_pages`).
+**Second pass** (`release.py`). When a check fails, a value still found in the
+output text is boxed where the check found it (the words of the output that
+spell it), a page without boxes that failed is flattened too, and the file is
+rebuilt and verified again; flattened pages are compared with the original as
+images at 200 dpi. The result reports which pages were flattened
+(`flattened_pages`).
 
 A document that still fails is blocked (409 `VERIFICATION_FAILED`) and the
 reasons are shown to the uploader. An edit marks the job unverified at once: nothing
@@ -370,8 +380,8 @@ Reading the numbers:
 
 ## OCR choice
 
-Measured end to end on the 120 scanned documents of the first dev split, with
-the current pipeline (a box is found when redaction covers 75% of it), only the
+Measured in October 2026, before the move to LiteParse, on the 120 scanned
+documents of the first dev split, with the pipeline of the time (a box is found when redaction covers 75% of it), only the
 OCR changing, on a laptop RTX 5070 (8 GB) with nothing else running:
 
 | OCR | Recall | Missed PII boxes | Precision | F1 | AP@0.5 / mAP@0.5 | s/page |
@@ -380,15 +390,13 @@ OCR changing, on a laptop RTX 5070 (8 GB) with nothing else running:
 | **PaddleOCR PP-OCRv5, server detector (RapidOCR)** | **0.900** | **426** | 0.947 | **0.923** | 0.584 / **0.571** | 4.0 |
 | PaddleOCR PP-OCRv6 medium (official package), first 90 documents | 0.750 | | 0.897 | | | 2.4 |
 
-PaddleOCR PP-OCRv5 with the server detector is the default: one missed value
-in five fewer than docTR at the same precision, for about 2 more seconds per
-page. Its label-agnostic AP is slightly lower because AP also scores box
-tightness and ranking, which redaction does not need. It is Apache 2.0 and
-installs as two ordinary packages (`rapidocr`, `onnxruntime`), without the
-Paddle framework. PP-OCRv5 has a larger "server" model only for detection; the
-Latin recogniser is the mobile one either way. `ANONPIP_OCR_MODEL_TYPE=mobile`
-halves the detection time at some loss of accuracy (recall 0.886 against 0.890
-in an earlier run at 60% coverage).
+PaddleOCR PP-OCRv5 with the server detector was chosen: one missed value in
+five fewer than docTR at the same precision. Its label-agnostic AP is slightly
+lower because AP also scores box tightness and ranking, which redaction does
+not need. It is Apache 2.0. PP-OCRv5 has a larger "server" model only for
+detection; the Latin recogniser is the mobile one either way. The same models
+now run in the OCR server of `ocr-server/` (PaddleOCR 3.x), where
+`OCRSRV_DET_MODEL=PP-OCRv5_mobile_det` trades some accuracy for speed.
 
 PP-OCRv6 scores higher than v5 in PaddleOCR's own benchmarks, but those are
 in-house sets, largely Chinese, compared with the Chinese v5 recogniser. Its
@@ -401,23 +409,19 @@ boxes only, so word boxes have to be estimated.
 
 ### Speed
 
-- **Detector on the GPU**: when `ANONPIP_DEVICE` resolves to cuda the text
-  detector runs on PyTorch with the same weights: on a test page it gave the
-  same 409 words as on CPU, in 3.4 s instead of 19 s (CPU busy at the time).
-  The recogniser stays on ONNX Runtime (CPU), the only format of the Latin model.
-- **Pages in parallel** (`ANONPIP_OCR_WORKERS`): each worker holds its own
-  engine. Two server detectors on 300 dpi pages need about 6 GB of GPU memory:
-  on the 8 GB laptop two workers filled it and ran 3.6 times slower (13.2 s per
-  page against 3.7), so the default is 1. On a larger GPU (L40S, 48 GB) measure
-  before raising it.
-- Native pages are not read by OCR, except the grayscale clinical images on
-  them (X-rays), whose burned-in text is read.
-- **GPU memory**: the OCR detector, GLiNER and GLiNER2 together need about 7.5 GB.
-  On the 8 GB laptop GPU that leaves the detector no room for 300 dpi pages and
-  it spills into system memory: scanned pages take about 12 s instead of 4 (with
-  GLiNER alone). On a larger GPU (L40S, 48 GB) everything stays resident; on a
-  small one `ANONPIP_NER2_ENABLED=false` brings scans back to about 4 s per page,
-  for about 1 point of recall less.
+- **Detector input size**: the OCR server caps the long side of the image the
+  detector sees at 2400 px (`OCRSRV_DET_LIMIT_SIDE_LEN`); recognition crops the
+  full 300 dpi image. Without the cap a 300 dpi page took about 20 s on the
+  detector, with it 0.7 s. The cap is the suspected cause of the remaining gap
+  on long codes in scans ([PDF_BACKEND_GAPS.md](PDF_BACKEND_GAPS.md)).
+- Measured on the 600-PDF gold set (RTX 5070 8 GB, OCR server and NER on the
+  same GPU): 1.4 s per native page, 3.0 s per scanned page, 3.3 s per scan with
+  an OCR layer, verification included.
+- Native pages are not read by OCR, except the pictures on them (X-rays), whose
+  burned-in text is read.
+- **GPU memory**: GLiNER and GLiNER2 need about 4 GB, the OCR server about 3 GB.
+  On a small GPU `ANONPIP_NER2_ENABLED=false` saves time for about 1 point of
+  recall less.
 
 Not adopted:
 
@@ -467,4 +471,6 @@ points at most. GLiNER2 (`gliner2`, Apache 2.0, Fastino) is loaded with
 - Reversible mode (encrypted mapping, reconstruction of the original) is out of scope.
 - Professional IDs and some phones on plain scans depend on OCR quality; the
   UI edits cover the misses.
-- PyMuPDF is AGPL: production use needs an Artifex commercial licence or AGPL compliance.
+- Pages with a box become images: the text stays searchable through an
+  invisible layer, but it is no longer vector text, and native documents grow
+  by about 45%.

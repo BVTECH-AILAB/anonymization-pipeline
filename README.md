@@ -1,12 +1,15 @@
 # anonmyzation-pipeline
 
-MIA platform service (AGENAS) for the **surgical anonymization of clinical
-documents** (evolution C1). A doctor uploads a referto, a discharge letter or a
+MIA platform service (AGENAS) for the **anonymization of clinical documents**
+(evolution C1). A doctor uploads a referto, a discharge letter or a
 prescription (native PDF, scanned PDF, photo); the service finds the personal
-data and removes it inside the original file: header, colours, tables and
-layout stay identical, only the personal data is replaced by black boxes.
-Every output is verified before it can be downloaded (fail-closed). All models
-run on-prem.
+data and removes it: pages with personal data are replaced by an image of
+themselves with black boxes painted in (layout, colours and tables look the
+same, an invisible text layer keeps them searchable), the other pages stay as
+they are. Every output is verified before it can be downloaded (fail-closed).
+All models run on-prem, on open-source components with permissive licences
+(LiteParse, PaddleOCR, pypdfium2, pypdf; no PyMuPDF). OCR runs in a second
+service, `ocr-server/`.
 
 Generated from `agenas-python-template`: same stack, logging and privacy rules
 (see `CLAUDE.md` and `docs/`). The service is stateless: no database.
@@ -21,8 +24,8 @@ flowchart TD
     IN["Uploaded document<br/>native PDF · scanned PDF · JPG/PNG/TIFF"] --> CONV["Convert to PDF<br/>images: EXIF rotation applied"]
     CONV --> PAGE{"For each page:<br/>image covers &gt; 50% of the page?"}
 
-    PAGE -- "no: native page" --> NAT["Native text layer<br/>words + per-character boxes<br/>(invisible / white text included,<br/>rotated pages in unrotated coordinates)"]
-    PAGE -- "yes: scanned page" --> OCR["PaddleOCR PP-OCRv5 (RapidOCR)<br/>words + boxes, detector on the GPU<br/>(margins re-read rotated 90°)"]
+    PAGE -- "no: native page" --> NAT["Native text layer (LiteParse, OCR off)<br/>word boxes, character boxes interpolated<br/>(invisible / white text included,<br/>rotated pages in unrotated coordinates)"]
+    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PaddleOCR PP-OCRv5, one box per word<br/>(margins re-read rotated 90°)"]
     PAGE -- "yes, with hidden OCR text" --> NAT
 
     NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…"]
@@ -58,27 +61,28 @@ flowchart TD
     BOXES --> EDIT["User edits (UI)<br/>draw area · un-redact box · search and redact"]
     EDIT --> RED
 
-    subgraph RED["Surgical redaction (PyMuPDF)"]
-        R1["Under each box:<br/>glyphs removed from the content stream,<br/>pixels blanked, covered vector art removed"]
-        R2["Black box"]
-        R3["Scrub: metadata, XMP, annotations, links,<br/>attachments, JavaScript, bookmarks, structure tree"]
-        R4["Full clean rewrite<br/>(no incremental history)"]
+    subgraph RED["Redaction (pypdfium2 + pypdf)"]
+        R1["Every occurrence of a redacted value<br/>gets a box (propagation)"]
+        R2["Pages with boxes: rendered, boxes painted,<br/>replaced by the image + invisible text<br/>of the words left"]
+        R3["Pages without boxes: copied as they are"]
+        R4["File rebuilt from the pages alone: no metadata,<br/>XMP, annotations, attachments, JavaScript,<br/>bookmarks, structure tree, history"]
         R1 --> R2 --> R3 --> R4
     end
 
     RED --> VER{"Fail-closed verification<br/>· no text left under boxes<br/>· no value in text, bytes, metadata<br/>· pixels identical outside boxes"}
-    VER -- passed --> OUT["Anonymized PDF (identical layout)<br/>+ Word with the text"]
-    VER -- "failed" --> FLAT["Failing pages only: rendered with every box painted,<br/>replaced by that image, file scrubbed again"]
-    FLAT --> VER2{"Verified again<br/>(those pages compared as images)"}
+    VER -- passed --> OUT["Anonymized PDF (identical look)<br/>+ Word with the text"]
+    VER -- "failed" --> FLAT["Values left: boxed where the check found them;<br/>failing pages without boxes: flattened too"]
+    FLAT --> VER2{"Verified again"}
     VER2 -- passed --> OUT
     VER2 -- failed --> BLOCK["Document BLOCKED<br/>not downloadable, reasons shown"]
     BLOCK -.-> EDIT
 ```
 
 1. **Text layers.** Every page becomes text in which each character keeps its
-   box on the page: from the PDF text layer on native pages (invisible text
-   included), from PaddleOCR PP-OCRv5 on scanned pages (side margins read again rotated
-   by 90 degrees). Characters printed one per box are joined into one word.
+   box on the page: from the PDF text layer read by LiteParse on native pages
+   (invisible text included), from the OCR server (PaddleOCR PP-OCRv5) on
+   scanned pages (side margins read again rotated by 90 degrees). Lines are
+   rebuilt from geometry; characters printed one per box are joined into one word.
 2. **Detection on the text.** Format rules (codice fiscale with checksum,
    tessera sanitaria, Italian and foreign phones, emails, IDs, dates,
    addresses, professional registrations), the value after a form label
@@ -91,19 +95,20 @@ flowchart TD
 4. **Boxes.** One box per line of every finding; quasi-identifiers (clinical
    dates, age, facilities) are detected but kept by default. In the web page
    the user can add an area, un-redact a box or search and redact a text.
-5. **Surgical redaction.** Inside the original PDF: glyphs under each box are
-   removed from the content stream, image pixels blanked, covered vector art
-   removed, a black box drawn; then metadata, annotations, links and
-   attachments are scrubbed and the file is rewritten from scratch.
+5. **Redaction.** Every occurrence of a redacted value gets a box. Each page
+   with a box is replaced by a rendering of itself with the boxes painted in
+   (only its pixels survive) plus an invisible text layer of the words left;
+   the other pages are copied; pypdf rebuilds the file from the pages alone
+   (no metadata, annotations, attachments, bookmarks, history).
 6. **Fail-closed verification.** Nothing readable under the boxes, no redacted
-   value anywhere in the text, file bytes or metadata, pixels identical outside
-   the boxes. A page that fails is replaced by a rendering of itself with the
-   boxes painted in (only its pixels survive) and the document is checked
-   again; if it still fails it is blocked and cannot be downloaded.
+   value anywhere in the text, file objects or metadata, pixels identical
+   outside the boxes. A value still found is boxed where the check found it and
+   the document is checked again; if it still fails it is blocked and cannot be
+   downloaded.
 
 ## Quick start
 
-Requirements: `uv`, `just`. A GPU is optional (about 4 s per scanned page on a
+Requirements: `uv`, `just`. A GPU is optional (about 3 s per scanned page on a
 laptop RTX 5070, slower on CPU; see "Speed" in [docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)).
 
 ```bash
@@ -111,12 +116,15 @@ cp .env.example .env
 just start          # deps, synthetic dataset, API + web UI on the first free port, browser
 ```
 
-`just start` downloads the OCR and NER weights on the first run, generates
+`just start` starts the OCR server (`ocr-server/`, port 8829) unless one is
+already running, downloads the OCR and NER weights on the first run, generates
 `dataset/` if it is missing, and opens `http://127.0.0.1:8000` (or the next
 free port) once `/readyz` is ready. OpenAPI on `/docs` (off in prod).
+`just dev` and `just evaluate` need the OCR server too: `just ocr-server`.
 
-With Docker: `just up` (weights cached in the `models` volume; uncomment the
-GPU block in `docker-compose.yml` to use an NVIDIA GPU).
+With Docker: `just up` starts both services (weights cached in the `models`
+volume; uncomment the GPU blocks in `docker-compose.yml` and set
+`PADDLE_EXTRA=gpu` to use an NVIDIA GPU).
 
 ## Commands
 
@@ -125,13 +133,15 @@ GPU block in `docker-compose.yml` to use an NVIDIA GPU).
 | `just start` | Local demo: API + web UI, dataset if missing, browser |
 | `just dev` | API on the host with reload |
 | `just up` / `just down` / `just logs` | Compose stack |
-| `just models` | Download the OCR and NER weights (before an offline start) |
+| `just models` | Download the NER weights (before an offline start; the OCR server must answer) |
+| `just ocr-server [cpu]` / `just ocr-server-test` | PaddleOCR server on the host, port 8829 / its unit tests |
 | `just lint` | ruff fix + format + ty: before every commit |
 | `just check` | Same checks without fixes (what CI runs) |
 | `just test` / `just test-cov` | Unit tests / with coverage (at least 80%) |
 | `just dataset [--n 7 --append]` | Synthetic dataset with ground truth -> `dataset/` |
 | `just evaluate [--split dev\|test]` | Recall, precision, AP, leaks, verification, time -> `reports/evaluation.md`; `test` is the held-out 30% of the template families, never used for tuning |
 | `just eval-ui` | Evaluation viewer on `http://127.0.0.1:8765`: ground truth vs predictions per document, live while evaluating |
+| `just eval-compare a b` | Two evaluations side by side -> `reports/comparison.md` |
 | `just audit` | Vulnerabilities in the dependencies |
 
 Developer tools are also available directly: `uv run python -m tools --help`
@@ -150,44 +160,47 @@ src/anonmyzation_pipeline/
   api/anonymization.py    upload, SSE progress, edits, previews, downloads
   api/web.py              demo web page (ANONPIP_UI_ENABLED)
   services/jobs.py        job lifecycle: worker, SSE, edits, expiry, KPI events
-  services/anonymization/ engine: layers, ocr, device, pipeline, redact,
-                          verify, release (redact + verify + flatten fallback),
-                          export_docx
+  services/anonymization/ engine: reader (LiteParse + OCR server), layers,
+                          geometry, pdf_pages (pypdfium2 page views), pipeline,
+                          release (flatten pages with boxes + pypdf rewrite),
+                          verify, export_docx, device
     detect/               rules, labels (+ labels.yaml), ner, eponyms
                           (+ eponyms.yaml), allowlist, ensemble, visual
   web/static/index.html   the page
 tools/                    dev only: dataset/ generator, evaluate.py (dev/test split),
                           viewer.py (evaluation UI)
-tests/unit/               no network, no model weights (fake OCR and NER)
-docs/                     ANONYMIZATION.md, logging and privacy, deploy handover
+tests/unit/               no network, no model weights (fake OCR server and NER)
+ocr-server/               PaddleOCR behind the LiteParse OCR API (own pyproject, image)
+docs/                     ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
+                          deploy handover
 ```
 
 ## Results
 
 `just evaluate` on the whole evaluation set (`dataset/`: 200 documents, 326
 pages, each as native PDF, scan and scan with a hidden OCR layer: 600 PDFs;
-GLiNER + GLiNER2, PaddleOCR PP-OCRv5; 16/10/2026):
+GLiNER + GLiNER2, LiteParse, PaddleOCR PP-OCRv5 server, pypdfium2 + pypdf;
+20/10/2026):
 
 | | native | scan | scan + OCR layer |
 |---|---|---|---|
-| **Recall** (box, required PII) | 0.948 | 0.915 | 0.943 |
-| **Precision** (box) | 0.971 | 0.938 | 0.906 |
-| **F1** (box) | 0.959 | 0.926 | 0.924 |
-| Precision / recall / F1 (word) | 0.946 / 0.959 / 0.952 | 0.743 / 0.932 / 0.827 | 0.698 / 0.960 / 0.808 |
-| **Accuracy** (word) | 0.988 | 0.950 | 0.942 |
-| **AP@0.5** (PII, label-agnostic) | 0.689 | 0.582 | 0.508 |
-| **mAP@0.5** (mean over PII types) | 0.680 | 0.565 | 0.558 |
-| Hidden PII leaked (white text, metadata, OCR layers) | 2/324, fixed since | n/a | 4/324, fixed since |
-| Eponyms wrongly redacted | 23/415 | 44/415 | 49/415 |
+| **Recall** (box, required PII) | 0.942 | 0.892 | 0.937 |
+| **Precision** (box) | 0.953 | 0.906 | 0.866 |
+| **F1** (box) | 0.948 | 0.899 | 0.900 |
+| Precision / recall / F1 (word) | 0.930 / 0.957 / 0.944 | 0.725 / 0.922 / 0.812 | 0.689 / 0.956 / 0.801 |
+| **Accuracy** (word) | 0.985 | 0.945 | 0.939 |
+| **AP@0.5** (PII, label-agnostic) | 0.652 | 0.588 | 0.500 |
+| **mAP@0.5** (mean over PII types) | 0.666 | 0.562 | 0.541 |
+| Hidden PII leaked (white text, metadata, OCR layers) | 0/324 | n/a | 0/324 |
+| Eponyms wrongly redacted | 32/415 | 40/415 | 49/415 |
 | Documents passing verification | 200/200 | 200/200 | 200/200 |
-| Seconds per page (laptop RTX 5070, 8 GB) | 1.2 | 7.6 | 8.0 |
+| Seconds per page (laptop RTX 5070, 8 GB) | 1.4 | 3.0 | 3.3 |
 
-The 6 hidden values left in that run (two hand-annotated worst cases: white
-text, a 4 pt footer, a scanner's OCR layer with glued and misread words) are
-fixed since: codes of the same numbering scheme, surnames glued to an initial,
-glued words split in the text layer, OCR confusions (0/o, 1/l) in propagation.
-Run `just evaluate` again to refresh the table; `--split test` scores only the
-77 held-out documents.
+Against the former PyMuPDF + RapidOCR pipeline (16/10/2026) recall is 0.6, 2.3
+and 0.7 points lower and scans are about 5 times faster; the gaps, their
+suspected causes and the next steps are in
+[docs/PDF_BACKEND_GAPS.md](docs/PDF_BACKEND_GAPS.md). Run `just evaluate` again
+to refresh the table; `--split test` scores only the 77 held-out documents.
 
 - **Box level** (scikit-learn): every required ground-truth box is found when
   redaction covers at least 75% of it; every redaction box touching no ground
@@ -210,6 +223,8 @@ every miss is listed in `reports/evaluation.md`.
 
 - The web page is for local testing and demos (Italian UI, it follows the MIA
   mockups); in the platform the doctor-facing frontend is `fe`.
-- PyMuPDF is AGPL: production use needs an Artifex commercial licence or AGPL compliance.
+- Licences: every component is open source; the licence audit and the few
+  non-permissive transitive packages left are in
+  [docs/PDF_BACKEND_GAPS.md](docs/PDF_BACKEND_GAPS.md).
 - Deploy: `docs/DEPLOY_HANDOVER.md` lists image, variables, resources and the
   model weights the platform team has to provide (the cluster has no internet access).

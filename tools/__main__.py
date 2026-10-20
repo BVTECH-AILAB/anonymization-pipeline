@@ -22,7 +22,7 @@ import typer
 import uvicorn
 from PIL import Image
 
-from anonmyzation_pipeline.config import get_settings
+from anonmyzation_pipeline.config import Settings, get_settings
 from anonmyzation_pipeline.logging_setup import setup_logging
 from anonmyzation_pipeline.main import build_pipeline
 from anonmyzation_pipeline.services.anonymization.pdf_pages import open_pages
@@ -34,6 +34,18 @@ from tools.dataset.generate import next_index, remove_documents
 
 logger = logging.getLogger("tools")
 app = typer.Typer(help="Anonymization pipeline developer tools.", no_args_is_help=True)
+
+# `just ocr-server` and `just start` serve the OCR API here
+LOCAL_OCR_SERVER = "http://127.0.0.1:8829"
+
+
+def eval_settings(ocr_server_url: str | None) -> Settings:
+    """Settings of an evaluation run: the OCR server from the option, else
+    ``ANONPIP_OCR_SERVER_URL``, else the local one (``.env.example`` leaves it empty).
+    """
+    settings = get_settings()
+    url = ocr_server_url or settings.ocr_server_url or LOCAL_OCR_SERVER
+    return settings.model_copy(update={"ocr_server_url": url})
 
 
 @app.callback()
@@ -139,15 +151,15 @@ def evaluate(
     ] = "all",
     ocr_server_url: Annotated[
         str | None,
-        typer.Option(help="OCR server (default: ANONPIP_OCR_SERVER_URL)."),
+        typer.Option(
+            help=f"OCR server (default: ANONPIP_OCR_SERVER_URL, else {LOCAL_OCR_SERVER})."
+        ),
     ] = None,
 ) -> None:
     """Score the pipeline against the ground truth -> <out>/evaluation.md."""
     if split not in ("all", "dev", "test"):
         raise typer.BadParameter("split must be all, dev or test")
-    settings = get_settings()
-    if ocr_server_url:
-        settings = settings.model_copy(update={"ocr_server_url": ocr_server_url})
+    settings = eval_settings(ocr_server_url)
     reports = [
         evaluation.evaluate(dataset, v, out, limit, split=split, settings=settings)
         for v in variants.split(",")
@@ -187,11 +199,18 @@ def viewer(
     dataset: Annotated[Path, typer.Option(help="Dataset folder.")] = Path("dataset"),
     out: Annotated[Path, typer.Option(help="Report folder.")] = Path("reports"),
     port: Annotated[int, typer.Option(help="Port on 127.0.0.1.")] = 8765,
+    ocr_server_url: Annotated[
+        str | None,
+        typer.Option(
+            help=f"OCR server of the runs started from the page (default: ANONPIP_OCR_SERVER_URL, else {LOCAL_OCR_SERVER})."
+        ),
+    ] = None,
 ) -> None:
     """Evaluation viewer: ground truth vs predictions, document by document, updated live."""
+    settings = eval_settings(ocr_server_url)
 
     def run(variant: str) -> None:
-        evaluation.evaluate(dataset, variant, out)
+        evaluation.evaluate(dataset, variant, out, settings=settings)
         reports = [
             json.loads((out / f"eval_{v}.json").read_text())
             for v in ("native", "scan", "scan_ocr")

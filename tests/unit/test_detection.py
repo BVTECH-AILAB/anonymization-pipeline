@@ -24,7 +24,7 @@ class FakeAddressNER:
         i = text.find(self.value)
         if i < 0:
             return []
-        return [Span(i, i + len(self.value), self.label, 0.9, "gliner", self.value)]
+        return [Span(i, i + len(self.value), self.label, 0.9, "ailab-ner", self.value)]
 
 
 def layer(text: str, page: int = 0) -> TextLayer:

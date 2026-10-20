@@ -35,7 +35,7 @@ dev:
 start:
     bash scripts/start.sh
 
-# Download the OCR and NER weights into the local caches (run once, before an offline start)
+# Download the OCR weights and check the NER service (run once, before an offline start)
 models:
     uv run python -c "from anonmyzation_pipeline.config import get_settings; from anonmyzation_pipeline.main import build_pipeline, load_models; import sys; sys.exit(0 if load_models(build_pipeline(get_settings())) else 1)"
 
@@ -45,13 +45,17 @@ models:
 dataset *args:
     uv run python -m tools generate {{args}}
 
+# NER timeout of evaluate and eval-ui, above the one in .env (for the API): a slow page must not
+# stop a run of hours. Change it with `EVAL_NER_TIMEOUT_SECONDS=300 just evaluate`.
+eval_ner_timeout := env("EVAL_NER_TIMEOUT_SECONDS", "120")
+
 # Score the pipeline against the ground truth -> reports/evaluation.md
 evaluate *args:
-    uv run python -m tools evaluate {{args}}
+    ANONPIP_NER_TIMEOUT_SECONDS={{eval_ner_timeout}} uv run python -m tools evaluate {{args}}
 
 # Evaluation viewer: ground truth vs predictions per document, live while evaluating
 eval-ui *args:
-    uv run python -m tools viewer {{args}}
+    ANONPIP_NER_TIMEOUT_SECONDS={{eval_ner_timeout}} uv run python -m tools viewer {{args}}
 
 # --- Quality ---
 

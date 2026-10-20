@@ -32,7 +32,7 @@ flowchart TD
     subgraph DET["PII detection (on text)"]
         RULES["Format rules<br/>tax code with checksum, health card, phones (IT, foreign, US),<br/>email, IBAN, NRE, dates, addresses, registrations, DICOM fields"]
         LABELS["Label → value (labels.yaml)<br/>Cognome: X · N. accettazione: Y · nato a Z"]
-        NER["NER: GLiNER + GLiNER2, findings joined<br/>persons, places, addresses, organizations"]
+        NER["NER: AILAB NER service (POST /batch_ner)<br/>persons, places, addresses, organizations"]
         CLEAN["Person spans cleaned<br/>titles trimmed · 'la paziente' dropped ·<br/>institutions → organisation"]
         ALLOW["Eponym filter per occurrence (eponyms.yaml)<br/>segno di Giordano ≠ Sig. Giordano · drugs · saints"]
         PROP["Document-wide propagation<br/>every value found is searched everywhere: wrapped,<br/>glued, misread by OCR, same numbering scheme"]
@@ -82,7 +82,7 @@ flowchart TD
 2. **Detection on the text.** Format rules (codice fiscale with checksum,
    tessera sanitaria, Italian and foreign phones, emails, IDs, dates,
    addresses, professional registrations), the value after a form label
-   ("Cognome:", "N. accettazione") and two NER models together (GLiNER and GLiNER2). An eponym filter decides each occurrence ("segno di Giordano"
+   ("Cognome:", "N. accettazione") and the AILAB NER service (`ANONPIP_NER_URL`, fail-closed). An eponym filter decides each occurrence ("segno di Giordano"
    stays, "Sig. Giordano" goes); every value found is searched across the
    whole document, also when wrapped, glued to other words or misread by OCR.
 3. **Detection on the pixels and drawings.** Barcodes and QR codes, signatures
@@ -111,7 +111,7 @@ cp .env.example .env
 just start          # deps, synthetic dataset, API + web UI on the first free port, browser
 ```
 
-`just start` downloads the OCR and NER weights on the first run, generates
+`just start` downloads the OCR weights on the first run (NER: set `ANONPIP_NER_URL`), generates
 `dataset/` if it is missing, and opens `http://127.0.0.1:8000` (or the next
 free port) once `/readyz` is ready. OpenAPI on `/docs` (off in prod).
 
@@ -125,7 +125,7 @@ GPU block in `docker-compose.yml` to use an NVIDIA GPU).
 | `just start` | Local demo: API + web UI, dataset if missing, browser |
 | `just dev` | API on the host with reload |
 | `just up` / `just down` / `just logs` | Compose stack |
-| `just models` | Download the OCR and NER weights (before an offline start) |
+| `just models` | Download the OCR weights and check the NER service (before an offline start) |
 | `just lint` | ruff fix + format + ty: before every commit |
 | `just check` | Same checks without fixes (what CI runs) |
 | `just test` / `just test-cov` | Unit tests / with coverage (at least 80%) |
@@ -166,26 +166,26 @@ docs/                     ANONYMIZATION.md, logging and privacy, deploy handover
 
 `just evaluate` on the whole evaluation set (`dataset/`: 200 documents, 326
 pages, each as native PDF, scan and scan with a hidden OCR layer: 600 PDFs;
-GLiNER + GLiNER2, PaddleOCR PP-OCRv5; 16/10/2026):
+AILAB NER service, PaddleOCR PP-OCRv5; 20/10/2026). In brackets the earlier
+in-pod GLiNER + GLiNER2 (commit `92ae6e5`), measured the same day:
 
 | | native | scan | scan + OCR layer |
 |---|---|---|---|
-| **Recall** (box, required PII) | 0.948 | 0.915 | 0.943 |
-| **Precision** (box) | 0.971 | 0.938 | 0.906 |
-| **F1** (box) | 0.959 | 0.926 | 0.924 |
-| Precision / recall / F1 (word) | 0.946 / 0.959 / 0.952 | 0.743 / 0.932 / 0.827 | 0.698 / 0.960 / 0.808 |
-| **Accuracy** (word) | 0.988 | 0.950 | 0.942 |
-| **AP@0.5** (PII, label-agnostic) | 0.689 | 0.582 | 0.508 |
-| **mAP@0.5** (mean over PII types) | 0.680 | 0.565 | 0.558 |
-| Hidden PII leaked (white text, metadata, OCR layers) | 2/324, fixed since | n/a | 4/324, fixed since |
-| Eponyms wrongly redacted | 23/415 | 44/415 | 49/415 |
+| **Recall** (box, required PII) | 0.938 (0.948) | 0.909 (0.915) | 0.939 (0.944) |
+| **Precision** (box) | 0.959 (0.970) | 0.928 (0.938) | 0.884 (0.904) |
+| **F1** (box) | 0.948 (0.959) | 0.918 (0.926) | 0.911 (0.924) |
+| Precision / recall / F1 (word) | 0.946 / 0.950 / 0.948 | 0.745 / 0.926 / 0.826 | 0.706 / 0.954 / 0.811 |
+| **Accuracy** (word) | 0.987 | 0.950 | 0.943 |
+| **AP@0.5** (PII, label-agnostic) | 0.658 | 0.576 | 0.502 |
+| **mAP@0.5** (mean over PII types) | 0.670 | 0.564 | 0.559 |
+| Hidden PII leaked (white text, metadata, OCR layers) | 0/324 | n/a | 1/324 |
+| Eponyms wrongly redacted | 54/415 | 72/415 | 100/415 |
 | Documents passing verification | 200/200 | 200/200 | 200/200 |
-| Seconds per page (laptop RTX 5070, 8 GB) | 1.2 | 7.6 | 8.0 |
+| Seconds per page (laptop RTX 5090, 24 GB) | 0.7 | 3.5 | 4.0 |
 
-The 6 hidden values left in that run (two hand-annotated worst cases: white
-text, a 4 pt footer, a scanner's OCR layer with glued and misread words) are
-fixed since: codes of the same numbering scheme, surnames glued to an initial,
-glued words split in the text layer, OCR confusions (0/o, 1/l) in propagation.
+With the AILAB service recall is 0.5 to 1 point lower and precision 1 to 2
+points lower than with GLiNER: names it replaces as eponyms, foreign names and
+fragments taken for places (details in docs/ANONYMIZATION.md, "NER choice").
 Run `just evaluate` again to refresh the table; `--split test` scores only the
 77 held-out documents.
 

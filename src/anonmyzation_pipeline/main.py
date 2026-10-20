@@ -3,10 +3,12 @@
 import asyncio
 import contextlib
 import logging
+import ssl
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+import httpx
 from fastapi import FastAPI
 
 from anonmyzation_pipeline import __version__
@@ -15,12 +17,7 @@ from anonmyzation_pipeline.config import Settings, get_settings
 from anonmyzation_pipeline.errors import register_exception_handlers
 from anonmyzation_pipeline.logging_setup import setup_logging
 from anonmyzation_pipeline.middleware import RequestIdMiddleware
-from anonmyzation_pipeline.services.anonymization.detect.ner import (
-    CombinedNER,
-    Gliner2NER,
-    GlinerNER,
-    NerEngine,
-)
+from anonmyzation_pipeline.services.anonymization.detect.ner import AilabNER
 from anonmyzation_pipeline.services.anonymization.ocr import RapidOcrEngine
 from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
 from anonmyzation_pipeline.services.jobs import JobManager
@@ -31,8 +28,23 @@ PURGE_INTERVAL_SECONDS = 60
 MODEL_RETRY_SECONDS = 30
 
 
+def _tls_context(ca_bundle: str) -> ssl.SSLContext:
+    """TLS context trusting ``ca_bundle`` (PEM), or the system CAs.
+
+    An unreadable bundle never crashes the pod: the system CAs are used, the
+    handshake with an internal certificate fails and ``/readyz`` stays 503.
+    """
+    context = ssl.create_default_context()
+    if ca_bundle:
+        try:
+            context.load_verify_locations(cafile=ca_bundle)
+        except (OSError, ssl.SSLError) as exc:
+            logger.error("NER CA bundle not loaded: error=%s", type(exc).__name__)
+    return context
+
+
 def build_pipeline(settings: Settings) -> Pipeline:
-    """OCR and NER engines from the settings. No weights are loaded here."""
+    """OCR and NER engines from the settings. No weights are loaded, no request is sent."""
     ocr = RapidOcrEngine(
         dpi=settings.ocr_dpi,
         margin_pt=settings.ocr_margin_pt,
@@ -41,14 +53,18 @@ def build_pipeline(settings: Settings) -> Pipeline:
         device=settings.device,
         workers=settings.ocr_workers,
     )
-    ner: NerEngine | None = None
+    ner: AilabNER | None = None
     if settings.ner_enabled:
-        # the models keep everything above the lower threshold; the pipeline applies both
-        threshold = min(settings.ner_threshold, settings.ner_person_threshold)
-        ner = GlinerNER(settings.ner_model, threshold, device=settings.device)
-        if settings.ner2_enabled:
-            second = Gliner2NER(settings.ner2_model, threshold, device=settings.device)
-            ner = CombinedNER(ner, second)
+        client = httpx.Client(
+            base_url=settings.ner_url,
+            timeout=settings.ner_timeout_seconds,
+            verify=_tls_context(settings.ner_ca_bundle),
+        )
+        ner = AilabNER(
+            client,
+            retries=settings.ner_retries,
+            backoff_seconds=settings.ner_retry_backoff_seconds,
+        )
     return Pipeline(
         ocr,
         ner,
@@ -128,6 +144,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
             with contextlib.suppress(asyncio.CancelledError):
                 await task
         jobs.shutdown()
+        if isinstance(pipeline.ner, AilabNER):
+            pipeline.ner.close()
         logger.info("Service stopped")
 
 

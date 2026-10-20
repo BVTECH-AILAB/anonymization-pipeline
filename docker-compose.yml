@@ -24,9 +24,11 @@ services:
       ANONPIP_OCR_WORKERS: ${ANONPIP_OCR_WORKERS:-1}
       ANONPIP_OCR_MARGIN_PT: ${ANONPIP_OCR_MARGIN_PT:-60}
       ANONPIP_NER_ENABLED: ${ANONPIP_NER_ENABLED:-true}
-      ANONPIP_NER_MODEL: ${ANONPIP_NER_MODEL:-urchade/gliner_multi_pii-v1}
-      ANONPIP_NER2_ENABLED: ${ANONPIP_NER2_ENABLED:-true}
-      ANONPIP_NER2_MODEL: ${ANONPIP_NER2_MODEL:-fastino/gliner2-privacy-filter-PII-multi}
+      ANONPIP_NER_URL: ${ANONPIP_NER_URL:-}
+      ANONPIP_NER_TIMEOUT_SECONDS: ${ANONPIP_NER_TIMEOUT_SECONDS:-30}
+      ANONPIP_NER_RETRIES: ${ANONPIP_NER_RETRIES:-2}
+      ANONPIP_NER_RETRY_BACKOFF_SECONDS: ${ANONPIP_NER_RETRY_BACKOFF_SECONDS:-1}
+      ANONPIP_NER_CA_BUNDLE: ${ANONPIP_NER_CA_BUNDLE:-}
       ANONPIP_NER_THRESHOLD: ${ANONPIP_NER_THRESHOLD:-0.5}
       ANONPIP_NER_PERSON_THRESHOLD: ${ANONPIP_NER_PERSON_THRESHOLD:-0.4}
       ANONPIP_MAX_UPLOAD_MB: ${ANONPIP_MAX_UPLOAD_MB:-30}
@@ -39,8 +41,6 @@ services:
       ANONPIP_REDACT_ORGANIZATIONS: ${ANONPIP_REDACT_ORGANIZATIONS:-false}
       ANONPIP_REDACTION_STYLE: ${ANONPIP_REDACTION_STYLE:-black}
       ANONPIP_VERIFY_PIXEL_TOLERANCE: ${ANONPIP_VERIFY_PIXEL_TOLERANCE:-0.0002}
-      # Hugging Face (GLiNER) weight cache, on the "models" volume (OCR: ANONPIP_OCR_MODEL_DIR)
-      HF_HOME: /models/huggingface
     ports:
       - "127.0.0.1:${APP_PORT:-8000}:8000"
     volumes:
@@ -48,7 +48,7 @@ services:
       - ./tests:/app/tests
       - ./pyproject.toml:/app/pyproject.toml:ro
       - models:/models
-    # GPU (NVIDIA Container Toolkit): uncomment to run OCR and NER on the GPU.
+    # GPU (NVIDIA Container Toolkit): uncomment to run OCR on the GPU.
     # deploy:
     #   resources:
     #     reservations:

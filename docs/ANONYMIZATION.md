@@ -25,7 +25,7 @@ flowchart TD
     subgraph DET["PII detection (on text)"]
         RULES["Format rules<br/>tax code with checksum, health card, phones (IT, foreign, US),<br/>email, IBAN, NRE, dates, addresses, registrations, DICOM fields"]
         LABELS["Label → value (labels.yaml)<br/>Cognome: X · N. accettazione: Y · nato a Z"]
-        NER["NER: GLiNER + GLiNER2, findings joined<br/>persons, places, addresses, organizations"]
+        NER["NER: AILAB NER service (POST /batch_ner)<br/>persons, places, addresses, organizations"]
         CLEAN["Person spans cleaned<br/>titles trimmed · 'la paziente' dropped ·<br/>institutions → organisation"]
         ALLOW["Eponym filter per occurrence (eponyms.yaml)<br/>segno di Giordano ≠ Sig. Giordano · drugs · saints"]
         PROP["Document-wide propagation<br/>every value found is searched everywhere: wrapped,<br/>glued, misread by OCR, same numbering scheme"]
@@ -108,7 +108,7 @@ Recall first: one detector is enough to redact.
 |---|---|
 | `rules.py` | Formats: codice fiscale (strict with checksum, plus an OCR-tolerant pattern), tessera sanitaria, phones (Italian, foreign "+234 ...", North American, extensions; never across lines, dates excluded), email, IBAN, URLs with personal tokens, dates (date of birth from context, also ISO, compact and "30-Nov-1966"), age, street addresses, CAP + municipality, professional registrations ("OMCeO MI n.", "Ord. Med. RN n.", "Albo PE n."), NRE, DICOM header fields ("(0010,0010) PatientName", also with the keyword split into words), places and names in typical phrasings |
 | `labels.py` + `labels.yaml` | The value after a label: about 60 groups of Italian and English form and report labels ("Cognome:", "COGNOME / SURNAME" with the value below, "N. accettazione", "Prenotazione CUP", "Medicaid ID", "Permesso di soggiorno", "Medico curante", "Mediatore linguistico") with the shape of the value (name, place, address, organisation, identifier, date, phone). A single word after a generic role label ("Medico Ostetrico") needs ":" or capitals. A label with no value on its line takes the next line only if that line is not a sentence ("Mediatore linguistico:" followed by "Acconsento al test HIV" is not a name). An address needs a street type, "c/o" or "presso", a number, or the shape of a place name ("San Giovanni in Fiore"), so prose after "domicilio" is not one. Vocabulary ported from feat/reconstructed-architecture |
-| `ner.py` | Two multilingual PII models run together, their findings joined: GLiNER `urchade/gliner_multi_pii-v1` and GLiNER2 `fastino/gliner2-privacy-filter-PII-multi`, labels mapped to the taxonomy, chunks of whole lines. Chosen against four other PII models, see "NER choice" |
+| `ner.py` | Client of the AILAB NER service (`POST /batch_ner`, one request per page, chunks of whole lines). Entity groups mapped to the taxonomy (NOME/COGNOME -> PERSON, LUOGO, INDIRIZZO, RAGIONE_SOCIALE ...), the others ignored; adjacent name and surname joined. The service preprocesses the text (eponyms become `EPONYMn`, emails a placeholder), so its offsets drift: word pieces are joined first ("Mo" + "##cenigo"), then each entity is checked against the original text and moved to the nearest occurrence of its word, or dropped. The service reads line breaks as spaces: a span is cut where the next line starts another field ("Grippo" + "Visto:", a stop word of `labels.yaml`, punctuation), while a value wrapped on two lines stays whole. Timeouts, connection errors and 502/503/504 are retried (`ANONPIP_NER_RETRIES`, waits doubling from `ANONPIP_NER_RETRY_BACKOFF_SECONDS`); then fail-closed: a service down fails the job. See "NER choice" |
 | `eponyms.py` + `eponyms.yaml`, `allowlist.py` | Per occurrence: eponyms and scales are not persons only in a clinical context ("segno di Giordano negativo", "Glasgow 15", "Wolff-Parkinson-White"), drug brands never are, common words only in lowercase ("globuli rossi"); "Sig. Giordano" stays a person. About 400 eponyms, 50 scales, 200 drug brands. Plus saints in facility names and clinical vocabulary |
 | `ensemble.py` | Person spans lose leading titles, references without a name ("la paziente") are dropped, institution names become organisations. Document-wide propagation: every name token and every redacted identifier found anywhere is searched in every layer (spaced, glued, with initials, both orders, wrapped on two lines); words ambiguous on their own (three letters or fewer, acronyms, field labels, eponyms, scales, Italian municipalities: "Ugo", "HIV", "Masson", "Napoli") are spread only as part of the full name, never alone. Also found: a surname glued to an initial in capitals ("TOKAFOR"), a full name glued to what follows ("LindaMarshRX-550"), OCR confusions 0/o, 1/l, 5/s in names and numbers ("Adebay0", "389 555 773l"), and other codes of the numbering scheme of a found identifier ("RX-550-2913" -> "RX-550-2877"). Names and places with stray symbols or numbers-only words are OCR fragments; addresses from NER need the shape of an address; facility names are organisations. Overlapping spans merge into the most specific label |
 | `visual.py` | Barcodes and QR codes (zxing), embedded images (signature or stamp; grayscale clinical pictures left to OCR, colour photos redacted whole; header logos excluded), vector signatures and stamp frames on native pages, on scans the ink that OCR does not explain (signatures), stamps (frame, coloured ink, or a cluster of words around "OMCeO" / "Medico Chirurgo") |
@@ -224,7 +224,7 @@ Errors are `ServiceError` subclasses with generic Italian messages (`errors.py`)
 
 ## Jobs and privacy (`services/jobs.py`)
 
-- One job at a time (single worker: OCR and NER share the GPU); edits go
+- One job at a time (single worker: OCR uses the GPU); edits go
   through the same worker.
 - Documents live in a private folder (`0700`) only while the job exists; they
   are deleted after `ANONPIP_JOB_TTL_MINUTES`, on `DELETE`, on cancel and on shutdown.
@@ -331,26 +331,26 @@ Plus hidden PII leaked (white text, metadata, deleted notes), eponyms wrongly
 redacted, verified documents and seconds per page.
 
 Results on the whole evaluation set (`just evaluate`: 200 documents x 3
-variants, 600 PDFs; 16/10/2026):
+variants, 600 PDFs; 20/10/2026), with the AILAB NER service and, for
+comparison, the earlier in-pod GLiNER + GLiNER2 (commit `92ae6e5`, same run
+conditions; see "NER choice"):
 
 | | native | scan | scan + OCR layer |
 |---|---|---|---|
-| Recall (box, required PII) | 0.948 | 0.915 | 0.943 |
-| Precision (box) | 0.971 | 0.938 | 0.906 |
-| F1 (box) | 0.959 | 0.926 | 0.924 |
-| Precision / recall / F1 (word) | 0.946 / 0.959 / 0.952 | 0.743 / 0.932 / 0.827 | 0.698 / 0.960 / 0.808 |
-| Accuracy (word) | 0.988 | 0.950 | 0.942 |
-| AP@0.5 (PII, label-agnostic) | 0.689 | 0.582 | 0.508 |
-| mAP@0.5 (mean over PII types) | 0.680 | 0.565 | 0.558 |
-| Hidden PII leaked (white text, metadata, OCR layers) | 2/324, fixed since | n/a | 4/324, fixed since |
-| Eponyms wrongly redacted | 23/415 | 44/415 | 49/415 |
+| Recall (box, required PII) | 0.938 (GLiNER 0.948) | 0.909 (0.915) | 0.939 (0.944) |
+| Precision (box) | 0.959 (0.970) | 0.928 (0.938) | 0.884 (0.904) |
+| F1 (box) | 0.948 (0.959) | 0.918 (0.926) | 0.911 (0.924) |
+| Precision / recall / F1 (word) | 0.946 / 0.950 / 0.948 | 0.745 / 0.926 / 0.826 | 0.706 / 0.954 / 0.811 |
+| Accuracy (word) | 0.987 | 0.950 | 0.943 |
+| AP@0.5 (PII, label-agnostic) | 0.658 (0.689) | 0.576 (0.582) | 0.502 (0.508) |
+| mAP@0.5 (mean over PII types) | 0.670 (0.680) | 0.564 (0.565) | 0.559 (0.557) |
+| Hidden PII leaked (white text, metadata, OCR layers) | 0/324 (0/324) | n/a | 1/324 (0/324) |
+| Eponyms wrongly redacted | 54/415 (23/415) | 72/415 (44/415) | 100/415 (50/415) |
 | Documents passing verification | 200/200 | 200/200 | 200/200 |
-| Seconds per page (laptop RTX 5070, 8 GB) | 1.2 | 7.6 | 8.0 |
+| Seconds per page (laptop RTX 5090, 24 GB) | 0.7 | 3.5 | 4.0 |
 
-The 6 hidden values left in that run (two hand-annotated worst cases: white
-text, a 4 pt footer, a scanner's OCR layer with glued and misread words) are
-fixed since: codes of the same numbering scheme, surnames glued to an initial,
-glued words split in the text layer, OCR confusions (0/o, 1/l) in propagation.
+The hidden value left is a foreign surname in a hidden channel of a scan
+("Okafor"), which the NER service does not always find (see "Known limits").
 Run `just evaluate` again to refresh the table; `--split test` scores only the
 77 held-out documents.
 
@@ -412,12 +412,10 @@ boxes only, so word boxes have to be estimated.
   before raising it.
 - Native pages are not read by OCR, except the grayscale clinical images on
   them (X-rays), whose burned-in text is read.
-- **GPU memory**: the OCR detector, GLiNER and GLiNER2 together need about 7.5 GB.
-  On the 8 GB laptop GPU that leaves the detector no room for 300 dpi pages and
-  it spills into system memory: scanned pages take about 12 s instead of 4 (with
-  GLiNER alone). On a larger GPU (L40S, 48 GB) everything stays resident; on a
-  small one `ANONPIP_NER2_ENABLED=false` brings scans back to about 4 s per page,
-  for about 1 point of recall less.
+- **GPU memory**: only the OCR detector runs on the pod GPU (about 3 GB per
+  worker); NER runs in the AILAB NER service. With GLiNER and GLiNER2 in the pod
+  the three models needed about 7.5 GB and on an 8 GB GPU scans slowed from
+  about 4 to 12 s per page; this no longer applies.
 
 Not adopted:
 
@@ -435,7 +433,45 @@ Not adopted:
 
 ## NER choice
 
-Six on-premise PII models (open weights, run in the pod, no external call) in
+NER is delegated to the AILAB NER service already used by the platform
+(`ANONPIP_NER_URL`): the pipeline sends the text of each page and keeps only
+the entities, never its `obfuscated_text`. The configuration endpoints of the
+service (`/medical_orgs`, `/medical_labels`) are shared with ai-platform and
+never called.
+
+Measured against the earlier in-pod GLiNER + GLiNER2 (commit `92ae6e5`) on the
+same 600 PDFs, everything else identical; differences in points, AILAB minus
+GLiNER, 95% interval from a document bootstrap:
+
+| | native | scan | scan + OCR layer |
+|---|---|---|---|
+| Recall, dev / test | -1.0 / -1.0 | -0.6 / -0.6 | -0.6 / -0.5 |
+| Precision, dev / test | -0.5 / -2.5 | -0.9 / -1.4 | -2.2 / -1.8 |
+| Values found only by GLiNER / only by AILAB (all) | 86 / 18 | 77 / 36 | 64 / 29 |
+
+The values lost are almost all persons and places (the other labels come from
+the rules; one phone per variant moves through propagation). Their causes, all
+in the service output:
+
+- eponyms of its dictionary are replaced before the model, also when they are
+  surnames or first names ("Alessia Corti" -> "Alessia EPONYM3", "Vittoria"
+  -> "EPONYM2"): the replaced word does not exist in the original text and is
+  dropped, so the name is redacted only in part;
+- words split into pieces with the middle piece missing ("ME" + "##INA" for
+  "MESSINA"), which cannot be aligned;
+- foreign names and dense lists of patients (shift handovers) with no entity
+  at all ("Emeka Okafor", "Popescu Ioana");
+- places with the country in brackets found in part ("Casablanca (Marocco)").
+
+The extra over-redaction comes from fragments taken for places ("il", "C",
+"PUGLIA"), medical eponyms taken for persons ("Marsh-Oberhuber", "Ishak") and
+label words joined to names ("CAIRONI DANILO Nato"). Joining word pieces and
+cutting spans at the next field (see `ner.py` above) recovered +0.1 to +0.3
+points of recall and +0.3 to +2.0 points of precision; the rest needs either a
+change in the service (offsets on the original text, or no `EPONYM`
+replacement on the entities) or further filters on our side.
+
+Earlier benchmark (before the switch to the service): six on-premise PII models (open weights, run in the pod, no external call) in
 place of the default, on the 108 native documents of the dev split (179-document set), every other
 part of the pipeline identical (75% coverage, laptop RTX 5070):
 
@@ -467,4 +503,8 @@ points at most. GLiNER2 (`gliner2`, Apache 2.0, Fastino) is loaded with
 - Reversible mode (encrypted mapping, reconstruction of the original) is out of scope.
 - Professional IDs and some phones on plain scans depend on OCR quality; the
   UI edits cover the misses.
+- NER depends on the AILAB NER service: names it replaces as eponyms ("Corti",
+  "Vittoria"), foreign names and dense lists of patients can be missed or
+  redacted in part (see "NER choice"); the text of each page leaves the pod for
+  the service; if the service is down, jobs fail (fail-closed).
 - PyMuPDF is AGPL: production use needs an Artifex commercial licence or AGPL compliance.

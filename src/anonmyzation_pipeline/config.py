@@ -45,8 +45,8 @@ class Settings(BaseSettings):
     # --- Models ---
     # "auto" uses the GPU when one is available, otherwise the CPU.
     device: str = "auto"
-    # Load OCR and NER at startup; /readyz reports 503 until they are loaded
-    # (retried every 30 s).
+    # Load OCR and check the NER service at startup; /readyz reports 503 until both
+    # are ready (retried every 30 s).
     preload_models: bool = True
     # PaddleOCR PP-OCRv5 (via RapidOCR): "mobile" or "server" text detector, on the GPU
     # (PyTorch) when ``device`` resolves to cuda; recognition: the Latin model (ONNX Runtime).
@@ -59,12 +59,15 @@ class Settings(BaseSettings):
     ocr_dpi: int = Field(default=300, ge=100, le=600)
     # Width of the side strips read again rotated by 90 degrees (vertical text).
     ocr_margin_pt: float = Field(default=60, ge=0, le=200)
+    # NER: the AILAB NER service (POST /batch_ner). Empty URL: /readyz stays 503.
     ner_enabled: bool = True
-    ner_model: str = "urchade/gliner_multi_pii-v1"
-    # Second NER model (GLiNER2), run together with the first: its findings are added.
-    # Off: GLiNER only (faster, about 1 point of recall less).
-    ner2_enabled: bool = True
-    ner2_model: str = "fastino/gliner2-privacy-filter-PII-multi"
+    ner_url: str = ""
+    ner_timeout_seconds: float = Field(default=30, gt=0, le=300)
+    # Retries of a request that timed out or got 502/503/504; waits double: 1 s, 2 s ...
+    ner_retries: int = Field(default=2, ge=0, le=5)
+    ner_retry_backoff_seconds: float = Field(default=1.0, ge=0, le=30)
+    # PEM bundle of the CA that signed the NER certificate; empty: the system CAs.
+    ner_ca_bundle: str = ""
     ner_threshold: float = Field(default=0.5, ge=0, le=1)
     ner_person_threshold: float = Field(default=0.4, ge=0, le=1)
 

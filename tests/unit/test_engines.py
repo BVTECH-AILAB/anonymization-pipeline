@@ -1,4 +1,4 @@
-"""OCR, NER and visual detectors with fake models: no weights, no network."""
+"""OCR and visual detectors with fake models: no weights, no network."""
 
 import threading
 import time
@@ -9,11 +9,6 @@ import pymupdf
 import pytest
 
 from anonmyzation_pipeline.services.anonymization.detect import visual
-from anonmyzation_pipeline.services.anonymization.detect.ner import (
-    CombinedNER,
-    Gliner2NER,
-    GlinerNER,
-)
 from anonmyzation_pipeline.services.anonymization.device import resolve_device
 from anonmyzation_pipeline.services.anonymization.layers import Word
 from anonmyzation_pipeline.services.anonymization.ocr import (
@@ -105,48 +100,6 @@ def test_parse_words_skips_the_empty_entries_of_a_blank_image() -> None:
     assert parse_words((("", 1.0, None),)) == []  # RapidOCR on a blank strip
 
 
-class FakeGliner2:
-    """GLiNER2 stand-in: the shape of ``extract_entities`` with spans and confidence."""
-
-    def extract_entities(self, text: str, labels: list[str], **kwargs) -> dict:
-        start = text.index("Verdani")
-        return {
-            "entities": {
-                "person": [
-                    {
-                        "text": "Verdani",
-                        "start": start,
-                        "end": start + 7,
-                        "confidence": 0.9,
-                    }
-                ],
-                "card_cvv": [{"text": "123", "start": 0, "end": 3, "confidence": 0.9}],
-            }
-        }
-
-
-def test_gliner2_spans_are_mapped_and_unknown_labels_ignored() -> None:
-    ner = Gliner2NER(model=FakeGliner2())
-    text = "123 visita del Sig. Verdani"
-
-    spans = ner.detect(text)
-
-    assert [(s.label, text[s.start : s.end], s.source) for s in spans] == [
-        ("PERSON", "Verdani", "gliner2")
-    ]
-
-
-def test_combined_ner_joins_the_spans_and_is_ready_only_when_all_are() -> None:
-    first = Gliner2NER(model=FakeGliner2())
-    second = Gliner2NER()  # not loaded
-    combined = CombinedNER(first, second)
-
-    assert not combined.ready
-    second._model = FakeGliner2()
-    assert combined.ready
-    assert len(combined.detect("Sig. Verdani")) == 2
-
-
 def test_resolve_device() -> None:
     assert resolve_device("cpu") == "cpu"
     assert resolve_device("auto") in ("cpu", "cuda")
@@ -157,44 +110,6 @@ def test_render_page_shape() -> None:
         img = render_page(doc.new_page(width=72, height=144), dpi=72)
 
     assert img.shape == (144, 72, 3)
-
-
-class FakeGliner:
-    def __init__(self) -> None:
-        self.chunks: list[str] = []
-
-    def predict_entities(
-        self, text: str, labels: list[str], threshold: float
-    ) -> list[dict]:
-        self.chunks.append(text)
-        i = text.find("Mario Rossi")
-        return (
-            [
-                {
-                    "start": i,
-                    "end": i + 11,
-                    "label": "person",
-                    "score": 0.97,
-                    "text": "Mario Rossi",
-                }
-            ]
-            if i >= 0
-            else []
-        )
-
-
-def test_gliner_offsets_survive_chunking() -> None:
-    model = FakeGliner()
-    ner = GlinerNER(max_words=5, model=model)
-    text = "riga uno con cinque parole\nriga due\nPaziente Mario Rossi oggi\n"
-
-    spans = ner.detect(text)
-
-    assert ner.ready
-    assert len(model.chunks) >= 2
-    assert [(s.label, text[s.start : s.end]) for s in spans] == [
-        ("PERSON", "Mario Rossi")
-    ]
 
 
 def test_visual_codes_and_signatures_on_native_pages(tmp_path: Path) -> None:

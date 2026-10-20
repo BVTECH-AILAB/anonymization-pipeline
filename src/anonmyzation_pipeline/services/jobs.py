@@ -41,6 +41,7 @@ from anonmyzation_pipeline.errors import (
 )
 from anonmyzation_pipeline.logging_setup import log_event
 from anonmyzation_pipeline.services.anonymization.export_docx import export_docx
+from anonmyzation_pipeline.services.anonymization.pdf_pages import pdfium_locked
 from anonmyzation_pipeline.services.anonymization.pipeline import (
     Analysis,
     Box,
@@ -122,6 +123,7 @@ class Job:
         return out
 
 
+@pdfium_locked
 def to_pdf(
     data: bytes, suffix: str, dest: Path, max_pages: int, render_dpi: int = 300
 ) -> int:
@@ -627,6 +629,7 @@ class JobManager:
         )
         return result
 
+    @pdfium_locked
     def render_page(self, jid: str, which: str, page: int, dpi: int) -> Path:
         """PNG of one page of the original or the anonymized document (cached)."""
         job = self.ready_job(jid)

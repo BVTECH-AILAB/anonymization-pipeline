@@ -36,6 +36,7 @@ from anonmyzation_pipeline.services.anonymization.layers import Rect, TextLayer,
 from anonmyzation_pipeline.services.anonymization.pdf_pages import (
     FLATTEN_DPI,
     page_box,
+    pdfium_locked,
     render_page,
 )
 from anonmyzation_pipeline.services.anonymization.pipeline import (
@@ -403,6 +404,7 @@ def _pages_with_values(out: Path, analysis: Analysis) -> set[int]:
     return found
 
 
+@pdfium_locked
 def redact_and_verify(
     src: Path,
     analysis: Analysis,

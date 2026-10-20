@@ -22,6 +22,7 @@ from pypdf.generic import IndirectObject, StreamObject
 from anonmyzation_pipeline.services.anonymization.pdf_pages import (
     FLATTEN_DPI,
     page_box,
+    pdfium_locked,
     render_page,
     to_pdf,
 )
@@ -136,6 +137,7 @@ def _file_text(path: Path) -> tuple[bytes, str, PdfReader]:
     return b"".join(chunks), meta, reader
 
 
+@pdfium_locked
 def verify(
     src: Path,
     out: Path,

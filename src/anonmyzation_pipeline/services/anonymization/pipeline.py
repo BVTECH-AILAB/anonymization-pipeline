@@ -28,7 +28,11 @@ from anonmyzation_pipeline.services.anonymization.layers import (
     TextLayer,
     Word,
 )
-from anonmyzation_pipeline.services.anonymization.pdf_pages import open_pages
+from anonmyzation_pipeline.services.anonymization.pdf_pages import (
+    PDFIUM_LOCK,
+    PageView,
+    open_pages,
+)
 from anonmyzation_pipeline.services.anonymization.reader import (
     TextReader,
     derotate_rect,
@@ -169,6 +173,33 @@ class Pipeline:
         """True when every model is loaded."""
         return self.reader.ready and (self.ner is None or self.ner.ready)
 
+    @staticmethod
+    def _visual(
+        views: list[PageView],
+        pages: list[dict],
+        ocr_words: dict[int, list[Word]],
+        progress: Progress,
+    ) -> list[visual.VisualFinding]:
+        """Visual findings of every page, in page space (PDFium: hold the lock)."""
+        vis: list[visual.VisualFinding] = []
+        for view in views:
+            pno = view.number
+            progress("detect", 0.6 + 0.4 * pno / len(views))
+            # found on the rendering: display space, turned into page space
+            rendered = visual.codes(view)
+            if pages[pno]["scanned"]:
+                rendered += visual.unexplained_ink(view, ocr_words[pno])
+                rendered += visual.stamp_from_text(pno, ocr_words[pno])
+            else:
+                # image and drawing positions are already in page space
+                vis += visual.embedded_images(view)
+                vis += visual.vector_marks(view)
+            vis += [
+                dataclasses.replace(v, rect=derotate_rect(pages[pno], v.rect))
+                for v in rendered
+            ]
+        return vis
+
     def analyze(self, path: Path, progress: Progress = _no_progress) -> Analysis:
         """Analyze a PDF.
 
@@ -179,10 +210,17 @@ class Pipeline:
         Returns:
             The analysis, with one box per line of every finding.
         """
-        with pdfium.PdfDocument(path) as pdf:
-            views = open_pages(pdf)
-            t0 = time.perf_counter()
-            read = self.reader.read(Path(path), views, lambda f: progress("read", f))
+        # PDFium is held while reading and in the visual detectors, released for
+        # NER: previews and uploads of other requests wait seconds, not minutes
+        with PDFIUM_LOCK:
+            pdf = pdfium.PdfDocument(path)
+        try:
+            with PDFIUM_LOCK:
+                views = open_pages(pdf)
+                t0 = time.perf_counter()
+                read = self.reader.read(
+                    Path(path), views, lambda f: progress("read", f)
+                )
             pages = [p.info for p in read]
             layers = [layer for p in read for layer in p.layers]
             ocr_words: dict[int, list[Word]] = {
@@ -190,30 +228,18 @@ class Pipeline:
                 for pno, p in enumerate(read)
                 if p.ocr_words is not None
             }
-            vis: list[visual.VisualFinding] = []
             t1 = time.perf_counter()
             progress("detect", 0.0)
             findings: list[Finding] = analyze_layers(
                 layers, self.ner, self.ner_threshold, self.person_threshold
             )
             t2 = time.perf_counter()
-            for view in views:
-                pno = view.number
-                progress("detect", 0.6 + 0.4 * pno / len(views))
-                # found on the rendering: display space, turned into page space
-                rendered = visual.codes(view)
-                if pages[pno]["scanned"]:
-                    rendered += visual.unexplained_ink(view, ocr_words[pno])
-                    rendered += visual.stamp_from_text(pno, ocr_words[pno])
-                else:
-                    # image and drawing positions are already in page space
-                    vis += visual.embedded_images(view)
-                    vis += visual.vector_marks(view)
-                vis += [
-                    dataclasses.replace(v, rect=derotate_rect(pages[pno], v.rect))
-                    for v in rendered
-                ]
+            with PDFIUM_LOCK:
+                vis = self._visual(views, pages, ocr_words, progress)
             t3 = time.perf_counter()
+        finally:
+            with PDFIUM_LOCK:
+                pdf.close()
 
         a = Analysis(
             Path(path),

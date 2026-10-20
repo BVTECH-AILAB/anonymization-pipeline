@@ -23,7 +23,10 @@ from pypdf.generic import (
 )
 
 from anonmyzation_pipeline.services.anonymization.geometry import Rect, union
-from anonmyzation_pipeline.services.anonymization.pdf_pages import PageView
+from anonmyzation_pipeline.services.anonymization.pdf_pages import (
+    PageView,
+    pdfium_locked,
+)
 from anonmyzation_pipeline.services.anonymization.pdf_text import Char, chars, to_page
 
 logger = logging.getLogger(__name__)
@@ -59,6 +62,7 @@ def words(page: pdfium.PdfPage) -> list[tuple[Rect, str]]:
     return [(_box(run), "".join(c.text for c in run)) for run in _runs(chars(page))]
 
 
+@pdfium_locked
 def document_words(path: Path) -> list[tuple[dict, list[tuple[Rect, str]]]]:
     """Words of every page of ``path`` as it is displayed, with the page geometry.
 
@@ -209,6 +213,7 @@ class FileContent:
     metadata: str
 
 
+@pdfium_locked
 def file_content(path: Path) -> FileContent:
     """Read every place of ``path`` where text can survive."""
     data = path.read_bytes()

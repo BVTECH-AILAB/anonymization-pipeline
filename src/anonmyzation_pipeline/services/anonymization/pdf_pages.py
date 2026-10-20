@@ -7,7 +7,9 @@ page through the matrices of their forms.
 """
 
 import ctypes
-from collections.abc import Iterator
+import functools
+import threading
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -15,6 +17,23 @@ import pypdfium2 as pdfium
 import pypdfium2.raw as pdfium_c
 
 from anonmyzation_pipeline.services.anonymization.geometry import Rect
+
+# PDFium is not thread-safe: two threads inside it at once crash the process
+# (segmentation fault). Every use holds this lock: the worker analysing a
+# document, request threads validating uploads and rendering previews.
+PDFIUM_LOCK = threading.RLock()
+
+
+def pdfium_locked[**P, R](fn: Callable[P, R]) -> Callable[P, R]:
+    """Run ``fn`` holding ``PDFIUM_LOCK``: for functions that use PDFium throughout."""
+
+    @functools.wraps(fn)
+    def locked(*args: P.args, **kwargs: P.kwargs) -> R:
+        with PDFIUM_LOCK:
+            return fn(*args, **kwargs)
+
+    return locked
+
 
 MAX_FORM_DEPTH = 8
 # resolution of the pages replaced by their rendering (and of their pixel check)

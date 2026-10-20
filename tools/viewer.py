@@ -23,7 +23,12 @@ from PIL import Image
 from pydantic import BaseModel, Field
 
 from anonmyzation_pipeline.services.anonymization.geometry import to_display
-from anonmyzation_pipeline.services.anonymization.pdf_pages import PageView, open_pages
+from anonmyzation_pipeline.services.anonymization.pdf_pages import (
+    PDFIUM_LOCK,
+    PageView,
+    open_pages,
+    pdfium_locked,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -105,6 +110,7 @@ def create_app(
         return read_json(reports / f"docs_{variant}" / f"{doc_id}.json")
 
     @lru_cache(maxsize=256)
+    @pdfium_locked
     def render(path: Path, _mtime: float, page: int, dpi: int) -> bytes:
         """PNG of one page; ``_mtime`` keys the cache so a re-evaluated output is re-rendered."""
         pdf = pdfium.PdfDocument(path)
@@ -206,11 +212,12 @@ def create_app(
                 "keep": [{**k, "lost": False} for k in gt["keep"]],
                 "stats": None,
             }
-        pdf = pdfium.PdfDocument(pdf_path(variant, doc_id))
-        try:
-            infos = [view.info for view in open_pages(pdf)]
-        finally:
-            pdf.close()
+        with PDFIUM_LOCK:
+            pdf = pdfium.PdfDocument(pdf_path(variant, doc_id))
+            try:
+                infos = [view.info for view in open_pages(pdf)]
+            finally:
+                pdf.close()
         rec["pages"] = [{"width": i["width"], "height": i["height"]} for i in infos]
         for key in ("gt", "pred", "keep"):
             for item in rec[key]:

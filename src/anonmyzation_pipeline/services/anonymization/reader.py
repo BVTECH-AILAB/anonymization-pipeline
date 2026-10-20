@@ -43,7 +43,10 @@ from anonmyzation_pipeline.services.anonymization.layers import (
     ocr_layer,
     split_glued,
 )
-from anonmyzation_pipeline.services.anonymization.pdf_pages import PageView
+from anonmyzation_pipeline.services.anonymization.pdf_pages import (
+    PageView,
+    pdfium_locked,
+)
 from anonmyzation_pipeline.services.anonymization.pdf_text import chars
 
 logger = logging.getLogger(__name__)
@@ -309,6 +312,7 @@ def pdfium_tokens(page: pdfium.PdfPage, info: dict | None = None) -> list[Token]
     return _to_page_space(info, shown) if rotation else shown
 
 
+@pdfium_locked
 def flattened_tokens(path: Path, views: list[PageView]) -> dict[int, list[Token]]:
     """Exact native tokens of every page, form-field values and annotations included.
 

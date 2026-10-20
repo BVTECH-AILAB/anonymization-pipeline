@@ -45,20 +45,22 @@ class Settings(BaseSettings):
     # --- Models ---
     # "auto" uses the GPU when one is available, otherwise the CPU.
     device: str = "auto"
-    # Load OCR and NER at startup; /readyz reports 503 until they are loaded
+    # Check the OCR server and load NER at startup; /readyz reports 503 until both are ready
     # (retried every 30 s).
     preload_models: bool = True
-    # PaddleOCR PP-OCRv5 (via RapidOCR): "mobile" or "server" text detector, on the GPU
-    # (PyTorch) when ``device`` resolves to cuda; recognition: the Latin model (ONNX Runtime).
-    # Stored in ocr_model_dir (empty: inside the package; in the image: /models/rapidocr)
-    ocr_model_type: Literal["mobile", "server"] = "server"
-    ocr_model_dir: str = ""
-    # Pages read at the same time, one OCR engine each. More than 1 only with GPU memory
-    # to spare (two server detectors at 300 dpi need about 6 GB): measure before raising it.
-    ocr_workers: int = Field(default=1, ge=1, le=16)
+    # Text layers: LiteParse; OCR: the PaddleOCR server of ocr-server/ (LiteParse OCR
+    # API). Base URL of that server; empty: /readyz stays 503, no document is read
+    # without OCR.
+    ocr_server_url: str = ""
+    # Native text layer: "liteparse" (word boxes, character boxes interpolated) or
+    # "pdfium" (exact character boxes from pypdfium2, glyph height as drawn).
+    native_text: Literal["liteparse", "pdfium"] = "pdfium"
+    # OCR on native pages: "liteparse" (every page with images, as LiteParse decides)
+    # or "grayscale" (only the grayscale clinical pictures, X-ray or CT, and only the
+    # words inside them; codes, signatures and photos go to the visual detectors)
+    picture_ocr: Literal["liteparse", "grayscale"] = "grayscale"
+    # Resolution of the pages sent to OCR (side margins are read by the server).
     ocr_dpi: int = Field(default=300, ge=100, le=600)
-    # Width of the side strips read again rotated by 90 degrees (vertical text).
-    ocr_margin_pt: float = Field(default=60, ge=0, le=200)
     ner_enabled: bool = True
     ner_model: str = "urchade/gliner_multi_pii-v1"
     # Second NER model (GLiNER2), run together with the first: its findings are added.

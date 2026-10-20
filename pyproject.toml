@@ -11,7 +11,6 @@ dependencies = [
     "uvicorn[standard]>=0.34",
     "python-multipart>=0.0.20",
     # Anonymization engine
-    "pymupdf>=1.28",
     "numpy>=2.0",
     "pillow>=11.0",
     "opencv-python-headless>=4.10",
@@ -22,9 +21,12 @@ dependencies = [
     "torchvision>=0.22",
     "gliner>=0.2",
     "pyyaml>=6.0",
-    "rapidocr>=3.10",
-    "onnxruntime>=1.20",
     "gliner2>=1.0",
+    "liteparse>=2.16.0",
+    "pypdfium2>=5.0",
+    "pypdf>=6.0",
+    # read by the GLiNER tokenizer (mdeberta SentencePiece), not declared by gliner
+    "protobuf>=5",
 ]
 
 [dependency-groups]

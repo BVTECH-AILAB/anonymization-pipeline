@@ -8,9 +8,7 @@ one rectangle per line, which is what redaction needs.
 import re
 from dataclasses import dataclass, field
 
-import pymupdf
-
-Rect = tuple[float, float, float, float]
+from anonmyzation_pipeline.services.anonymization.geometry import Rect, union
 
 
 @dataclass
@@ -34,6 +32,7 @@ class Token:
     line: int
     source: str
     conf: float = 1.0
+    direction: str = "ltr"  # reading direction, as in ``Word``
 
 
 @dataclass
@@ -81,50 +80,22 @@ class TextLayer:
 
     def rects(self, start: int, end: int, pad: float = 0.0) -> list[Rect]:
         """One rectangle per line covering the characters in [start, end)."""
-        by_line: dict[int, pymupdf.Rect] = {}
+        by_line: dict[int, Rect] = {}
         for t, a, b in self.token_range(start, end):
-            r = pymupdf.Rect()
-            for c in t.chars[a:b]:
-                r |= c
-            if r.is_empty:
+            r = union(t.chars[a:b])
+            if r is None:
                 continue
-            by_line[t.line] = by_line[t.line] | r if t.line in by_line else r
-        return [tuple(r + (-pad, -pad, pad, pad)) for r in by_line.values()]
-
-
-# ------------------------------------------------------------------ native ---
-_FLAGS = (
-    pymupdf.TEXT_PRESERVE_WHITESPACE | pymupdf.TEXT_PRESERVE_LIGATURES
-)  # no MEDIABOX_CLIP: off-page text too
-
-
-def page_number(page: pymupdf.Page) -> int:
-    """Zero-based number of a page that belongs to a document."""
-    number = page.number
-    if number is None:
-        raise ValueError("page does not belong to a document")
-    return number
-
-
-def _flush(
-    tokens: list[Token], text: list[str], chars: list[Rect], line_no: int
-) -> None:
-    """Close the current word: append it as a token and reset the buffers."""
-    if not text:
-        return
-    r = pymupdf.Rect()
-    for c in chars:
-        r |= c
-    tokens.append(
-        Token("".join(text), (r.x0, r.y0, r.x1, r.y1), list(chars), line_no, "native")
-    )
-    text.clear()
-    chars.clear()
+            by_line[t.line] = (
+                union([by_line[t.line], r]) or r if t.line in by_line else r
+            )
+        return [
+            (r[0] - pad, r[1] - pad, r[2] + pad, r[3] + pad) for r in by_line.values()
+        ]
 
 
 def _cell(text: str) -> str:
-    """The character of a one-character cell ("A", "7", "1." -> "1", "|"), or ""."""
-    c = text.rstrip(".,") if len(text) == 2 else text
+    """The character of a one-character cell ("A", "7", "1." or ".1" -> "1", "|"), or ""."""
+    c = text.strip(".,") if len(text) == 2 else text  # a dot or a speck read beside it
     return c if len(c) == 1 and (c.isdigit() or c.isupper() or c == "|") else ""
 
 
@@ -175,13 +146,11 @@ def merge_cells(tokens: list[Token], min_run: int = 5) -> list[Token]:
                 if c == "|":
                     c = "1" if text[-1:].isdigit() else "I"
                 text += c
-            r = pymupdf.Rect()
-            for t in run:
-                r |= t.rect
+            r = union(t.rect for t in run) or run[0].rect
             out.append(
                 Token(
                     text,
-                    (r.x0, r.y0, r.x1, r.y1),
+                    r,
                     [t.chars[0] if len(t.chars) == 1 else t.rect for t in run],
                     run[0].line,
                     run[0].source,
@@ -215,13 +184,11 @@ def split_glued(tokens: list[Token]) -> list[Token]:
             out.append(t)
             continue
         for a, b in zip([0, *cuts], [*cuts, len(t.text)], strict=True):
-            r = pymupdf.Rect()
-            for c in t.chars[a:b]:
-                r |= c
+            r = union(t.chars[a:b]) or t.chars[a]
             out.append(
                 Token(
                     t.text[a:b],
-                    (r.x0, r.y0, r.x1, r.y1),
+                    r,
                     t.chars[a:b],
                     t.line,
                     t.source,
@@ -231,49 +198,10 @@ def split_glued(tokens: list[Token]) -> list[Token]:
     return out
 
 
-def native_layer(page: pymupdf.Page) -> TextLayer:
-    """Tokens from the PDF text layer, with exact per-character boxes.
-    Includes invisible text (white, render mode 3), which must be redacted too."""
-    tokens: list[Token] = []
-    line_no = 0
-    for block in page.get_text("rawdict", flags=_FLAGS)["blocks"]:
-        if block.get("type") != 0:
-            continue
-        for line in block["lines"]:
-            cur_txt: list[str] = []
-            cur_chars: list[Rect] = []
-
-            horizontal = abs(line["dir"][0]) >= abs(line["dir"][1])
-            for span in line["spans"]:
-                for ch in span["chars"]:
-                    c = ch["c"]
-                    if c.isspace():
-                        _flush(tokens, cur_txt, cur_chars, line_no)
-                        continue
-                    if cur_chars:  # words written without space characters (e.g. scanner OCR layers)
-                        prev, bb = cur_chars[-1], ch["bbox"]
-                        size = max(span["size"], 1)
-                        # distance between the two character boxes along the writing direction
-                        gap = (
-                            (bb[0] - prev[2])
-                            if horizontal
-                            else max(prev[1] - bb[3], bb[1] - prev[3])
-                        )
-                        if gap > 0.12 * size:
-                            _flush(tokens, cur_txt, cur_chars, line_no)
-                    cur_txt.append(c)
-                    cur_chars.append(tuple(ch["bbox"]))
-            _flush(tokens, cur_txt, cur_chars, line_no)
-            line_no += 1
-    return TextLayer.build(
-        page_number(page), "native", merge_cells(split_glued(tokens))
-    )
-
-
-def is_vertical(rect: Rect | pymupdf.Rect, text: str) -> bool:
+def is_vertical(rect: Rect, text: str) -> bool:
     """True for a box of text written top-down or bottom-up (taller than wide, a real word)."""
-    r = pymupdf.Rect(rect)
-    return r.height > 1.5 * r.width and len(text) > 2
+    x0, y0, x1, y1 = rect
+    return (y1 - y0) > 1.5 * (x1 - x0) and len(text) > 2
 
 
 def char_boxes(rect: Rect, n: int, direction: str) -> list[Rect]:

@@ -22,7 +22,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Annotated, Any, Literal
 
-import pymupdf
+import pypdfium2 as pdfium
+import pypdfium2.raw as pdfium_c
 from fastapi import Depends, Request
 from PIL import Image, ImageOps
 
@@ -145,12 +146,14 @@ def to_pdf(
     """
     if suffix in PDF_SUFFIXES:
         try:
-            doc = pymupdf.open(stream=data, filetype="pdf")
+            doc = pdfium.PdfDocument(data)
+        except pdfium.PdfiumError as exc:
+            if getattr(exc, "err_code", None) == pdfium_c.FPDF_ERR_PASSWORD:
+                raise PasswordProtectedError() from exc
+            raise UnreadableDocumentError() from exc
         except Exception as exc:
             raise UnreadableDocumentError() from exc
-        with doc:
-            if doc.needs_pass:
-                raise PasswordProtectedError()
+        try:
             pages = len(doc)
             if pages == 0:
                 raise UnreadableDocumentError()
@@ -159,12 +162,15 @@ def to_pdf(
             scale = (render_dpi / 72) ** 2
             try:
                 too_large = any(
-                    p.rect.width * p.rect.height * scale > MAX_FRAME_PIXELS for p in doc
+                    w * h * scale > MAX_FRAME_PIXELS
+                    for w, h in (doc.get_page_size(i) for i in range(pages))
                 )
             except Exception as exc:
                 raise UnreadableDocumentError() from exc
             if too_large:
                 raise UnreadableDocumentError()
+        finally:
+            doc.close()
         dest.write_bytes(data)
         return pages
     if suffix not in IMAGE_SUFFIXES:
@@ -176,7 +182,8 @@ def to_pdf(
         raise UnreadableDocumentError() from exc
     if n_frames > max_pages:
         raise TooManyPagesError()
-    with pymupdf.open() as doc:
+    doc = pdfium.PdfDocument.new()
+    try:
         try:
             for i in range(n_frames):
                 img.seek(i)
@@ -188,15 +195,20 @@ def to_pdf(
                 dpi = (frame.info.get("dpi") or (200, 200))[0] or 200
                 buf = io.BytesIO()
                 frame.save(buf, "JPEG", quality=92)
-                page = doc.new_page(
-                    width=frame.width * 72 / dpi, height=frame.height * 72 / dpi
-                )
-                page.insert_image(page.rect, stream=buf.getvalue())
+                width, height = frame.width * 72 / dpi, frame.height * 72 / dpi
+                page = doc.new_page(width, height)
+                image = pdfium.PdfImage.new(doc)
+                image.load_jpeg(io.BytesIO(buf.getvalue()), inline=True)
+                image.set_matrix(pdfium.PdfMatrix().scale(width, height))
+                page.insert_obj(image)
+                page.gen_content()
         except UnreadableDocumentError:
             raise
         except Exception as exc:
             raise UnreadableDocumentError() from exc
         doc.save(dest)
+    finally:
+        doc.close()
     return n_frames
 
 
@@ -623,10 +635,13 @@ class JobManager:
         cache = job.dir / f"{which}-{page}-{dpi}-{version}.png"
         if not cache.exists():
             src = job.original if which == "original" else job.anonymized
-            with pymupdf.open(src) as doc:
+            doc = pdfium.PdfDocument(src)
+            try:
                 if not 0 <= page < len(doc):
                     raise JobNotFoundError()
-                doc[page].get_pixmap(dpi=dpi).save(cache)
+                doc[page].render(scale=dpi / 72).to_pil().save(cache, "PNG")
+            finally:
+                doc.close()
         return cache
 
 

@@ -1,9 +1,11 @@
-"""Fail-closed verification of a redacted PDF.
+"""Fail-closed verification of a redacted PDF (pypdfium2 and pypdf).
 
-1. under every box no original text survives (only our tag)
-2. no redacted value appears anywhere in the output text, raw (decompressed)
-   bytes or metadata
-3. preservation: rendered pages are identical outside the boxes
+1. under every box no original text survives;
+2. no text is left outside the visible page area;
+3. no redacted value appears anywhere in the output text, decoded file
+   objects or metadata, and no annotation, bookmark or document entry that can
+   carry text is left;
+4. preservation: rendered pages are identical outside the boxes.
 """
 
 import re
@@ -11,15 +13,20 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
-import pymupdf
+import pypdfium2 as pdfium
+import pypdfium2.raw as pdfium_c
 from docx import Document
+from pypdf import PdfReader
+from pypdf.generic import IndirectObject, StreamObject
 
-from anonmyzation_pipeline.services.anonymization.layers import is_vertical
-from anonmyzation_pipeline.services.anonymization.pipeline import Analysis
-from anonmyzation_pipeline.services.anonymization.taxonomy import LABELS, STRONG_LABELS
-
-# values strong enough to search globally (single surnames can collide with eponyms)
-_TAGS = {w for lab in LABELS.values() for t in (lab.tag, lab.short) for w in t.split()}
+from anonmyzation_pipeline.services.anonymization.pdf_pages import (
+    FLATTEN_DPI,
+    page_box,
+    render_page,
+    to_pdf,
+)
+from anonmyzation_pipeline.services.anonymization.pipeline import Analysis, to_display
+from anonmyzation_pipeline.services.anonymization.taxonomy import STRONG_LABELS
 
 
 @dataclass
@@ -47,15 +54,15 @@ class Report:
             self.pages.add(page)
 
 
-def render_matrix(page: pymupdf.Page, dpi: int) -> pymupdf.Matrix:
-    """The scale that renders ``page`` at ``dpi`` with a whole number of pixels per side.
+@dataclass
+class Release:
+    """Outcome of ``redact_and_verify``."""
 
-    A flattened page is an image of exactly that many pixels: rendered with this
-    matrix, one image pixel is one rendered pixel, with no resampling to blur the
-    comparison (at 200 dpi a 595.5 pt page is 1654.2 pixels wide, not 1655).
-    """
-    size = (page.rect * pymupdf.Matrix(dpi / 72, dpi / 72)).irect
-    return pymupdf.Matrix(size.width / page.rect.width, size.height / page.rect.height)
+    report: Report
+    flattened: list[int] = field(
+        default_factory=list
+    )  # 0-based pages released as images
+    seconds: dict[str, float] = field(default_factory=dict)  # redaction, verification
 
 
 def _norm(s: str) -> str:
@@ -93,114 +100,141 @@ def verify_docx(path: Path, analysis: Analysis) -> list[str]:
     ]
 
 
+def _words(
+    textpage: pdfium.PdfTextPage, box: tuple[float, float, float, float]
+) -> list[str]:
+    left, bottom, right, top = box
+    return textpage.get_text_bounded(left, bottom, right, top).split()
+
+
+def _file_text(path: Path) -> tuple[bytes, str, PdfReader]:
+    """Every object of the file, streams decoded, and its metadata as text."""
+    reader = PdfReader(path)
+    chunks: list[bytes] = []
+    for gen, ids in reader.xref.items():
+        for idnum in ids:
+            try:
+                obj = reader.get_object(IndirectObject(idnum, gen, reader))
+            except Exception:  # noqa: S112 - a broken object cannot hide a value from the others
+                continue
+            if isinstance(obj, StreamObject):
+                try:
+                    chunks.append(obj.get_data())
+                except Exception:  # noqa: S112
+                    chunks.append(obj._data)
+            chunks.append(str(obj).encode("latin-1", "ignore"))
+    for idnum in reader.xref_objStm:
+        try:
+            obj = reader.get_object(IndirectObject(idnum, 0, reader))
+        except Exception:  # noqa: S112
+            continue
+        chunks.append(str(obj).encode("latin-1", "ignore"))
+    meta = " ".join(str(v) for v in (reader.metadata or {}).values() if v)
+    xmp = reader.xmp_metadata
+    if xmp is not None:
+        meta += " " + str(xmp.stream.get_data(), "utf-8", "ignore")
+    return b"".join(chunks), meta, reader
+
+
 def verify(
     src: Path,
     out: Path,
     analysis: Analysis,
+    flat: set[int],
     dpi: int = 72,
     tol: float = 2e-4,
-    raster_pages: dict[int, int] | None = None,
 ) -> Report:
-    """Fail-closed checks of ``out`` against ``src``: nothing left under the boxes, no value or
-    text outside the page left in the file, pixels unchanged outside the boxes."""
-    raster_pages = raster_pages or {}  # page -> dpi of pages replaced by a rendering
+    """Fail-closed checks of ``out`` against ``src``: nothing left under the boxes, no
+    value or text outside the page left in the file, pixels unchanged outside the boxes.
+
+    Args:
+        src: Original PDF.
+        out: Redacted PDF.
+        analysis: Boxes; ``applied`` holds the painted rectangles.
+        flat: Pages replaced by a rendering (compared at ``FLATTEN_DPI``).
+        dpi: Resolution of the pixel comparison of the other pages.
+        tol: Share of pixels allowed to change outside the boxes.
+    """
     rep = Report()
-    a, b = pymupdf.open(src), pymupdf.open(out)
+    boxes = [x for x in analysis.boxes if x.redact]
+    a, b = pdfium.PdfDocument(src), pdfium.PdfDocument(out)
     try:
-        boxes = [x for x in analysis.boxes if x.redact]
-
-        # 1. nothing left under the boxes
-        for x in boxes:
-            if x.layer == "visual":
-                continue
-            r = pymupdf.Rect(x.rect)
-            if is_vertical(r, x.text):
-                r = pymupdf.Rect(
-                    r.x0 + r.width * 0.3, r.y0 + 1, r.x1 - r.width * 0.3, r.y1 - 1
-                )
-            else:
-                r = pymupdf.Rect(
-                    r.x0 + 1, r.y0 + r.height * 0.3, r.x1 - 1, r.y1 - r.height * 0.3
-                )
-            left = [
-                w
-                for w in b[x.page].get_text("words", clip=r)
-                if w[4] not in _TAGS and pymupdf.Rect(w[:4]).intersects(r)
-            ]
-            orig = _norm(x.text)
-            for w in left:
-                if len(w[4]) >= 2 and _norm(w[4]) in orig:
-                    rep.fail(f"'{w[4]}' still under {x.label} box", x.page)
-
-        # 1b. text outside the visible page area: invisible, never detected, still in the file
-        for pno in range(b.page_count):
+        if len(a) != len(b):
+            rep.fail(f"page count changed: {len(a)} -> {len(b)}")
+            return rep
+        texts: list[str] = []
+        for pno in range(len(b)):
             page = b[pno]
-            visible = page.rect * page.derotation_matrix
-            hidden = [
-                w
-                for w in page.get_text("words", clip=pymupdf.INFINITE_RECT())
-                if not pymupdf.Rect(w[:4]).intersects(visible)
-            ]
-            if hidden:
-                rep.fail(f"{len(hidden)} words outside the visible page area", pno)
+            textpage = page.get_textpage()
+            texts.append(textpage.get_text_bounded())
+            # 1. nothing left under the boxes
+            for x in boxes:
+                if x.page != pno or x.layer == "visual":
+                    continue
+                # a flattened page is stored upright, as displayed
+                r = to_display(x.rect, analysis.pages[pno]) if pno in flat else x.rect
+                inner = (
+                    r[0] + 1,
+                    r[1] + (r[3] - r[1]) * 0.3,
+                    r[2] - 1,
+                    r[3] - (r[3] - r[1]) * 0.3,
+                )
+                if inner[2] <= inner[0] or inner[3] <= inner[1]:
+                    continue
+                orig = _norm(x.text)
+                for w in _words(textpage, to_pdf(page, inner)):
+                    if len(w) >= 2 and _norm(w) in orig:
+                        rep.fail(f"'{w}' still under {x.label} box", pno)
+            # 1b. text outside the visible page area
+            cx0, cy0, cx1, cy1 = page_box(page)
+            outside = 0
+            for i in range(textpage.count_chars()):
+                left, bottom, right, top = textpage.get_charbox(i)
+                if right < cx0 or left > cx1 or top < cy0 or bottom > cy1:
+                    outside += 1
+            if outside:
+                rep.fail(f"{outside} characters outside the visible page area", pno)
+            # annotations
+            if pdfium_c.FPDFPage_GetAnnotCount(page.raw) > 0:
+                rep.fail("annotations left", pno)
 
         # 2. global search for strong values
-        full = _norm(" ".join(p.get_text() for p in b))
-        raw = b"".join(
-            (b.xref_stream(i) or b"") + b.xref_object(i).encode("latin-1", "ignore")
-            for i in range(1, b.xref_length())
-        )
+        full = _norm(" ".join(texts))
+        raw, meta, reader = _file_text(out)
         raw_low = raw.lower()
-        md = " ".join(str(v) for v in (b.metadata or {}).values() if v) + (
-            b.get_xml_metadata() or ""
-        )
-        values = strong_values(analysis)
-        for v in values:
+        for v in strong_values(analysis):
             nv = _norm(v)
-            if nv in full:
+            if nv and nv in full:
                 rep.fail(f"value still in text: '{v}'")
-            if v.lower().encode("latin-1", "ignore") in raw_low and len(v) >= 6:
+            if len(v) >= 6 and v.lower().encode("latin-1", "ignore") in raw_low:
                 rep.fail(f"value still in file bytes: '{v}'")
-            if nv and nv in _norm(md):
+            if nv and nv in _norm(meta):
                 rep.fail(f"value still in metadata: '{v}'")
-        for pno in range(b.page_count):
-            if list(b[pno].annots() or []):
-                rep.fail("annotations left", pno)
-        # bookmarks and the structure tree carry text outside the pages
-        if b.get_toc():
+        if reader.outline:
             rep.fail("bookmarks left")
-        cat = b.pdf_catalog()
-        for key in ("StructTreeRoot", "Names"):
-            if b.xref_get_key(cat, key)[0] != "null":
-                rep.fail(f"document entry left: {key}")
+        root = reader.root_object
+        for key in ("/StructTreeRoot", "/Names", "/AcroForm", "/OpenAction"):
+            if key in root:
+                rep.fail(f"document entry left: {key[1:]}")
 
         # 3. preservation outside the boxes
-        for pno in range(min(a.page_count, b.page_count)):
-            pa, pb = a[pno], b[pno]
-            matrix = render_matrix(pa, raster_pages.get(pno, dpi))
-            ia = pa.get_pixmap(matrix=matrix, alpha=False, annots=False)
-            ib = pb.get_pixmap(matrix=matrix, alpha=False, annots=False)
-            A = (
-                np.frombuffer(ia.samples, np.uint8)
-                .reshape(ia.height, ia.width, ia.n)
-                .astype(np.int16)
-            )
-            B = (
-                np.frombuffer(ib.samples, np.uint8)
-                .reshape(ib.height, ib.width, ib.n)
-                .astype(np.int16)
-            )
+        for pno in range(len(a)):
+            scale = (FLATTEN_DPI if pno in flat else dpi) / 72
+            A = render_page(a[pno], scale).astype(np.int16)
+            B = render_page(b[pno], scale).astype(np.int16)
+            if A.shape != B.shape:
+                rep.fail(f"page size changed: {A.shape} -> {B.shape}", pno)
+                continue
             diff = np.abs(A - B).max(axis=2) > 40
-            sx, sy = matrix.a, matrix.d
+            info = analysis.pages[pno]
             rects = [r for n, r, _ in analysis.applied if n == pno] or [
                 x.rect for x in boxes if x.page == pno
             ]
-            # boxes are in unrotated coordinates, the rendering is rotated
-            rects = [tuple(pymupdf.Rect(r) * pa.rotation_matrix) for r in rects]
-            for x0, y0, x1, y1 in rects:
+            for rect in rects:
+                x0, y0, x1, y1 = to_display(rect, info)
                 diff[
-                    max(0, int((y0 - 3) * sy)) : int((y1 + 3) * sy) + 1,
-                    max(0, int((x0 - 3) * sx)) : int((x1 + 3) * sx) + 1,
+                    max(0, int((y0 - 3) * scale)) : int((y1 + 3) * scale) + 1,
+                    max(0, int((x0 - 3) * scale)) : int((x1 + 3) * scale) + 1,
                 ] = False
             frac = float(diff.mean())
             rep.pixel_changed_outside.append(frac)

@@ -3,8 +3,9 @@
 from pathlib import Path
 
 import numpy as np
-import pymupdf
+import pypdfium2 as pdfium
 from docx import Document
+from pypdf import PdfReader
 
 from anonmyzation_pipeline.services.anonymization.layers import Word, char_boxes
 from anonmyzation_pipeline.services.anonymization.pipeline import (
@@ -14,54 +15,63 @@ from anonmyzation_pipeline.services.anonymization.pipeline import (
     from_display,
     to_display,
 )
-from anonmyzation_pipeline.services.anonymization.redact import redact
-from anonmyzation_pipeline.services.anonymization.release import (
-    FLATTEN_DPI,
-    flatten_pages,
-)
-from anonmyzation_pipeline.services.anonymization.verify import verify, verify_docx
+from anonmyzation_pipeline.services.anonymization.release import redact_and_verify
+from anonmyzation_pipeline.services.anonymization.verify import verify_docx
 from tests.conftest import FAKE_CF
-from tests.documents import FakeNER, FakeOCR
+from tests.documents import (
+    FakeNER,
+    FakeReader,
+    draw_pdf,
+    edit_pdf,
+    find_text,
+    scanned_pdf,
+)
 
 
-def _rotated_scan(tmp_path: Path) -> tuple[Path, pymupdf.Rect]:
+def _rotated_scan(tmp_path: Path) -> tuple[Path, tuple[float, float, float, float]]:
     """A scanned page stored with /Rotate 90 and the page-space box of the CF on it."""
-    src = pymupdf.open()
-    page = src.new_page(width=595, height=842)
-    page.insert_text((100, 700), f"C.F. {FAKE_CF}", fontsize=14)
-    cf = page.search_for(FAKE_CF)[0]
-    pix = page.get_pixmap(dpi=100)
-    scan = pymupdf.open()
-    sp = scan.new_page(width=595, height=842)
-    sp.insert_image(sp.rect, stream=pix.tobytes("png"))
-    sp.set_rotation(90)
-    path = tmp_path / "rotated_scan.pdf"
-    scan.save(path)
-    return path, cf
+    native = draw_pdf(
+        tmp_path / "native.pdf", lambda p: p.text(100, 700, f"C.F. {FAKE_CF}", size=14)
+    )
+    cf = find_text(native, FAKE_CF)
+    scan = scanned_pdf(native, tmp_path / "scan.pdf", dpi=100)
+    return edit_pdf(scan, tmp_path / "rotated_scan.pdf", rotate={0: 90}), cf
+
+
+def _dark_box(img: np.ndarray, scale: float) -> tuple[float, float, float, float]:
+    ys, xs = np.nonzero(img.mean(axis=2) < 60)
+    return (
+        xs.min() / scale,
+        ys.min() / scale,
+        (xs.max() + 1) / scale,
+        (ys.max() + 1) / scale,
+    )
 
 
 def test_ocr_boxes_of_a_rotated_scan_land_on_the_text(tmp_path: Path) -> None:
     path, cf = _rotated_scan(tmp_path)
-    with pymupdf.open(path) as doc:
-        shown = (
-            cf * doc[0].rotation_matrix
-        )  # where the OCR sees the code on the rendering
-    word = Word(FAKE_CF, tuple(shown), 0.99, "ocr", 0)  # type: ignore[arg-type]
-    analysis = Pipeline(FakeOCR({0: [word]}), FakeNER(())).analyze(path)
+    info = {
+        "width": 842,
+        "height": 595,
+        "rotation": 90,
+        "page_width": 595,
+        "page_height": 842,
+    }
+    shown = to_display(cf, info)  # where the OCR sees the code on the rendering
+    word = Word(FAKE_CF, shown, 0.99, "ocr", 0)
+    analysis = Pipeline(FakeReader({0: [word]}), FakeNER(())).analyze(path)
 
     boxes = [b for b in analysis.boxes if b.label == "FISCAL_CODE"]
     assert boxes
-    assert pymupdf.Rect(boxes[0].rect).contains(cf + (1, 1, -1, -1))
+    x0, y0, x1, y1 = boxes[0].rect
+    assert x0 <= cf[0] + 1 and y0 <= cf[1] + 1 and x1 >= cf[2] - 1 and y1 >= cf[3] - 1
 
     out = tmp_path / "out.pdf"
-    redact(path, analysis, out)
-    assert verify(path, out, analysis).ok
-    with pymupdf.open(out) as doc:
-        pix = doc[0].get_pixmap(dpi=72, clip=cf * doc[0].rotation_matrix)
-        dark = np.frombuffer(pix.samples, np.uint8).reshape(
-            pix.height, pix.width, pix.n
-        )
-        assert dark.mean() < 60  # the code is under a black box
+    assert redact_and_verify(path, analysis, out).report.ok
+    with pdfium.PdfDocument(out) as doc:
+        img = doc[0].render(scale=1, rev_byteorder=True).to_numpy()[:, :, :3]
+    sx0, sy0, sx1, sy1 = (int(v) for v in shown)
+    assert img[sy0 + 2 : sy1 - 2, sx0 + 2 : sx1 - 2].mean() < 60  # under a black box
 
 
 def test_character_boxes_follow_the_reading_direction() -> None:
@@ -72,21 +82,21 @@ def test_character_boxes_follow_the_reading_direction() -> None:
     assert up[0][3] == 30 and up[-1][1] == 0
 
 
-def test_text_outside_the_visible_page_blocks_the_document(tmp_path: Path) -> None:
-    doc = pymupdf.open()
-    page = doc.new_page(width=595, height=842)
-    page.insert_text((100, 100), "Referto", fontsize=12)
-    page.insert_text((100, 900), f"C.F. {FAKE_CF}", fontsize=12)  # below the page
-    src = tmp_path / "offpage.pdf"
-    doc.save(src)
-    analysis = Pipeline(FakeOCR(), FakeNER(())).analyze(src)
+def test_text_outside_the_visible_page_is_not_released(tmp_path: Path) -> None:
+    def draw(p) -> None:
+        p.text(100, 100, "Referto", size=12)
+        p.text(100, 900, f"C.F. {FAKE_CF}", size=12)  # below the page
+
+    src = draw_pdf(tmp_path / "offpage.pdf", draw)
+    analysis = Pipeline(FakeReader(), FakeNER(())).analyze(src)
     out = tmp_path / "out.pdf"
-    redact(src, analysis, out)
 
-    rep = verify(src, out, analysis)
+    release = redact_and_verify(src, analysis, out)
 
-    assert not rep.ok
-    assert any("outside the visible page" in issue for issue in rep.issues)
+    assert release.report.ok, release.report.issues
+    assert FAKE_CF.encode() not in out.read_bytes()
+    with pdfium.PdfDocument(out) as doc:
+        assert FAKE_CF not in doc[0].get_textpage().get_text_bounded()
 
 
 def test_a_value_left_in_the_word_export_is_reported(tmp_path: Path) -> None:
@@ -106,61 +116,35 @@ def test_a_value_left_in_the_word_export_is_reported(tmp_path: Path) -> None:
     assert verify_docx(clean, analysis) == []
 
 
-def test_display_and_page_space_round_trip_for_every_rotation() -> None:
-    doc = pymupdf.open()
-    page = doc.new_page(width=595, height=842)
-    rect = pymupdf.Rect(300, 600, 400, 650)
+def test_display_space_matches_the_rendering_for_every_rotation(tmp_path: Path) -> None:
+    rect = (300.0, 600.0, 400.0, 650.0)
+    src = draw_pdf(
+        tmp_path / "box.pdf", lambda p: p.rect(rect, fill=(0, 0, 0), stroke=None)
+    )
     for rotation in (0, 90, 180, 270):
-        page.set_rotation(rotation)
+        rotated = edit_pdf(src, tmp_path / f"r{rotation}.pdf", rotate={0: rotation})
         info = {
-            "width": page.rect.width,
-            "height": page.rect.height,
+            "width": 842 if rotation % 180 else 595,
+            "height": 595 if rotation % 180 else 842,
             "rotation": rotation,
             "page_width": 595,
             "page_height": 842,
         }
-        shown = to_display((rect.x0, rect.y0, rect.x1, rect.y1), info)
-        assert pymupdf.Rect(shown) == rect * page.rotation_matrix
-        assert pymupdf.Rect(from_display(shown, info)) == rect
+        with pdfium.PdfDocument(rotated) as doc:
+            img = doc[0].render(scale=2, rev_byteorder=True).to_numpy()[:, :, :3]
+        shown = to_display(rect, info)
+        assert np.allclose(_dark_box(img, 2), shown, atol=1)
+        assert from_display(shown, info) == rect
 
 
-def test_bookmarks_and_structure_tree_do_not_survive(tmp_path: Path) -> None:
-    doc = pymupdf.open()
-    page = doc.new_page()
-    page.insert_text((72, 72), "Referto", fontsize=12)
-    doc.set_toc([[1, "Lettera dimissione - ROSSI MARIO", 1]])
-    src = tmp_path / "bookmarked.pdf"
-    doc.save(src)
-    analysis = Pipeline(FakeOCR(), FakeNER(())).analyze(src)
+def test_bookmarks_and_structure_do_not_survive(tmp_path: Path) -> None:
+    src = draw_pdf(tmp_path / "b.pdf", lambda p: p.text(72, 72, "Referto", size=12))
+    edit_pdf(src, outline=["Lettera dimissione - ROSSI MARIO"])
+    analysis = Pipeline(FakeReader(), FakeNER(())).analyze(src)
     out = tmp_path / "out.pdf"
 
-    redact(src, analysis, out)
+    release = redact_and_verify(src, analysis, out)
 
-    with pymupdf.open(out) as result:
-        assert result.get_toc() == []
-        assert b"ROSSI" not in b"".join(
-            result.xref_object(i).encode() for i in range(1, result.xref_length())
-        )
-    assert verify(src, out, analysis).ok
-
-
-def test_a_flattened_page_of_fractional_size_passes_the_pixel_check(
-    tmp_path: Path,
-) -> None:
-    # A4 as scanners write it: 595.5 x 842.1 pt is not a whole number of pixels at 200 dpi
-    src = tmp_path / "a4.pdf"
-    doc = pymupdf.open()
-    page = doc.new_page(width=595.5, height=842.1)
-    for i in range(30):
-        page.insert_text(
-            (60, 80 + 22 * i), f"Riga {i} del referto, {FAKE_CF}", fontsize=10
-        )
-    doc.save(src)
-    analysis = Pipeline(FakeOCR(), FakeNER(())).analyze(src)
-    out = tmp_path / "out.pdf"
-    redact(src, analysis, out)
-
-    flatten_pages(src, analysis, out, {0})
-    rep = verify(src, out, analysis, raster_pages={0: FLATTEN_DPI})
-
-    assert rep.ok, rep.issues
+    assert release.report.ok, release.report.issues
+    assert not PdfReader(out).outline
+    assert b"ROSSI" not in out.read_bytes()

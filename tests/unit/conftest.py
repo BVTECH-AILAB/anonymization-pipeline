@@ -1,4 +1,4 @@
-"""Unit-test app: real routers and middleware, job manager on fake OCR and NER."""
+"""Unit-test app: real routers and middleware, job manager on a fake OCR server and NER."""
 
 from collections.abc import Iterator
 from pathlib import Path
@@ -10,17 +10,17 @@ from anonmyzation_pipeline.config import Settings
 from anonmyzation_pipeline.main import create_app
 from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
 from anonmyzation_pipeline.services.jobs import JobManager, get_job_manager
-from tests.documents import FakeNER, FakeOCR, letter_pdf
+from tests.documents import FakeNER, FakeReader, letter_pdf
 
 
 @pytest.fixture
-def fake_ocr() -> FakeOCR:
-    return FakeOCR()
+def fake_reader() -> FakeReader:
+    return FakeReader()
 
 
 @pytest.fixture
-def pipeline(fake_ocr: FakeOCR) -> Pipeline:
-    return Pipeline(fake_ocr, FakeNER())
+def pipeline(fake_reader: FakeReader) -> Pipeline:
+    return Pipeline(fake_reader, FakeNER())
 
 
 @pytest.fixture

@@ -21,8 +21,11 @@ from anonmyzation_pipeline.services.anonymization.detect.ner import (
     GlinerNER,
     NerEngine,
 )
-from anonmyzation_pipeline.services.anonymization.ocr import RapidOcrEngine
 from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
+from anonmyzation_pipeline.services.anonymization.reader import (
+    LiteparseReader,
+    TextReader,
+)
 from anonmyzation_pipeline.services.jobs import JobManager
 
 logger = logging.getLogger(__name__)
@@ -31,16 +34,18 @@ PURGE_INTERVAL_SECONDS = 60
 MODEL_RETRY_SECONDS = 30
 
 
-def build_pipeline(settings: Settings) -> Pipeline:
-    """OCR and NER engines from the settings. No weights are loaded here."""
-    ocr = RapidOcrEngine(
+def build_reader(settings: Settings) -> TextReader:
+    """The text reader: LiteParse plus the OCR server. Nothing is loaded here."""
+    return LiteparseReader(
+        settings.ocr_server_url,
         dpi=settings.ocr_dpi,
-        margin_pt=settings.ocr_margin_pt,
-        model_type=settings.ocr_model_type,
-        model_dir=settings.ocr_model_dir,
-        device=settings.device,
-        workers=settings.ocr_workers,
+        native=settings.native_text,
+        picture_ocr=settings.picture_ocr,
     )
+
+
+def build_pipeline(settings: Settings) -> Pipeline:
+    """Text reader and NER engines from the settings. No weights are loaded here."""
     ner: NerEngine | None = None
     if settings.ner_enabled:
         # the models keep everything above the lower threshold; the pipeline applies both
@@ -50,7 +55,7 @@ def build_pipeline(settings: Settings) -> Pipeline:
             second = Gliner2NER(settings.ner2_model, threshold, device=settings.device)
             ner = CombinedNER(ner, second)
     return Pipeline(
-        ocr,
+        build_reader(settings),
         ner,
         policy=settings.redaction_policy,
         ner_threshold=settings.ner_threshold,
@@ -67,7 +72,7 @@ def load_models(pipeline: Pipeline) -> bool:
     Returns:
         True when every engine is ready.
     """
-    engines = [("ocr", pipeline.ocr), ("ner", pipeline.ner)]
+    engines = [("reader", pipeline.reader), ("ner", pipeline.ner)]
     for name, engine in engines:
         if engine is None or engine.ready:
             continue

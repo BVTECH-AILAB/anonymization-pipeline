@@ -3,11 +3,11 @@ Layout is preserved only in the PDF; this is for editing the text."""
 
 from pathlib import Path
 
-import pymupdf
 from docx import Document
 from docx.enum.text import WD_BREAK
 from docx.shared import Pt, RGBColor
 
+from anonmyzation_pipeline.services.anonymization.geometry import contains_point, grow
 from anonmyzation_pipeline.services.anonymization.pipeline import Analysis
 
 
@@ -20,9 +20,7 @@ def export_docx(analysis: Analysis, out: Path) -> None:
     red = {}
     for b in analysis.boxes:
         if b.redact:
-            red.setdefault(b.page, []).append(
-                pymupdf.Rect(b.rect) + (-0.5, -0.5, 0.5, 0.5)
-            )
+            red.setdefault(b.page, []).append(grow(b.rect, 0.5))
     for pno, info in enumerate(analysis.pages):
         layers = [L for L in analysis.layers if L.page == pno]
         layer = (
@@ -49,11 +47,8 @@ def export_docx(analysis: Analysis, out: Path) -> None:
                     para.add_run(" ")
                 buf, hidden = "", None
                 for ch, cr in zip(t.text, t.chars, strict=False):
-                    c = pymupdf.Rect(cr)
-                    h = any(
-                        r.contains(pymupdf.Point((c.x0 + c.x1) / 2, (c.y0 + c.y1) / 2))
-                        for r in rects
-                    )
+                    cx, cy = (cr[0] + cr[2]) / 2, (cr[1] + cr[3]) / 2
+                    h = any(contains_point(r, cx, cy) for r in rects)
                     if hidden is not None and h != hidden:
                         _run(para, buf, hidden)
                         buf = ""

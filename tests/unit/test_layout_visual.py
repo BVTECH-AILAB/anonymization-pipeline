@@ -1,37 +1,35 @@
 """Text layout and visual marks: character boxes, vector signatures and stamps, clinical pictures."""
 
 import io
+from pathlib import Path
 
 import numpy as np
-import pymupdf
 from PIL import Image
 
 from anonmyzation_pipeline.services.anonymization.detect import visual
 from anonmyzation_pipeline.services.anonymization.layers import (
     Token,
     Word,
-    native_layer,
     ocr_layer,
     split_glued,
 )
+from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
 from tests.conftest import FAKE_CF
+from tests.documents import FakeNER, FakeReader, Page, draw_pdf, page_view
 
 
-def _page() -> tuple[pymupdf.Document, pymupdf.Page]:
-    doc = pymupdf.open()
-    return doc, doc.new_page(width=595, height=842)
+def test_characters_printed_one_per_box_become_one_word(tmp_path: Path) -> None:
+    def draw(page: Page) -> None:
+        for i, ch in enumerate(FAKE_CF):  # one cell per character, as on paper forms
+            page.rect((50 + i * 15, 100, 65 + i * 15, 116))
+            page.text(54 + i * 15, 112, ch, size=11)
+        page.text(50, 200, "e a i o u sono vocali in una frase normale", size=11)
 
+    src = draw_pdf(tmp_path / "cells.pdf", draw)
+    analysis = Pipeline(FakeReader(), FakeNER(())).analyze(src)
+    (layer,) = analysis.layers
 
-def test_characters_printed_one_per_box_become_one_word() -> None:
-    doc, page = _page()
-    for i, ch in enumerate(FAKE_CF):  # one cell per character, as on paper forms
-        page.draw_rect(pymupdf.Rect(50 + i * 15, 100, 65 + i * 15, 116))
-        page.insert_text((54 + i * 15, 112), ch, fontsize=11)
-    page.insert_text(
-        (50, 200), "e a i o u sono vocali in una frase normale", fontsize=11
-    )
-
-    tokens = [t.text for t in native_layer(page).tokens]
+    tokens = [t.text for t in layer.tokens]
 
     assert FAKE_CF in tokens
     assert "frase" in tokens and "a" in tokens  # prose stays word by word
@@ -79,24 +77,20 @@ def test_table_borders_alone_are_not_a_code() -> None:
     assert [t.text for t in ocr_layer(0, words).tokens] == ["|"] * 6
 
 
-def test_vector_signature_and_stamp_frame_are_found_and_logos_ignored() -> None:
-    doc, page = _page()
-    shape = page.new_shape()
-    for k in range(3):  # a handwritten signature: an open stroke of curves
-        shape.draw_bezier(
-            (60 + 60 * k, 420),
-            (80 + 60 * k, 400),
-            (100 + 60 * k, 440),
-            (120 + 60 * k, 420),
-        )
-    shape.finish(color=(0.1, 0.15, 0.4), width=0.9, closePath=False)
-    shape.draw_rect(pymupdf.Rect(300, 400, 450, 460), radius=0.1)  # stamp frame
-    shape.finish(color=(0.3, 0.2, 0.6), width=1.2)
-    shape.draw_circle((60, 60), 15)  # filled logo
-    shape.finish(fill=(0.2, 0.4, 0.6), color=None)
-    shape.commit()
+def test_vector_signature_and_stamp_frame_are_found_and_logos_ignored(
+    tmp_path: Path,
+) -> None:
+    def draw(page: Page) -> None:
+        points = [(60.0, 420.0)]
+        for k in range(3):  # a handwritten signature: an open stroke of curves
+            points += [(80 + 60 * k, 400), (100 + 60 * k, 440), (120 + 60 * k, 420)]
+        page.bezier(points, (0.1, 0.15, 0.4), 0.9)
+        page.rect((300, 400, 450, 460), stroke=(0.3, 0.2, 0.6), width=1.2, radius=6)
+        page.circle(60, 60, 15, fill=(0.2, 0.4, 0.6))  # filled logo
 
-    labels = sorted(f.label for f in visual.vector_marks(page))
+    src = draw_pdf(tmp_path / "marks.pdf", draw)
+
+    labels = sorted(f.label for f in visual.vector_marks(page_view(src)))
 
     assert labels == ["SIGNATURE", "STAMP"]
 
@@ -107,25 +101,24 @@ def _png(array: np.ndarray) -> bytes:
     return buf.getvalue()
 
 
-def test_a_grayscale_xray_is_a_picture_not_a_stamp() -> None:
-    doc, page = _page()
+def test_a_grayscale_xray_is_a_picture_not_a_stamp(tmp_path: Path) -> None:
     rng = np.random.default_rng(0)
     xray = (rng.random((300, 300)) * 120).astype(np.uint8)  # dark, textured
-    page.insert_image(
-        pymupdf.Rect(60, 200, 300, 440), stream=_png(np.stack([xray] * 3, -1))
-    )
+    png = _png(np.stack([xray] * 3, -1))
+    src = draw_pdf(tmp_path / "xray.pdf", lambda p: p.image((60, 200, 300, 440), png))
 
-    assert [colour for _, colour in visual.pictures(page)] == [False]
-    assert visual.embedded_images(page) == []  # left visible: its text goes to OCR
+    assert [colour for _, colour in visual.pictures(page_view(src))] == [False]
+    # left visible: its text goes to OCR
+    assert visual.embedded_images(page_view(src)) == []
 
 
-def test_a_colour_photo_is_redacted_whole() -> None:
-    doc, page = _page()
+def test_a_colour_photo_is_redacted_whole(tmp_path: Path) -> None:
     photo = np.zeros((200, 200, 3), np.uint8)
     photo[..., 0], photo[..., 1] = 200, 80  # saturated orange skin-like tone
-    page.insert_image(pymupdf.Rect(60, 200, 260, 400), stream=_png(photo))
+    png = _png(photo)
+    src = draw_pdf(tmp_path / "photo.pdf", lambda p: p.image((60, 200, 260, 400), png))
 
-    assert [f.label for f in visual.embedded_images(page)] == ["FACE"]
+    assert [f.label for f in visual.embedded_images(page_view(src))] == ["FACE"]
 
 
 def _token(text: str) -> Token:
@@ -144,3 +137,14 @@ def test_mixed_case_names_and_terms_stay_whole() -> None:
     words = ["McDonald", "DiMaio", "HbA1c", "SerD", "OMCeO", "eGFR", "NaCl"]
 
     assert [t.text for t in split_glued([_token(w) for w in words])] == words
+
+
+def test_a_speck_read_before_a_cell_character_does_not_break_the_code() -> None:
+    # a dirty scan: OCR reads one cell as ".1" (a speck before the digit)
+    cells = list("80380") + [".1"] + list("60196130540595")
+    words = [
+        Word(c, (100 + 12 * i, 200, 110 + 12 * i, 212), 0.9, "ocr", i)
+        for i, c in enumerate(cells)
+    ]
+
+    assert ocr_layer(0, words).tokens[0].text == "80380160196130540595"

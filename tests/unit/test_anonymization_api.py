@@ -3,7 +3,7 @@ import json
 import time
 from pathlib import Path
 
-import pymupdf
+import pypdfium2 as pdfium
 import pytest
 from docx import Document
 from fastapi.testclient import TestClient
@@ -15,12 +15,21 @@ from anonmyzation_pipeline.errors import (
     TooManyJobsError,
     TooManyPagesError,
 )
-from anonmyzation_pipeline.services.anonymization.ocr import RapidOcrEngine
 from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
-from anonmyzation_pipeline.services.anonymization.verify import verify
+from anonmyzation_pipeline.services.anonymization.reader import LiteparseReader
+from anonmyzation_pipeline.services.anonymization.verify import Report, verify
 from anonmyzation_pipeline.services.jobs import JobManager
 from tests.conftest import FAKE_CF
-from tests.documents import PATIENT, PHONE, letter_pdf, native_words, scanned_pdf
+from tests.documents import (
+    PATIENT,
+    PHONE,
+    FakeReader,
+    draw_pdf,
+    edit_pdf,
+    letter_pdf,
+    native_words,
+    scanned_pdf,
+)
 
 
 def upload(
@@ -48,8 +57,10 @@ def wait_done(client: TestClient, job_id: str, timeout: float = 60) -> dict:
 
 
 def pdf_text(data: bytes) -> str:
-    with pymupdf.open(stream=data, filetype="pdf") as doc:
-        return " ".join(page.get_text() for page in doc)
+    with pdfium.PdfDocument(data) as doc:
+        return " ".join(
+            doc[i].get_textpage().get_text_bounded() for i in range(len(doc))
+        )
 
 
 def test_upload_progress_and_result(client: TestClient, letter: Path) -> None:
@@ -124,39 +135,30 @@ def test_download_docx(client: TestClient, letter: Path) -> None:
     assert "Crohn" in text
 
 
-def never_redact(src: Path, analysis, out: Path, style: str = "black") -> dict:
-    """A redaction that silently changes nothing."""
-    out.write_bytes(src.read_bytes())
-    return {"boxes": 0}
-
-
-def test_failed_pages_are_flattened_and_released_clean(
-    client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch
+def test_pages_with_boxes_are_released_as_images(
+    client: TestClient, letter: Path
 ) -> None:
-    monkeypatch.setattr(
-        "anonmyzation_pipeline.services.anonymization.release.redact", never_redact
-    )
     created = upload(client, letter)
     state = wait_done(client, created["id"])
 
     assert state["result"]["verified"] is True
-    assert state["result"]["flattened_pages"]
+    assert state["result"]["flattened_pages"] == [1]  # 1-based, as shown to the user
     pdf = client.get(f"/anonymizations/{created['id']}/download/pdf").content
-    with pymupdf.open(stream=pdf) as doc:
-        assert PATIENT not in " ".join(p.get_text() for p in doc)
-        pix = doc[0].get_pixmap(dpi=72)  # rendered page: still a document, not blank
-        assert pix.width > 0
+    assert PATIENT not in pdf_text(pdf)
+    with pdfium.PdfDocument(pdf) as doc:  # rendered page: still a document, not blank
+        assert doc[0].render(scale=1).to_numpy().mean() < 255
 
 
-def test_download_refused_when_the_fallback_cannot_fix_it(
+def test_download_refused_when_a_check_fails(
     client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    def failing(*args, **kwargs) -> Report:
+        rep = Report()
+        rep.fail("value still in text: 'x'")
+        return rep
+
     monkeypatch.setattr(
-        "anonmyzation_pipeline.services.anonymization.release.redact", never_redact
-    )
-    monkeypatch.setattr(
-        "anonmyzation_pipeline.services.anonymization.release.flatten_pages",
-        lambda *args, **kwargs: None,
+        "anonmyzation_pipeline.services.anonymization.release.verify", failing
     )
     created = upload(client, letter)
     state = wait_done(client, created["id"])
@@ -333,15 +335,8 @@ def test_upload_errors(
 
 
 def test_password_protected_pdf(client: TestClient, tmp_path: Path) -> None:
-    path = tmp_path / "locked.pdf"
-    with pymupdf.open() as doc:
-        doc.new_page().insert_text((72, 72), "segreto")
-        doc.save(
-            path,
-            encryption=vars(pymupdf)["PDF_ENCRYPT_AES_256"],
-            user_pw="pw",
-            owner_pw="pw",
-        )
+    path = draw_pdf(tmp_path / "locked.pdf", lambda p: p.text(72, 72, "segreto"))
+    edit_pdf(path, password="pw")
 
     response = client.post(
         "/anonymizations",
@@ -360,11 +355,7 @@ def test_limits(jobs: JobManager, letter: Path, tmp_path: Path) -> None:
     jobs.settings = jobs.settings.model_copy(
         update={"max_upload_mb": 30, "max_pages": 1}
     )
-    many = tmp_path / "many.pdf"
-    with pymupdf.open() as doc:
-        doc.new_page()
-        doc.new_page()
-        doc.save(many)
+    many = draw_pdf(tmp_path / "many.pdf", lambda p: None, lambda p: None)
     with pytest.raises(TooManyPagesError):
         jobs.create(many.read_bytes(), "many.pdf")
 
@@ -386,9 +377,8 @@ def test_expired_jobs_are_purged(jobs: JobManager, letter: Path) -> None:
 def test_image_upload_becomes_a_pdf(
     client: TestClient, letter: Path, tmp_path: Path
 ) -> None:
-    with pymupdf.open(letter) as doc:
-        pix = doc[0].get_pixmap(dpi=80)
-    img = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+    with pdfium.PdfDocument(letter) as doc:
+        img = doc[0].render(scale=80 / 72).to_pil().convert("RGB")
     buf = io.BytesIO()
     img.save(buf, "PNG")
 
@@ -419,10 +409,12 @@ def test_letter_fixture_contains_the_pii(letter: Path) -> None:
     assert PATIENT in text
 
 
-def test_scanned_upload_uses_ocr(client: TestClient, fake_ocr, tmp_path: Path) -> None:
+def test_scanned_upload_uses_ocr(
+    client: TestClient, fake_reader: FakeReader, tmp_path: Path
+) -> None:
     native = letter_pdf(tmp_path / "native.pdf")
     scan = scanned_pdf(native, tmp_path / "scan.pdf")
-    fake_ocr.words = native_words(native)
+    fake_reader.words = native_words(native)
 
     created = upload(client, scan)
     result = wait_done(client, created["id"])["result"]
@@ -437,7 +429,7 @@ def test_upload_refused_while_models_load(
     settings, tmp_path: Path, letter: Path
 ) -> None:
     loading = JobManager(
-        Pipeline(RapidOcrEngine(), None),
+        Pipeline(LiteparseReader(""), None),  # no OCR server: never ready
         settings.model_copy(update={"preload_models": True}),
         tmp_path / "w",
     )

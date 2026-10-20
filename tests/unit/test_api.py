@@ -16,7 +16,7 @@ def test_readyz_reflects_models(
     client: TestClient, models_ready: bool, status: int
 ) -> None:
     app = client.app
-    app.state.pipeline.ocr._reader = object() if models_ready else None  # type: ignore[attr-defined]
+    app.state.pipeline.reader._ready = models_ready  # type: ignore[attr-defined]
     for engine in app.state.pipeline.ner.engines:  # type: ignore[attr-defined]
         engine._model = object() if models_ready else None
 

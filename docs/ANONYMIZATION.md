@@ -370,11 +370,11 @@ edits (draw an area, click a box to un-redact or restore, search and redact),
 PDF and Word download, error card. It is for local testing and demos:
 in the platform the doctor-facing frontend is `fe`.
 
-## Synthetic dataset and evaluation (`tools/`)
+## Synthetic dataset and evaluation (`apps/eval`)
 
 Dev-only tools, not part of the image (`just dataset`, `just evaluate`, `just eval-ui`).
 
-**Dataset** (`tools/dataset/`): seven Italian document types (discharge
+**Dataset** (`anonymization_eval/dataset/`): seven Italian document types (discharge
 letter, lab report, radiology report, ER report, referral letter, sick-leave
 certificate, electronic prescription), each in three variants: native PDF,
 scan (skew, paper tint, noise, blur, JPEG, some in grayscale) and scan with
@@ -396,7 +396,7 @@ that both copies have identical words and positions. Ground truth lives in
 just dataset --out dataset_new                 # 21 documents x 3 variants in a new folder
 just dataset --n 7 --append                    # add 7 new documents after the existing ones
 just dataset --n 42 --overwrite                # regenerate the 42 NNN_ documents of dataset/
-uv run python -m tools orientation --out dataset  # the e056 edge-case document, every variant
+uv run python -m anonymization_eval orientation --out dataset  # the e056 edge-case document, every variant
 just evaluate                                  # -> reports/evaluation.md
 ```
 
@@ -415,27 +415,27 @@ the sources apart (`just dataset --overwrite` replaces only the `NNN_` documents
 |---|---|---|
 | `NNN_` | 42 | the generator above, 6 of each of its 7 types |
 | none | 96 | eight Italian report types in three difficulty levels (facile, media, complessa): repeated headers and footers, codice fiscale in character boxes, stamps, signatures, barcodes and QR codes, eponyms. Boxes recovered from a value-level ground truth; clinical content (diagnoses, drugs, lab values) is not PII, so redacting it counts as over-redaction |
-| `eNNN_` | 57 | edge cases: fax with the codice fiscale in character boxes, phone photo with perspective and handwritten PII, landscape table on a `/Rotate 90` page, PII in AcroForm fields, X-ray with PII burned into the pixels and a DICOM header dump, handwritten note on a scan plus the same scan with an OCR layer, PII in metadata, attachments, sticky notes, white text, text under an image and a 2 pt footer, surnames that are cities or words, foreign patients (STP/ENI, passports, diacritics), US and UK documents, and `e056_orientamento_ocr` (`tools/dataset/orientation.py`): a patient label pasted upside down, codice fiscale and date of birth in character boxes, a page scanned upside down and a page sent by fax |
+| `eNNN_` | 57 | edge cases: fax with the codice fiscale in character boxes, phone photo with perspective and handwritten PII, landscape table on a `/Rotate 90` page, PII in AcroForm fields, X-ray with PII burned into the pixels and a DICOM header dump, handwritten note on a scan plus the same scan with an OCR layer, PII in metadata, attachments, sticky notes, white text, text under an image and a 2 pt footer, surnames that are cities or words, foreign patients (STP/ENI, passports, diacritics), US and UK documents, and `e056_orientamento_ocr` (`anonymization_eval/dataset/orientation.py`): a patient label pasted upside down, codice fiscale and date of birth in character boxes, a page scanned upside down and a page sent by fax |
 | `d3_` | 6 | hand-annotated worst cases: mixed scanned and native pages, phone photo, fax, hidden channels, US forms |
 
 The dataset is not regenerable as a whole (only the `NNN_` documents are), so
 back up `dataset/` before deleting it. On the documents whose native PDF is
 already an image (fax, photo, scans) the `scan_ocr` variant has no OCR layer.
 
-**Viewer** (`just eval-ui`, `tools/viewer.py`, `http://127.0.0.1:8765`, dev only): the
+**Viewer** (`just eval-ui`, `anonymization_eval/viewer.py`, `http://127.0.0.1:8765`, dev only): the
 same layout as the demo page, ground truth on the left (found, missed,
 quasi-identifiers, hidden, terms that must stay) and the pipeline's boxes on the
 right (correct, false positives, on quasi-identifiers, found but not redacted),
 or the redacted output. Every document of a variant is listed with its result;
 ← → move between documents, PagSu/PagGiù between pages, E jumps to the next
 document with errors, and the errors of a document are listed and clickable.
-`tools/evaluate.py` writes each document's result to
+`anonymization_eval/evaluate.py` writes each document's result to
 `reports/docs_<variant>/<doc_id>.json` as soon as it is scored, so an evaluation
 started from the page ("Avvia valutazione") or with `just evaluate` shows up live,
 with running recall, precision and F1; AP/mAP and accuracy appear when the
 variant is complete.
 
-**Evaluation** (`tools/evaluate.py`, metrics from standard libraries in `tools/metrics.py`):
+**Evaluation** (`anonymization_eval/evaluate.py`, metrics from standard libraries in `anonymization_eval/metrics.py`):
 
 | Metric | Definition | Library |
 |---|---|---|

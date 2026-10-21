@@ -147,25 +147,25 @@ volume; uncomment the GPU blocks in `docker-compose.yml` and set
 | `just lint` | ruff fix + format + ty: before every commit |
 | `just check` | Same checks without fixes (what CI runs) |
 | `just test` / `just test-cov` | Unit tests of every package / with coverage (at least 80% per package) |
-| `just test-core` / `just test-api` / `just test-tools` | One suite only (arguments go to pytest) |
+| `just test-core` / `just test-api` / `just test-eval` | One suite only (arguments go to pytest) |
 | `just dataset [--n 7 --append]` | Synthetic dataset with ground truth -> `dataset/` |
 | `just evaluate [--split dev\|test]` | Recall, precision, AP, leaks, verification, time -> `reports/evaluation.md`; `test` is the held-out 30% of the template families, never used for tuning |
 | `just eval-ui` | Evaluation viewer on `http://127.0.0.1:8765`: ground truth vs predictions per document, live while evaluating |
 | `just eval-compare a b` | Two evaluations side by side -> `reports/comparison.md` |
 | `just audit` | Vulnerabilities in the dependencies |
 
-Developer tools are also available directly: `uv run python -m tools --help`
+Developer tools are also available directly: `uv run python -m anonymization_eval --help`
 (`generate`, `anonymize`, `evaluate`, `viewer`, `preview`).
 
 ## Layout
 
 A uv workspace: one lock, one package per area, each with its own dependencies,
 tests and lint config. The root is not a package: its dev group is the developer
-environment (every member plus `tools/`).
+environment (every member).
 
 ```
 packages/anonymization-core/   the engine, a library: no web framework, never imports the
-                               service or tools/ (banned in its pyproject); own tests,
+                               service or the evaluation (banned in its pyproject); own tests,
                                coverage and lint config, so it can be extracted as is
   src/anonymization_core/
     config.py             PipelineConfig (plain values, no environment lookup)
@@ -195,9 +195,11 @@ apps/api/                      the service (image anonmyzation-pipeline): Docker
     api/web.py            demo web page (ANONPIP_UI_ENABLED)
     services/jobs.py      job lifecycle around the engine: queue, SSE, expiry, limits, KPI events
     web/static/index.html  the page
-tools/                    dev only, on the engine (never the service): dataset/ generator,
-                          evaluate.py (dev/test split), viewer.py (evaluation UI);
-                          tests in tests/tools (`just test-tools`)
+apps/eval/                     evaluation, dev only (never in an image): uses the engine,
+                               never the service (banned in its pyproject); reads the same
+                               ANONPIP_* variables (config.py); own tests (`just test-eval`)
+  src/anonymization_eval/ dataset/ generator, evaluate.py (dev/test split), metrics.py,
+                          viewer.py (evaluation UI); run from the root (`just evaluate`)
 ocr-server/               PP-OCRv5 (RapidOCR) behind the LiteParse OCR API (own pyproject, image)
 docs/                     ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
                           deploy handover
@@ -259,7 +261,7 @@ tessera sanitaria 91% to 100%). Compared with the earlier in-pod GLiNER +
 GLiNER2, the AILAB service has 0.5 to 1 point less recall: names it replaces as
 eponyms, foreign names and fragments taken for places (details in
 docs/ANONYMIZATION.md, "OCR choice" and "NER choice").
-Run `just evaluate` again to measure the current stack (`uv run python -m tools
+Run `just evaluate` again to measure the current stack (`uv run python -m anonymization_eval
 orientation` adds `e056` to the set); `--split test` scores only the held-out
 documents.
 

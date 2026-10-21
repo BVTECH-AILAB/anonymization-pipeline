@@ -1,6 +1,38 @@
 """Clinical content pools. Eponyms, drug names and scores are traps: they look
 like person names but must NOT be redacted."""
 
+from typing import TypedDict
+
+
+class Scenario(TypedDict):
+    """A hospital stay: ward, diagnosis, course, therapy and lab results."""
+
+    ward: str
+    diagnosis: str
+    secondary: list[str]
+    history: str
+    course: list[str]
+    # drug, dose, time
+    therapy: list[tuple[str, str, str]]
+    # test, value, unit, reference range, flag (H, L or "")
+    labs: list[tuple[str, str, str, str, str]]
+    followup: str
+
+
+class PsCase(TypedDict):
+    """An emergency department visit."""
+
+    # triage code and its colour (RGB, 0-1)
+    triage: tuple[str, tuple[float, float, float]]
+    complaint: str
+    exam: str
+    tests: str
+    dx: str
+    outcome: str
+    # time, administration
+    tx: list[tuple[str, str]]
+
+
 EPONYM_SENTENCES = {
     "Pacini": "All'esame obiettivo sensibilità vibratoria ridotta, compatibile con alterata funzione dei corpuscoli di Pacini.",
     "Morgagni": "Alla TC si conferma piccola ernia di Morgagni, già nota e stabile.",
@@ -24,7 +56,7 @@ GENERIC_EPONYMS = [
     "Non segni di Kernig né di Brudzinski.",
 ]
 
-SCENARIOS = [
+SCENARIOS: list[Scenario] = [
     {
         "ward": "Medicina Interna",
         "diagnosis": "Riacutizzazione di BPCO (GOLD 3) con insufficienza respiratoria ipossiemica lieve.",
@@ -279,7 +311,7 @@ RADIOLOGY = [
     },
 ]
 
-PS_CASES = [
+PS_CASES: list[PsCase] = [
     {
         "triage": ("ARANCIONE", (1.0, 0.6, 0.15)),
         "complaint": "Dolore toracico oppressivo insorto a riposo da circa 1 ora.",

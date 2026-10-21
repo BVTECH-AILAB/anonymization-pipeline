@@ -67,27 +67,27 @@ def render(built: Built, reg: Registry, path: Path) -> None:
         c.showPage()
         c.save()
         return
-    top = 100 if built.ctx.kind == "hospital" else 115
+    ctx = built.ctx
+    if ctx is None:
+        raise ValueError("a story document needs a page context")
+    top = 100 if ctx.kind == "hospital" else 115
+    left, bottom = 42, 62
     doc = BaseDocTemplate(
         str(path),
         pagesize=A4,
-        leftMargin=42,
+        leftMargin=left,
         rightMargin=42,
         topMargin=top,
-        bottomMargin=62,
+        bottomMargin=bottom,
         title=md["title"],
         author=md["author"],
         subject=md["subject"],
         keywords=md["keywords"],
         creator="HIS Report Engine 4.2",
     )
-    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="body")
+    frame = Frame(left, bottom, doc.width, doc.height, id="body")
     doc.addPageTemplates(
-        [
-            PageTemplate(
-                id="p", frames=[frame], onPage=lambda c, d: decorate(c, d, built.ctx)
-            )
-        ]
+        [PageTemplate(id="p", frames=[frame], onPage=lambda c, d: decorate(c, d, ctx))]
     )
     doc.build(built.story)
 
@@ -135,9 +135,10 @@ def extract_ground_truth(path: Path, reg: Registry) -> dict:
             for rect, width, height in images(page):
                 mid = reg.image_id(width, height)
                 if mid:
-                    reg.by_id(mid).boxes.append(
-                        {"page": pno, "rect": [round(v, 2) for v in rect]}
-                    )
+                    m = reg.by_id(mid)
+                    if m is None:
+                        raise ValueError(f"unknown image id {mid} in {path}")
+                    m.boxes.append({"page": pno, "rect": [round(v, 2) for v in rect]})
             pii_rects = [
                 tuple(b["rect"])
                 for m in reg.mentions

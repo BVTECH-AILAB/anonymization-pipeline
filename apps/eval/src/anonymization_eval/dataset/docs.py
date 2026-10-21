@@ -12,7 +12,15 @@ from datetime import date, timedelta
 
 from reportlab.lib.colors import Color, HexColor
 from reportlab.lib.utils import ImageReader
-from reportlab.platypus import Image, KeepTogether, Paragraph, Spacer, Table, TableStyle
+from reportlab.platypus import (
+    Flowable,
+    Image,
+    KeepTogether,
+    Paragraph,
+    Spacer,
+    Table,
+    TableStyle,
+)
 
 from anonymization_eval.dataset import content as C
 from anonymization_eval.dataset import visuals as V
@@ -25,6 +33,7 @@ from anonymization_eval.dataset.identities import (
 from anonymization_eval.dataset.layout import (
     GREY,
     PageCtx,
+    Segment,
     draw_segments,
     families,
     fonts,
@@ -40,7 +49,7 @@ class Built:
     doc_type: str
     title: str
     family: str
-    story: list | None = None
+    story: list[Flowable] | None = None
     ctx: PageCtx | None = None
     canvas_fn: Callable | None = None
     metadata: dict = field(default_factory=dict)
@@ -253,7 +262,7 @@ def lettera_dimissione(f: IdentityFactory, reg: Registry, rnd: random.Random) ->
     relation = rnd.choice(C.RELATIONS_M if rel_sex == "M" else C.RELATIONS_F)
     names = name_forms(p, M)
 
-    s = [Paragraph("LETTERA DI DIMISSIONE", st["title"])]
+    s: list[Flowable] = [Paragraph("LETTERA DI DIMISSIONE", st["title"])]
     s.append(
         info_table(
             [
@@ -344,7 +353,7 @@ def lettera_dimissione(f: IdentityFactory, reg: Registry, rnd: random.Random) ->
             ctx.band,
         )
     )
-    h = ctx.hospital
+    h = ctx.require_hospital()
     s += [
         Paragraph("Indicazioni e follow-up", st["h"]),
         Paragraph(
@@ -389,7 +398,7 @@ def referto_laboratorio(f: IdentityFactory, reg: Registry, rnd: random.Random) -
     st = styles(fam, ctx.band)
     req, val = f.doctor(), f.doctor("Patologia Clinica")
     draw = rand_date(rnd)
-    s = [Paragraph("REFERTO DI LABORATORIO", st["title"])]
+    s: list[Flowable] = [Paragraph("REFERTO DI LABORATORIO", st["title"])]
     s.append(
         info_table(
             [
@@ -475,7 +484,7 @@ def referto_laboratorio(f: IdentityFactory, reg: Registry, rnd: random.Random) -
             )
         )
     s.append(Spacer(1, 8))
-    url = f"https://referti.{ctx.hospital.web[4:]}/r?c={sample}&cf={p.cf}"
+    url = f"https://referti.{ctx.require_hospital().web[4:]}/r?c={sample}&cf={p.cf}"
     qr_img = img_flow(reg, "QRCODE", V.qr(url), 62, url)
     txt = [
         Paragraph(
@@ -517,7 +526,7 @@ def referto_radiologico(f: IdentityFactory, reg: Registry, rnd: random.Random) -
     st = styles(fam, ctx.band)
     rad, presc, tsrm = f.doctor("Radiologia"), f.doctor(), f.person()
     dt = rand_date(rnd)
-    s = [Paragraph("REFERTO DI DIAGNOSTICA PER IMMAGINI", st["title"])]
+    s: list[Flowable] = [Paragraph("REFERTO DI DIAGNOSTICA PER IMMAGINI", st["title"])]
     s.append(
         info_table(
             [
@@ -600,7 +609,7 @@ def verbale_ps(f: IdentityFactory, reg: Registry, rnd: random.Random) -> Built:
     rel_sex = rnd.choice("MF")
     rel = f.person(sex=rel_sex)
     relation = rnd.choice(C.RELATIONS_M if rel_sex == "M" else C.RELATIONS_F)
-    s = [Paragraph("VERBALE DI PRONTO SOCCORSO", st["title"])]
+    s: list[Flowable] = [Paragraph("VERBALE DI PRONTO SOCCORSO", st["title"])]
     s.append(
         info_table(
             [
@@ -728,11 +737,11 @@ def lettera_invio(f: IdentityFactory, reg: Registry, rnd: random.Random) -> Buil
     fam = rnd.choice(families())
     ctx = mmg_ctx(f, reg, rnd, p, fam)
     st = styles(fam, ctx.band)
-    mmg = ctx.mmg
+    mmg = ctx.require_mmg()
     dt = rand_date(rnd)
     sc = rnd.choice(C.SCENARIOS)
     names = name_forms(p, M)
-    s = [
+    s: list[Flowable] = [
         Spacer(1, 4),
         Paragraph(
             f"{M(ctx.extras['mmg_city'], 'LOCATION')}, {M(d(dt), 'DATE')}", st["body"]
@@ -801,7 +810,11 @@ def certificato(f: IdentityFactory, reg: Registry, rnd: random.Random) -> Built:
     ctx = mmg_ctx(f, reg, rnd, p, fam)
     st = styles(fam, ctx.band)
     dt = rand_date(rnd)
-    s = [Spacer(1, 20), Paragraph("CERTIFICATO MEDICO", st["title"]), Spacer(1, 10)]
+    s: list[Flowable] = [
+        Spacer(1, 20),
+        Paragraph("CERTIFICATO MEDICO", st["title"]),
+        Spacer(1, 10),
+    ]
     s.append(
         Paragraph(
             f"Si certifica che {p.title} {M(p.full, 'PERSON')}, {p.g('nato', 'nata')} a {M(p.birthplace, 'LOCATION')} "
@@ -837,7 +850,7 @@ def certificato(f: IdentityFactory, reg: Registry, rnd: random.Random) -> Built:
             f"{M(ctx.extras['mmg_city'], 'LOCATION')}, {M(d(dt), 'DATE')}", st["body"]
         ),
     ]
-    s.append(signature_block(reg, rnd, st, "Il Medico", ctx.mmg))
+    s.append(signature_block(reg, rnd, st, "Il Medico", ctx.require_mmg()))
     return Built(
         "certificato",
         "Certificato medico",
@@ -931,7 +944,7 @@ def ricetta(f: IdentityFactory, reg: Registry, rnd: random.Random) -> Built:
             "TIPOLOGIA PRESCRIZIONE:": "S",
         }
         for lab, vals in rows:
-            segs = [(lab + " ", None)]
+            segs: list[Segment] = [(lab + " ", None)]
             for v, code in vals:
                 segs.append((v, R.color(v, code)))
             if lab in extra:

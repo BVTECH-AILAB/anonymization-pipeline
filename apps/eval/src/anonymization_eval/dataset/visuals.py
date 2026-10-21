@@ -10,7 +10,9 @@ from barcode.writer import ImageWriter
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 
-def _font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
+def _font(
+    size: int, bold: bool = False
+) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
     path = (
         "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
         if bold
@@ -109,7 +111,7 @@ def signature(rnd: random.Random, w: int = 420, h: int = 130) -> Image.Image:
             ]
         )
         d.line([tuple(p) for p in _catmull_rom(fl)], fill=ink, width=4, joint="curve")
-    return img.resize((w, h), Image.LANCZOS)
+    return img.resize((w, h), Image.Resampling.LANCZOS)
 
 
 def stamp(
@@ -142,7 +144,9 @@ def stamp(
     noise = np.random.default_rng(rnd.randint(0, 1 << 30)).random(a.shape[:2])
     a[..., 3] = (a[..., 3] * np.clip(noise * 1.6, 0.25, 1)).astype(np.uint8)
     img = Image.fromarray(a).filter(ImageFilter.GaussianBlur(0.6))
-    img = img.rotate(rnd.uniform(-7, 7), resample=Image.BICUBIC, expand=False)
+    img = img.rotate(
+        rnd.uniform(-7, 7), resample=Image.Resampling.BICUBIC, expand=False
+    )
     return img
 
 
@@ -156,6 +160,8 @@ def qr(data: str, box: int = 6) -> Image.Image:
 
 
 def barcode39(data: str) -> Image.Image:
+    if ImageWriter is None:  # python-barcode without Pillow
+        raise RuntimeError("python-barcode cannot write images")
     buf = io.BytesIO()
     barcode.get_barcode_class("code39")(
         data, writer=ImageWriter(), add_checksum=False

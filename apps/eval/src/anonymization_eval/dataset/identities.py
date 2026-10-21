@@ -292,7 +292,7 @@ class IdentityFactory:
         return codicefiscale.encode(
             lastname=last,
             firstname=first,
-            gender=sex,
+            gender="F" if sex == "F" else "M",
             birthdate=dob.strftime("%d/%m/%Y"),
             birthplace=place,
         )

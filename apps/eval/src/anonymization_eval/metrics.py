@@ -170,8 +170,9 @@ class DetectionMAP:
         pred_boxes = boxes([p[0] for p in preds])
         scores = torch.tensor([p[2] for p in preds], dtype=torch.float32)
         gt_boxes = boxes([g[0] for g in gts])
+        # torchmetrics wraps update/compute on the instance: ty sees the unbound methods
         self._per_class.update(
-            [
+            [  # ty: ignore[invalid-argument-type]
                 {
                     "boxes": pred_boxes,
                     "scores": scores,
@@ -189,7 +190,7 @@ class DetectionMAP:
             ],
         )
         self._agnostic.update(
-            [
+            [  # ty: ignore[invalid-argument-type]
                 {
                     "boxes": pred_boxes,
                     "scores": scores,
@@ -207,8 +208,8 @@ class DetectionMAP:
 
     def compute(self) -> MapResult:
         """``ap_pii`` (label-agnostic AP@0.5), ``map`` (mean over labels) and ``ap_per_label``."""
-        agnostic = self._agnostic.compute()
-        per_class = self._per_class.compute()
+        agnostic = self._agnostic.compute()  # ty: ignore[missing-argument]
+        per_class = self._per_class.compute()  # ty: ignore[missing-argument]
         classes = per_class["classes"].reshape(-1).tolist()
         values = per_class["map_per_class"].reshape(-1).tolist()
         per_label = {

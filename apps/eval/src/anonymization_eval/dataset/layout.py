@@ -134,12 +134,28 @@ class PageCtx:
     band: tuple[float, float, float] = (0.1, 0.3, 0.5)
     extras: dict = field(default_factory=dict)
 
+    def require_hospital(self) -> Hospital:
+        """The hospital of a ``hospital`` page, which always has one."""
+        if self.hospital is None:
+            raise ValueError("a hospital page needs a hospital")
+        return self.hospital
+
+    def require_mmg(self) -> Doctor:
+        """The general practitioner of an ``mmg`` page, which always has one."""
+        if self.mmg is None:
+            raise ValueError("a GP page needs a GP")
+        return self.mmg
+
+
+# text and its colour in the registry (None: plain text)
+Segment = tuple[str, Color | None]
+
 
 def draw_segments(
     c,
     x: float,
     y: float,
-    segs: list[tuple[str, Color | None]],
+    segs: list[Segment],
     font: str,
     size: float,
     default: Color,
@@ -165,7 +181,7 @@ def decorate(c, doc, ctx: PageCtx) -> None:
     p = ctx.patient
     c.saveState()
     if ctx.kind == "hospital":
-        h = ctx.hospital
+        h = ctx.require_hospital()
         c.setFillColor(Color(*ctx.band))
         c.rect(0, H - 80, W, 80, stroke=0, fill=1)
         # vector logo
@@ -195,7 +211,7 @@ def decorate(c, doc, ctx: PageCtx) -> None:
             8.5,
             white,
         )
-        segs = [(f"U.O.C. {ctx.ward}", None)]
+        segs: list[Segment] = [(f"U.O.C. {ctx.ward}", None)]
         if ctx.director:
             segs += [
                 ("  ·  Direttore: ", None),
@@ -246,7 +262,7 @@ def decorate(c, doc, ctx: PageCtx) -> None:
         c.setFillColor(Color(*ctx.accent))
         c.rect(0, H - 84, W, 4, stroke=0, fill=1)
     else:  # MMG letterhead
-        d = ctx.mmg
+        d = ctx.require_mmg()
         street, cap, city = ctx.mmg_address
         black = HexColor("#000000")
         draw_segments(
@@ -326,7 +342,7 @@ def decorate(c, doc, ctx: PageCtx) -> None:
     c.setLineWidth(0.5)
     c.line(40, 46, W - 40, 46)
     up = p.full_rev_upper
-    segs = [("Paziente: ", None), (up, R.color(up, "PERSON"))]
+    segs: list[Segment] = [("Paziente: ", None), (up, R.color(up, "PERSON"))]
     if ctx.record_id:
         segs += [
             (f"  ·  {ctx.record_label} ", None),

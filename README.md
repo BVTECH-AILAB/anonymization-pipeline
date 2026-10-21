@@ -172,7 +172,7 @@ src/anonmyzation_pipeline/
   services/anonymization/ engine: reader (pypdfium2 text, LiteParse + OCR server), layers,
                           geometry, pdf_pages (pypdfium2 page views), pipeline,
                           release (flatten pages with boxes + pypdf rewrite),
-                          verify, export_docx, device
+                          verify, export_docx
     detect/               rules, labels (+ labels.yaml), ner, eponyms
                           (+ eponyms.yaml), allowlist, ensemble, visual
   web/static/index.html   the page

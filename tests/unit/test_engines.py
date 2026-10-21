@@ -5,14 +5,8 @@ from pathlib import Path
 import numpy as np
 
 from anonmyzation_pipeline.services.anonymization.detect import visual
-from anonmyzation_pipeline.services.anonymization.device import resolve_device
 from anonmyzation_pipeline.services.anonymization.layers import Word
 from tests.documents import letter_pdf, native_words, page_view, scanned_pdf
-
-
-def test_resolve_device() -> None:
-    assert resolve_device("cpu") == "cpu"
-    assert resolve_device("auto") in ("cpu", "cuda")
 
 
 def test_visual_codes_and_signatures_on_native_pages(tmp_path: Path) -> None:

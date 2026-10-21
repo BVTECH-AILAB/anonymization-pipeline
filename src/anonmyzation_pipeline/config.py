@@ -43,8 +43,6 @@ class Settings(BaseSettings):
     ui_enabled: bool = False
 
     # --- Models ---
-    # "auto" uses the GPU when one is available, otherwise the CPU.
-    device: str = "auto"
     # Check the OCR server and the NER service at startup; /readyz reports 503 until
     # both are ready (retried every 30 s).
     preload_models: bool = True

@@ -35,7 +35,6 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_EXTENDED_LOG_CONTEXT` | `false` | `false` (solo per debug mirato) | ignorata | no |
 | `ANONPIP_LOG_MASK_PREFIX` / `ANONPIP_LOG_MASK_SUFFIX` | `1` / `1` | | | no |
 | `ANONPIP_UI_ENABLED` | `false` | `true` (pagina demo) | `false` | no |
-| `ANONPIP_DEVICE` | `auto` | `auto` | `auto` | no |
 | `ANONPIP_PRELOAD_MODELS` | `true` | `true` | `true` | no |
 | `ANONPIP_OCR_SERVER_URL` | vuoto (URL del servizio `paddle-ocr`, es. `http://paddle-ocr:8829`; vuoto o non raggiungibile = `/readyz` 503) | `http://paddle-ocr:8829` | `http://paddle-ocr:8829` | no |
 | `ANONPIP_OCR_DPI` | `300` | | | no |

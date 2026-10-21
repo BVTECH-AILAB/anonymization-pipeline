@@ -16,7 +16,7 @@ from anonymization_core.pipeline import Pipeline
 from fastapi import FastAPI
 
 from anonmyzation_pipeline import __version__
-from anonmyzation_pipeline.api import anonymization, health, web
+from anonmyzation_pipeline.api import anonymization, health
 from anonmyzation_pipeline.config import Settings, get_settings
 from anonmyzation_pipeline.errors import register_exception_handlers
 from anonmyzation_pipeline.logging_setup import setup_logging
@@ -110,7 +110,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app.include_router(health.router)
     app.include_router(anonymization.router)
-    app.include_router(web.router)
     return app
 
 

@@ -106,16 +106,15 @@ def test_service_starts_without_models(settings: Settings) -> None:
         }
 
 
-@pytest.mark.parametrize(("enabled", "status"), [(True, 200), (False, 404)])
-def test_ui_only_when_enabled(enabled: bool, status: int) -> None:
+def test_the_service_serves_no_web_page(settings: Settings) -> None:
+    # the demo page is apps/web (its own image), even when the old flag is set
     with TestClient(
-        create_app(make_settings(ui_enabled=enabled)), raise_server_exceptions=False
+        create_app(make_settings(ui_enabled=True)), raise_server_exceptions=False
     ) as client:
         response = client.get("/")
 
-    assert response.status_code == status
-    if enabled:
-        assert "Anonimizza un documento" in response.text
+    assert response.status_code == 404
+    assert not hasattr(settings, "ui_enabled")
 
 
 def test_labels(client: TestClient) -> None:

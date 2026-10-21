@@ -9,7 +9,6 @@ from tests.conftest import make_settings
 def test_safe_defaults(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.chdir(tmp_path)  # no .env here
     for var in (
-        "ANONPIP_UI_ENABLED",
         "ANONPIP_REDACTION_STYLE",
         "ANONPIP_PRELOAD_MODELS",
     ):
@@ -17,7 +16,6 @@ def test_safe_defaults(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
 
     settings = Settings()
 
-    assert settings.ui_enabled is False
     assert settings.redaction_style == "black"
     assert settings.preload_models is True
     assert settings.redaction_policy == {

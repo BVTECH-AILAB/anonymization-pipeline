@@ -40,9 +40,6 @@ class Settings(BaseSettings):
     log_mask_prefix: int = 1
     log_mask_suffix: int = 1
 
-    # --- Web UI (demo page served at "/"): off unless explicitly enabled ---
-    ui_enabled: bool = False
-
     # --- Models ---
     # Check the OCR server and the NER service at startup; /readyz reports 503 until
     # both are ready (retried every 30 s).

@@ -31,7 +31,7 @@ def test_pipeline_config_carries_the_engine_settings() -> None:
 def test_settings_read_the_service_variables(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ANONPIP_OCR_SERVER_URL", "http://ocr.env:1")
     monkeypatch.setenv("ANONPIP_REDACTION_STYLE", "label")
-    monkeypatch.setenv("ANONPIP_UI_ENABLED", "true")  # a service setting: ignored
+    monkeypatch.setenv("ANONPIP_MAX_JOBS", "3")  # a service setting: ignored
 
     settings = EvalSettings(_env_file=None)
 

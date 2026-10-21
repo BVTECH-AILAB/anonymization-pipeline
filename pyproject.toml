@@ -6,7 +6,8 @@
 # repository-wide tools (pre-commit, audit). Each member has its own lint,
 # type, test and coverage configuration.
 [tool.uv.workspace]
-members = ["packages/*", "apps/*"]
+# apps/web is not a Python package: members are listed explicitly
+members = ["packages/*", "apps/api", "apps/eval"]
 
 [dependency-groups]
 dev = [

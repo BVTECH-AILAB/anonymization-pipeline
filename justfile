@@ -22,6 +22,11 @@ down-v:
 logs:
     docker compose logs -f app
 
+# Demo page image (apps/web): build it and check its nginx configuration
+web-check:
+    docker build --quiet --tag anonpip-web:check apps/web
+    docker run --rm -e API_UPSTREAM=http://127.0.0.1:1 anonpip-web:check nginx -t
+
 # --- Local (uv) ---
 
 sync:

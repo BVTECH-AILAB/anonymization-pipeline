@@ -7,6 +7,12 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+from anonymization_core.detect.ner import AilabNER
+from anonymization_core.factory import (
+    build_pipeline,
+    load_models,
+)
+from anonymization_core.pipeline import Pipeline
 from fastapi import FastAPI
 
 from anonmyzation_pipeline import __version__
@@ -15,12 +21,6 @@ from anonmyzation_pipeline.config import Settings, get_settings
 from anonmyzation_pipeline.errors import register_exception_handlers
 from anonmyzation_pipeline.logging_setup import setup_logging
 from anonmyzation_pipeline.middleware import RequestIdMiddleware
-from anonmyzation_pipeline.services.anonymization.detect.ner import AilabNER
-from anonmyzation_pipeline.services.anonymization.factory import (
-    build_pipeline,
-    load_models,
-)
-from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
 from anonmyzation_pipeline.services.jobs import JobManager
 
 logger = logging.getLogger(__name__)

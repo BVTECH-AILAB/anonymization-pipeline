@@ -11,6 +11,7 @@ import json
 from collections.abc import AsyncIterator
 from typing import Annotated, Any, Literal
 
+from anonymization_core.taxonomy import LABELS
 from fastapi import APIRouter, File, Path, Query, Request, Response, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel, Field
@@ -19,7 +20,6 @@ from anonmyzation_pipeline.errors import (
     ModeNotSupportedError,
     VerificationFailedError,
 )
-from anonmyzation_pipeline.services.anonymization.taxonomy import LABELS
 from anonmyzation_pipeline.services.jobs import TERMINAL, JobManagerDep, Mode
 
 router = APIRouter(prefix="/anonymizations", tags=["anonymization"])

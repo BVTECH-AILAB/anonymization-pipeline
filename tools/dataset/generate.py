@@ -5,6 +5,8 @@ import random
 from pathlib import Path
 
 import pypdfium2 as pdfium
+from anonymization_core.geometry import intersects
+from anonymization_core.pdf_pages import PageView
 from pypdf import PdfWriter
 from pypdf.annotations import Text
 from pypdf.generic import NameObject, TextStringObject
@@ -12,8 +14,6 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate
 
-from anonmyzation_pipeline.services.anonymization.geometry import intersects
-from anonmyzation_pipeline.services.anonymization.pdf_pages import PageView
 from tools.dataset import scan
 from tools.dataset.docs import BUILDERS, Built
 from tools.dataset.identities import IdentityFactory

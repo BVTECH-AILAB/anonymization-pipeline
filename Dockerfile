@@ -17,7 +17,9 @@ WORKDIR /app
 
 FROM base AS dev
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-install-project
+COPY packages/anonymization-core/pyproject.toml ./packages/anonymization-core/
+RUN uv sync --frozen --no-install-workspace
+COPY packages ./packages
 COPY src ./src
 RUN uv sync --frozen && chown -R appuser:appuser /app
 ENV PATH="/app/.venv/bin:$PATH"
@@ -25,9 +27,12 @@ USER appuser
 EXPOSE 8000
 CMD ["uvicorn", "anonmyzation_pipeline.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
+# The workspace members are installed as wheels: the runtime image has no sources.
 FROM base AS builder
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --no-install-project
+COPY packages/anonymization-core/pyproject.toml ./packages/anonymization-core/
+RUN uv sync --frozen --no-dev --no-install-workspace
+COPY packages ./packages
 COPY src ./src
 RUN uv sync --frozen --no-dev --no-editable
 

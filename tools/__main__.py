@@ -21,13 +21,13 @@ from typing import Annotated
 import pypdfium2 as pdfium
 import typer
 import uvicorn
+from anonymization_core.factory import build_pipeline
+from anonymization_core.pdf_pages import open_pages
+from anonymization_core.release import redact_and_verify
 from PIL import Image
 
 from anonmyzation_pipeline.config import Settings, get_settings
 from anonmyzation_pipeline.logging_setup import setup_logging
-from anonmyzation_pipeline.services.anonymization.factory import build_pipeline
-from anonmyzation_pipeline.services.anonymization.pdf_pages import open_pages
-from anonmyzation_pipeline.services.anonymization.release import redact_and_verify
 from tools import evaluate as evaluation
 from tools import viewer as eval_viewer
 from tools.dataset.generate import generate as generate_dataset

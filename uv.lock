@@ -2,6 +2,12 @@ version = 1
 revision = 3
 requires-python = "==3.12.*"
 
+[manifest]
+members = [
+    "anonmyzation-pipeline",
+    "anonymization-core",
+]
+
 [[package]]
 name = "annotated-doc"
 version = "0.0.5"
@@ -25,27 +31,19 @@ name = "anonmyzation-pipeline"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "anonymization-core" },
     { name = "fastapi" },
-    { name = "httpx" },
-    { name = "liteparse" },
-    { name = "numpy" },
-    { name = "opencv-python-headless" },
-    { name = "pillow" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
-    { name = "pypdf" },
-    { name = "pypdfium2" },
-    { name = "python-codicefiscale" },
-    { name = "python-docx" },
     { name = "python-multipart" },
-    { name = "pyyaml" },
     { name = "uvicorn", extra = ["standard"] },
-    { name = "zxing-cpp" },
 ]
 
 [package.dev-dependencies]
 dev = [
+    { name = "anonymization-core", extra = ["testing"] },
     { name = "faker" },
+    { name = "httpx" },
     { name = "pip-audit" },
     { name = "pre-commit" },
     { name = "pycocotools" },
@@ -66,27 +64,19 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "anonymization-core", editable = "packages/anonymization-core" },
     { name = "fastapi", specifier = ">=0.115" },
-    { name = "httpx", specifier = ">=0.28" },
-    { name = "liteparse", specifier = ">=2.16.0" },
-    { name = "numpy", specifier = ">=2.0" },
-    { name = "opencv-python-headless", specifier = ">=4.10" },
-    { name = "pillow", specifier = ">=11.0" },
     { name = "pydantic", specifier = ">=2.10" },
     { name = "pydantic-settings", specifier = ">=2.7" },
-    { name = "pypdf", specifier = ">=6.0" },
-    { name = "pypdfium2", specifier = ">=5.0" },
-    { name = "python-codicefiscale", specifier = ">=0.12" },
-    { name = "python-docx", specifier = ">=1.1" },
     { name = "python-multipart", specifier = ">=0.0.20" },
-    { name = "pyyaml", specifier = ">=6.0" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34" },
-    { name = "zxing-cpp", specifier = ">=2.3" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "anonymization-core", extras = ["testing"], editable = "packages/anonymization-core" },
     { name = "faker", specifier = ">=30.0" },
+    { name = "httpx", specifier = ">=0.28" },
     { name = "pip-audit", specifier = ">=2.7" },
     { name = "pre-commit", specifier = ">=4.0" },
     { name = "pycocotools", specifier = ">=2.0.11" },
@@ -103,6 +93,66 @@ dev = [
     { name = "torchvision", specifier = ">=0.22", index = "https://download.pytorch.org/whl/cu128" },
     { name = "ty", specifier = ">=0.0.1a0" },
     { name = "typer", specifier = ">=0.27.3" },
+]
+
+[[package]]
+name = "anonymization-core"
+version = "0.1.0"
+source = { editable = "packages/anonymization-core" }
+dependencies = [
+    { name = "httpx" },
+    { name = "liteparse" },
+    { name = "numpy" },
+    { name = "opencv-python-headless" },
+    { name = "pillow" },
+    { name = "pypdf" },
+    { name = "pypdfium2" },
+    { name = "python-codicefiscale" },
+    { name = "python-docx" },
+    { name = "pyyaml" },
+    { name = "zxing-cpp" },
+]
+
+[package.optional-dependencies]
+testing = [
+    { name = "pytest" },
+    { name = "qrcode" },
+    { name = "reportlab" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "anonymization-core", extra = ["testing"] },
+    { name = "pytest-cov" },
+    { name = "ruff" },
+    { name = "ty" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "httpx", specifier = ">=0.28" },
+    { name = "liteparse", specifier = ">=2.16.0" },
+    { name = "numpy", specifier = ">=2.0" },
+    { name = "opencv-python-headless", specifier = ">=4.10" },
+    { name = "pillow", specifier = ">=11.0" },
+    { name = "pypdf", specifier = ">=6.0" },
+    { name = "pypdfium2", specifier = ">=5.0" },
+    { name = "pytest", marker = "extra == 'testing'", specifier = ">=8.3" },
+    { name = "python-codicefiscale", specifier = ">=0.12" },
+    { name = "python-docx", specifier = ">=1.1" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "qrcode", marker = "extra == 'testing'", specifier = ">=8.0" },
+    { name = "reportlab", marker = "extra == 'testing'", specifier = ">=4.2" },
+    { name = "zxing-cpp", specifier = ">=2.3" },
+]
+provides-extras = ["testing"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "anonymization-core", extras = ["testing"], editable = "packages/anonymization-core" },
+    { name = "pytest-cov", specifier = ">=6.0" },
+    { name = "ruff", specifier = ">=0.15" },
+    { name = "ty", specifier = ">=0.0.1a0" },
 ]
 
 [[package]]

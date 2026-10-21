@@ -20,20 +20,20 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
-
-from anonmyzation_pipeline.config import Settings, get_settings
-from anonmyzation_pipeline.services.anonymization.factory import (
+from anonymization_core.factory import (
     build_pipeline,
     load_models,
 )
-from anonmyzation_pipeline.services.anonymization.geometry import (
+from anonymization_core.geometry import (
     Rect,
     grow,
     intersects,
     to_display,
 )
-from anonmyzation_pipeline.services.anonymization.release import redact_and_verify
-from anonmyzation_pipeline.services.anonymization.taxonomy import LABELS
+from anonymization_core.release import redact_and_verify
+from anonymization_core.taxonomy import LABELS
+
+from anonmyzation_pipeline.config import Settings, get_settings
 from tools.dataset.scan import transform_rect
 from tools.metrics import DetectionMAP, binary_scores, coverage, word_labels
 from tools.pdf import document_words, file_content

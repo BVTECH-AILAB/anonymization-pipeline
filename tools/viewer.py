@@ -16,19 +16,18 @@ from pathlib import Path
 from typing import Annotated, Literal
 
 import pypdfium2 as pdfium
-from fastapi import FastAPI, HTTPException, Query
-from fastapi import Path as PathParam
-from fastapi.responses import HTMLResponse, Response
-from PIL import Image
-from pydantic import BaseModel, Field
-
-from anonmyzation_pipeline.services.anonymization.geometry import to_display
-from anonmyzation_pipeline.services.anonymization.pdf_pages import (
+from anonymization_core.geometry import to_display
+from anonymization_core.pdf_pages import (
     PDFIUM_LOCK,
     PageView,
     open_pages,
     pdfium_locked,
 )
+from fastapi import FastAPI, HTTPException, Query
+from fastapi import Path as PathParam
+from fastapi.responses import HTMLResponse, Response
+from PIL import Image
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 

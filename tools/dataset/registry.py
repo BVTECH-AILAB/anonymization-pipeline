@@ -11,9 +11,8 @@ Images (signatures, stamps, codes) are registered by their unique pixel size.
 from dataclasses import asdict, dataclass, field
 from xml.sax.saxutils import escape
 
+from anonymization_core.taxonomy import LABELS
 from reportlab.lib.colors import Color
-
-from anonmyzation_pipeline.services.anonymization.taxonomy import LABELS
 
 MAX_ID = 4095
 

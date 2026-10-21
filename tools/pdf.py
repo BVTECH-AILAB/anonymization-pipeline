@@ -13,6 +13,12 @@ from pathlib import Path
 
 import pypdfium2 as pdfium
 import pypdfium2.raw as pdfium_c
+from anonymization_core.geometry import Rect, union
+from anonymization_core.pdf_pages import (
+    PageView,
+    pdfium_locked,
+)
+from anonymization_core.pdf_text import Char, chars, to_page
 from pypdf import PdfReader
 from pypdf.generic import (
     ArrayObject,
@@ -21,13 +27,6 @@ from pypdf.generic import (
     PdfObject,
     StreamObject,
 )
-
-from anonmyzation_pipeline.services.anonymization.geometry import Rect, union
-from anonmyzation_pipeline.services.anonymization.pdf_pages import (
-    PageView,
-    pdfium_locked,
-)
-from anonmyzation_pipeline.services.anonymization.pdf_text import Char, chars, to_page
 
 logger = logging.getLogger(__name__)
 

@@ -5,11 +5,11 @@ import time
 from pathlib import Path
 
 import pytest
+from anonymization_core.testing import EMAIL, PATIENT, PHONE, letter_pdf
 from fastapi.testclient import TestClient
 
 from anonmyzation_pipeline.logging_setup import log_event, setup_logging
 from tests.conftest import FAKE_CF, make_settings
-from tests.documents import EMAIL, PATIENT, PHONE, letter_pdf
 
 
 def test_log_event_format(log_stream: io.StringIO) -> None:

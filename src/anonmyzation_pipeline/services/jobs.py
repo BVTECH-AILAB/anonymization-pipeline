@@ -1,6 +1,6 @@
 """Anonymization jobs: upload -> analysis -> release, around the engine.
 
-The engine (``services.anonymization``) converts, analyses, releases and edits a
+The engine (``anonymization_core``) converts, analyses, releases and edits a
 document; this module owns what a service adds: the queue, progress over
 Server-Sent Events, expiry, limits and the KPI events. Two modes: ``accurate`` releases the redacted PDF (and a Word copy) and can be
 edited by hand; ``fast`` skips the visual detectors and the PDF redaction and
@@ -26,6 +26,17 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Annotated, Any, Literal
 
+from anonymization_core.convert import upload_to_pdf
+from anonymization_core.document import (
+    apply_edits,
+    display_boxes,
+    release_markdown,
+    release_pdf,
+    render_png,
+)
+from anonymization_core.errors import AnonymizationError
+from anonymization_core.pipeline import Analysis, Pipeline
+from anonymization_core.taxonomy import LABELS
 from fastapi import Depends, Request
 
 from anonmyzation_pipeline.config import Settings
@@ -39,17 +50,6 @@ from anonmyzation_pipeline.errors import (
     service_error,
 )
 from anonmyzation_pipeline.logging_setup import log_event
-from anonmyzation_pipeline.services.anonymization.convert import upload_to_pdf
-from anonmyzation_pipeline.services.anonymization.document import (
-    apply_edits,
-    display_boxes,
-    release_markdown,
-    release_pdf,
-    render_png,
-)
-from anonmyzation_pipeline.services.anonymization.errors import AnonymizationError
-from anonmyzation_pipeline.services.anonymization.pipeline import Analysis, Pipeline
-from anonmyzation_pipeline.services.anonymization.taxonomy import LABELS
 
 logger = logging.getLogger(__name__)
 

@@ -41,12 +41,13 @@ services:
       - "127.0.0.1:${APP_PORT:-8000}:8000"
     volumes:
       - ./src:/app/src
+      - ./packages:/app/packages
       - ./tests:/app/tests
       - ./pyproject.toml:/app/pyproject.toml:ro
     depends_on:
       - paddle-ocr
     command: >
-      uvicorn anonmyzation_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src
+      uvicorn anonmyzation_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src --reload-dir /app/packages
 
   # OCR server (PP-OCRv5 on RapidOCR, LiteParse OCR API): the service reads scanned pages through it
   paddle-ocr:

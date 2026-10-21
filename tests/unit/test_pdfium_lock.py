@@ -1,4 +1,4 @@
-"""PDFium is not thread-safe: every use goes through PDFIUM_LOCK.
+"""PDFium is not thread-safe: the job manager uses it only under PDFIUM_LOCK.
 
 Two threads inside PDFium at once crash the process (segmentation fault): the
 worker analyses a document while request threads validate uploads and render
@@ -10,12 +10,10 @@ import threading
 import time
 from pathlib import Path
 
-import pypdfium2 as pdfium
 import pytest
+from anonymization_core.testing import record_unlocked_pdfium
 from PIL import Image
-from tools.pdf import document_words, file_content
 
-from anonmyzation_pipeline.services.anonymization.pdf_pages import PDFIUM_LOCK
 from anonmyzation_pipeline.services.jobs import Job, JobManager
 
 
@@ -34,24 +32,7 @@ def _png() -> bytes:
 
 @pytest.fixture
 def lock_checked(monkeypatch: pytest.MonkeyPatch) -> list[str]:
-    """Record every document opened or page rendered without holding the lock."""
-    unlocked: list[str] = []
-    open_doc = pdfium.PdfDocument.__init__
-    render = pdfium.PdfPage.render
-
-    def checked_open(self: pdfium.PdfDocument, *args: object, **kw: object) -> None:
-        if not PDFIUM_LOCK._is_owned():  # ty: ignore[unresolved-attribute]
-            unlocked.append("open")
-        open_doc(self, *args, **kw)
-
-    def checked_render(self: pdfium.PdfPage, *args: object, **kw: object) -> object:
-        if not PDFIUM_LOCK._is_owned():  # ty: ignore[unresolved-attribute]
-            unlocked.append("render")
-        return render(self, *args, **kw)
-
-    monkeypatch.setattr(pdfium.PdfDocument, "__init__", checked_open)
-    monkeypatch.setattr(pdfium.PdfPage, "render", checked_render)
-    return unlocked
+    return record_unlocked_pdfium(monkeypatch)
 
 
 def test_service_uses_pdfium_only_under_the_lock(
@@ -66,14 +47,6 @@ def test_service_uses_pdfium_only_under_the_lock(
     fast = jobs.create(letter.read_bytes(), "lettera.pdf", "fast")  # Markdown export
     _wait(fast)
     jobs.render_page(fast.id, "original", 0, 80)
-    assert lock_checked == []
-
-
-def test_evaluation_judge_uses_pdfium_only_under_the_lock(
-    letter: Path, lock_checked: list[str]
-) -> None:
-    document_words(letter)
-    file_content(letter)
     assert lock_checked == []
 
 

@@ -4,13 +4,13 @@ from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
+from anonymization_core.pipeline import Pipeline
+from anonymization_core.testing import FakeNER, FakeReader, letter_pdf
 from fastapi.testclient import TestClient
 
 from anonmyzation_pipeline.config import Settings
 from anonmyzation_pipeline.main import create_app
-from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
 from anonmyzation_pipeline.services.jobs import JobManager, get_job_manager
-from tests.documents import FakeNER, FakeReader, letter_pdf
 
 
 @pytest.fixture

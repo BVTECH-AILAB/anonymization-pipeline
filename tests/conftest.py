@@ -1,7 +1,7 @@
 """Shared fixtures.
 
-Test data is synthetic: the codice fiscale below is the textbook example
-(Mario Rossi), never a real person's.
+Test data is synthetic: the only codice fiscale is the textbook example
+(Mario Rossi, ``anonymization_core.testing.FAKE_CF``), never a real person's.
 """
 
 import io
@@ -9,12 +9,13 @@ from collections.abc import Iterator
 from typing import Any
 
 import pytest
+from anonymization_core.testing import FAKE_CF
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource
 
 from anonmyzation_pipeline.config import Settings
 from anonmyzation_pipeline.logging_setup import setup_logging
 
-FAKE_CF = "RSSMRA85M01H501U"
+__all__ = ["FAKE_CF", "make_settings"]
 
 
 class _ExplicitSettings(Settings):

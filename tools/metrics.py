@@ -22,17 +22,16 @@ from dataclasses import dataclass, field
 from typing import TypedDict
 
 import torch
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support
-from torchmetrics.detection import MeanAveragePrecision
-from torchvision.ops import nms
-
-from anonmyzation_pipeline.services.anonymization.geometry import (
+from anonymization_core.geometry import (
     Rect,
     area,
     intersects,
     is_empty,
     overlap_area,
 )
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from torchmetrics.detection import MeanAveragePrecision
+from torchvision.ops import nms
 
 
 def coverage(target: Rect, rects: Iterable[Rect]) -> float:

@@ -5,6 +5,19 @@ from pathlib import Path
 
 import pypdfium2 as pdfium
 import pytest
+from anonymization_core.pipeline import Pipeline
+from anonymization_core.reader import LiteparseReader
+from anonymization_core.testing import (
+    PATIENT,
+    PHONE,
+    FakeReader,
+    draw_pdf,
+    edit_pdf,
+    letter_pdf,
+    native_words,
+    scanned_pdf,
+)
+from anonymization_core.verify import Report, verify
 from docx import Document
 from fastapi.testclient import TestClient
 from PIL import Image
@@ -15,21 +28,8 @@ from anonmyzation_pipeline.errors import (
     TooManyJobsError,
     TooManyPagesError,
 )
-from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
-from anonmyzation_pipeline.services.anonymization.reader import LiteparseReader
-from anonmyzation_pipeline.services.anonymization.verify import Report, verify
 from anonmyzation_pipeline.services.jobs import JobManager
 from tests.conftest import FAKE_CF
-from tests.documents import (
-    PATIENT,
-    PHONE,
-    FakeReader,
-    draw_pdf,
-    edit_pdf,
-    letter_pdf,
-    native_words,
-    scanned_pdf,
-)
 
 
 def upload(
@@ -159,9 +159,7 @@ def test_download_refused_when_a_check_fails(
         rep.fail("value still in text: 'x'")
         return rep
 
-    monkeypatch.setattr(
-        "anonmyzation_pipeline.services.anonymization.release.verify", failing
-    )
+    monkeypatch.setattr("anonymization_core.release.verify", failing)
     created = upload(client, letter)
     state = wait_done(client, created["id"])
 
@@ -179,9 +177,7 @@ def test_verification_time_is_measured(
         time.sleep(0.05)
         return verify(*args, **kwargs)
 
-    monkeypatch.setattr(
-        "anonmyzation_pipeline.services.anonymization.release.verify", slow_verify
-    )
+    monkeypatch.setattr("anonymization_core.release.verify", slow_verify)
     created = upload(client, letter)
     timings = wait_done(client, created["id"])["result"]["timings"]
 
@@ -198,7 +194,7 @@ def test_a_failed_edit_leaves_the_job_blocked_and_clean(
         raise RuntimeError("redaction failed")
 
     monkeypatch.setattr(
-        "anonmyzation_pipeline.services.anonymization.document.redact_and_verify",
+        "anonymization_core.document.redact_and_verify",
         broken,
     )
     response = client.post(
@@ -495,7 +491,7 @@ def test_fast_markdown_refused_when_a_value_survives(
     client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setattr(
-        "anonmyzation_pipeline.services.anonymization.document.verify_markdown",
+        "anonymization_core.document.verify_markdown",
         lambda *_: ["value still in the Markdown export: 'x'"],
     )
     created = upload(client, letter, mode="fast")

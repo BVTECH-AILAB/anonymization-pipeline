@@ -6,11 +6,10 @@ SQL errors or the input the user sent.
 
 import logging
 
+from anonymization_core import errors as engine
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-
-from anonmyzation_pipeline.services.anonymization import errors as engine
 
 logger = logging.getLogger(__name__)
 

@@ -12,10 +12,9 @@ When you add a setting, add it in three places: here, ``.env.example`` and
 from functools import lru_cache
 from typing import Literal
 
+from anonymization_core.config import PipelineConfig
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-from anonmyzation_pipeline.services.anonymization.config import PipelineConfig
 
 Environment = Literal["local", "staging", "prod"]
 

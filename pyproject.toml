@@ -5,26 +5,19 @@ description = "AGENAS MIA service: surgical anonymization of clinical documents 
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.115",
-    "httpx>=0.28",
     "pydantic>=2.10",
     "pydantic-settings>=2.7",
     "uvicorn[standard]>=0.34",
     "python-multipart>=0.0.20",
-    # Anonymization engine
-    "numpy>=2.0",
-    "pillow>=11.0",
-    "opencv-python-headless>=4.10",
-    "zxing-cpp>=2.3",
-    "python-codicefiscale>=0.12",
-    "python-docx>=1.1",
-    "pyyaml>=6.0",
-    "liteparse>=2.16.0",
-    "pypdfium2>=5.0",
-    "pypdf>=6.0",
+    # the engine: packages/anonymization-core
+    "anonymization-core",
 ]
 
 [dependency-groups]
 dev = [
+    # synthetic PDFs and fake engines shared with the engine tests
+    "anonymization-core[testing]",
+    "httpx>=0.28",
     "pip-audit>=2.7",
     "pre-commit>=4.0",
     "pytest>=8.3",
@@ -52,7 +45,11 @@ name = "pytorch-cu128"
 url = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
+[tool.uv.workspace]
+members = ["packages/*"]
+
 [tool.uv.sources]
+anonymization-core = { workspace = true }
 torch = { index = "pytorch-cu128" }
 torchvision = { index = "pytorch-cu128" }
 
@@ -62,8 +59,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/anonmyzation_pipeline"]
-# nested ruff.toml files hold the import boundaries: lint config, not package data
-exclude = ["**/ruff.toml"]
 
 [tool.ruff]
 target-version = "py312"

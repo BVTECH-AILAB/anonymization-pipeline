@@ -12,16 +12,16 @@ from pathlib import Path
 import cv2
 import numpy as np
 import pypdfium2 as pdfium
-from reportlab import rl_config
-from reportlab.lib.utils import ImageReader
-from reportlab.pdfgen import canvas
-
-from anonmyzation_pipeline.services.anonymization.geometry import (
+from anonymization_core.geometry import (
     Rect,
     intersection,
     to_display,
 )
-from anonmyzation_pipeline.services.anonymization.pdf_pages import PageView
+from anonymization_core.pdf_pages import PageView
+from reportlab import rl_config
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfgen import canvas
+
 from tools.pdf import words
 
 OCR_FONT = "Helvetica"

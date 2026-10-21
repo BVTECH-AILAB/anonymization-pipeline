@@ -19,10 +19,10 @@ import random
 from pathlib import Path
 
 import pypdfium2 as pdfium
+from anonymization_core.pdf_pages import PageView
 from codicefiscale import codicefiscale
 from reportlab.pdfgen import canvas
 
-from anonmyzation_pipeline.services.anonymization.pdf_pages import PageView
 from tools.dataset import scan
 from tools.pdf import search
 

@@ -37,7 +37,7 @@ start:
 
 # Check the OCR server and the NER service (both must answer; nothing is downloaded)
 models:
-    uv run python -c "from anonmyzation_pipeline.config import get_settings; from anonmyzation_pipeline.services.anonymization.factory import build_pipeline, load_models; import sys; sys.exit(0 if load_models(build_pipeline(get_settings().pipeline_config())) else 1)"
+    uv run python -c "from anonmyzation_pipeline.config import get_settings; from anonymization_core.factory import build_pipeline, load_models; import sys; sys.exit(0 if load_models(build_pipeline(get_settings().pipeline_config())) else 1)"
 
 # --- Synthetic dataset and evaluation (tools/, dev only) ---
 
@@ -69,7 +69,9 @@ ocr-server extra="gpu":
 ocr-server-test extra="gpu":
     cd ocr-server && VIRTUAL_ENV= uv run --extra {{extra}} pytest -q
 
-# --- Quality ---
+# --- Quality (ruff picks each package's own config: engine boundaries included) ---
+
+core := "packages/anonymization-core"
 
 format:
     uv run ruff format
@@ -79,6 +81,7 @@ fix:
 
 types:
     uv run ty check src tests
+    cd {{core}} && uv run ty check src tests
 
 # Fix, format and type-check: run before every commit
 lint: fix format types
@@ -88,15 +91,24 @@ check:
     uv run ruff check
     uv run ruff format --check
     uv run ty check src tests
+    cd {{core}} && uv run ty check src tests
 
 # --- Tests ---
 
-# Unit tests (no network, no model weights)
-test *args:
+# Unit tests of the engine and of the service (no network, no model weights)
+test: test-core test-api
+
+# Engine tests alone, in its package: `just test-core -k release`
+test-core *args:
+    cd {{core}} && uv run pytest {{args}}
+
+# Service and tools tests: `just test-api -k edits`
+test-api *args:
     uv run pytest {{args}}
 
-# Unit tests with coverage (fails under 80%), writes coverage.xml and junit.xml for Sonar
+# Both suites with coverage (each fails under 80%): coverage.xml and junit.xml per package, for Sonar
 test-cov:
+    cd {{core}} && uv run pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=junit.xml
     uv run pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=junit.xml
 
 # Known vulnerabilities in the dependencies

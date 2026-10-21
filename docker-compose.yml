@@ -52,7 +52,7 @@ services:
   # OCR server (PP-OCRv5 on RapidOCR, LiteParse OCR API): the service reads scanned pages through it
   paddle-ocr:
     build:
-      context: ./ocr-server
+      context: ./services/ocr-server
       args:
         # cpu works everywhere; gpu (CUDA 12 wheels) needs the deploy block below
         OCR_EXTRA: ${OCR_EXTRA:-cpu}

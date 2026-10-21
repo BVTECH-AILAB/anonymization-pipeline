@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Local demo: installs dependencies, prepares the synthetic dataset, starts the
-# OCR server (ocr-server/, port 8829) unless one already answers, the API and the
+# OCR server (services/ocr-server/, port 8829) unless one already answers, the API and the
 # demo page (apps/web: nginx in Docker, host network, proxying to the API), each
 # on the first free port, then opens the browser on the page.
 #   just start                  -> page http://127.0.0.1:8080, API http://127.0.0.1:8000
@@ -55,7 +55,7 @@ if ! curl -sf -o /dev/null "${OCR_URL}/health"; then
     if command -v nvidia-smi >/dev/null 2>&1; then OCR_EXTRA=gpu; else OCR_EXTRA=cpu; fi
   fi
   echo "==> Starting the OCR server (${OCR_EXTRA}) at ${OCR_URL}; first run downloads the models"
-  (cd ocr-server && VIRTUAL_ENV= uv run --quiet --extra "$OCR_EXTRA" python -m paddle_ocr_server) &
+  (cd services/ocr-server && VIRTUAL_ENV= uv run --quiet --extra "$OCR_EXTRA" python -m paddle_ocr_server) &
   PIDS+=("$!")
 fi
 

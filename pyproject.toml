@@ -8,6 +8,8 @@
 [tool.uv.workspace]
 # apps/web is not a Python package: members are listed explicitly
 members = ["packages/*", "apps/api", "apps/eval"]
+# own lock and ONNX Runtime extras (cpu | gpu): kept out of the workspace
+exclude = ["services/*"]
 
 [dependency-groups]
 dev = [

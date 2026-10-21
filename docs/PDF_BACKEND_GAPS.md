@@ -10,7 +10,7 @@ later iteration.
 | Native text, exact character boxes, rendering, flatten, visual detectors | pypdfium2 (PDFium) | BSD-3 / Apache-2.0 |
 | Structure rebuild, scrub, raw verification | pypdf | BSD-3 |
 | Scan detection, page screenshots for OCR | LiteParse (PDFium) | Apache-2.0 |
-| OCR (`ocr-server/`) | RapidOCR on ONNX Runtime, PP-OCRv5 server detector + Latin recogniser | Apache-2.0, MIT; models Apache-2.0 |
+| OCR (`services/ocr-server/`) | RapidOCR on ONNX Runtime, PP-OCRv5 server detector + Latin recogniser | Apache-2.0, MIT; models Apache-2.0 |
 
 ## Measured on the 600-PDF gold set (2026-10-20)
 
@@ -76,7 +76,7 @@ split, grouped by cause, before changing `LINE_GAP`.
 ## Behaviour that must stay (do not undo)
 
 Each has a regression test in `packages/anonymization-core/tests/test_liteparse_reader.py`,
-`packages/anonymization-core/tests/test_release.py` or `ocr-server/tests/`.
+`packages/anonymization-core/tests/test_release.py` or `services/ocr-server/tests/`.
 
 - **LiteParse never runs OCR itself.** With OCR on, it replaces a scan's hidden
   text layer with what OCR sees, and hidden values were never redacted (3
@@ -94,7 +94,7 @@ Each has a regression test in `packages/anonymization-core/tests/test_liteparse_
 
 ## Licences (checked 2026-10-20)
 
-Installed packages of the service (runtime) and of `ocr-server/`, model
+Installed packages of the service (runtime) and of `services/ocr-server/`, model
 weights and the native libraries bundled in the wheels. Everything is MIT,
 BSD, Apache-2.0, PSF or ISC except:
 

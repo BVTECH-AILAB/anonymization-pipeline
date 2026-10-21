@@ -51,7 +51,7 @@ RUN pip install --no-cache-dir --upgrade "pip>=25.3" \
 WORKDIR /app
 COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
 COPY --chown=appuser:appuser apps/api/scripts/entrypoint.sh ./entrypoint.sh
-# No model weights here: OCR runs in the OCR server (ocr-server/), NER in the AILAB NER service.
+# No model weights here: OCR runs in the OCR server (services/ocr-server/), NER in the AILAB NER service.
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1

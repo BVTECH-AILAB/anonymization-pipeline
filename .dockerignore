@@ -34,4 +34,6 @@ README.md
 .pre-commit-config.yaml
 sonar-project.properties
 docker-compose.yml
-ocr-server
+# other images, built from their own folders
+services
+apps/web

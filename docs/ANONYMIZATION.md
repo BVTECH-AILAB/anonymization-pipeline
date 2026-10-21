@@ -8,7 +8,7 @@ colours and tables look identical; an invisible text layer keeps them
 searchable); pages without it stay as they are. Every output is verified before
 it can be downloaded (fail-closed). Everything runs on-prem, on open-source
 components with permissive licences (no PyMuPDF): the other services are
-the OCR server of `ocr-server/`, deployed next to this one, and the AILAB NER
+the OCR server of `services/ocr-server/`, deployed next to this one, and the AILAB NER
 service.
 
 ## How it works
@@ -19,7 +19,7 @@ flowchart TD
     CONV --> PAGE{"For each page:<br/>image covers &gt; 50% of the page?"}
 
     PAGE -- "no: native page" --> NAT["Native text layer (pypdfium2)<br/>exact character boxes<br/>(invisible / white text and form fields included,<br/>rotated pages in unrotated coordinates)"]
-    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°,<br/>pages and lines upside down re-read turned)"]
+    PAGE -- "yes: scanned page" --> OCR["OCR server (services/ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°,<br/>pages and lines upside down re-read turned)"]
     PAGE -- "yes, with hidden OCR text" --> NAT
 
     NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…<br/>(on scans: boxes found from the ruling,<br/>read again cleaned of specks)"]
@@ -87,12 +87,12 @@ A detected span `(start, end)` becomes one rectangle per line.
   capitalised word starts inside them ("prevpt:LindaMarshRX-550-2877" ->
   "Linda", "Marsh", "RX-550-2877"; "McDonald", "HbA1c", "SerD" stay whole).
 - **Scanned pages** (a full-page image, or images over half of the page, as
-  LiteParse classifies them): read whole by the OCR server of `ocr-server/`,
+  LiteParse classifies them): read whole by the OCR server of `services/ocr-server/`,
   PP-OCRv5 on RapidOCR (server detector, Latin recogniser, 300 DPI) behind the
   LiteParse OCR API. It returns one box per word; vertical text in the side
   margins (print traces, protocol numbers, wristband labels) is read by a
   second pass on the margin strips rotated by 90 degrees.
-- **Orientation** (`ocr-server/`, `engine.py`): RapidOCR's line orientation
+- **Orientation** (`services/ocr-server/`, `engine.py`): RapidOCR's line orientation
   classifier is off. It turned upright lines by 180 degrees, which were then
   read as noise and dropped whole, personal data included (see "OCR choice").
   Instead:
@@ -515,7 +515,7 @@ five fewer than docTR at the same precision. Its label-agnostic AP is slightly
 lower because AP also scores box tightness and ranking, which redaction does
 not need. It is Apache 2.0. PP-OCRv5 has a larger "server" model only for
 detection; the Latin recogniser is the mobile one either way. The same models
-now run in the OCR server of `ocr-server/` (RapidOCR on ONNX Runtime), where
+now run in the OCR server of `services/ocr-server/` (RapidOCR on ONNX Runtime), where
 `OCRSRV_DET_MODEL=PP-OCRv5_mobile_det` trades some accuracy for speed.
 
 PP-OCRv6 scores higher than v5 in PaddleOCR's own benchmarks, but those are

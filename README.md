@@ -9,7 +9,7 @@ same, an invisible text layer keeps them searchable), the other pages stay as
 they are. Every output is verified before it can be downloaded (fail-closed).
 All models run on-prem, on open-source components with permissive licences
 (pypdfium2, pypdf, LiteParse, RapidOCR with PP-OCRv5 models; no PyMuPDF). OCR runs in a second
-service, `ocr-server/`; NER runs in the AILAB NER service.
+service, `services/ocr-server/`; NER runs in the AILAB NER service.
 
 Generated from `agenas-python-template`: same stack, logging and privacy rules
 (see `CLAUDE.md` and `docs/`). The service is stateless: no database.
@@ -30,7 +30,7 @@ flowchart TD
     CONV --> PAGE{"For each page:<br/>image covers &gt; 50% of the page?"}
 
     PAGE -- "no: native page" --> NAT["Native text layer (pypdfium2)<br/>exact character boxes<br/>(invisible / white text and form fields included,<br/>rotated pages in unrotated coordinates)"]
-    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°,<br/>pages and lines upside down re-read turned)"]
+    PAGE -- "yes: scanned page" --> OCR["OCR server (services/ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°,<br/>pages and lines upside down re-read turned)"]
     PAGE -- "yes, with hidden OCR text" --> NAT
 
     NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…<br/>(on scans: boxes found from the ruling,<br/>read again cleaned of specks)"]
@@ -124,7 +124,7 @@ cp .env.example .env
 just start          # deps, synthetic dataset, API + demo page on the first free ports, browser
 ```
 
-`just start` starts the OCR server (`ocr-server/`, port 8829) unless one is
+`just start` starts the OCR server (`services/ocr-server/`, port 8829) unless one is
 already running, downloads the OCR weights on the first run (NER: set
 `ANONPIP_NER_URL` to the AILAB NER service), generates
 `dataset/` if it is missing, starts the API on `http://127.0.0.1:8000` and the
@@ -206,7 +206,9 @@ apps/eval/                     evaluation, dev only (never in an image): uses th
                                ANONPIP_* variables (config.py); own tests (`just test-eval`)
   src/anonymization_eval/ dataset/ generator, evaluate.py (dev/test split), metrics.py,
                           viewer.py (evaluation UI); run from the root (`just evaluate`)
-ocr-server/               PP-OCRv5 (RapidOCR) behind the LiteParse OCR API (own pyproject, image)
+services/ocr-server/           OCR server: PP-OCRv5 (RapidOCR) behind the LiteParse OCR API;
+                               own pyproject, lock and image (ONNX Runtime, CPU or GPU),
+                               outside the workspace: `just ocr-server-test`
 docs/                     ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
                           deploy handover
 ```

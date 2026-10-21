@@ -25,7 +25,7 @@ from PIL import Image
 
 from anonmyzation_pipeline.config import Settings, get_settings
 from anonmyzation_pipeline.logging_setup import setup_logging
-from anonmyzation_pipeline.main import build_pipeline
+from anonmyzation_pipeline.services.anonymization.factory import build_pipeline
 from anonmyzation_pipeline.services.anonymization.pdf_pages import open_pages
 from anonmyzation_pipeline.services.anonymization.release import redact_and_verify
 from tools import evaluate as evaluation
@@ -120,7 +120,7 @@ def anonymize(
     """Anonymize one PDF and verify it (exit code 2 when verification fails)."""
     out = out or pdf.with_suffix(".anon.pdf")
     settings = get_settings()
-    pipeline = build_pipeline(settings)
+    pipeline = build_pipeline(settings.pipeline_config())
     analysis = pipeline.analyze(pdf)
     release = redact_and_verify(
         pdf,

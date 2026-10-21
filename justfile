@@ -37,7 +37,7 @@ start:
 
 # Check the OCR server and the NER service (both must answer; nothing is downloaded)
 models:
-    uv run python -c "from anonmyzation_pipeline.config import get_settings; from anonmyzation_pipeline.main import build_pipeline, load_models; import sys; sys.exit(0 if load_models(build_pipeline(get_settings())) else 1)"
+    uv run python -c "from anonmyzation_pipeline.config import get_settings; from anonmyzation_pipeline.services.anonymization.factory import build_pipeline, load_models; import sys; sys.exit(0 if load_models(build_pipeline(get_settings().pipeline_config())) else 1)"
 
 # --- Synthetic dataset and evaluation (tools/, dev only) ---
 

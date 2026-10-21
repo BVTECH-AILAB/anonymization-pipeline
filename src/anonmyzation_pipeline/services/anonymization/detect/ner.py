@@ -21,8 +21,8 @@ from typing import Any, Protocol
 
 import httpx
 
-from anonmyzation_pipeline.errors import NerUnavailableError
 from anonmyzation_pipeline.services.anonymization.detect import labels
+from anonmyzation_pipeline.services.anonymization.errors import NerUnavailableError
 from anonmyzation_pipeline.services.anonymization.layers import Span
 
 logger = logging.getLogger(__name__)

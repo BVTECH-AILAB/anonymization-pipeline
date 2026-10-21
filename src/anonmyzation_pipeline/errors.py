@@ -1,4 +1,4 @@
-"""Domain errors and their HTTP mapping.
+"""Service errors and their HTTP mapping, engine errors included (``service_error``).
 
 User-facing messages are in Italian and generic: never return stack traces,
 SQL errors or the input the user sent.
@@ -9,6 +9,8 @@ import logging
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+
+from anonmyzation_pipeline.services.anonymization import errors as engine
 
 logger = logging.getLogger(__name__)
 
@@ -103,8 +105,29 @@ class VerificationFailedError(ServiceError):
     )
 
 
+_ENGINE_ERRORS: dict[type[engine.AnonymizationError], type[ServiceError]] = {
+    engine.NerUnavailableError: NerUnavailableError,
+    engine.UnsupportedFormatError: UnsupportedFormatError,
+    engine.UnreadableDocumentError: UnreadableDocumentError,
+    engine.PasswordProtectedError: PasswordProtectedError,
+    engine.TooManyPagesError: TooManyPagesError,
+    engine.PageNotFoundError: JobNotFoundError,
+}
+
+
+def service_error(exc: engine.AnonymizationError) -> ServiceError:
+    """The HTTP error of an engine error; an unmapped one is a generic 500."""
+    for engine_error, error in _ENGINE_ERRORS.items():
+        if isinstance(exc, engine_error):
+            return error()
+    return ServiceError()
+
+
 async def _service_error_handler(request: Request, exc: Exception) -> JSONResponse:
-    error = exc if isinstance(exc, ServiceError) else ServiceError()
+    if isinstance(exc, engine.AnonymizationError):
+        error = service_error(exc)
+    else:
+        error = exc if isinstance(exc, ServiceError) else ServiceError()
     logger.warning("%s on %s %s", error.code, request.method, request.url.path)
     return JSONResponse(
         status_code=error.status_code,
@@ -154,5 +177,6 @@ async def _unhandled_error_handler(request: Request, exc: Exception) -> JSONResp
 def register_exception_handlers(app: FastAPI) -> None:
     """Attach the error handlers to ``app``."""
     app.add_exception_handler(ServiceError, _service_error_handler)
+    app.add_exception_handler(engine.AnonymizationError, _service_error_handler)
     app.add_exception_handler(RequestValidationError, _validation_error_handler)
     app.add_exception_handler(Exception, _unhandled_error_handler)

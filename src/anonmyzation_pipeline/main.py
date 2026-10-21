@@ -3,12 +3,10 @@
 import asyncio
 import contextlib
 import logging
-import ssl
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-import httpx
 from fastapi import FastAPI
 
 from anonmyzation_pipeline import __version__
@@ -18,11 +16,11 @@ from anonmyzation_pipeline.errors import register_exception_handlers
 from anonmyzation_pipeline.logging_setup import setup_logging
 from anonmyzation_pipeline.middleware import RequestIdMiddleware
 from anonmyzation_pipeline.services.anonymization.detect.ner import AilabNER
-from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
-from anonmyzation_pipeline.services.anonymization.reader import (
-    LiteparseReader,
-    TextReader,
+from anonmyzation_pipeline.services.anonymization.factory import (
+    build_pipeline,
+    load_models,
 )
+from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
 from anonmyzation_pipeline.services.jobs import JobManager
 
 logger = logging.getLogger(__name__)
@@ -31,76 +29,11 @@ PURGE_INTERVAL_SECONDS = 60
 MODEL_RETRY_SECONDS = 30
 
 
-def build_reader(settings: Settings) -> TextReader:
-    """The text reader: LiteParse plus the OCR server. Nothing is loaded here."""
-    return LiteparseReader(
-        settings.ocr_server_url,
-        dpi=settings.ocr_dpi,
-    )
-
-
-def _tls_context(ca_bundle: str) -> ssl.SSLContext:
-    """TLS context trusting ``ca_bundle`` (PEM), or the system CAs.
-
-    An unreadable bundle never crashes the pod: the system CAs are used, the
-    handshake with an internal certificate fails and ``/readyz`` stays 503.
-    """
-    context = ssl.create_default_context()
-    if ca_bundle:
-        try:
-            context.load_verify_locations(cafile=ca_bundle)
-        except (OSError, ssl.SSLError) as exc:
-            logger.error("NER CA bundle not loaded: error=%s", type(exc).__name__)
-    return context
-
-
-def build_pipeline(settings: Settings) -> Pipeline:
-    """Text reader and NER engine from the settings. No request is sent here."""
-    ner: AilabNER | None = None
-    if settings.ner_enabled:
-        client = httpx.Client(
-            base_url=settings.ner_url,
-            timeout=settings.ner_timeout_seconds,
-            verify=_tls_context(settings.ner_ca_bundle),
-        )
-        ner = AilabNER(
-            client,
-            retries=settings.ner_retries,
-            backoff_seconds=settings.ner_retry_backoff_seconds,
-        )
-    return Pipeline(
-        build_reader(settings),
-        ner,
-        policy=settings.redaction_policy,
-        ner_threshold=settings.ner_threshold,
-        person_threshold=settings.ner_person_threshold,
-    )
-
-
-def load_models(pipeline: Pipeline) -> bool:
-    """Load every engine that is not loaded yet; each one independently.
-
-    A failure leaves ``/readyz`` at 503 (fail-closed) and is retried by the
-    lifespan, so a model server that starts after the pod is picked up.
-
-    Returns:
-        True when every engine is ready.
-    """
-    engines = [("reader", pipeline.reader), ("ner", pipeline.ner)]
-    for name, engine in engines:
-        if engine is None or engine.ready:
-            continue
-        try:
-            engine.load()
-        except Exception as exc:
-            logger.error(
-                "Model loading failed: engine=%s error=%s", name, type(exc).__name__
-            )
-    return pipeline.ready
-
-
 async def _load_loop(pipeline: Pipeline) -> None:
-    """Load the models, retrying until every engine is ready."""
+    """Load the models, retrying until every engine is ready.
+
+    Until then ``/readyz`` stays 503 (fail-closed).
+    """
     while not await asyncio.to_thread(load_models, pipeline):
         await asyncio.sleep(MODEL_RETRY_SECONDS)
 
@@ -124,7 +57,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     the probes at once and ``/readyz`` turns ready when the weights are loaded.
     """
     settings: Settings = app.state.settings
-    pipeline = build_pipeline(settings)
+    pipeline = build_pipeline(settings.pipeline_config())
     jobs = JobManager(
         pipeline, settings, Path(settings.work_dir) if settings.work_dir else None
     )

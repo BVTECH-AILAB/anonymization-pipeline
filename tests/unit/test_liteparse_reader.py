@@ -11,7 +11,11 @@ import pytest
 from liteparse import LiteParse
 from PIL import Image
 
-from anonmyzation_pipeline.main import build_reader, load_models
+from anonmyzation_pipeline.services.anonymization.config import PipelineConfig
+from anonmyzation_pipeline.services.anonymization.factory import (
+    build_reader,
+    load_models,
+)
 from anonmyzation_pipeline.services.anonymization.layers import TextLayer, Word
 from anonmyzation_pipeline.services.anonymization.pdf_pages import PageView, open_pages
 from anonmyzation_pipeline.services.anonymization.pipeline import Pipeline
@@ -24,7 +28,7 @@ from anonmyzation_pipeline.services.anonymization.reader import (
     server_words,
     split_words,
 )
-from tests.conftest import FAKE_CF, make_settings
+from tests.conftest import FAKE_CF
 from tests.documents import (
     FakeNER,
     FakeReader,
@@ -184,14 +188,15 @@ def test_not_ready_without_a_healthy_server(tmp_path: Path) -> None:
 
 
 def test_load_models_stays_not_ready_without_server() -> None:
-    settings = make_settings(ocr_server_url="", ner_enabled=False)
-    reader = build_reader(settings)
+    reader = build_reader(PipelineConfig(ocr_server_url="", ner_enabled=False))
     assert isinstance(reader, LiteparseReader)
     assert load_models(Pipeline(reader, None)) is False
 
 
 def test_build_reader_uses_the_configured_server() -> None:
-    reader = build_reader(make_settings(ocr_server_url="http://ocr.test/", ocr_dpi=200))
+    reader = build_reader(
+        PipelineConfig(ocr_server_url="http://ocr.test/", ocr_dpi=200)
+    )
     assert isinstance(reader, LiteparseReader)
     assert (reader.server_url, reader.dpi) == ("http://ocr.test", 200)
 

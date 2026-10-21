@@ -12,10 +12,11 @@ from collections.abc import Callable
 import httpx
 import pytest
 
-from anonmyzation_pipeline.errors import NerUnavailableError
-from anonmyzation_pipeline.main import build_pipeline
+from anonmyzation_pipeline.services.anonymization.config import PipelineConfig
 from anonmyzation_pipeline.services.anonymization.detect.ner import AilabNER
-from tests.conftest import FAKE_CF, make_settings
+from anonmyzation_pipeline.services.anonymization.errors import NerUnavailableError
+from anonmyzation_pipeline.services.anonymization.factory import build_pipeline
+from tests.conftest import FAKE_CF
 
 Handler = Callable[[httpx.Request], httpx.Response]
 
@@ -252,18 +253,18 @@ def test_ner_never_logs_document_text(log_stream: io.StringIO) -> None:
 
 
 def test_build_pipeline_points_the_engine_at_the_configured_service() -> None:
-    pipeline = build_pipeline(make_settings(ner_url="http://ner.test:8080"))
+    pipeline = build_pipeline(PipelineConfig(ner_url="http://ner.test:8080"))
 
     assert isinstance(pipeline.ner, AilabNER)
     assert pipeline.ner._client.base_url.host == "ner.test"
     assert not pipeline.ready
     pipeline.ner.close()
-    assert build_pipeline(make_settings(ner_enabled=False)).ner is None
+    assert build_pipeline(PipelineConfig(ner_enabled=False)).ner is None
 
 
 def test_an_unreadable_ca_bundle_does_not_crash(log_stream: io.StringIO) -> None:
     pipeline = build_pipeline(
-        make_settings(ner_url="https://ner.test", ner_ca_bundle="/missing/ca.pem")
+        PipelineConfig(ner_url="https://ner.test", ner_ca_bundle="/missing/ca.pem")
     )
 
     assert isinstance(pipeline.ner, AilabNER)
@@ -345,7 +346,7 @@ def test_retries_never_log_document_text(log_stream: io.StringIO) -> None:
 
 def test_build_pipeline_passes_the_retry_settings() -> None:
     pipeline = build_pipeline(
-        make_settings(
+        PipelineConfig(
             ner_url="http://ner.test", ner_retries=3, ner_retry_backoff_seconds=0.5
         )
     )

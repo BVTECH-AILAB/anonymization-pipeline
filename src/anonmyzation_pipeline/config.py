@@ -15,6 +15,8 @@ from typing import Literal
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from anonmyzation_pipeline.services.anonymization.config import PipelineConfig
+
 Environment = Literal["local", "staging", "prod"]
 
 
@@ -113,6 +115,22 @@ class Settings(BaseSettings):
             "AGE": self.redact_age,
             "ORGANIZATION": self.redact_organizations,
         }
+
+    def pipeline_config(self) -> PipelineConfig:
+        """The engine configuration: OCR, NER and redaction policy."""
+        return PipelineConfig(
+            ocr_server_url=self.ocr_server_url,
+            ocr_dpi=self.ocr_dpi,
+            ner_enabled=self.ner_enabled,
+            ner_url=self.ner_url,
+            ner_timeout_seconds=self.ner_timeout_seconds,
+            ner_retries=self.ner_retries,
+            ner_retry_backoff_seconds=self.ner_retry_backoff_seconds,
+            ner_ca_bundle=self.ner_ca_bundle,
+            ner_threshold=self.ner_threshold,
+            ner_person_threshold=self.ner_person_threshold,
+            redaction_policy=self.redaction_policy,
+        )
 
     @property
     def docs_enabled(self) -> bool:

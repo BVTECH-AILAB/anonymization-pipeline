@@ -22,7 +22,10 @@ from pathlib import Path
 import numpy as np
 
 from anonmyzation_pipeline.config import Settings, get_settings
-from anonmyzation_pipeline.main import build_pipeline, load_models
+from anonmyzation_pipeline.services.anonymization.factory import (
+    build_pipeline,
+    load_models,
+)
 from anonmyzation_pipeline.services.anonymization.geometry import (
     Rect,
     grow,
@@ -213,7 +216,7 @@ def evaluate(
     options; default: the environment.
     """
     settings = settings or get_settings()
-    pipe = build_pipeline(settings)
+    pipe = build_pipeline(settings.pipeline_config())
     if not load_models(pipe):
         raise RuntimeError(f"models not ready (OCR server {settings.ocr_server_url})")
     gts = [

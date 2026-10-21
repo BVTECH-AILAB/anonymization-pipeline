@@ -37,10 +37,12 @@ def upload(
     path: Path,
     name: str | None = None,
     mime: str = "application/pdf",
+    mode: str = "accurate",
 ) -> dict:
     with path.open("rb") as f:
         response = client.post(
-            "/anonymizations", files={"file": (name or path.name, f, mime)}
+            f"/anonymizations?mode={mode}",
+            files={"file": (name or path.name, f, mime)},
         )
     assert response.status_code == 202, response.text
     return response.json()
@@ -283,11 +285,11 @@ def test_cancel(
 ) -> None:
     original = jobs.pipeline.analyze
 
-    def slow_analyze(path: Path, progress) -> object:
+    def slow_analyze(path: Path, progress, visual: bool = True) -> object:
         progress("read", 0)
         time.sleep(0.3)
         progress("read", 0.5)
-        return original(path, progress)
+        return original(path, progress, visual)
 
     monkeypatch.setattr(jobs.pipeline, "analyze", slow_analyze)
     created = upload(client, letter)
@@ -303,7 +305,7 @@ def test_cancel(
 def test_processing_error_is_reported(
     client: TestClient, jobs: JobManager, letter: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    def broken(path: Path, progress) -> object:
+    def broken(path: Path, progress, visual: bool = True) -> object:
         raise RuntimeError(f"cannot read {FAKE_CF}")
 
     monkeypatch.setattr(jobs.pipeline, "analyze", broken)
@@ -438,3 +440,144 @@ def test_upload_refused_while_models_load(
             loading.create(letter.read_bytes(), "a.pdf")
     finally:
         loading.shutdown()
+
+
+def test_mode_defaults_to_accurate(client: TestClient, letter: Path) -> None:
+    with letter.open("rb") as f:
+        created = client.post(
+            "/anonymizations", files={"file": ("a.pdf", f, "application/pdf")}
+        ).json()
+
+    assert created["mode"] == "accurate"
+    assert client.get(f"/anonymizations/{created['id']}").json()["mode"] == "accurate"
+
+
+def test_unknown_mode_is_refused(client: TestClient, letter: Path) -> None:
+    with letter.open("rb") as f:
+        response = client.post(
+            "/anonymizations?mode=turbo",
+            files={"file": ("a.pdf", f, "application/pdf")},
+        )
+
+    assert response.status_code == 422
+
+
+def test_fast_mode_releases_anonymized_markdown(
+    client: TestClient, letter: Path
+) -> None:
+    created = upload(client, letter, name=f"referto_{FAKE_CF}.pdf", mode="fast")
+    state = wait_done(client, created["id"])
+
+    assert created["mode"] == "fast"
+    assert state["mode"] == "fast"
+    result = state["result"]
+    assert result["verified"] is True
+    assert result["counts"]["FISCAL_CODE"] == 1
+    assert "boxes" not in result
+    assert "QRCODE" not in result["counts"]  # no visual detection in fast mode
+    response = client.get(f"/anonymizations/{created['id']}/download/md")
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/markdown")
+    assert "documento_anonimizzato.md" in response.headers["content-disposition"]
+    md = response.text
+    assert md.startswith("<!-- pagina 1 -->")
+    assert "[CODICE FISCALE]" in md
+    assert "[IMMAGINE]" in md
+    for value in (FAKE_CF, PATIENT, PHONE):
+        assert value not in md
+    assert "Crohn" in md
+
+
+def test_fast_markdown_refused_when_a_value_survives(
+    client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        "anonmyzation_pipeline.services.jobs.verify_markdown",
+        lambda *_: ["value still in the Markdown export: 'x'"],
+    )
+    created = upload(client, letter, mode="fast")
+    state = wait_done(client, created["id"])
+
+    assert state["result"]["verified"] is False
+    response = client.get(f"/anonymizations/{created['id']}/download/md")
+    assert response.status_code == 409
+    assert response.json()["code"] == "VERIFICATION_FAILED"
+
+
+@pytest.mark.parametrize(
+    ("mode", "method", "path"),
+    [
+        ("fast", "get", "download/pdf"),
+        ("fast", "get", "download/docx"),
+        ("fast", "get", "preview"),
+        ("fast", "get", "pages/anonymized/0"),
+        ("fast", "post", "edits"),
+        ("accurate", "get", "download/md"),
+    ],
+)
+def test_actions_of_the_other_mode_are_refused(
+    client: TestClient, letter: Path, mode: str, method: str, path: str
+) -> None:
+    created = upload(client, letter, mode=mode)
+    wait_done(client, created["id"])
+
+    url = f"/anonymizations/{created['id']}/{path}"
+    response = client.post(url, json={}) if method == "post" else client.get(url)
+
+    assert response.status_code == 409
+    assert response.json()["code"] == "MODE_NOT_SUPPORTED"
+
+
+def test_fast_job_keeps_the_original_preview(client: TestClient, letter: Path) -> None:
+    created = upload(client, letter, mode="fast")
+    wait_done(client, created["id"])
+
+    response = client.get(f"/anonymizations/{created['id']}/pages/original/0?dpi=60")
+
+    assert response.status_code == 200
+
+
+def test_preview_manifest(client: TestClient, letter: Path) -> None:
+    created = upload(client, letter)
+    wait_done(client, created["id"])
+    url = f"/anonymizations/{created['id']}/preview"
+
+    preview = client.get(url).json()
+
+    assert preview["id"] == created["id"]
+    assert preview["mode"] == "accurate"
+    assert preview["version"] == 0
+    assert preview["verified"] is True
+    page = preview["pages"][0]
+    assert page["index"] == 0
+    assert (page["width"], page["height"]) == (595, 842)
+    assert page["original"] == f"/anonymizations/{created['id']}/pages/original/0"
+    assert page["anonymized"] == (
+        f"/anonymizations/{created['id']}/pages/anonymized/0?v=0"
+    )
+    assert client.get(page["original"]).status_code == 200
+    assert client.get(page["anonymized"]).status_code == 200
+    box = preview["boxes"][0]
+    assert set(box) == {"id", "page", "rect", "label", "layer", "redact"}
+    assert preview["labels"]["PERSON"] == "Nomi"
+    assert FAKE_CF not in json.dumps(preview)
+    assert PATIENT not in json.dumps(preview)
+
+    client.post(f"/anonymizations/{created['id']}/edits", json={"remove": [0]})
+    edited = client.get(url).json()
+
+    assert edited["version"] == 1
+    assert edited["pages"][0]["anonymized"].endswith("?v=1")
+    assert edited["boxes"][0]["redact"] is False
+
+
+def test_preview_before_completion_is_refused(
+    client: TestClient, jobs: JobManager, letter: Path
+) -> None:
+    job = jobs.create(letter.read_bytes(), "a.pdf")
+    job.status = "running"
+
+    response = client.get(f"/anonymizations/{job.id}/preview")
+
+    assert response.status_code == 409
+    assert response.json()["code"] == "JOB_NOT_READY"

@@ -26,7 +26,7 @@ import httpx
 import numpy as np
 import pypdfium2 as pdfium
 import pypdfium2.raw as pdfium_c
-from liteparse import LiteParse, ParsedPage
+from liteparse import AnnotationRect, LiteParse, ParsedPage
 
 from anonmyzation_pipeline.services.anonymization.cells import read_cells
 from anonmyzation_pipeline.services.anonymization.detect import visual
@@ -64,6 +64,31 @@ LINE_GAP = 0.8
 
 
 @dataclass
+class Region:
+    """A table or a figure found by LiteParse.
+
+    Attributes:
+        kind: ``table`` or ``figure``.
+        rect: Area of the region.
+        cells: Table rows, header first, one area per cell; None for a cell
+            LiteParse added to square off the grid. Empty for a figure, and for
+            a table LiteParse could not split into cells.
+    """
+
+    kind: str
+    rect: Rect
+    cells: list[list[Rect | None]] = dataclasses.field(default_factory=list)
+
+    def map(self, fn: Callable[[Rect], Rect]) -> "Region":
+        """The same region with ``fn`` applied to every area (space conversions)."""
+        return Region(
+            self.kind,
+            fn(self.rect),
+            [[None if c is None else fn(c) for c in row] for row in self.cells],
+        )
+
+
+@dataclass
 class PageText:
     """What a reader returns for one page.
 
@@ -73,11 +98,13 @@ class PageText:
         layers: Text layers in page space.
         ocr_words: OCR words in display space (scanned pages only), for the
             visual detectors; None on native pages.
+        regions: Tables and figures LiteParse found on the page, in page space.
     """
 
     info: dict
     layers: list[TextLayer]
     ocr_words: list[Word] | None = None
+    regions: list[Region] = dataclasses.field(default_factory=list)
 
 
 class TextReader(Protocol):
@@ -388,6 +415,28 @@ def is_scanned_page(parsed: ParsedPage) -> bool:
     return c is not None and (c.full_page_image or c.image_coverage > 0.5)
 
 
+# LiteParse block kinds the Markdown export lays out on their own
+REGION_KINDS = {"table": "table", "grid_fallback": "table", "figure": "figure"}
+
+
+def _rect(a: AnnotationRect) -> Rect:
+    return (a.x, a.y, a.x + a.width, a.y + a.height)
+
+
+def page_regions(parsed: ParsedPage) -> list[Region]:
+    """Tables and figures of a LiteParse page, display space, in reading order."""
+    out = []
+    for b in parsed.blocks or []:
+        if b.kind not in REGION_KINDS or b.bbox is None:
+            continue
+        rows = ([b.header] if b.header else []) + (b.rows or [])
+        cells = [
+            [None if c.bbox is None else _rect(c.bbox) for c in row] for row in rows
+        ]
+        out.append(Region(REGION_KINDS[b.kind], _rect(b.bbox), cells))
+    return out
+
+
 class LiteparseReader:
     """Exact native text (pypdfium2) and OCR through the LiteParse OCR API.
 
@@ -440,11 +489,13 @@ class LiteparseReader:
         if r.status_code != 200:
             raise RuntimeError(f"OCR server not ready: status={r.status_code}")
         if self._parser is None:
-            # page complexity (scan detection) and screenshots: its text is not used
+            # page complexity (scan detection), screenshots, table and figure
+            # regions (Markdown export): its text is not used
             self._parser = LiteParse(
                 ocr_enabled=False,
                 dpi=float(self.dpi),
                 include_complexity=True,
+                extract_blocks=True,
                 max_pages=1000,
                 quiet=True,
             )
@@ -550,6 +601,15 @@ class LiteparseReader:
                 words = pictures.get(pno, [])
             if words:
                 layers.append(ocr_layer(pno, [derotate_word(info, w) for w in words]))
-            out.append(PageText(info, layers, words if scanned[pno] else None))
+            # a scan is one picture: its content is the OCR text, not a figure
+            regions = (
+                []
+                if scanned[pno]
+                else [
+                    region.map(lambda r, info=info: derotate_rect(info, r))
+                    for region in page_regions(result.pages[pno])
+                ]
+            )
+            out.append(PageText(info, layers, words if scanned[pno] else None, regions))
             progress((pno + 1) / len(views))
         return out

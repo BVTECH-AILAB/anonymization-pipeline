@@ -253,23 +253,87 @@ pages are redacted where the text really is.
 
 ## API
 
-| Method and path | What it does |
-|---|---|
-| `POST /anonymizations` (multipart `file`) | Upload and start; 202 with the job id |
-| `GET /anonymizations/{id}` | State; includes the result when done |
-| `GET /anonymizations/{id}/events` | Server-Sent Events: one message per progress change, then the final state |
-| `POST /anonymizations/{id}/cancel` | Stop at the next step; files deleted |
-| `POST /anonymizations/{id}/edits` | `{add: [{page, rect}], remove: [box ids], restore: [box ids], search: "text"}`: redaction and verification only, no new detection |
-| `GET /anonymizations/{id}/pages/{original\|anonymized}/{page}?dpi=` | PNG preview |
-| `GET /anonymizations/{id}/download/{pdf\|docx}` | Anonymized document (refused when not verified) |
-| `DELETE /anonymizations/{id}` | Delete now |
-| `GET /anonymizations/labels` | Taxonomy with Italian names |
-| `GET /` | Demo web page, only with `ANONPIP_UI_ENABLED=true` |
+Two modes, chosen at upload with `?mode=` (default `accurate`):
+
+- **`accurate`**: the whole pipeline above; releases the redacted PDF and a Word
+  copy, and supports the side-by-side review with manual edits.
+- **`fast`**: the same text layers and text detection (rules, labels, NER,
+  propagation), without the visual detectors, the redaction of the PDF and its
+  pixel checks; releases only the anonymized text as Markdown (see "Fast mode").
+
+| Method and path | What it does | Modes |
+|---|---|---|
+| `POST /anonymizations?mode=accurate\|fast` (multipart `file`) | Upload and start; 202 with `{id, pages, size, mode}` | both |
+| `GET /anonymizations/{id}` | State; includes the result when done | both |
+| `GET /anonymizations/{id}/events` | Server-Sent Events: one message per progress change, then the final state | both |
+| `POST /anonymizations/{id}/cancel` | Stop at the next step; files deleted | both |
+| `GET /anonymizations/{id}/preview` | Manifest of the side-by-side review (see below) | accurate |
+| `GET /anonymizations/{id}/pages/original/{page}?dpi=` | PNG of the original page | both |
+| `GET /anonymizations/{id}/pages/anonymized/{page}?dpi=` | PNG of the anonymized page | accurate |
+| `POST /anonymizations/{id}/edits` | `{add: [{page, rect}], remove: [box ids], restore: [box ids], search: "text"}`: redaction and verification only, no new detection | accurate |
+| `GET /anonymizations/{id}/download/{pdf\|docx}` | Anonymized document (refused when not verified) | accurate |
+| `GET /anonymizations/{id}/download/md` | Anonymized text as Markdown (refused when not verified) | fast |
+| `DELETE /anonymizations/{id}` | Delete now | both |
+| `GET /anonymizations/labels` | Taxonomy with Italian names | - |
+| `GET /` | Demo web page, only with `ANONPIP_UI_ENABLED=true` | - |
+
+An action of the other mode answers 409 `MODE_NOT_SUPPORTED`.
+
+### Side-by-side review (frontend contract)
+
+1. `POST /anonymizations?mode=accurate`, then follow `/events` (or poll `GET /{id}`)
+   until `status` is `done`.
+2. `GET /{id}/preview`:
+
+   ```json
+   {
+     "id": "<32 hex>", "mode": "accurate", "version": 0, "verified": true,
+     "pages": [{"index": 0, "width": 595.0, "height": 842.0,
+                "original": "/anonymizations/<id>/pages/original/0",
+                "anonymized": "/anonymizations/<id>/pages/anonymized/0?v=0"}],
+     "boxes": [{"id": 0, "page": 0, "rect": [40.0, 92.1, 120.5, 103.0],
+                "label": "PERSON", "layer": "native", "redact": true}],
+     "labels": {"PERSON": "Nomi", "FISCAL_CODE": "Codice fiscale"}
+   }
+   ```
+
+   - Original on the left, anonymized on the right: the two image URLs, relative
+     to the service root; `dpi` (50..200, default 110) may be added.
+   - `width`/`height` and `rect` are PDF points, top-left origin, as the page is
+     displayed: scale by `image_width_px / width` to draw the boxes on the image.
+   - Boxes carry no text: the value is visible on the original page.
+   - `version` changes with every edit, and so do the anonymized URLs (no stale cache).
+3. The reviewer draws a rectangle on the original page to redact it, or clicks a
+   box to remove or restore it: `POST /{id}/edits` with `add` (rectangles in the
+   same space as `rect`), `remove` / `restore` (box ids). The answer is the new
+   result; `GET /{id}/preview` again gives the new boxes and URLs.
+4. `GET /{id}/download/pdf` (or `docx`) once `verified` is true.
+
+### Fast mode (`services/anonymization/export_markdown.py`)
+
+The text is the one of the Word export (native layer, or OCR on scanned pages),
+line by line, with:
+
+- `<!-- pagina N -->` before every page;
+- every redacted value replaced by its label tag: `[NOME]`, `[CODICE FISCALE]`,
+  `[INDIRIZZO]`, ... (`taxonomy.py`, column `tag`);
+- every table found by LiteParse (`extract_blocks`, ruled or borderless) as a
+  Markdown table, first row as header, each cell anonymized like any other text
+  (`| [NOME] | [CODICE FISCALE] | negativo |`). When some text inside the table
+  falls in no cell, the table is exported as lines instead: no text is lost;
+- `[IMMAGINE]` in place of every figure, in reading order: pictures are not
+  read in fast mode.
+
+Before release, no redacted identifier or full name may appear in the file
+(`verify_markdown`, the same check as the Word export); otherwise the download
+is refused. Scanned pages have no LiteParse blocks: their OCR text, tables
+included, is exported line by line.
 
 Errors are `ServiceError` subclasses with generic Italian messages (`errors.py`):
 `UNSUPPORTED_FORMAT` 415, `FILE_TOO_LARGE` 413, `TOO_MANY_PAGES` 413,
 `UNREADABLE_DOCUMENT` 422, `PASSWORD_PROTECTED` 422, `TOO_MANY_JOBS` 429,
-`JOB_NOT_FOUND` 404, `JOB_NOT_READY` 409, `VERIFICATION_FAILED` 409.
+`JOB_NOT_FOUND` 404, `JOB_NOT_READY` 409, `MODE_NOT_SUPPORTED` 409,
+`VERIFICATION_FAILED` 409.
 
 ## Jobs and privacy (`services/jobs.py`)
 
@@ -288,8 +352,8 @@ Errors are `ServiceError` subclasses with generic Italian messages (`errors.py`)
 
 | Event | Keys |
 |---|---|
-| `anonymization_job_created` | `job_id`, `pages`, `size_kb`, `source_format` |
-| `anonymization_completed` | `job_id`, `pages`, `scanned_pages`, `boxes`, `values_by_label`, `verified`, `edits`, `seconds_total`, `timings` |
+| `anonymization_job_created` | `job_id`, `pages`, `size_kb`, `source_format`, `mode` |
+| `anonymization_completed` | `job_id`, `pages`, `scanned_pages`, `boxes`, `values_by_label`, `verified`, `edits`, `seconds_total`, `timings`, `mode` |
 | `anonymization_edited` | `job_id`, `added`, `removed`, `restored`, `search_hits`, `verified`, `seconds` |
 | `anonymization_failed` | `job_id`, `error` (exception type) |
 | `anonymization_cancelled` | `job_id` |

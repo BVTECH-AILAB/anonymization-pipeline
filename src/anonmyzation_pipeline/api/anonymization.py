@@ -1,6 +1,9 @@
-"""Anonymization API: upload, progress (Server-Sent Events), result, edits, downloads.
+"""Anonymization API: upload, progress (Server-Sent Events), result, preview, edits, downloads.
 
-URLs carry only random job ids: never names, codici fiscali or file names.
+``mode=accurate`` (default) releases the redacted PDF and Word copy and supports the
+side-by-side review (preview, edits); ``mode=fast`` releases only the anonymized
+text as Markdown. URLs carry only random job ids: never names, codici fiscali or
+file names.
 """
 
 import asyncio
@@ -12,9 +15,12 @@ from fastapi import APIRouter, File, Path, Query, Request, Response, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
-from anonmyzation_pipeline.errors import VerificationFailedError
+from anonmyzation_pipeline.errors import (
+    ModeNotSupportedError,
+    VerificationFailedError,
+)
 from anonmyzation_pipeline.services.anonymization.taxonomy import LABELS
-from anonmyzation_pipeline.services.jobs import TERMINAL, JobManagerDep
+from anonmyzation_pipeline.services.jobs import TERMINAL, JobManagerDep, Mode
 
 router = APIRouter(prefix="/anonymizations", tags=["anonymization"])
 
@@ -23,11 +29,15 @@ JobId = Annotated[str, Path(pattern=r"^[0-9a-f]{32}$")]
 DOWNLOAD_NAMES = {
     "pdf": "documento_anonimizzato.pdf",
     "docx": "documento_anonimizzato.docx",
+    "md": "documento_anonimizzato.md",
 }
 MEDIA_TYPES = {
     "pdf": "application/pdf",
     "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "md": "text/markdown; charset=utf-8",
 }
+# the downloads each mode produces
+FORMATS: dict[str, set[str]] = {"accurate": {"pdf", "docx"}, "fast": {"md"}}
 SSE_KEEPALIVE_SECONDS = 15
 
 
@@ -41,10 +51,12 @@ class JobCreated(BaseModel):
     id: str
     pages: int
     size: int
+    mode: Mode
 
 
 class JobStatus(BaseModel):
     id: str
+    mode: Mode
     status: str
     step: str
     percent: int
@@ -67,6 +79,39 @@ class EditRequest(BaseModel):
     search: str = Field(default="", max_length=200)
 
 
+class PreviewPage(BaseModel):
+    """One page: size in PDF points (display space) and the URLs of its two renderings."""
+
+    index: int
+    width: float
+    height: float
+    original: str
+    anonymized: str
+
+
+class PreviewBox(BaseModel):
+    """A detected or manual area; ``rect`` is ``(x0, y0, x1, y1)`` in points, top-left origin."""
+
+    id: int
+    page: int
+    rect: tuple[float, float, float, float]
+    label: str
+    layer: str
+    redact: bool
+
+
+class PreviewManifest(BaseModel):
+    """Everything the side-by-side review needs; ``version`` changes with every edit."""
+
+    id: str
+    mode: Mode
+    version: int
+    verified: bool
+    pages: list[PreviewPage]
+    boxes: list[PreviewBox]
+    labels: dict[str, str]
+
+
 @router.get("/labels")
 async def labels() -> dict[str, LabelInfo]:
     """PII taxonomy: Italian name, kind and default policy of every label."""
@@ -80,13 +125,18 @@ async def labels() -> dict[str, LabelInfo]:
 
 @router.post("", status_code=202)
 async def create(
-    jobs: JobManagerDep, file: Annotated[UploadFile, File()]
+    jobs: JobManagerDep,
+    file: Annotated[UploadFile, File()],
+    mode: Annotated[Mode, Query()] = "accurate",
 ) -> JobCreated:
-    """Upload a document (PDF, scanned PDF, JPG, PNG, TIFF) and start the anonymization."""
+    """Upload a document (PDF, scanned PDF, JPG, PNG, TIFF) and start the anonymization.
+
+    ``accurate``: redacted PDF, reviewable and editable. ``fast``: anonymized text as Markdown.
+    """
     # never more than the limit in memory: one byte over is enough to refuse it
     data = await file.read(jobs.settings.max_upload_mb * 1024 * 1024 + 1)
-    job = await asyncio.to_thread(jobs.create, data, file.filename or "documento")
-    return JobCreated(id=job.id, pages=job.pages, size=job.size)
+    job = await asyncio.to_thread(jobs.create, data, file.filename or "documento", mode)
+    return JobCreated(id=job.id, pages=job.pages, size=job.size, mode=job.mode)
 
 
 @router.get("/{job_id}")
@@ -150,6 +200,27 @@ async def edit(
     )
 
 
+@router.get("/{job_id}/preview")
+def preview(job_id: JobId, jobs: JobManagerDep) -> PreviewManifest:
+    """Side-by-side review: pages with their original and anonymized renderings, and the boxes.
+
+    Rectangles drawn on a rendering are sent to ``/edits`` in the same space as
+    ``boxes[].rect``. Accurate mode only.
+    """
+    manifest = jobs.preview(job_id)
+    base = f"{router.prefix}/{job_id}/pages"
+    version = manifest["version"]
+    pages = [
+        PreviewPage(
+            **p,
+            original=f"{base}/original/{p['index']}",
+            anonymized=f"{base}/anonymized/{p['index']}?v={version}",
+        )
+        for p in manifest["pages"]
+    ]
+    return PreviewManifest.model_validate(manifest | {"pages": pages})
+
+
 @router.get("/{job_id}/pages/{which}/{page}")
 def page_image(
     job_id: JobId,
@@ -158,7 +229,7 @@ def page_image(
     jobs: JobManagerDep,
     dpi: Annotated[int, Query(ge=50, le=200)] = 110,
 ) -> FileResponse:
-    """PNG preview of one page."""
+    """PNG preview of one page; the anonymized one only in accurate mode."""
     path = jobs.render_page(job_id, which, page, dpi)
     return FileResponse(
         path, media_type="image/png", headers={"Cache-Control": "no-store"}
@@ -167,13 +238,18 @@ def page_image(
 
 @router.get("/{job_id}/download/{fmt}")
 def download(
-    job_id: JobId, fmt: Literal["pdf", "docx"], jobs: JobManagerDep
+    job_id: JobId, fmt: Literal["pdf", "docx", "md"], jobs: JobManagerDep
 ) -> FileResponse:
-    """The anonymized document. Refused when verification failed (fail-closed)."""
+    """The anonymized document: pdf or docx (accurate), md (fast).
+
+    Refused when verification failed (fail-closed).
+    """
     job = jobs.ready_job(job_id)
+    if fmt not in FORMATS[job.mode]:
+        raise ModeNotSupportedError()
     if not job.verified:
         raise VerificationFailedError()
-    path = job.anonymized if fmt == "pdf" else job.docx
+    path = {"pdf": job.anonymized, "docx": job.docx, "md": job.markdown}[fmt]
     return FileResponse(
         path,
         media_type=MEDIA_TYPES[fmt],

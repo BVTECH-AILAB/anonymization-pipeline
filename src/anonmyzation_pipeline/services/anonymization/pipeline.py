@@ -34,6 +34,7 @@ from anonmyzation_pipeline.services.anonymization.pdf_pages import (
     open_pages,
 )
 from anonmyzation_pipeline.services.anonymization.reader import (
+    Region,
     TextReader,
     derotate_rect,
 )
@@ -66,6 +67,8 @@ class Analysis:
     timings: dict[str, float] = field(default_factory=dict)
     layers: list[TextLayer] = field(default_factory=list, repr=False)
     applied: list[tuple[int, Rect, str]] = field(default_factory=list, repr=False)
+    # (page, region) of the tables and figures, page space (Markdown export)
+    regions: list[tuple[int, Region]] = field(default_factory=list, repr=False)
 
     def search(self, term: str) -> list[Box]:
         """All occurrences of ``term`` (case-insensitive) in every text layer, as manual boxes.
@@ -200,12 +203,16 @@ class Pipeline:
             ]
         return vis
 
-    def analyze(self, path: Path, progress: Progress = _no_progress) -> Analysis:
+    def analyze(
+        self, path: Path, progress: Progress = _no_progress, visual: bool = True
+    ) -> Analysis:
         """Analyze a PDF.
 
         Args:
             path: PDF to analyze.
             progress: ``progress(step, fraction)``, called as work advances; it may raise to cancel.
+            visual: Run the visual detectors (codes, signatures, stamps); off for
+                the text-only export, where pictures become placeholders.
 
         Returns:
             The analysis, with one box per line of every finding.
@@ -234,8 +241,11 @@ class Pipeline:
                 layers, self.ner, self.ner_threshold, self.person_threshold
             )
             t2 = time.perf_counter()
-            with PDFIUM_LOCK:
-                vis = self._visual(views, pages, ocr_words, progress)
+            if visual:
+                with PDFIUM_LOCK:
+                    vis = self._visual(views, pages, ocr_words, progress)
+            else:
+                vis = []
             t3 = time.perf_counter()
         finally:
             with PDFIUM_LOCK:
@@ -250,6 +260,9 @@ class Pipeline:
                 "visual": round(t3 - t2, 2),
             },
             layers=layers,
+            regions=[
+                (pno, region) for pno, p in enumerate(read) for region in p.regions
+            ],
         )
         for f in findings:
             for r in f.layer.rects(f.start, f.end):

@@ -63,6 +63,9 @@ def test_service_uses_pdfium_only_under_the_lock(
     jobs.render_page(job.id, "anonymized", 0, 80)
     photo = jobs.create(_png(), "foto.png")  # image -> PDF
     _wait(photo)
+    fast = jobs.create(letter.read_bytes(), "lettera.pdf", "fast")  # Markdown export
+    _wait(fast)
+    jobs.render_page(fast.id, "original", 0, 80)
     assert lock_checked == []
 
 

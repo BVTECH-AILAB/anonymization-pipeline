@@ -78,6 +78,32 @@ def test_anonymization_never_logs_document_content(
         assert secret not in logs
 
 
+def test_fast_anonymization_never_logs_document_content(
+    client: TestClient, log_stream: io.StringIO, tmp_path: Path
+) -> None:
+    """Fast mode (Markdown): the logs carry ids and counters, never PII or file names."""
+    name = f"referto_{PATIENT.replace(' ', '_')}_{FAKE_CF}.pdf"
+    src = letter_pdf(tmp_path / "in.pdf")
+
+    created = client.post(
+        "/anonymizations?mode=fast",
+        files={"file": (name, src.read_bytes(), "application/pdf")},
+    ).json()
+    deadline = time.monotonic() + 30
+    while (
+        client.get(f"/anonymizations/{created['id']}").json()["status"] != "done"
+        and time.monotonic() < deadline
+    ):
+        time.sleep(0.05)
+    client.get(f"/anonymizations/{created['id']}/download/md")
+
+    logs = log_stream.getvalue()
+    assert "anonymization_completed" in logs
+    assert '"mode": "fast"' in logs
+    for secret in (FAKE_CF, PATIENT, "Rossi", PHONE, EMAIL, "Garibaldi", name):
+        assert secret not in logs
+
+
 def test_kpi_events_keep_their_keys(
     client: TestClient, log_stream: io.StringIO, tmp_path: Path
 ) -> None:
@@ -104,6 +130,7 @@ def test_kpi_events_keep_their_keys(
         "pages",
         "size_kb",
         "source_format",
+        "mode",
     }
     assert set(json.loads(completed.split("anonymization_completed ", 1)[1])) == {
         "job_id",
@@ -115,4 +142,5 @@ def test_kpi_events_keep_their_keys(
         "edits",
         "seconds_total",
         "timings",
+        "mode",
     }

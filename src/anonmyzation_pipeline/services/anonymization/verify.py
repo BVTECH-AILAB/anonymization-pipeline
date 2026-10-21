@@ -101,6 +101,20 @@ def verify_docx(path: Path, analysis: Analysis) -> list[str]:
     ]
 
 
+def verify_markdown(path: Path, analysis: Analysis) -> list[str]:
+    """Issues of the Markdown export: a redacted value left in its text.
+
+    Returns:
+        One message per value found; empty when the export is clean.
+    """
+    text = _norm(path.read_text(encoding="utf-8"))
+    return [
+        f"value still in the Markdown export: '{v}'"
+        for v in strong_values(analysis)
+        if _norm(v) in text
+    ]
+
+
 def _words(
     textpage: pdfium.PdfTextPage, box: tuple[float, float, float, float]
 ) -> list[str]:

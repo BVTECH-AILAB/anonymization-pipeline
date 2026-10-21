@@ -1,5 +1,9 @@
 """Anonymization jobs: upload -> analysis -> redaction -> verification -> exports.
 
+Two modes: ``accurate`` releases the redacted PDF (and a Word copy) and can be
+edited by hand; ``fast`` skips the visual detectors and the PDF redaction and
+releases only the anonymized text as Markdown.
+
 One job runs at a time (single worker: the models share one GPU). Progress
 is pushed to Server-Sent Events subscribers. Documents live in a private
 work folder only while the job exists and are deleted after
@@ -32,6 +36,7 @@ from anonmyzation_pipeline.errors import (
     FileTooLargeError,
     JobNotFoundError,
     JobNotReadyError,
+    ModeNotSupportedError,
     PasswordProtectedError,
     ServiceUnavailableError,
     TooManyJobsError,
@@ -41,6 +46,9 @@ from anonmyzation_pipeline.errors import (
 )
 from anonmyzation_pipeline.logging_setup import log_event
 from anonmyzation_pipeline.services.anonymization.export_docx import export_docx
+from anonmyzation_pipeline.services.anonymization.export_markdown import (
+    export_markdown,
+)
 from anonmyzation_pipeline.services.anonymization.pdf_pages import pdfium_locked
 from anonmyzation_pipeline.services.anonymization.pipeline import (
     Analysis,
@@ -50,7 +58,11 @@ from anonmyzation_pipeline.services.anonymization.pipeline import (
     to_display,
 )
 from anonmyzation_pipeline.services.anonymization.release import redact_and_verify
-from anonmyzation_pipeline.services.anonymization.verify import verify_docx
+from anonmyzation_pipeline.services.anonymization.taxonomy import LABELS
+from anonmyzation_pipeline.services.anonymization.verify import (
+    verify_docx,
+    verify_markdown,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -64,9 +76,11 @@ WEIGHTS = {
     "detect": (45, 80),
     "redact": (80, 90),
     "preview": (90, 100),
+    "export": (80, 100),  # fast mode: Markdown instead of redaction and previews
 }
 TERMINAL = {"done", "error", "cancelled"}
 Status = Literal["queued", "running", "done", "error", "cancelled"]
+Mode = Literal["fast", "accurate"]
 
 
 class Cancelled(Exception):
@@ -83,6 +97,7 @@ class Job:
     size: int
     pages: int
     source_format: str
+    mode: Mode = "accurate"
     created: float = field(default_factory=time.monotonic)
     status: Status = "queued"
     step: str = "read"
@@ -109,10 +124,15 @@ class Job:
     def docx(self) -> Path:
         return self.dir / "anonymized.docx"
 
+    @property
+    def markdown(self) -> Path:
+        return self.dir / "anonymized.md"
+
     def snapshot(self) -> dict[str, Any]:
         """Public state: what the status endpoint and the SSE stream return."""
         out: dict[str, Any] = {
             "id": self.id,
+            "mode": self.mode,
             "status": self.status,
             "step": self.step,
             "percent": self.percent,
@@ -240,8 +260,8 @@ class JobManager:
         )
 
     # -- lifecycle -----------------------------------------------------------
-    def create(self, data: bytes, filename: str) -> Job:
-        """Validate and store an upload, then queue it.
+    def create(self, data: bytes, filename: str, mode: Mode = "accurate") -> Job:
+        """Validate and store an upload, then queue it in ``mode``.
 
         Raises:
             FileTooLargeError, UnsupportedFormatError, UnreadableDocumentError,
@@ -272,7 +292,7 @@ class JobManager:
         except Exception:
             shutil.rmtree(job_dir, ignore_errors=True)
             raise
-        job = Job(jid, job_dir, filename, len(data), pages, suffix.lstrip("."))
+        job = Job(jid, job_dir, filename, len(data), pages, suffix.lstrip("."), mode)
         with self._jobs_lock:
             if len(self.jobs) >= self.settings.max_jobs:  # filled while converting
                 shutil.rmtree(job_dir, ignore_errors=True)
@@ -286,6 +306,7 @@ class JobManager:
                 "pages": pages,
                 "size_kb": round(len(data) / 1024),
                 "source_format": job.source_format,
+                "mode": mode,
             },
         )
         self._executor.submit(self._run, job)
@@ -313,6 +334,19 @@ class JobManager:
         job = self.get(jid)
         if job.status != "done" or job.analysis is None:
             raise JobNotReadyError()
+        return job
+
+    def accurate_job(self, jid: str) -> Job:
+        """Return a completed job of the accurate mode (redacted PDF, editable).
+
+        Raises:
+            JobNotFoundError: Unknown or expired id.
+            JobNotReadyError: Still running, failed or cancelled.
+            ModeNotSupportedError: A fast job (Markdown only).
+        """
+        job = self.ready_job(jid)
+        if job.mode != "accurate":
+            raise ModeNotSupportedError()
         return job
 
     def cancel(self, jid: str) -> None:
@@ -405,14 +439,21 @@ class JobManager:
         try:
             job.status = "running"
             self._publish(job)
-            analysis = self.pipeline.analyze(job.original, progress=self._progress(job))
+            analysis = self.pipeline.analyze(
+                job.original,
+                progress=self._progress(job),
+                visual=job.mode == "accurate",
+            )
             job.analysis = analysis
             timings = {
                 "text_layers": analysis.timings["text_layers"],
                 "detection": analysis.timings["detection"],
                 "visual": analysis.timings["visual"],
             }
-            self._finish(job, t0, timings)
+            if job.mode == "fast":
+                self._finish_fast(job, t0, timings)
+            else:
+                self._finish(job, t0, timings)
             log_event(logger, "anonymization_completed", self._event_payload(job))
         except Cancelled:
             job.status = "cancelled"
@@ -479,25 +520,14 @@ class JobManager:
             "redaction": release.seconds["redaction"],
             "verification": round(verification, 2),
         }
-        total = round(time.perf_counter() - t_start, 2)
         rep, flattened = release.report, release.flattened
         ok = rep.ok and not docx_issues
         job.verified = ok
-        job.result = {
-            "id": job.id,
-            "filename": job.name,
-            "size": job.size,
-            "pages": analysis.pages,
-            "n_pages": len(analysis.pages),
-            "seconds_total": total,
-            "seconds_per_page": round(total / max(len(analysis.pages), 1), 2),
-            "timings": timings,
-            "counts": analysis.counts(),
+        issues = rep.issues + docx_issues
+        job.result = self._result(job, analysis, t_start, timings, issues) | {
             "verified": ok,
-            "issues": (rep.issues + docx_issues)[:20],
             # pages released as images: a surgical check failed and the page was rendered
             "flattened_pages": [p + 1 for p in flattened],
-            "edits": job.edits,
             # boxes as shown on the rendered pages (page space differs on rotated pages)
             "boxes": [
                 {
@@ -510,6 +540,49 @@ class JobManager:
         }
         job.percent, job.status = 100, "done"
         self._publish(job)
+
+    def _finish_fast(self, job: Job, t_start: float, timings: dict[str, float]) -> None:
+        """Markdown export and its verification (fast mode); fail-closed as ``_finish``."""
+        analysis = job.analysis
+        if analysis is None:
+            raise JobNotReadyError()
+        self._progress(job)("export", 0)
+        t1 = time.perf_counter()
+        md_next = job.markdown.with_name("anonymized.next.md")
+        export_markdown(analysis, md_next)
+        issues = verify_markdown(md_next, analysis)
+        os.replace(md_next, job.markdown)
+        timings = timings | {"verification": round(time.perf_counter() - t1, 2)}
+        job.verified = not issues
+        job.result = self._result(job, analysis, t_start, timings, issues)
+        job.percent, job.status = 100, "done"
+        self._publish(job)
+
+    @staticmethod
+    def _result(
+        job: Job,
+        analysis: Analysis,
+        t_start: float,
+        timings: dict[str, float],
+        issues: list[str],
+    ) -> dict[str, Any]:
+        """Result fields shared by both modes."""
+        total = round(time.perf_counter() - t_start, 2)
+        return {
+            "id": job.id,
+            "mode": job.mode,
+            "filename": job.name,
+            "size": job.size,
+            "pages": analysis.pages,
+            "n_pages": len(analysis.pages),
+            "seconds_total": total,
+            "seconds_per_page": round(total / max(len(analysis.pages), 1), 2),
+            "timings": timings,
+            "counts": analysis.counts(),
+            "verified": not issues,
+            "issues": issues[:20],
+            "edits": job.edits,
+        }
 
     def _event_payload(self, job: Job) -> dict[str, Any]:
         """KPI payload: counters, ids and timings only."""
@@ -527,6 +600,7 @@ class JobManager:
             "edits": job.edits,
             "seconds_total": result.get("seconds_total"),
             "timings": result.get("timings", {}),
+            "mode": job.mode,
         }
 
     def edit(
@@ -549,7 +623,7 @@ class JobManager:
         Returns:
             The new result, with ``edit_seconds`` and ``search_hits``.
         """
-        job = self.ready_job(jid)
+        job = self.accurate_job(jid)
         future = self._executor.submit(
             self._apply_edit, job, add, remove, restore, search
         )
@@ -632,7 +706,7 @@ class JobManager:
     @pdfium_locked
     def render_page(self, jid: str, which: str, page: int, dpi: int) -> Path:
         """PNG of one page of the original or the anonymized document (cached)."""
-        job = self.ready_job(jid)
+        job = self.accurate_job(jid) if which == "anonymized" else self.ready_job(jid)
         # the anonymized version changes with every edit: the edit count is in its name
         version = job.edits if which == "anonymized" else 0
         cache = job.dir / f"{which}-{page}-{dpi}-{version}.png"
@@ -646,6 +720,35 @@ class JobManager:
             finally:
                 doc.close()
         return cache
+
+    def preview(self, jid: str) -> dict[str, Any]:
+        """What the side-by-side review needs: page sizes, boxes, label names.
+
+        Boxes are in display space, as drawn on the rendered pages, and carry
+        no text: the reviewer sees the value on the original page.
+
+        Raises:
+            JobNotFoundError, JobNotReadyError, ModeNotSupportedError.
+        """
+        job = self.accurate_job(jid)
+        result = job.result
+        if result is None:
+            raise JobNotReadyError()
+        return {
+            "id": job.id,
+            "mode": job.mode,
+            "version": result["edits"],
+            "verified": result["verified"],
+            "pages": [
+                {"index": i, "width": p["width"], "height": p["height"]}
+                for i, p in enumerate(result["pages"])
+            ],
+            "boxes": [
+                {k: b[k] for k in ("id", "page", "rect", "label", "layer", "redact")}
+                for b in result["boxes"]
+            ],
+            "labels": {code: label.it for code, label in LABELS.items()},
+        }
 
 
 def get_job_manager(request: Request) -> JobManager:

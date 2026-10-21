@@ -354,6 +354,7 @@ def _parser(dpi: int = 150) -> LiteParse:
         keep_headers_footers=True,
         preserve_very_small_text=True,
         include_complexity=True,
+        extract_blocks=True,
         dpi=float(dpi),
         quiet=True,
     )

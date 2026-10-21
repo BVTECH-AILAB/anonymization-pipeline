@@ -89,6 +89,12 @@ class JobNotReadyError(ServiceError):
     user_message = "Il documento non è ancora pronto."
 
 
+class ModeNotSupportedError(ServiceError):
+    status_code = 409
+    code = "MODE_NOT_SUPPORTED"
+    user_message = "Operazione non disponibile per la modalità scelta."
+
+
 class VerificationFailedError(ServiceError):
     status_code = 409
     code = "VERIFICATION_FAILED"

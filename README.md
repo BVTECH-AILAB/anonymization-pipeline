@@ -14,6 +14,11 @@ service, `ocr-server/`; NER runs in the AILAB NER service.
 Generated from `agenas-python-template`: same stack, logging and privacy rules
 (see `CLAUDE.md` and `docs/`). The service is stateless: no database.
 
+Two modes, chosen at upload (`POST /anonymizations?mode=`): `accurate` (default)
+releases the redacted PDF, reviewable side by side and editable by hand; `fast`
+releases only the anonymized text as Markdown, with page delimiters, tables
+as Markdown tables and `[IMMAGINE]` placeholders.
+
 How the algorithm works, the API, the PII taxonomy, the synthetic dataset and
 the evaluation results: **[docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)**.
 

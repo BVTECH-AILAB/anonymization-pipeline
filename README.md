@@ -146,7 +146,8 @@ volume; uncomment the GPU blocks in `docker-compose.yml` and set
 | `just ocr-server [cpu]` / `just ocr-server-test` | OCR server on the host, port 8829 / its unit tests |
 | `just lint` | ruff fix + format + ty: before every commit |
 | `just check` | Same checks without fixes (what CI runs) |
-| `just test` / `just test-cov` | Unit tests / with coverage (at least 80%) |
+| `just test` / `just test-cov` | Unit tests of every package / with coverage (at least 80% per package) |
+| `just test-core` / `just test-api` / `just test-tools` | One suite only (arguments go to pytest) |
 | `just dataset [--n 7 --append]` | Synthetic dataset with ground truth -> `dataset/` |
 | `just evaluate [--split dev\|test]` | Recall, precision, AP, leaks, verification, time -> `reports/evaluation.md`; `test` is the held-out 30% of the template families, never used for tuning |
 | `just eval-ui` | Evaluation viewer on `http://127.0.0.1:8765`: ground truth vs predictions per document, live while evaluating |
@@ -158,7 +159,9 @@ Developer tools are also available directly: `uv run python -m tools --help`
 
 ## Layout
 
-A uv workspace: the engine is a package of its own, the service depends on it.
+A uv workspace: one lock, one package per area, each with its own dependencies,
+tests and lint config. The root is not a package: its dev group is the developer
+environment (every member plus `tools/`).
 
 ```
 packages/anonymization-core/   the engine, a library: no web framework, never imports the
@@ -179,20 +182,22 @@ packages/anonymization-core/   the engine, a library: no web framework, never im
                           (+ eponyms.yaml), allowlist, ensemble, visual
     testing.py            synthetic PDFs and fake engines (extra `testing`)
   tests/                  engine tests: `just test-core`
-src/anonmyzation_pipeline/     the service
-  main.py                 create_app(), lifespan (pipeline and job manager on app.state)
-  config.py               Settings (pydantic-settings, prefix ANONPIP_), pipeline_config()
-  errors.py               service errors, Italian messages, engine error mapping
-  logging_setup.py        setup_logging, log_event, request id
-  privacy.py              hashing/masking, user-text redaction, log filter
-  api/health.py           /healthz, /readyz (models loaded), /version
-  api/anonymization.py    upload, SSE progress, edits, previews, downloads
-  api/web.py              demo web page (ANONPIP_UI_ENABLED)
-  services/jobs.py        job lifecycle around the engine: queue, SSE, expiry, limits, KPI events
-  web/static/index.html   the page
-tests/unit/               service tests: `just test-api` (no network, no model weights)
+apps/api/                      the service (image anonmyzation-pipeline): Dockerfile,
+                               scripts/entrypoint.sh, own tests (`just test-api`)
+  src/anonmyzation_pipeline/
+    main.py               create_app(), lifespan (pipeline and job manager on app.state)
+    config.py             Settings (pydantic-settings, prefix ANONPIP_), pipeline_config()
+    errors.py             service errors, Italian messages, engine error mapping
+    logging_setup.py      setup_logging, log_event, request id
+    privacy.py            hashing/masking, user-text redaction, log filter
+    api/health.py         /healthz, /readyz (models loaded), /version
+    api/anonymization.py  upload, SSE progress, edits, previews, downloads
+    api/web.py            demo web page (ANONPIP_UI_ENABLED)
+    services/jobs.py      job lifecycle around the engine: queue, SSE, expiry, limits, KPI events
+    web/static/index.html  the page
 tools/                    dev only, on the engine (never the service): dataset/ generator,
-                          evaluate.py (dev/test split), viewer.py (evaluation UI)
+                          evaluate.py (dev/test split), viewer.py (evaluation UI);
+                          tests in tests/tools (`just test-tools`)
 ocr-server/               PP-OCRv5 (RapidOCR) behind the LiteParse OCR API (own pyproject, image)
 docs/                     ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
                           deploy handover

@@ -123,7 +123,7 @@ Regole per i nuovi eventi:
 
 Nel servizio di anonimizzazione nessuna riga contiene testo del documento,
 valori rilevati o nomi dei file: solo id del job, contatori e tempi (vedi
-`docs/ANONYMIZATION.md`, test in `tests/unit/test_logging.py`).
+`docs/ANONYMIZATION.md`, test in `apps/api/tests/unit/test_logging.py`).
 
 ## Test di non-leak
 

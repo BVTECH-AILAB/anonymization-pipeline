@@ -75,8 +75,8 @@ split, grouped by cause, before changing `LINE_GAP`.
 
 ## Behaviour that must stay (do not undo)
 
-Each has a regression test in `tests/unit/test_liteparse_reader.py`,
-`tests/unit/test_release.py` or `ocr-server/tests/`.
+Each has a regression test in `packages/anonymization-core/tests/test_liteparse_reader.py`,
+`packages/anonymization-core/tests/test_release.py` or `ocr-server/tests/`.
 
 - **LiteParse never runs OCR itself.** With OCR on, it replaces a scan's hidden
   text layer with what OCR sees, and hidden values were never redacted (3

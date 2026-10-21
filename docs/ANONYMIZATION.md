@@ -359,7 +359,7 @@ Errors are `ServiceError` subclasses with generic Italian messages (`errors.py`)
 | `anonymization_cancelled` | `job_id` |
 | `anonymization_job_deleted` | `job_id`, `reason` (`user`, `expired`) |
 
-`tests/unit/test_logging.py` pins the keys and checks that no PII reaches the logs.
+`apps/api/tests/unit/test_logging.py` pins the keys and checks that no PII reaches the logs.
 
 ## Web UI (`web/static/index.html`)
 

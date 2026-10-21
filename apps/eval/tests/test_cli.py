@@ -2,9 +2,9 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-import tools.__main__ as cli
 from typer.testing import CliRunner
 
+import anonymization_eval.__main__ as cli
 from tests.conftest import make_settings
 
 

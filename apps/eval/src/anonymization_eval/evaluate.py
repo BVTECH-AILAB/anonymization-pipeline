@@ -6,7 +6,7 @@ Per variant (native, scan, scan_ocr):
   cover at least ``cover`` of it (honorifics like "Dott." may stay visible);
 * box level precision / recall / F1 and word level precision / recall / F1 /
   accuracy (scikit-learn), AP and mAP at IoU 0.5 (torchmetrics, COCO): see
-  ``tools/metrics.py`` for the definitions;
+  ``metrics.py`` for the definitions;
 * hidden PII (white text, metadata, deleted annotations) surviving in the output;
 * eponyms wrongly redacted, verification outcome, seconds per page.
 """
@@ -20,7 +20,6 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
-from anonmyzation_pipeline.config import Settings, get_settings
 from anonymization_core.factory import (
     build_pipeline,
     load_models,
@@ -34,9 +33,15 @@ from anonymization_core.geometry import (
 from anonymization_core.release import redact_and_verify
 from anonymization_core.taxonomy import LABELS
 
-from tools.dataset.scan import transform_rect
-from tools.metrics import DetectionMAP, binary_scores, coverage, word_labels
-from tools.pdf import document_words, file_content
+from anonymization_eval.config import EvalSettings, get_settings
+from anonymization_eval.dataset.scan import transform_rect
+from anonymization_eval.metrics import (
+    DetectionMAP,
+    binary_scores,
+    coverage,
+    word_labels,
+)
+from anonymization_eval.pdf import document_words, file_content
 
 logger = logging.getLogger(__name__)
 
@@ -174,7 +179,7 @@ def _pred_view(a, gt: dict) -> list[dict]:
 def _write_doc(
     path: Path, gt: dict, gt_view: list, preds: list, keep: list, stats: dict
 ) -> None:
-    """Per-document result for the viewer (``tools/viewer.py``), written as soon as it is scored."""
+    """Per-document result for the viewer (``viewer.py``), written as soon as it is scored."""
     scored = [g for g in gt_view if g["status"] in ("hit", "miss")]
     hits = sum(g["status"] == "hit" for g in scored)
     fp = sum(p["match"] == "fp" for p in preds)
@@ -208,7 +213,7 @@ def evaluate(
     cover: float = 0.75,
     split: str = "all",
     nms_iou: float | None = 0.5,
-    settings: Settings | None = None,
+    settings: EvalSettings | None = None,
 ) -> dict:
     """Run the pipeline on every document of a variant and score it.
 

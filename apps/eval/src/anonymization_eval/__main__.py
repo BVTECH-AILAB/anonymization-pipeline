@@ -1,12 +1,12 @@
 """Developer tools: synthetic dataset, single-file anonymization, evaluation, viewer.
 
-    uv run python -m tools generate --n 7 --out dataset --append
-    uv run python -m tools generate --n 21 --out dataset --overwrite
-    uv run python -m tools orientation --out dataset
-    uv run python -m tools anonymize dataset/scan/000_lettera_dimissione.pdf
-    uv run python -m tools evaluate --dataset dataset
-    uv run python -m tools viewer
-    uv run python -m tools preview file.pdf
+    uv run python -m anonymization_eval generate --n 7 --out dataset --append
+    uv run python -m anonymization_eval generate --n 21 --out dataset --overwrite
+    uv run python -m anonymization_eval orientation --out dataset
+    uv run python -m anonymization_eval anonymize dataset/scan/000_lettera_dimissione.pdf
+    uv run python -m anonymization_eval evaluate --dataset dataset
+    uv run python -m anonymization_eval viewer
+    uv run python -m anonymization_eval preview file.pdf
 
 Output goes to stderr through logging (``print`` is banned by ruff); the
 machine-readable results are written to files.
@@ -21,28 +21,28 @@ from typing import Annotated
 import pypdfium2 as pdfium
 import typer
 import uvicorn
-from anonmyzation_pipeline.config import Settings, get_settings
-from anonmyzation_pipeline.logging_setup import setup_logging
 from anonymization_core.factory import build_pipeline
 from anonymization_core.pdf_pages import open_pages
 from anonymization_core.release import redact_and_verify
 from PIL import Image
 
-from tools import evaluate as evaluation
-from tools import viewer as eval_viewer
-from tools.dataset.generate import generate as generate_dataset
-from tools.dataset.generate import next_index, remove_documents
-from tools.dataset.orientation import DOC_ID as ORIENTATION_DOC
-from tools.dataset.orientation import build as build_orientation
+from anonymization_eval import evaluate as evaluation
+from anonymization_eval import viewer as eval_viewer
+from anonymization_eval.config import EvalSettings, get_settings
+from anonymization_eval.dataset.generate import generate as generate_dataset
+from anonymization_eval.dataset.generate import next_index, remove_documents
+from anonymization_eval.dataset.orientation import DOC_ID as ORIENTATION_DOC
+from anonymization_eval.dataset.orientation import build as build_orientation
+from anonymization_eval.log import setup_logging
 
-logger = logging.getLogger("tools")
+logger = logging.getLogger("anonymization_eval")
 app = typer.Typer(help="Anonymization pipeline developer tools.", no_args_is_help=True)
 
 # `just ocr-server` and `just start` serve the OCR API here
 LOCAL_OCR_SERVER = "http://127.0.0.1:8829"
 
 
-def eval_settings(ocr_server_url: str | None) -> Settings:
+def eval_settings(ocr_server_url: str | None) -> EvalSettings:
     """Settings of an evaluation run: the OCR server from the option, else
     ``ANONPIP_OCR_SERVER_URL``, else the local one (``.env.example`` leaves it empty).
     """
@@ -53,9 +53,7 @@ def eval_settings(ocr_server_url: str | None) -> Settings:
 
 @app.callback()
 def _setup() -> None:
-    setup_logging(
-        get_settings().model_copy(update={"log_level": "INFO"}), stream=sys.stderr
-    )
+    setup_logging("INFO", stream=sys.stderr)
 
 
 @app.command()

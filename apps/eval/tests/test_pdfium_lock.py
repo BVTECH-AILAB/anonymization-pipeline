@@ -4,7 +4,8 @@ from pathlib import Path
 
 import pytest
 from anonymization_core.testing import letter_pdf, record_unlocked_pdfium
-from tools.pdf import document_words, file_content
+
+from anonymization_eval.pdf import document_words, file_content
 
 
 def test_evaluation_judge_uses_pdfium_only_under_the_lock(

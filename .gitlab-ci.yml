@@ -69,9 +69,9 @@ lint:
       "uv sync --frozen &&
       uv run ruff check &&
       uv run ruff format --check &&
-      uv run ty check tests &&
       (cd packages/anonymization-core && uv run ty check src tests) &&
-      (cd apps/api && uv run ty check src tests)"
+      (cd apps/api && uv run ty check src tests) &&
+      (cd apps/eval && uv run ty check src tests)"
 
 tests:
   extends: .quality-base
@@ -82,7 +82,7 @@ tests:
       -e HOME=/tmp -e UV_PROJECT_ENVIRONMENT=/tmp/.venv -e UV_CACHE_DIR=/tmp/uv-cache -e CI=true
       "$UV_IMAGE" sh -c
       "uv sync --frozen &&
-      uv run pytest -q &&
+      (cd apps/eval && uv run pytest -q) &&
       (cd packages/anonymization-core && uv run pytest --cov --cov-report=xml:coverage.xml --junitxml=junit.xml -q) &&
       (cd apps/api && uv run pytest --cov --cov-report=xml:coverage.xml --junitxml=junit.xml -q)"
     # Paths are recorded as seen inside the container: rewrite them for Sonar.

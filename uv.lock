@@ -6,29 +6,22 @@ requires-python = "==3.12.*"
 members = [
     "anonmyzation-pipeline",
     "anonymization-core",
+    "anonymization-eval",
 ]
 
 [manifest.dependency-groups]
 dev = [
     { name = "anonmyzation-pipeline", editable = "apps/api" },
     { name = "anonymization-core", extras = ["testing"], editable = "packages/anonymization-core" },
-    { name = "faker", specifier = ">=30.0" },
+    { name = "anonymization-eval", editable = "apps/eval" },
+    { name = "httpx", specifier = ">=0.28" },
     { name = "pip-audit", specifier = ">=2.7" },
     { name = "pre-commit", specifier = ">=4.0" },
-    { name = "pycocotools", specifier = ">=2.0.11" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "pytest-asyncio", specifier = ">=0.25" },
     { name = "pytest-cov", specifier = ">=6.0" },
-    { name = "python-barcode", specifier = ">=0.15" },
-    { name = "qrcode", specifier = ">=8.0" },
-    { name = "reportlab", specifier = ">=4.2" },
     { name = "ruff", specifier = ">=0.15" },
-    { name = "scikit-learn", specifier = ">=1.9.1" },
-    { name = "torch", specifier = ">=2.7", index = "https://download.pytorch.org/whl/cu128" },
-    { name = "torchmetrics", specifier = ">=1.9.0" },
-    { name = "torchvision", specifier = ">=0.22", index = "https://download.pytorch.org/whl/cu128" },
     { name = "ty", specifier = ">=0.0.1a0" },
-    { name = "typer", specifier = ">=0.27.3" },
 ]
 
 [[package]]
@@ -152,6 +145,77 @@ provides-extras = ["testing"]
 dev = [
     { name = "anonymization-core", extras = ["testing"], editable = "packages/anonymization-core" },
     { name = "pytest-cov", specifier = ">=6.0" },
+    { name = "ruff", specifier = ">=0.15" },
+    { name = "ty", specifier = ">=0.0.1a0" },
+]
+
+[[package]]
+name = "anonymization-eval"
+version = "0.1.0"
+source = { editable = "apps/eval" }
+dependencies = [
+    { name = "anonymization-core" },
+    { name = "faker" },
+    { name = "fastapi" },
+    { name = "numpy" },
+    { name = "opencv-python-headless" },
+    { name = "pillow" },
+    { name = "pycocotools" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+    { name = "pypdf" },
+    { name = "pypdfium2" },
+    { name = "python-barcode" },
+    { name = "python-codicefiscale" },
+    { name = "qrcode" },
+    { name = "reportlab" },
+    { name = "scikit-learn" },
+    { name = "torch" },
+    { name = "torchmetrics" },
+    { name = "torchvision" },
+    { name = "typer" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "anonymization-core", extra = ["testing"] },
+    { name = "httpx" },
+    { name = "pytest" },
+    { name = "ruff" },
+    { name = "ty" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anonymization-core", editable = "packages/anonymization-core" },
+    { name = "faker", specifier = ">=30.0" },
+    { name = "fastapi", specifier = ">=0.115" },
+    { name = "numpy", specifier = ">=2.0" },
+    { name = "opencv-python-headless", specifier = ">=4.10" },
+    { name = "pillow", specifier = ">=11.0" },
+    { name = "pycocotools", specifier = ">=2.0.11" },
+    { name = "pydantic", specifier = ">=2.10" },
+    { name = "pydantic-settings", specifier = ">=2.7" },
+    { name = "pypdf", specifier = ">=6.0" },
+    { name = "pypdfium2", specifier = ">=5.0" },
+    { name = "python-barcode", specifier = ">=0.15" },
+    { name = "python-codicefiscale", specifier = ">=0.12" },
+    { name = "qrcode", specifier = ">=8.0" },
+    { name = "reportlab", specifier = ">=4.2" },
+    { name = "scikit-learn", specifier = ">=1.9.1" },
+    { name = "torch", specifier = ">=2.7", index = "https://download.pytorch.org/whl/cu128" },
+    { name = "torchmetrics", specifier = ">=1.9.0" },
+    { name = "torchvision", specifier = ">=0.22", index = "https://download.pytorch.org/whl/cu128" },
+    { name = "typer", specifier = ">=0.27.3" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.34" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "anonymization-core", extras = ["testing"], editable = "packages/anonymization-core" },
+    { name = "httpx", specifier = ">=0.28" },
+    { name = "pytest", specifier = ">=8.3" },
     { name = "ruff", specifier = ">=0.15" },
     { name = "ty", specifier = ">=0.0.1a0" },
 ]

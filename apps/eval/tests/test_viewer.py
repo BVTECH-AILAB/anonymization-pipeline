@@ -6,8 +6,9 @@ from types import SimpleNamespace
 import pypdfium2 as pdfium
 import pytest
 from fastapi.testclient import TestClient
-from tools.evaluate import _pred_view, _write_doc
-from tools.viewer import create_app
+
+from anonymization_eval.evaluate import _pred_view, _write_doc
+from anonymization_eval.viewer import create_app
 
 GT: dict = {
     "doc_id": "e000_test",

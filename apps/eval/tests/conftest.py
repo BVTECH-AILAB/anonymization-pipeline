@@ -1,16 +1,13 @@
-"""Fixtures of the tools/ tests.
-
-The tools still read the service ``Settings``; this module goes away when
-they get their own configuration.
-"""
+"""Shared fixtures of the evaluation tests (synthetic data only)."""
 
 from typing import Any
 
-from anonmyzation_pipeline.config import Settings
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource
 
+from anonymization_eval.config import EvalSettings
 
-class _ExplicitSettings(Settings):
+
+class _ExplicitSettings(EvalSettings):
     """Settings whose only source is the values passed to the constructor."""
 
     @classmethod
@@ -25,11 +22,6 @@ class _ExplicitSettings(Settings):
         return (init_settings,)
 
 
-def make_settings(**overrides: Any) -> Settings:
+def make_settings(**overrides: Any) -> EvalSettings:
     """Settings built only from explicit values: neither ``.env`` nor the environment."""
-    values: dict[str, Any] = {
-        "environment": "local",
-        "log_level": "DEBUG",
-        "preload_models": False,
-    }
-    return _ExplicitSettings(**(values | overrides))
+    return _ExplicitSettings(**overrides)

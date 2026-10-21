@@ -22,7 +22,7 @@ uv sync --quiet
 
 if [ ! -d dataset/native ]; then
   echo "==> Generating the synthetic dataset (dataset/)"
-  uv run python -m tools generate --n 21 --out dataset
+  uv run python -m anonymization_eval generate --n 21 --out dataset
 fi
 
 # first free port starting from PORT (8000, 8001, ...)

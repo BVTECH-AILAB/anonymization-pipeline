@@ -23,8 +23,8 @@ from anonymization_core.pdf_pages import PageView
 from codicefiscale import codicefiscale
 from reportlab.pdfgen import canvas
 
-from tools.dataset import scan
-from tools.pdf import search
+from anonymization_eval.dataset import scan
+from anonymization_eval.pdf import search
 
 DOC_ID = "e056_orientamento_ocr"
 SEED = 56

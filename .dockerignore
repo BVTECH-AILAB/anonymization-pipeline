@@ -16,7 +16,7 @@ build
 .vscode
 docs
 CLAUDE.md
-tools
+apps/eval/src
 dataset
 dataset_*
 reports

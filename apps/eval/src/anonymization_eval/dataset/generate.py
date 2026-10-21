@@ -14,12 +14,12 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate
 
-from tools.dataset import scan
-from tools.dataset.docs import BUILDERS, Built
-from tools.dataset.identities import IdentityFactory
-from tools.dataset.layout import decorate
-from tools.dataset.registry import Registry, rgb_to_id
-from tools.pdf import color_spans, images, search, words
+from anonymization_eval.dataset import scan
+from anonymization_eval.dataset.docs import BUILDERS, Built
+from anonymization_eval.dataset.identities import IdentityFactory
+from anonymization_eval.dataset.layout import decorate
+from anonymization_eval.dataset.registry import Registry, rgb_to_id
+from anonymization_eval.pdf import color_spans, images, search, words
 
 # Terms that look like names but must survive anonymization.
 KEEP_TERMS = [

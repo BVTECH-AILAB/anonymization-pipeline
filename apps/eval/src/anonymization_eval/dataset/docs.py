@@ -14,11 +14,23 @@ from reportlab.lib.colors import Color, HexColor
 from reportlab.lib.utils import ImageReader
 from reportlab.platypus import Image, KeepTogether, Paragraph, Spacer, Table, TableStyle
 
-from tools.dataset import content as C
-from tools.dataset import visuals as V
-from tools.dataset.identities import CITIES, Doctor, IdentityFactory, Person
-from tools.dataset.layout import GREY, PageCtx, draw_segments, families, fonts, styles
-from tools.dataset.registry import Registry
+from anonymization_eval.dataset import content as C
+from anonymization_eval.dataset import visuals as V
+from anonymization_eval.dataset.identities import (
+    CITIES,
+    Doctor,
+    IdentityFactory,
+    Person,
+)
+from anonymization_eval.dataset.layout import (
+    GREY,
+    PageCtx,
+    draw_segments,
+    families,
+    fonts,
+    styles,
+)
+from anonymization_eval.dataset.registry import Registry
 
 FMT = "%d/%m/%Y"
 

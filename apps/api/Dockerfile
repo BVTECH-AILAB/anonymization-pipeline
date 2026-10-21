@@ -1,6 +1,7 @@
 # The service image. Build context: the repository root (the engine is a
 # workspace member): docker build -f apps/api/Dockerfile .
-# Only this package and its dependencies are installed (--package): never tools/.
+# Only this package and its dependencies are installed (--package): never apps/eval.
+# uv needs the pyproject.toml of every workspace member to read the lock.
 # Stages:
 #   dev      - used by docker-compose (dev dependencies, editable install, --reload)
 #   runtime  - the image CI builds and pushes to Harbor (last stage = default target)
@@ -22,6 +23,7 @@ FROM base AS dev
 COPY pyproject.toml uv.lock ./
 COPY packages/anonymization-core/pyproject.toml ./packages/anonymization-core/
 COPY apps/api/pyproject.toml ./apps/api/
+COPY apps/eval/pyproject.toml ./apps/eval/
 RUN uv sync --frozen --package anonmyzation-pipeline --no-install-workspace
 COPY packages ./packages
 COPY apps/api/src ./apps/api/src
@@ -36,6 +38,7 @@ FROM base AS builder
 COPY pyproject.toml uv.lock ./
 COPY packages/anonymization-core/pyproject.toml ./packages/anonymization-core/
 COPY apps/api/pyproject.toml ./apps/api/
+COPY apps/eval/pyproject.toml ./apps/eval/
 RUN uv sync --frozen --package anonmyzation-pipeline --no-dev --no-install-workspace
 COPY packages ./packages
 COPY apps/api/src ./apps/api/src

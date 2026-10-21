@@ -22,7 +22,7 @@ from reportlab import rl_config
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
-from tools.pdf import words
+from anonymization_eval.pdf import words
 
 OCR_FONT = "Helvetica"
 

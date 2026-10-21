@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from tools.evaluate import compare
+from anonymization_eval.evaluate import compare
 
 
 def _report(folder: Path, recall: float, found: int, misses: int) -> None:

@@ -1,7 +1,7 @@
 """Evaluation viewer: ground truth on the left, predictions on the right, document by document.
 
-Dev only, like the rest of ``tools/``: it reads the synthetic dataset and the
-per-document results that ``tools/evaluate.py`` writes to
+Dev only, like the rest of ``anonymization_eval``: it reads the synthetic dataset and the
+per-document results that ``evaluate.py`` writes to
 ``reports/docs_<variant>/<doc_id>.json`` while it runs, so an evaluation
 started here or with ``just evaluate`` shows up live. Binds to localhost.
 """

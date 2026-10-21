@@ -2,7 +2,8 @@ import json
 from pathlib import Path
 
 import pypdfium2 as pdfium
-from tools.dataset.orientation import DOC_ID, MENTIONS, build
+
+from anonymization_eval.dataset.orientation import DOC_ID, MENTIONS, build
 
 
 def test_every_variant_and_every_mention_is_written(tmp_path: Path) -> None:

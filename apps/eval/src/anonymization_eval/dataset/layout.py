@@ -12,8 +12,8 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfbase.ttfonts import TTFont
 
-from tools.dataset.identities import Doctor, Hospital, Person
-from tools.dataset.registry import Registry
+from anonymization_eval.dataset.identities import Doctor, Hospital, Person
+from anonymization_eval.dataset.registry import Registry
 
 DEJAVU = Path("/usr/share/fonts/truetype/dejavu")
 _FAMILIES: dict[str, tuple[str, str, str, str]] = {

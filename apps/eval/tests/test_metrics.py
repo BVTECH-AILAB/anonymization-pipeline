@@ -1,6 +1,13 @@
 import pytest
 from anonymization_core.geometry import Rect
-from tools.metrics import DetectionMAP, binary_scores, coverage, overlap, word_labels
+
+from anonymization_eval.metrics import (
+    DetectionMAP,
+    binary_scores,
+    coverage,
+    overlap,
+    word_labels,
+)
 
 
 def R(x0: float, y0: float, x1: float, y1: float) -> Rect:

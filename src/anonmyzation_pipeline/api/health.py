@@ -17,7 +17,7 @@ async def healthz() -> dict[str, str]:
 
 @router.get("/readyz", response_model=None)
 async def readyz(request: Request) -> dict[str, str] | JSONResponse:
-    """Readiness: the service can serve traffic (OCR and NER models loaded)."""
+    """Readiness: the service can serve traffic (OCR loaded, NER service healthy)."""
     if not request.app.state.pipeline.ready:
         return JSONResponse(
             status_code=503, content={"status": "unavailable", "reason": "models"}

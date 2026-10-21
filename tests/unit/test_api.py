@@ -17,8 +17,7 @@ def test_readyz_reflects_models(
 ) -> None:
     app = client.app
     app.state.pipeline.reader._ready = models_ready  # type: ignore[attr-defined]
-    for engine in app.state.pipeline.ner.engines:  # type: ignore[attr-defined]
-        engine._model = object() if models_ready else None
+    app.state.pipeline.ner._ready = models_ready  # type: ignore[attr-defined]
 
     response = client.get("/readyz")
 

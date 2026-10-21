@@ -45,8 +45,8 @@ class Settings(BaseSettings):
     # --- Models ---
     # "auto" uses the GPU when one is available, otherwise the CPU.
     device: str = "auto"
-    # Check the OCR server and load NER at startup; /readyz reports 503 until both are ready
-    # (retried every 30 s).
+    # Check the OCR server and the NER service at startup; /readyz reports 503 until
+    # both are ready (retried every 30 s).
     preload_models: bool = True
     # Native text: pypdfium2; OCR: the server of ocr-server/ (PP-OCRv5 on RapidOCR,
     # LiteParse OCR API). Base URL of that server; empty: /readyz stays 503, no
@@ -54,12 +54,15 @@ class Settings(BaseSettings):
     ocr_server_url: str = ""
     # Resolution of the pages sent to OCR (side margins are read by the server).
     ocr_dpi: int = Field(default=300, ge=100, le=600)
+    # NER: the AILAB NER service (POST /batch_ner). Empty URL: /readyz stays 503.
     ner_enabled: bool = True
-    ner_model: str = "urchade/gliner_multi_pii-v1"
-    # Second NER model (GLiNER2), run together with the first: its findings are added.
-    # Off: GLiNER only (faster, about 1 point of recall less).
-    ner2_enabled: bool = True
-    ner2_model: str = "fastino/gliner2-privacy-filter-PII-multi"
+    ner_url: str = ""
+    ner_timeout_seconds: float = Field(default=30, gt=0, le=300)
+    # Retries of a request that timed out or got 502/503/504; waits double: 1 s, 2 s ...
+    ner_retries: int = Field(default=2, ge=0, le=5)
+    ner_retry_backoff_seconds: float = Field(default=1.0, ge=0, le=30)
+    # PEM bundle of the CA that signed the NER certificate; empty: the system CAs.
+    ner_ca_bundle: str = ""
     ner_threshold: float = Field(default=0.5, ge=0, le=1)
     ner_person_threshold: float = Field(default=0.4, ge=0, le=1)
 

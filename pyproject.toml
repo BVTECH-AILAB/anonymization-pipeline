@@ -18,14 +18,10 @@ dependencies = [
     "python-codicefiscale>=0.12",
     "python-docx>=1.1",
     "torch>=2.7",
-    "gliner>=0.2",
     "pyyaml>=6.0",
-    "gliner2>=1.0",
     "liteparse>=2.16.0",
     "pypdfium2>=5.0",
     "pypdf>=6.0",
-    # read by the GLiNER tokenizer (mdeberta SentencePiece), not declared by gliner
-    "protobuf>=5",
 ]
 
 [dependency-groups]

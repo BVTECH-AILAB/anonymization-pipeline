@@ -33,6 +33,10 @@ class ServiceUnavailableError(ServiceError):
     user_message = "Servizio temporaneamente non disponibile. Riprova più tardi."
 
 
+class NerUnavailableError(ServiceUnavailableError):
+    code = "NER_UNAVAILABLE"
+
+
 class UnsupportedFormatError(ServiceError):
     status_code = 415
     code = "UNSUPPORTED_FORMAT"

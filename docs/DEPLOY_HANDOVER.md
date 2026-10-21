@@ -13,14 +13,14 @@ fa il provisioning.
 | Namespace proposto | |
 | Porta | `8000` (nome `web`) |
 | Liveness probe | `GET /healthz` |
-| Readiness probe | `GET /readyz` (503 finché il server OCR non risponde e i modelli NER non sono caricati: 1-3 minuti all'avvio; ritentato ogni 30 s) |
+| Readiness probe | `GET /readyz` (503 finché il server OCR non risponde e il servizio NER non risponde a `/health`; il controllo viene ritentato ogni 30 s) |
 | Serve un database? | **no**: servizio stateless, i job vivono in memoria e i documenti in una cartella privata fino alla scadenza (`ANONPIP_JOB_TTL_MINUTES`) |
 | Esposizione | solo interna (`traefik-int`) / tramite WSO2 API Manager |
 | Chi lo chiama | |
-| Chi chiama (dipendenze) | il servizio **`paddle-ocr`** (sotto, stesso namespace) su `ANONPIP_OCR_SERVER_URL`: legge le pagine scansionate. Se non risponde, `/readyz` è 503 e nessun documento viene elaborato senza OCR. NER (GLiNER e GLiNER2) gira nel pod |
+| Chi chiama (dipendenze) | il servizio **`paddle-ocr`** (sotto, stesso namespace) su `ANONPIP_OCR_SERVER_URL`: legge le pagine scansionate. Se non risponde, `/readyz` è 503 e nessun documento viene elaborato senza OCR. Il **servizio NER AILAB** (`POST /batch_ner`, `GET /health`): riceve il testo estratto dalle pagine, quindi va raggiunto all'interno del cluster. In staging risponde su `ner.agenas-stg.oci`, ma il suo certificato HTTPS non è verificabile (il server non presenta la CA): serve l'URL interno del Service oppure la CA in `ANONPIP_NER_CA_BUNDLE`. Se non risponde, i job falliscono senza rilasciare nulla (fail-closed) |
 | Repliche | **1**, oppure 2+ con session affinity sull'ingress: i job sono in memoria del pod che li ha creati |
-| Risorse | con GPU: 1 GPU NVIDIA (i due modelli NER occupano circa 4 GB), requests 1 CPU / 4Gi, limits 4 CPU / 8Gi. Senza GPU: requests 2 CPU / 4Gi, limits 8 CPU / 8Gi (più lento). L'OCR è nel servizio `paddle-ocr` |
-| Pesi dei modelli | volume montato su `/models` (`HF_HOME=/models/huggingface`), popolato una volta con `just models`; in alternativa un'immagine derivata che li contiene. Il cluster non scarica da internet |
+| Risorse | nessuna GPU nel pod (OCR nel servizio `paddle-ocr`, NER nel servizio AILAB): requests 1 CPU / 4Gi, limits 4 CPU / 8Gi, da rimisurare |
+| Pesi dei modelli | nessuno nel pod: i modelli OCR stanno nel volume del servizio `paddle-ocr` (sezione sotto) |
 | Spazio temporaneo | `emptyDir` per `ANONPIP_WORK_DIR` (o la `/tmp` del container): i documenti restano solo per `ANONPIP_JOB_TTL_MINUTES` |
 
 ### Variabili d'ambiente
@@ -40,9 +40,11 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_OCR_SERVER_URL` | vuoto (URL del servizio `paddle-ocr`, es. `http://paddle-ocr:8829`; vuoto o non raggiungibile = `/readyz` 503) | `http://paddle-ocr:8829` | `http://paddle-ocr:8829` | no |
 | `ANONPIP_OCR_DPI` | `300` | | | no |
 | `ANONPIP_NER_ENABLED` | `true` | | | no |
-| `ANONPIP_NER_MODEL` | `urchade/gliner_multi_pii-v1` | | | no |
-| `ANONPIP_NER2_ENABLED` | `true` (secondo modello NER, i suoi risultati si aggiungono; `false` = solo GLiNER: su GPU da 8 GB le scansioni tornano da circa 12 a 4 s per pagina, con circa 1 punto di recall in meno) | | | no |
-| `ANONPIP_NER2_MODEL` | `fastino/gliner2-privacy-filter-PII-multi` | | | no |
+| `ANONPIP_NER_URL` | vuoto (`/readyz` resta 503) | URL interno del servizio NER AILAB di staging | URL interno del servizio NER AILAB di produzione | no |
+| `ANONPIP_NER_TIMEOUT_SECONDS` | `30` | | | no |
+| `ANONPIP_NER_RETRIES` | `2` (nuovi tentativi su timeout, errore di connessione, 502/503/504; poi il job fallisce) | | | no |
+| `ANONPIP_NER_RETRY_BACKOFF_SECONDS` | `1` (prima attesa, raddoppia a ogni tentativo: 1 s, 2 s) | | | no |
+| `ANONPIP_NER_CA_BUNDLE` | vuoto (CA di sistema) | path del PEM della CA interna, se il NER è in HTTPS con certificato interno | idem | no |
 | `ANONPIP_NER_THRESHOLD` / `ANONPIP_NER_PERSON_THRESHOLD` | `0.5` / `0.4` | | | no |
 | `ANONPIP_MAX_UPLOAD_MB` | `30` | | | no |
 | `ANONPIP_MAX_PAGES` | `50` | | | no |
@@ -52,7 +54,6 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_REDACT_CLINICAL_DATES` / `ANONPIP_REDACT_AGE` / `ANONPIP_REDACT_ORGANIZATIONS` | `false` | | | no |
 | `ANONPIP_REDACTION_STYLE` | `black` | | | no |
 | `ANONPIP_VERIFY_PIXEL_TOLERANCE` | `0.0002` | | | no |
-| `HF_HOME` | `/models/huggingface` (nell'immagine) | | | no |
 
 Il servizio non ha credenziali: nessun segreto da Vault.
 
@@ -76,8 +77,8 @@ da `ocr-server/Dockerfile`. Lo chiama solo questo servizio: nessuna esposizione.
 1. **Namespace**: cartella `<namespace>/` in `oke-staging` e `oke-prod` con `ns.yaml`.
 2. **Database**: non serve.
 3. **Modelli e GPU**: un nodo con GPU NVIDIA (o nodi CPU, più lenti) e un volume
-   con i pesi di GLiNER e GLiNER2 montato su `/models`, popolato con `just models`.
-   Il servizio `paddle-ocr` ha il suo volume di modelli (sezione sotto).
+3. **Modelli e GPU**: nessuno per questo servizio. La GPU (opzionale) e il volume
+   dei modelli servono solo al servizio `paddle-ocr` (sezione sotto).
 4. **Segreti**: nessuno.
 5. **Manifest applicativo**: ConfigMap, Deployment, Service, Ingress
    (modello in `docs/k8s-example/service.yaml`).

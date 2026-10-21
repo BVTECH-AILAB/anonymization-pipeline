@@ -11,6 +11,8 @@ data:
   ANONPIP_EXTENDED_LOG_CONTEXT: "false"
   ANONPIP_UI_ENABLED: "true"
   ANONPIP_WORK_DIR: "/work"
+  ANONPIP_OCR_SERVER_URL: "http://paddle-ocr:8829"
+  ANONPIP_NER_URL: "http://<ner-service>.<ner-namespace>.svc.cluster.local:<port>"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -49,8 +51,6 @@ spec:
         - configMapRef:
             name: anonmyzation-pipeline-config-env
         volumeMounts:
-        - name: models          # GLiNER and GLiNER2 weights (HF_HOME)
-          mountPath: /models
         - name: work            # documents, deleted after ANONPIP_JOB_TTL_MINUTES
           mountPath: /work
         ports:
@@ -60,7 +60,7 @@ spec:
           httpGet:
             path: /readyz
             port: web
-          initialDelaySeconds: 30   # 503 until the models are loaded
+          initialDelaySeconds: 30   # 503 until the OCR server and the NER service answer
           periodSeconds: 10
         livenessProbe:
           httpGet:
@@ -75,11 +75,7 @@ spec:
           limits:
             cpu: "4"
             memory: 8Gi
-            nvidia.com/gpu: 1
       volumes:
-      - name: models
-        persistentVolumeClaim:
-          claimName: anonmyzation-pipeline-models
       - name: work
         emptyDir:
           sizeLimit: 2Gi

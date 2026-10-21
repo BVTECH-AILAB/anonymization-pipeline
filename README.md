@@ -121,17 +121,21 @@ laptop RTX 5070, slower on CPU; see "Speed" in [docs/ANONYMIZATION.md](docs/ANON
 
 ```bash
 cp .env.example .env
-just start          # deps, synthetic dataset, API + web UI on the first free port, browser
+just start          # deps, synthetic dataset, API + demo page on the first free ports, browser
 ```
 
 `just start` starts the OCR server (`ocr-server/`, port 8829) unless one is
 already running, downloads the OCR weights on the first run (NER: set
 `ANONPIP_NER_URL` to the AILAB NER service), generates
-`dataset/` if it is missing, and opens `http://127.0.0.1:8000` (or the next
-free port) once `/readyz` is ready. OpenAPI on `/docs` (off in prod).
+`dataset/` if it is missing, starts the API on `http://127.0.0.1:8000` and the
+demo page (`apps/web`: nginx in Docker on the host network, proxying to the
+API) on `http://127.0.0.1:8080` (or the next free ports), and opens the page
+once `/readyz` is ready. Without Docker only the API starts. OpenAPI on
+`/docs` of the API (off in prod).
 `just dev` and `just evaluate` need the OCR server too: `just ocr-server`.
 
-With Docker: `just up` starts both services (weights cached in the `models`
+With Docker: `just up` starts the API, the OCR server and the demo page
+(`http://127.0.0.1:8080`; weights cached in the `models`
 volume; uncomment the GPU blocks in `docker-compose.yml` and set
 `OCR_EXTRA=gpu` to use an NVIDIA GPU).
 
@@ -139,9 +143,10 @@ volume; uncomment the GPU blocks in `docker-compose.yml` and set
 
 | Command | What it does |
 |---|---|
-| `just start` | Local demo: API + web UI, dataset if missing, browser |
+| `just start` | Local demo: API + demo page, dataset if missing, browser |
 | `just dev` | API on the host with reload |
-| `just up` / `just down` / `just logs` | Compose stack |
+| `just up` / `just down` / `just logs` | Compose stack (API, OCR server, demo page) |
+| `just web-check` | Build the demo page image and check its nginx configuration |
 | `just models` | Check the OCR server and the NER service (both must answer) |
 | `just ocr-server [cpu]` / `just ocr-server-test` | OCR server on the host, port 8829 / its unit tests |
 | `just lint` | ruff fix + format + ty: before every commit |
@@ -192,9 +197,10 @@ apps/api/                      the service (image anonmyzation-pipeline): Docker
     privacy.py            hashing/masking, user-text redaction, log filter
     api/health.py         /healthz, /readyz (models loaded), /version
     api/anonymization.py  upload, SSE progress, edits, previews, downloads
-    api/web.py            demo web page (ANONPIP_UI_ENABLED)
     services/jobs.py      job lifecycle around the engine: queue, SSE, expiry, limits, KPI events
-    web/static/index.html  the page
+apps/web/                      demo page (image of its own): index.html, nginx config
+                               (serves the page, proxies /anonymizations to the API,
+                               no buffering for the SSE progress), Dockerfile
 apps/eval/                     evaluation, dev only (never in an image): uses the engine,
                                never the service (banned in its pyproject); reads the same
                                ANONPIP_* variables (config.py); own tests (`just test-eval`)
@@ -284,8 +290,9 @@ every miss is listed in `reports/evaluation.md`.
 
 ## Notes
 
-- The web page is for local testing and demos (Italian UI, it follows the MIA
-  mockups); in the platform the doctor-facing frontend is `fe`.
+- The demo page (`apps/web`) is for local testing and demos (Italian UI, it
+  follows the MIA mockups); in the platform the doctor-facing frontend is `fe`.
+  The API serves no page: the page is its own image, nginx in front of the API.
 - Licences: every component is open source; the licence audit and the few
   non-permissive transitive packages left are in
   [docs/PDF_BACKEND_GAPS.md](docs/PDF_BACKEND_GAPS.md).

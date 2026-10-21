@@ -35,7 +35,6 @@ nella ConfigMap e nel codice non ha default.
 | `ANONPIP_LOG_LEVEL` | `INFO` | `DEBUG` | `INFO` | no |
 | `ANONPIP_EXTENDED_LOG_CONTEXT` | `false` | `false` (solo per debug mirato) | ignorata | no |
 | `ANONPIP_LOG_MASK_PREFIX` / `ANONPIP_LOG_MASK_SUFFIX` | `1` / `1` | | | no |
-| `ANONPIP_UI_ENABLED` | `false` | `true` (pagina demo) | `false` | no |
 | `ANONPIP_PRELOAD_MODELS` | `true` | `true` | `true` | no |
 | `ANONPIP_OCR_SERVER_URL` | vuoto (URL del servizio `paddle-ocr`, es. `http://paddle-ocr:8829`; vuoto o non raggiungibile = `/readyz` 503) | `http://paddle-ocr:8829` | `http://paddle-ocr:8829` | no |
 | `ANONPIP_OCR_DPI` | `300` | | | no |
@@ -72,6 +71,24 @@ questo servizio: nessuna esposizione.
 | Modelli | volume su `/models`, cartella `/models/rapidocr` (`OCRSRV_MODEL_DIR`, già nell'immagine) con `ch_PP-OCRv5_det_server.onnx`, `latin_PP-OCRv5_rec_mobile.onnx` e `ch_ppocr_mobile_v2.0_cls_mobile.onnx` (circa 90 MB). il server li carica all'avvio leggendo un'immagine di prova e, se mancano, li scarica: popolare il volume con un primo avvio con internet, poi copiarlo. Senza modelli e senza internet il container termina all'avvio |
 | Variabili | `OCRSRV_MARGIN_PT` (`60`), `OCRSRV_MARGIN_MIN_SCORE` (`0.5`), `OCRSRV_MAX_UPLOAD_MB` (`40`), `OCRSRV_DEVICE` (`auto`: GPU se utilizzabile, altrimenti CPU con un WARNING all'avvio; `gpu`: senza GPU il container termina; `cpu`), `OCRSRV_GPU_MEM_LIMIT_MB` (`0` = nessun tetto, in MiB), `OCRSRV_LOG_LEVEL` (`INFO`); nessun segreto |
 | Dati | riceve immagini di pagine (dati sanitari): non scrive su disco e non registra il testo letto |
+
+## Terzo servizio (opzionale): pagina demo `anonymization-web`
+
+Pagina di prova per staging (in produzione il frontend dei medici è `fe`). Prima era servita
+dall'API con `ANONPIP_UI_ENABLED=true`; ora l'API non serve nessuna pagina, e la variabile
+si può togliere dalla ConfigMap (se resta viene ignorata). Immagine costruita da
+`apps/web/Dockerfile` (contesto `apps/web`): nginx non privilegiato, serve la pagina e fa da
+reverse proxy verso l'API sulla stessa origine.
+
+| Voce | Valore |
+|---|---|
+| Immagine | `harbor.agenas.oci/agenas/anonymization-web` (nome da confermare) |
+| Porta | `8080` (`WEB_PORT`) |
+| Liveness / readiness | `GET /healthz` (del container nginx, non dell'API) |
+| Variabili | `API_UPSTREAM`: URL dell'API, es. `http://anonmyzation-pipeline:8000`; nessun segreto |
+| Ingress | al posto dell'API sull'host di staging, oppure su un host suo; l'API resta raggiungibile solo da qui |
+| Risorse | requests 50m CPU / 32Mi, limits 200m CPU / 128Mi |
+| Dati | inoltra upload e documenti all'API senza scriverli su disco (`proxy_request_buffering off`, `proxy_buffering off`) e non registra i corpi; l'access log contiene solo metodo, percorso (id casuali) e codice |
 
 ## Cosa fa il team piattaforma
 

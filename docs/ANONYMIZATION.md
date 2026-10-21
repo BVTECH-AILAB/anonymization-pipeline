@@ -275,7 +275,6 @@ Two modes, chosen at upload with `?mode=` (default `accurate`):
 | `GET /anonymizations/{id}/download/md` | Anonymized text as Markdown (refused when not verified) | fast |
 | `DELETE /anonymizations/{id}` | Delete now | both |
 | `GET /anonymizations/labels` | Taxonomy with Italian names | - |
-| `GET /` | Demo web page, only with `ANONPIP_UI_ENABLED=true` | - |
 
 An action of the other mode answers 409 `MODE_NOT_SUPPORTED`.
 
@@ -361,7 +360,7 @@ Errors are `ServiceError` subclasses with generic Italian messages (`errors.py`)
 
 `apps/api/tests/unit/test_logging.py` pins the keys and checks that no PII reaches the logs.
 
-## Web UI (`web/static/index.html`)
+## Demo page (`apps/web`)
 
 A single page following the MIA mockups (Italian, it is shown to doctors):
 upload, live progress over SSE with cancel, original with the detections next
@@ -369,6 +368,11 @@ to the anonymized document, chips per data type, processing time per step,
 edits (draw an area, click a box to un-redact or restore, search and redact),
 PDF and Word download, error card. It is for local testing and demos:
 in the platform the doctor-facing frontend is `fe`.
+
+The API serves no page. The page is an image of its own: nginx serves
+`index.html` and proxies `/anonymizations` to the API (`API_UPSTREAM`), on one
+origin, so the page calls relative URLs and no CORS is needed. Buffering is
+off, so the SSE progress reaches the page event by event.
 
 ## Synthetic dataset and evaluation (`apps/eval`)
 

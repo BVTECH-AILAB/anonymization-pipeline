@@ -9,7 +9,6 @@ data:
   ANONPIP_ENVIRONMENT: "staging"
   ANONPIP_LOG_LEVEL: "DEBUG"
   ANONPIP_EXTENDED_LOG_CONTEXT: "false"
-  ANONPIP_UI_ENABLED: "true"
   ANONPIP_WORK_DIR: "/work"
   ANONPIP_OCR_SERVER_URL: "http://paddle-ocr:8829"
   ANONPIP_NER_URL: "http://<ner-service>.<ner-namespace>.svc.cluster.local:<port>"

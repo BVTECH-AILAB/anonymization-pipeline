@@ -162,22 +162,25 @@ Developer tools are also available directly: `uv run python -m tools --help`
 src/anonmyzation_pipeline/
   main.py                 create_app(), lifespan (pipeline and job manager on app.state)
   config.py               Settings (pydantic-settings, prefix ANONPIP_)
-  errors.py               domain errors, Italian messages
+  errors.py               service errors, Italian messages, engine error mapping
   logging_setup.py        setup_logging, log_event, request id
   privacy.py              hashing/masking, user-text redaction, log filter
   api/health.py           /healthz, /readyz (models loaded), /version
   api/anonymization.py    upload, SSE progress, edits, previews, downloads
   api/web.py              demo web page (ANONPIP_UI_ENABLED)
-  services/jobs.py        job lifecycle: worker, SSE, edits, expiry, KPI events
-  services/anonymization/ engine: reader (pypdfium2 text, LiteParse + OCR server), layers,
-                          geometry, pdf_pages (pypdfium2 page views), pipeline,
+  services/jobs.py        job lifecycle around the engine: queue, SSE, expiry, limits, KPI events
+  services/anonymization/ engine, a library that never imports the service (ruff.toml bans it):
+                          config (PipelineConfig), factory (build_pipeline, load_models),
+                          errors, convert (upload -> PDF), document (releases, edits,
+                          page images), reader (pypdfium2 text, LiteParse + OCR server),
+                          layers, geometry, pdf_pages (pypdfium2 page views), pipeline,
                           release (flatten pages with boxes + pypdf rewrite),
-                          verify, export_docx
+                          verify, export_docx, export_markdown
     detect/               rules, labels (+ labels.yaml), ner, eponyms
                           (+ eponyms.yaml), allowlist, ensemble, visual
   web/static/index.html   the page
-tools/                    dev only: dataset/ generator, evaluate.py (dev/test split),
-                          viewer.py (evaluation UI)
+tools/                    dev only, on the engine (never the service): dataset/ generator,
+                          evaluate.py (dev/test split), viewer.py (evaluation UI)
 tests/unit/               no network, no model weights (fake OCR server and NER)
 ocr-server/               PP-OCRv5 (RapidOCR) behind the LiteParse OCR API (own pyproject, image)
 docs/                     ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,

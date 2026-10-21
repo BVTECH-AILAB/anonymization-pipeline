@@ -2,6 +2,7 @@
 name = "anonymization-core"
 version = "0.1.0"
 description = "Surgical anonymization of clinical documents (PDF, scans, images): text layers, PII detection, verified redaction"
+readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "httpx>=0.28",

@@ -162,6 +162,32 @@ volume; uncomment the GPU blocks in `docker-compose.yml` and set
 Developer tools are also available directly: `uv run python -m anonymization_eval --help`
 (`generate`, `anonymize`, `evaluate`, `viewer`, `preview`).
 
+## Modules
+
+Each area is a package with its own dependencies, tests, lint and image, so
+it can be deployed, or extracted, on its own:
+
+```mermaid
+flowchart LR
+    WEB["apps/web<br/>demo page, nginx<br/>(image)"] -- "HTTP /anonymizations" --> API
+    API["apps/api<br/>the service: jobs, SSE, limits, KPI events<br/>(image anonmyzation-pipeline)"] -- "Python import" --> CORE
+    EVAL["apps/eval<br/>dataset, evaluation, viewer<br/>(dev only)"] -- "Python import" --> CORE
+    CORE["packages/anonymization-core<br/>the engine (library)"] -- "HTTP, OCR_CONTRACT.md" --> OCR["services/ocr-server<br/>PP-OCRv5 on ONNX Runtime<br/>(image paddle-ocr-server)"]
+    CORE -- "HTTP /batch_ner" --> NER["AILAB NER service"]
+```
+
+| Package | Depends on | Never imports | Tests |
+|---|---|---|---|
+| `packages/anonymization-core` | OCR server and NER over HTTP | the service, the evaluation, any web framework | `just test-core` |
+| `apps/api` | the engine | the evaluation | `just test-api` |
+| `apps/eval` | the engine | the service | `just test-eval` |
+| `apps/web` | the API over HTTP | - | `just web-check` |
+| `services/ocr-server` | - (own lock, outside the workspace) | - | `just ocr-server-test` |
+
+The "never imports" column is enforced by ruff (`banned-api` in each
+`pyproject.toml`). To extract the engine, copy its folder: see
+[packages/anonymization-core/README.md](packages/anonymization-core/README.md).
+
 ## Layout
 
 A uv workspace: one lock, one package per area, each with its own dependencies,

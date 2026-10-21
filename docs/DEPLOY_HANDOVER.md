@@ -109,9 +109,14 @@ reverse proxy verso l'API sulla stessa origine.
 
 ## Flusso di rilascio
 
-1. MR da feature branch verso `test`: la CI esegue lint, tipi, unit test e Sonar.
+1. MR da feature branch verso `test`: la CI esegue lint, tipi, unit test e Sonar,
+   un job per pacchetto (`core`, `api`, `eval`, `ocr-server`, `web`), solo per i
+   pacchetti toccati e per quelli che ne dipendono.
 2. Merge su `test`: la CI costruisce e pubblica `YYYY.MM.DD-test.<epoch>`,
-   Flux lo rilascia in **staging**.
+   Flux lo rilascia in **staging**. L'immagine del servizio si costruisce a ogni
+   merge; `paddle-ocr-server` (`OCR_EXTRA=gpu`, che senza GPU ripiega sulla CPU) e
+   `anonymization-web` solo quando cambiano `services/ocr-server/` o `apps/web/`,
+   con lo stesso schema di tag: le loro ImagePolicy restano sull'ultimo tag pubblicato.
 3. Validazione in staging.
 4. MR da `test` a `main`: la CI pubblica `YYYY.MM.DD`, Flux lo rilascia in **produzione**.
 

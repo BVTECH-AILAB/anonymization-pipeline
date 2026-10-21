@@ -25,10 +25,10 @@ flowchart TD
     CONV --> PAGE{"For each page:<br/>image covers &gt; 50% of the page?"}
 
     PAGE -- "no: native page" --> NAT["Native text layer (pypdfium2)<br/>exact character boxes<br/>(invisible / white text and form fields included,<br/>rotated pages in unrotated coordinates)"]
-    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°)"]
+    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°,<br/>pages and lines upside down re-read turned)"]
     PAGE -- "yes, with hidden OCR text" --> NAT
 
-    NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…"]
+    NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…<br/>(on scans: boxes found from the ruling,<br/>read again cleaned of specks)"]
     OCR --> CELLS
     CELLS --> LAYERS[("Text layers<br/>text ↔ character boxes")]
 
@@ -81,8 +81,11 @@ flowchart TD
 1. **Text layers.** Every page becomes text in which each character keeps its
    box on the page: from the PDF text layer read by pypdfium2 on native pages
    (invisible text and form fields included), from the OCR server (PP-OCRv5) on
-   scanned pages (side margins read again rotated by 90 degrees). Lines are
-   rebuilt from geometry; characters printed one per box are joined into one word.
+   scanned pages (side margins read again rotated by 90 degrees; pages and lines
+   upside down read again turned by 180 degrees). Lines are rebuilt from
+   geometry; characters printed one per box are joined into one word. On scans
+   the boxes are found from the ruling of the form and read again cleaned of
+   specks (recognition only, on the OCR server).
 2. **Detection on the text.** Format rules (codice fiscale with checksum,
    tessera sanitaria, Italian and foreign phones, emails, IDs, dates,
    addresses, professional registrations), the value after a form label
@@ -180,12 +183,13 @@ docs/                     ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and pri
 
 `just evaluate` on the whole evaluation set (`dataset/`: 200 documents, 326
 pages, each as native PDF, scan and scan with a hidden OCR layer: 600 PDFs;
-20/10/2026). The current stack (LiteParse + OCR server, AILAB NER service) has
-not been measured yet: the two tables below measure each half on its own branch,
-against the same 600 PDFs.
+20/10/2026). The current stack (LiteParse + OCR server, AILAB NER service, OCR
+orientation and character boxes) has not been measured yet: the tables below
+measure each part on its own branch.
 
 LiteParse stack, NER still GLiNER + GLiNER2 in the pod (pypdfium2 + pypdf,
-LiteParse, PP-OCRv5 server on RapidOCR):
+LiteParse, PP-OCRv5 server on RapidOCR), before the OCR orientation and
+character-box changes:
 
 | | native | scan | scan + OCR layer |
 |---|---|---|---|
@@ -206,29 +210,34 @@ and 0.7 points lower and scans are about 5 times faster; the gaps, their
 suspected causes and the next steps are in
 [docs/PDF_BACKEND_GAPS.md](docs/PDF_BACKEND_GAPS.md).
 
-AILAB NER service, OCR still PyMuPDF + PaddleOCR PP-OCRv5 in the pod. In
-brackets the earlier in-pod GLiNER + GLiNER2 (commit `92ae6e5`), measured the
-same day:
+AILAB NER service with the OCR orientation and character-box changes, OCR still
+PyMuPDF + PaddleOCR PP-OCRv5 in the pod (201 documents, 329 pages, 603 PDFs:
+the orientation document `e056` added; 21/10/2026). In brackets the same stack
+before those changes (20/10/2026):
 
 | | native | scan | scan + OCR layer |
 |---|---|---|---|
-| **Recall** (box, required PII) | 0.938 (0.948) | 0.909 (0.915) | 0.939 (0.944) |
-| **Precision** (box) | 0.959 (0.970) | 0.928 (0.938) | 0.884 (0.904) |
-| **F1** (box) | 0.948 (0.959) | 0.918 (0.926) | 0.911 (0.924) |
-| Precision / recall / F1 (word) | 0.946 / 0.950 / 0.948 | 0.745 / 0.926 / 0.826 | 0.706 / 0.954 / 0.811 |
-| **Accuracy** (word) | 0.987 | 0.950 | 0.943 |
-| **AP@0.5** (PII, label-agnostic) | 0.658 | 0.576 | 0.502 |
-| **mAP@0.5** (mean over PII types) | 0.670 | 0.564 | 0.559 |
+| **Recall** (box, required PII) | 0.940 (0.938) | 0.931 (0.909) | 0.942 (0.939) |
+| **Precision** (box) | 0.960 (0.959) | 0.940 (0.928) | 0.893 (0.884) |
+| **F1** (box) | 0.950 (0.948) | 0.935 (0.918) | 0.917 (0.911) |
+| Precision / recall / F1 (word) | 0.947 / 0.950 / 0.948 | 0.791 / 0.947 / 0.862 | 0.743 / 0.956 / 0.836 |
+| **Accuracy** (word) | 0.987 | 0.961 | 0.952 |
+| **AP@0.5** (PII, label-agnostic) | 0.657 | 0.586 | 0.504 |
+| **mAP@0.5** (mean over PII types) | 0.672 | 0.587 | 0.566 |
 | Hidden PII leaked (white text, metadata, OCR layers) | 0/324 | n/a | 1/324 |
-| Eponyms wrongly redacted | 54/415 | 72/415 | 100/415 |
-| Documents passing verification | 200/200 | 200/200 | 200/200 |
-| Seconds per page (laptop RTX 5090, 24 GB) | 0.7 | 3.5 | 4.0 |
+| Eponyms wrongly redacted | 53/416 | 75/416 | 102/416 |
+| Documents passing verification | 201/201 | 201/201 | 201/201 |
+| Seconds per page (laptop RTX 5090, 24 GB) | 0.6 | 3.0 | 3.9 |
 
-With the AILAB service recall is 0.5 to 1 point lower and precision 1 to 2
-points lower than with GLiNER: names it replaces as eponyms, foreign names and
-fragments taken for places (details in docs/ANONYMIZATION.md, "NER choice").
-Run `just evaluate` again to measure the current stack; `--split test` scores
-only the 77 held-out documents.
+On plain scans the OCR changes recover lines the orientation classifier used to
+drop and codes in character boxes broken by specks (codice fiscale 93% to 98%,
+tessera sanitaria 91% to 100%). Compared with the earlier in-pod GLiNER +
+GLiNER2, the AILAB service has 0.5 to 1 point less recall: names it replaces as
+eponyms, foreign names and fragments taken for places (details in
+docs/ANONYMIZATION.md, "OCR choice" and "NER choice").
+Run `just evaluate` again to measure the current stack (`uv run python -m tools
+orientation` adds `e056` to the set); `--split test` scores only the held-out
+documents.
 
 - **Box level** (scikit-learn): every required ground-truth box is found when
   redaction covers at least 75% of it; every redaction box touching no ground

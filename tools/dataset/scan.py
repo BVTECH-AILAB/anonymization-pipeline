@@ -88,15 +88,39 @@ def _degrade(img: np.ndarray, rnd: random.Random) -> np.ndarray:
     return out
 
 
+def _fax(img: np.ndarray, rnd: random.Random) -> np.ndarray:
+    """A page sent by fax: low resolution, black and white, noisy, with streaks."""
+    h, w = img.shape[:2]
+    rng = np.random.default_rng(rnd.randint(0, 1 << 30))
+    g = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    small = cv2.resize(g, (int(w * 0.45), int(h * 0.45)), interpolation=cv2.INTER_AREA)
+    small = small.astype(np.float32) + rng.normal(0, 22, small.shape)
+    bw = np.where(small < rnd.uniform(140, 160), 0, 255).astype(np.uint8)
+    out = cv2.resize(bw, (w, h), interpolation=cv2.INTER_NEAREST)
+    for _ in range(rnd.randint(3, 6)):  # streaks of a dirty fax drum
+        y = rnd.randint(0, h - 4)
+        out[y : y + rnd.randint(1, 3), :] = rnd.choice([0, 120])
+    mask = rng.random((h, w)) < 0.003
+    out[mask] = 0
+    return cv2.cvtColor(out, cv2.COLOR_GRAY2RGB)
+
+
 def make_scan(
-    native: Path, gt: dict, out_path: Path, rnd: random.Random, ocr_layer: bool
+    native: Path,
+    gt: dict,
+    out_path: Path,
+    rnd: random.Random,
+    ocr_layer: bool,
+    turned: frozenset[int] = frozenset(),
+    faxed: frozenset[int] = frozenset(),
 ) -> dict:
     """Write a scanned twin of ``native`` and return its ground truth.
 
     Ground-truth boxes (and the words of the optional OCR layer) are in the page
     space of the native file; the scan is made from the rendered, possibly
     rotated, page, so each box goes through the page rotation and then through
-    the scanner's skew.
+    the scanner's skew. Pages in ``turned`` are fed upside down (skew plus 180
+    degrees); pages in ``faxed`` are degraded like a fax.
 
     Returns:
         The ground truth with moved boxes and a ``scan`` entry (dpi, OCR layer,
@@ -121,12 +145,15 @@ def make_scan(
                 infos.append(view.info)
                 img = view.render(dpi)
                 h, w = img.shape[:2]
-                M = cv2.getRotationMatrix2D((w / 2, h / 2), rnd.uniform(-1.6, 1.6), 1.0)
+                angle = rnd.uniform(-1.6, 1.6) + (180 if pno in turned else 0)
+                M = cv2.getRotationMatrix2D((w / 2, h / 2), angle, 1.0)
                 M[:, 2] += (rnd.uniform(-0.01, 0.01) * w, rnd.uniform(-0.01, 0.01) * h)
                 img = cv2.warpAffine(
                     img, M, (w, h), flags=cv2.INTER_LINEAR, borderValue=(250, 250, 248)
                 )
                 img = _degrade(img, rnd)
+                if pno in faxed:
+                    img = _fax(img, rnd)
                 ok, jpg = cv2.imencode(
                     ".jpg",
                     cv2.cvtColor(img, cv2.COLOR_RGB2BGR),

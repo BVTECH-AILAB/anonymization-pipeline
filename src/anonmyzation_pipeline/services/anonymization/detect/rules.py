@@ -290,6 +290,18 @@ def repair_cf(value: str) -> str | None:
     return code if _cf_ok(code) else None
 
 
+def is_code(value: str) -> bool:
+    """True for a whole personal code: codice fiscale (check character valid,
+    OCR confusions repaired), tessera sanitaria, STP or ENI.
+
+    Args:
+        value: The candidate, spaces removed.
+    """
+    return bool(
+        repair_cf(value) or HEALTH_CARD.fullmatch(value) or STP_ENI.fullmatch(value)
+    )
+
+
 def iban_ok(value: str) -> bool:
     """ISO 13616 check (mod 97) of an IBAN, spaces ignored."""
     s = value.replace(" ", "").upper()

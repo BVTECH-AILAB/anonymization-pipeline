@@ -15,7 +15,7 @@ from paddle_ocr_server.engine import (
     page_results,
     parse_rapid,
 )
-from paddle_ocr_server.words import Line, results
+from paddle_ocr_server.words import Line, Quad, results
 
 SECRET = "RSSMRA85M01H501U"  # noqa: S105 - textbook codice fiscale, not a credential
 
@@ -38,6 +38,11 @@ class FakeEngine:
             raise RuntimeError(SECRET)
         self.dpi = dpi
         return [{"text": SECRET, "bbox": [0, 0, 10, 10], "confidence": 0.9}]
+
+    def recognize(self, _img: np.ndarray) -> tuple[str, float]:
+        if self.fail:
+            raise RuntimeError(SECRET)
+        return SECRET, 0.91234
 
 
 def _png(w: int = 40, h: int = 20) -> bytes:
@@ -68,6 +73,30 @@ def test_ocr_follows_liteparse_contract_and_never_logs_text(
     }
     assert engine.dpi == 300
     assert SECRET not in caplog.text
+
+
+def test_recognize_reads_one_line_and_never_logs_text(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    caplog.set_level(logging.DEBUG)
+    with _client(FakeEngine()) as client:
+        r = client.post("/recognize", files={"file": ("w.png", _png(), "image/png")})
+        bad = client.post("/recognize", files={"file": ("w.png", b"x", "image/png")})
+    with _client(FakeEngine(fail=True)) as client:
+        failed = client.post(
+            "/recognize", files={"file": ("w.png", _png(), "image/png")}
+        )
+    assert r.status_code == 200
+    assert r.json() == {"text": SECRET, "confidence": 0.9123}
+    assert bad.status_code == 400
+    assert failed.status_code == 500 and failed.json() == {"error": "OCR failed"}
+    assert SECRET not in caplog.text
+
+
+def test_recognize_is_503_until_models_load() -> None:
+    client = TestClient(create_app(Settings(), FakeEngine(ready=False)))  # type: ignore[arg-type]
+    r = client.post("/recognize", files={"file": ("w.png", _png(), "image/png")})
+    assert r.status_code == 503
 
 
 def test_default_dpi_without_header() -> None:
@@ -132,13 +161,139 @@ def test_page_results_margin_width_follows_dpi() -> None:
 
     def predict(a: np.ndarray) -> list[Line]:
         widths.append(a.shape[0])
-        return []
+        return [Line("Referto", 0.95, _quad(10, 10, 80, 20))]
 
     page_results(img, 144, predict, margin_pt=36, min_score=0.5)
     assert widths == [100, 72, 72, 72, 72]  # page, then 36 pt at 144 dpi = 72 px strips
     widths.clear()
     page_results(img, 144, predict, margin_pt=0, min_score=0.5)
     assert widths == [100]
+
+
+def _quad(x0: float, y0: float, x1: float, y1: float) -> Quad:
+    return ((x0, y0), (x1, y0), (x1, y1), (x0, y1))
+
+
+def _texts(found: list[dict]) -> list[str]:
+    return [r["text"] for r in found]
+
+
+def test_upright_page_is_read_once() -> None:
+    calls: list[tuple[int, ...]] = []
+
+    def predict(img: np.ndarray) -> list[Line]:
+        calls.append(img.shape)
+        return [Line("Rossi", 0.98, _quad(10, 10, 60, 20))]
+
+    assert _texts(page_results(np.zeros((800, 600, 3), np.uint8), 72, predict, 0, 0.5))
+    assert len(calls) == 1
+
+
+def test_upside_down_page_is_read_turned_and_mapped_back() -> None:
+    # the text sits in the bottom-right corner, upside down: turned by 180 degrees
+    # it is in the top-left corner, where the fake engine reads it
+    img = np.full((800, 600, 3), 255, np.uint8)
+    img[760:780, 500:560] = 0
+
+    def predict(a: np.ndarray) -> list[Line]:
+        h, w = a.shape[:2]
+        top_left = a[: h // 4, : w // 4]
+        if top_left.min() < 128:
+            ys, xs = np.nonzero(top_left.min(axis=2) < 128)
+            box = _quad(xs.min(), ys.min(), xs.max() + 1, ys.max() + 1)
+            return [Line("Rossi", 0.97, box)]
+        return [Line("e e r", 0.45, _quad(0, 0, w / 2, 10))]
+
+    (word,) = page_results(img, 72, predict, 0, 0.5)
+    assert word["text"] == "Rossi"
+    assert word["bbox"] == pytest.approx([500, 760, 560, 780], abs=1)
+    # TL -> TR runs right to left: the reading frame of text upside down
+    assert word["polygon"][1][0] < word["polygon"][0][0]
+
+
+def test_poor_reading_is_kept_when_the_turned_page_is_not_better() -> None:
+    def predict(_: np.ndarray) -> list[Line]:
+        return [Line("Bianchi", 0.6, _quad(10, 10, 60, 20))]
+
+    (word,) = page_results(np.zeros((800, 600, 3), np.uint8), 72, predict, 0, 0.5)
+    assert word["text"] == "Bianchi"
+    assert word["polygon"][1][0] > word["polygon"][0][0]
+
+
+def test_a_degraded_page_is_not_swapped_for_a_noisy_turned_reading() -> None:
+    # a faded fax read poorly: turned, it gives more text but just as unsure
+    img = np.full((800, 600, 3), 255, np.uint8)
+    img[770:790, 540:580] = 0
+
+    def predict(a: np.ndarray) -> list[Line]:
+        if a[760:, 520:].min() < 128:  # the marker sits bottom-right: upright
+            return [Line("Bianchi", 0.6, _quad(10, 10, 60, 20))]
+        return [Line("eerr nnee aaee rrnn", 0.7, _quad(10, 10, 200, 20))]
+
+    assert _texts(page_results(img, 72, predict, 0, 0.5)) == ["Bianchi"]
+
+
+def _sticker(_: np.ndarray) -> list[Line]:
+    """A page read well, but for a sticker pasted upside down read as noise."""
+    return [
+        Line("Paziente: ROSSI", 0.99, _quad(10, 10, 140, 20)),
+        Line("e", 0.31, _quad(200, 100, 260, 112)),
+        Line("rr", 0.28, _quad(270, 100, 330, 112)),
+        Line("Ricovero", 0.97, _quad(10, 200, 80, 212)),
+    ]
+
+
+def test_a_line_upside_down_on_an_upright_page_is_read_turned() -> None:
+    seen: list[np.ndarray] = []
+
+    def recognize(img: np.ndarray) -> tuple[str, float]:
+        seen.append(img)
+        return "Mario Rossi", 0.96
+
+    img = np.zeros((800, 600, 3), np.uint8)
+    found = page_results(img, 72, _sticker, 0, 0.5, recognize)
+
+    assert _texts(found) == ["Paziente:", "ROSSI", "Mario", "Rossi", "Ricovero"]
+    mario, rossi = found[2]["bbox"], found[3]["bbox"]
+    # upside down the text runs right to left: the first word is on the right
+    assert mario[0] > rossi[2] - 1
+    assert rossi[0] == pytest.approx(200, abs=1)
+    assert mario[2] == pytest.approx(330, abs=1)
+    # the pieces are passed as one crop, turned, at its own size
+    assert len(seen) == 1 and seen[0].shape[1] >= 130
+
+
+def test_pieces_of_an_upside_down_line_are_read_again_together() -> None:
+    # the detector cuts a line upside down into pieces; one piece is read just
+    # above the noise threshold ("1138" for "1176"): the pieces on the band are
+    # read again as one crop, the confident line below is left alone
+    def predict(_: np.ndarray) -> list[Line]:
+        return [
+            Line("326", 0.14, _quad(200, 100, 240, 112)),
+            Line("808", 0.21, _quad(246, 100, 286, 112)),
+            Line("1138", 0.51, _quad(292, 100, 330, 112)),
+            Line("Cl1", 0.21, _quad(336, 100, 360, 112)),
+            Line("Ricovero", 0.97, _quad(200, 130, 280, 142)),
+        ]
+
+    seen: list[np.ndarray] = []
+
+    def recognize(img: np.ndarray) -> tuple[str, float]:
+        seen.append(img)
+        return "Tel. 348 905 1176", 0.97
+
+    img = np.zeros((800, 600, 3), np.uint8)
+    found = page_results(img, 72, predict, 0, 0.5, recognize)
+
+    assert _texts(found) == ["Tel.", "348", "905", "1176", "Ricovero"]
+    assert len(seen) == 1 and seen[0].shape[1] >= 160
+
+
+@pytest.mark.parametrize("recognize", [None, lambda _: ("x7 ;", 0.4)])
+def test_a_noise_line_that_is_not_upside_down_is_dropped(recognize) -> None:
+    img = np.zeros((800, 600, 3), np.uint8)
+    found = page_results(img, 72, _sticker, 0, 0.5, recognize)
+    assert _texts(found) == ["Paziente:", "ROSSI", "Ricovero"]
 
 
 def test_rapid_result_keeps_its_word_boxes() -> None:
@@ -168,14 +323,16 @@ def test_rapid_result_keeps_its_word_boxes() -> None:
 
 class _FakeRapid:
     calls: list[tuple[int, ...]] = []
+    kwargs: list[dict] = []
     reads = ("Referto",)
 
     def __init__(self, params: dict) -> None:
         self.params = params
         _FakeRapid.last_params = params
 
-    def __call__(self, img: np.ndarray, **_: object) -> object:
+    def __call__(self, img: np.ndarray, **kwargs: object) -> object:
         _FakeRapid.calls.append(img.shape)
+        _FakeRapid.kwargs.append(kwargs)
         return type("Res", (), {"txts": _FakeRapid.reads})()
 
 
@@ -189,6 +346,22 @@ def test_load_reads_a_sample_so_health_waits_for_every_model(
     ocr = RapidEngine(Settings(device="cpu"))
     ocr.load()
     assert len(_FakeRapid.calls) == 1 and ocr.ready
+
+
+def test_line_orientation_classifier_is_off(monkeypatch: pytest.MonkeyPatch) -> None:
+    # PP-OCRv5's line classifier turns upright lines by 180 degrees: they come
+    # back as noise and whole lines with personal data are lost
+    monkeypatch.setattr(engine, "RapidOCR", _FakeRapid)
+    _FakeRapid.calls, _FakeRapid.reads = [], ("Referto",)
+    ocr = RapidEngine(Settings(device="cpu"))
+    ocr.load()
+    assert _FakeRapid.last_params["Global.use_cls"] is False
+    ocr.predict(np.zeros((10, 10, 3), np.uint8))
+    assert _FakeRapid.kwargs[-1]["use_cls"] is False
+    # every line comes back: settle_lines decides on the low ones
+    assert _FakeRapid.kwargs[-1]["text_score"] == 0.0
+    assert ocr.recognize(np.zeros((10, 10, 3), np.uint8)) == ("", 0.0)
+    assert _FakeRapid.kwargs[-1]["use_det"] is False
 
 
 def test_load_fails_when_the_sample_reads_nothing(

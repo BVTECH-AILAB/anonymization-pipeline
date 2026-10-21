@@ -2,6 +2,7 @@
 
     uv run python -m tools generate --n 7 --out dataset --append
     uv run python -m tools generate --n 21 --out dataset --overwrite
+    uv run python -m tools orientation --out dataset
     uv run python -m tools anonymize dataset/scan/000_lettera_dimissione.pdf
     uv run python -m tools evaluate --dataset dataset
     uv run python -m tools viewer
@@ -31,6 +32,8 @@ from tools import evaluate as evaluation
 from tools import viewer as eval_viewer
 from tools.dataset.generate import generate as generate_dataset
 from tools.dataset.generate import next_index, remove_documents
+from tools.dataset.orientation import DOC_ID as ORIENTATION_DOC
+from tools.dataset.orientation import build as build_orientation
 
 logger = logging.getLogger("tools")
 app = typer.Typer(help="Anonymization pipeline developer tools.", no_args_is_help=True)
@@ -96,6 +99,15 @@ def generate(
         start,
         start + n - 1,
     )
+
+
+@app.command()
+def orientation(
+    out: Annotated[Path, typer.Option(help="Dataset folder.")] = Path("dataset"),
+) -> None:
+    """Edge-case document for OCR orientation and character boxes (all variants)."""
+    files = build_orientation(out)
+    logger.info("%s: %d PDF written to %s", ORIENTATION_DOC, len(files), out)
 
 
 @app.command()

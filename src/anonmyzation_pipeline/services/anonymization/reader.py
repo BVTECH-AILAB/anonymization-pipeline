@@ -4,7 +4,8 @@
 LiteParse (PDFium) tells scanned pages apart and renders them for the OCR
 server (``ocr-server/``, PP-OCRv5 behind the LiteParse OCR API). A scan that
 already has a text layer is read by OCR too, so a wrong scanner layer never
-hides the visible text.
+hides the visible text. On an upright scan, codes printed one character per box
+are read again box by box, cleaned (``cells.py``).
 
 Boxes of the layers are in page space (unrotated), where redaction works.
 OCR words of scanned pages are also returned in display space, for the
@@ -20,11 +21,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
+import cv2
 import httpx
+import numpy as np
 import pypdfium2 as pdfium
 import pypdfium2.raw as pdfium_c
 from liteparse import LiteParse, ParsedPage
 
+from anonmyzation_pipeline.services.anonymization.cells import read_cells
 from anonmyzation_pipeline.services.anonymization.detect import visual
 from anonmyzation_pipeline.services.anonymization.geometry import (
     direction_from_display,
@@ -372,6 +376,12 @@ def _to_page_space(info: dict, tokens: list[Token]) -> list[Token]:
     ]
 
 
+def read_upside_down(words: list[Word]) -> bool:
+    """True when most of the text was read right to left: the page was upside down."""
+    turned = sum(len(w.text) for w in words if w.direction == "rtl")
+    return turned > sum(len(w.text) for w in words) / 2
+
+
 def is_scanned_page(parsed: ParsedPage) -> bool:
     """A scan for LiteParse: a full-page raster, or images over half of the page."""
     c = parsed.complexity
@@ -441,17 +451,50 @@ class LiteparseReader:
         self._ready = True
         logger.info("LiteParse reader ready: dpi=%d", self.dpi)
 
-    def _ocr_page(self, path: Path, pno: int) -> list[Word]:
-        """Every word of a scanned page, read by the OCR server."""
-        shot = self._parser.screenshot(str(path), page_numbers=[pno + 1])[0]
+    def _screenshot(self, path: Path, pno: int) -> bytes:
+        """PNG of a page as displayed, at the reader's resolution."""
+        return self._parser.screenshot(str(path), page_numbers=[pno + 1])[0].image_bytes
+
+    def _server_words(self, png: bytes) -> list[Word]:
+        """Every word of a page image, read by the OCR server."""
         r = self._client.post(
             f"{self.server_url}/ocr",
-            files={"file": ("page.png", shot.image_bytes, "image/png")},
+            files={"file": ("page.png", png, "image/png")},
             data={"language": self.language},
             headers={"X-Render-DPI": str(self.dpi)},
         )
         r.raise_for_status()
         return server_words(r.json().get("results", []), 72 / self.dpi)
+
+    def _ocr_page(self, path: Path, pno: int) -> list[Word]:
+        """Every word of a page, read by the OCR server."""
+        return self._server_words(self._screenshot(path, pno))
+
+    def _scan_page(self, path: Path, pno: int) -> list[Word]:
+        """Every word of a scanned page; on an upright page, rows of character
+        boxes are read again cleaned (``read_cells``)."""
+        png = self._screenshot(path, pno)
+        words = self._server_words(png)
+        if read_upside_down(words):
+            return words
+        bgr = cv2.imdecode(np.frombuffer(png, np.uint8), cv2.IMREAD_COLOR)
+        if bgr is None:
+            return words
+        img = cv2.cvtColor(np.asarray(bgr), cv2.COLOR_BGR2RGB)
+        return read_cells(img, self.dpi / 72, words, self._recognize)
+
+    def _recognize(self, img: np.ndarray) -> tuple[str, float]:
+        """Text of an image holding one word, recognition only (OCR server)."""
+        ok, png = cv2.imencode(".png", cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
+        if not ok:
+            return "", 0.0
+        r = self._client.post(
+            f"{self.server_url}/recognize",
+            files={"file": ("word.png", png.tobytes(), "image/png")},
+        )
+        r.raise_for_status()
+        body = r.json()
+        return str(body.get("text", "")), float(body.get("confidence", 0.0))
 
     def _grayscale_picture_words(
         self, path: Path, views: list[PageView], scanned: list[bool]
@@ -501,7 +544,10 @@ class LiteparseReader:
             tokens = exact[pno]
             if tokens:
                 layers.append(TextLayer.build(pno, "native", tokens))
-            words = self._ocr_page(path, pno) if scanned[pno] else pictures.get(pno, [])
+            if scanned[pno]:
+                words = self._scan_page(path, pno)
+            else:
+                words = pictures.get(pno, [])
             if words:
                 layers.append(ocr_layer(pno, [derotate_word(info, w) for w in words]))
             out.append(PageText(info, layers, words if scanned[pno] else None))

@@ -3,6 +3,8 @@
 Derived from the reference server of run-llama/liteparse
 (``ocr/paddleocr/server.py``, Apache-2.0). The main difference: one result
 per word instead of one per line, plus a pass on the side margins.
+``POST /recognize`` is ours, outside the LiteParse API: recognition only, on an
+image holding one line (the service sends the characters of a row of boxes).
 
 The OCR text is never logged: it is health data.
 """
@@ -35,6 +37,8 @@ class Engine(Protocol):
     def load(self) -> None: ...
 
     def read(self, img: np.ndarray, dpi: float) -> list[dict]: ...
+
+    def recognize(self, img: np.ndarray) -> tuple[str, float]: ...
 
 
 def _error(status: int, message: str) -> JSONResponse:
@@ -70,6 +74,15 @@ def create_app(
             return _error(503, "models not loaded")
         return {"status": "healthy"}
 
+    def _image(file: UploadFile) -> np.ndarray | JSONResponse:
+        data = file.file.read(max_bytes + 1)
+        if len(data) > max_bytes:
+            return _error(400, "image too large")
+        try:
+            return np.asarray(Image.open(io.BytesIO(data)).convert("RGB"))
+        except (UnidentifiedImageError, OSError, Image.DecompressionBombError):
+            return _error(400, "unreadable image")
+
     @app.post("/ocr", response_model=None)
     def read_image(
         file: Annotated[UploadFile, File()],
@@ -78,13 +91,9 @@ def create_app(
     ) -> dict[str, Any] | JSONResponse:
         if not ocr.ready:
             return _error(503, "models not loaded")
-        data = file.file.read(max_bytes + 1)
-        if len(data) > max_bytes:
-            return _error(400, "image too large")
-        try:
-            img = np.asarray(Image.open(io.BytesIO(data)).convert("RGB"))
-        except (UnidentifiedImageError, OSError, Image.DecompressionBombError):
-            return _error(400, "unreadable image")
+        img = _image(file)
+        if isinstance(img, JSONResponse):
+            return img
         dpi = (
             x_render_dpi
             if x_render_dpi and 50 <= x_render_dpi <= 1200
@@ -106,5 +115,21 @@ def create_app(
             language[:8] if language.isalpha() else "invalid",
         )
         return {"results": found}
+
+    @app.post("/recognize", response_model=None)
+    def recognize(
+        file: Annotated[UploadFile, File()],
+    ) -> dict[str, Any] | JSONResponse:
+        if not ocr.ready:
+            return _error(503, "models not loaded")
+        img = _image(file)
+        if isinstance(img, JSONResponse):
+            return img
+        try:
+            text, conf = ocr.recognize(img)
+        except Exception as exc:
+            logger.error("Recognition failed: error=%s", type(exc).__name__)
+            return _error(500, "OCR failed")
+        return {"text": text, "confidence": round(float(conf), 4)}
 
     return app

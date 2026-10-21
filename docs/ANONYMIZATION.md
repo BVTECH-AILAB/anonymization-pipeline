@@ -19,10 +19,10 @@ flowchart TD
     CONV --> PAGE{"For each page:<br/>image covers &gt; 50% of the page?"}
 
     PAGE -- "no: native page" --> NAT["Native text layer (pypdfium2)<br/>exact character boxes<br/>(invisible / white text and form fields included,<br/>rotated pages in unrotated coordinates)"]
-    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°)"]
+    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°,<br/>pages and lines upside down re-read turned)"]
     PAGE -- "yes, with hidden OCR text" --> NAT
 
-    NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…"]
+    NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…<br/>(on scans: boxes found from the ruling,<br/>read again cleaned of specks)"]
     OCR --> CELLS
     CELLS --> LAYERS[("Text layers<br/>text ↔ character boxes")]
 
@@ -92,6 +92,21 @@ A detected span `(start, end)` becomes one rectangle per line.
   LiteParse OCR API. It returns one box per word; vertical text in the side
   margins (print traces, protocol numbers, wristband labels) is read by a
   second pass on the margin strips rotated by 90 degrees.
+- **Orientation** (`ocr-server/`, `engine.py`): RapidOCR's line orientation
+  classifier is off. It turned upright lines by 180 degrees, which were then
+  read as noise and dropped whole, personal data included (see "OCR choice").
+  Instead:
+  - a page read with a mean confidence below 0.8 per character is read again
+    turned by 180 degrees (a sheet fed upside down); the turned reading is kept
+    only when it is both confident (0.8) and richer, its boxes mapped back with
+    the reading direction right to left;
+  - on an upright page, a line read below 0.5 is noise or text upside down (a
+    patient label pasted the wrong way). The detector cuts such a line into
+    pieces, so each low line is grouped with the unsure pieces next to it on its
+    band (below 0.8) and the group is read again turned, as one crop
+    (recognition only): a reading of at least 0.8 takes its place, otherwise the
+    low lines are dropped (as RapidOCR did) and the unsure pieces kept. Lines
+    read with confidence are never touched.
 - A scan that also carries a hidden OCR layer gets both layers: the hidden text
   is redacted where it overlaps the findings.
 - Lines are rebuilt from geometry (`group_lines`): each word is chained to its
@@ -101,6 +116,29 @@ A detected span `(start, end)` becomes one rectangle per line.
   "R S S M R A ...") are joined into one word whose character boxes are the
   cells (`merge_cells`), on native and OCR layers, so the rules see the code.
   Only capitals and digits are joined: the single-letter words of prose stay apart.
+- **Character boxes on scans** (`cells.py`, OpenCV). Read as a page, every box
+  is a separate word, and scanner specks inside the boxes come back as ".C",
+  "i7", "[1" or a lower-case "s", which break the run. The boxes are found from
+  the ruling of the form: adaptive threshold, a morphological opening with a
+  30 pt horizontal element keeps the ruling lines, and between two lines 7 to
+  30 pt apart the columns inked over 80% of the height are the borders; a row
+  is at least 5 evenly sized boxes (0.4 to 1.8 times as wide as high). A row
+  more than 35% inked inside is a title bar, not boxes. Boxes whose border was
+  not seen are added along the ruling while they hold a character, snapped to
+  the borders seen, with at most one box per side lacking its border (a faint
+  outer border lost on the scan); past it the ruling runs over a table or text. Each
+  box is cleaned (Otsu threshold, connected components: only strokes at least a
+  quarter of the box high are kept) and the characters are set side by side,
+  3 pt apart, into one word that the recogniser reads far better than isolated
+  characters ("1" alone comes back as "(i:", "99" without the gap as "9"). The
+  reading replaces the page OCR of the row only when it has one capital or digit
+  per box with a confidence of at least 0.5, when the row holds the whole code
+  (no word of the page OCR runs out of it, no single character is read right
+  next to it: a row seen in part is left alone) and when the page OCR did not
+  already read a valid code there (codice fiscale, tessera sanitaria, STP/ENI)
+  that the clean reading is not. The composed word is read by the OCR server
+  (`POST /recognize`, recognition only); boxes are read again only on scanned
+  pages read upright.
 - Grayscale pictures embedded in a native page (X-ray, CT, ultrasound, an
   embedded scan) stay visible; the text burned into them (patient name, ID,
   date of birth, operator, accession number) is read by the same server, only
@@ -294,22 +332,26 @@ that both copies have identical words and positions. Ground truth lives in
 just dataset --out dataset_new                 # 21 documents x 3 variants in a new folder
 just dataset --n 7 --append                    # add 7 new documents after the existing ones
 just dataset --n 42 --overwrite                # regenerate the 42 NNN_ documents of dataset/
+uv run python -m tools orientation --out dataset  # the e056 edge-case document, every variant
 just evaluate                                  # -> reports/evaluation.md
 ```
 
-**Evaluation dataset** (`dataset/`): 200 documents (326 pages), each in the
-three variants above with ground truth in the same format: 600 PDFs, scored
-with `just evaluate`. 185 are Italian and 15 English. `just evaluate --split test`
+**Evaluation dataset** (`dataset/`): 201 documents (329 pages), each in the
+three variants above with ground truth in the same format: 603 PDFs, scored
+with `just evaluate`. 186 are Italian and 15 English. `just evaluate --split test`
 scores only the held-out documents: the split is fixed by template family
-(about 30% of the 50 families, 77 documents), so no sibling of a test document
-is ever seen while tuning; `--split dev` is the rest (123 documents). The `doc_id` prefix tells
+(about 30% of the 51 families, 78 documents), so no sibling of a test document
+is ever seen while tuning; `--split dev` is the rest (123 documents). One
+exception: `e056_orientamento_ocr` falls in the test split by its family but was
+used to develop the orientation fixes, so the test split holds one document seen
+while tuning. The `doc_id` prefix tells
 the sources apart (`just dataset --overwrite` replaces only the `NNN_` documents):
 
 | Prefix | Documents | Content |
 |---|---|---|
 | `NNN_` | 42 | the generator above, 6 of each of its 7 types |
 | none | 96 | eight Italian report types in three difficulty levels (facile, media, complessa): repeated headers and footers, codice fiscale in character boxes, stamps, signatures, barcodes and QR codes, eponyms. Boxes recovered from a value-level ground truth; clinical content (diagnoses, drugs, lab values) is not PII, so redacting it counts as over-redaction |
-| `eNNN_` | 56 | edge cases: fax with the codice fiscale in character boxes, phone photo with perspective and handwritten PII, landscape table on a `/Rotate 90` page, PII in AcroForm fields, X-ray with PII burned into the pixels and a DICOM header dump, handwritten note on a scan plus the same scan with an OCR layer, PII in metadata, attachments, sticky notes, white text, text under an image and a 2 pt footer, surnames that are cities or words, foreign patients (STP/ENI, passports, diacritics), US and UK documents |
+| `eNNN_` | 57 | edge cases: fax with the codice fiscale in character boxes, phone photo with perspective and handwritten PII, landscape table on a `/Rotate 90` page, PII in AcroForm fields, X-ray with PII burned into the pixels and a DICOM header dump, handwritten note on a scan plus the same scan with an OCR layer, PII in metadata, attachments, sticky notes, white text, text under an image and a 2 pt footer, surnames that are cities or words, foreign patients (STP/ENI, passports, diacritics), US and UK documents, and `e056_orientamento_ocr` (`tools/dataset/orientation.py`): a patient label pasted upside down, codice fiscale and date of birth in character boxes, a page scanned upside down and a page sent by fax |
 | `d3_` | 6 | hand-annotated worst cases: mixed scanned and native pages, phone photo, fax, hidden channels, US forms |
 
 The dataset is not regenerable as a whole (only the `NNN_` documents are), so
@@ -341,29 +383,38 @@ variant is complete.
 Plus hidden PII leaked (white text, metadata, deleted notes), eponyms wrongly
 redacted, verified documents and seconds per page.
 
-Results on the whole evaluation set (`just evaluate`: 200 documents x 3
-variants, 600 PDFs; 20/10/2026), with the AILAB NER service and, for
-comparison, the earlier in-pod GLiNER + GLiNER2 (commit `92ae6e5`, same run
-conditions; see "NER choice"):
+Results on the whole evaluation set (`just evaluate`: 201 documents x 3
+variants, 603 PDFs; 21/10/2026), with the AILAB NER service. In brackets the
+results before the OCR orientation and character-box changes (200 documents,
+20/10/2026, same NER service; see "OCR choice"):
 
 | | native | scan | scan + OCR layer |
 |---|---|---|---|
-| Recall (box, required PII) | 0.938 (GLiNER 0.948) | 0.909 (0.915) | 0.939 (0.944) |
-| Precision (box) | 0.959 (0.970) | 0.928 (0.938) | 0.884 (0.904) |
-| F1 (box) | 0.948 (0.959) | 0.918 (0.926) | 0.911 (0.924) |
-| Precision / recall / F1 (word) | 0.946 / 0.950 / 0.948 | 0.745 / 0.926 / 0.826 | 0.706 / 0.954 / 0.811 |
-| Accuracy (word) | 0.987 | 0.950 | 0.943 |
-| AP@0.5 (PII, label-agnostic) | 0.658 (0.689) | 0.576 (0.582) | 0.502 (0.508) |
-| mAP@0.5 (mean over PII types) | 0.670 (0.680) | 0.564 (0.565) | 0.559 (0.557) |
-| Hidden PII leaked (white text, metadata, OCR layers) | 0/324 (0/324) | n/a | 1/324 (0/324) |
-| Eponyms wrongly redacted | 54/415 (23/415) | 72/415 (44/415) | 100/415 (50/415) |
-| Documents passing verification | 200/200 | 200/200 | 200/200 |
-| Seconds per page (laptop RTX 5090, 24 GB) | 0.7 | 3.5 | 4.0 |
+| Recall (box, required PII) | 0.940 (0.938) | 0.931 (0.909) | 0.942 (0.939) |
+| Precision (box) | 0.960 (0.959) | 0.940 (0.928) | 0.893 (0.884) |
+| F1 (box) | 0.950 (0.948) | 0.935 (0.918) | 0.917 (0.911) |
+| Precision / recall / F1 (word) | 0.947 / 0.950 / 0.948 | 0.791 / 0.947 / 0.862 | 0.743 / 0.956 / 0.836 |
+| Accuracy (word) | 0.987 (0.987) | 0.961 (0.950) | 0.952 (0.943) |
+| AP@0.5 (PII, label-agnostic) | 0.657 (0.658) | 0.586 (0.576) | 0.504 (0.502) |
+| mAP@0.5 (mean over PII types) | 0.672 (0.670) | 0.587 (0.564) | 0.566 (0.559) |
+| Hidden PII leaked (white text, metadata, OCR layers) | 0/324 (0/324) | n/a | 1/324 (1/324) |
+| Eponyms wrongly redacted | 53/416 (54/415) | 75/416 (72/415) | 102/416 (100/415) |
+| Documents passing verification | 201/201 | 201/201 | 201/201 |
+| Seconds per page (laptop RTX 5090, 24 GB) | 0.6 | 3.0 | 3.9 |
+
+The OCR changes act on scans: on plain scans recall goes from 0.909 to 0.931
+(codice fiscale 93% to 98%, tessera sanitaria 91% to 100%, persons 94% to 96%)
+and precision rises too, because lines that were dropped or read as fragments
+are now read whole. On scans with a hidden OCR layer the gain is smaller: that
+layer already gave the text. Native pages are not read by OCR; their small
+changes are run-to-run variation of the NER service. Seconds per page depend on
+the load of the machine and of the NER service during the run, so they are not
+comparable between runs.
 
 The hidden value left is a foreign surname in a hidden channel of a scan
 ("Okafor"), which the NER service does not always find (see "Known limits").
 Run `just evaluate` again to refresh the table; `--split test` scores only the
-77 held-out documents.
+78 held-out documents.
 
 Reading the numbers:
 
@@ -408,6 +459,52 @@ Italian documents it drops the spaces after punctuation ("Salerno,15/03/2026",
 neighbours are no longer recognised. The official package also returns line
 boxes only, so word boxes have to be estimated.
 
+### Orientation and character boxes
+
+Two changes to how PP-OCRv5 is run, measured step by step on the scans of the
+evaluation set (box level; the first three rows on the 200 documents of
+20/10/2026, the last on the 201 documents of 21/10/2026), everything else
+identical. They were measured with the former in-pod OCR (PyMuPDF rendering,
+`ocr.py`) and then moved as they are to the OCR server (orientation) and to
+`cells.py` with the server's `POST /recognize` (character boxes); the current
+stack has not been measured with them yet:
+
+| | scan recall | scan precision | scan F1 | scan + OCR layer F1 |
+|---|---|---|---|---|
+| Before (line classifier on, boxes read by the page OCR) | 0.908 | 0.923 | 0.916 | 0.902 |
+| Line orientation classifier off, upside-down pages read turned | 0.920 | 0.938 | 0.929 | 0.916 |
+| Plus character boxes read again cleaned | 0.930 | 0.939 | 0.935 | 0.916 |
+| Plus upside-down lines read turned, guards on turned pages and valid codes | 0.931 | 0.940 | 0.935 | 0.917 |
+
+- **The line classifier.** RapidOCR passes every detected line to an
+  orientation classifier; on our scans it turned upright, perfectly legible
+  lines by 180 degrees ("Paz. Zanetti Carlo Alberto - nato il 30.08.1953 - Acc.
+  TC2025-118842", "la cugina Khady Sow (+39 389 0047215)"). The recogniser then
+  read noise (confidence about 0.35) and RapidOCR dropped the whole line under
+  its 0.5 threshold. Without the classifier the same lines are read at 0.98 to
+  0.99. Of the values missed on plain scans but found on the native twin, about
+  a fifth were lines never read at all; most of them are back.
+- **Character boxes.** About 80 of those values were codes in boxes broken by
+  specks. Read again as one clean word, the ten rows of the misses were all read
+  right; on the evaluation set codice fiscale goes from 94% to 98% and tessera
+  sanitaria from 91% to 100% on plain scans, and no document loses a code. A
+  first version replaced the page OCR also when only part of a row was found
+  (a lost border) and lost two codes the page OCR had read whole: the guards
+  described in "Text layers" come from that.
+- **Edge cases.** `e056_orientamento_ocr` holds what the evaluation set did not
+  have: a label pasted upside down, a page scanned upside down, a fax. Before
+  the changes its plain scan scored recall 0.80 (1 value of 7 on the upside-down
+  page, the label's record number and phone missed); now 1.0 on every variant,
+  and the fax page is never swapped for a turned reading.
+- **Cost.** Finding the box rows takes about 0.08 s per page; each row and each
+  low line read again is one recognition call on a small crop (CPU). A page is
+  read twice only when its mean confidence is below 0.8, which no page of the
+  evaluation set reaches (its lowest is 0.98).
+- **Side effects.** More lines read means more text to misjudge: eponyms wrongly
+  redacted on scans went from 70 to 75 of 415. On 60 upright pages the turned
+  re-reading of low lines added one piece of noise (a signature read as two
+  short words) and removed no word read with confidence.
+
 ### Speed
 
 - **Detector input size**: RapidOCR shrinks every image to a long side of 2000
@@ -438,6 +535,9 @@ Not adopted:
   to an engine like the one above and no word boxes.
 
 ## NER choice
+
+The measurements of this section were taken before the OCR changes of
+21/10/2026 (see "OCR choice"); the comparison holds, both NERs read the same text.
 
 NER is delegated to the AILAB NER service already used by the platform
 (`ANONPIP_NER_URL`): the pipeline sends the text of each page and keeps only
@@ -512,6 +612,15 @@ points at most. GLiNER2 (`gliner2`, Apache 2.0, Fastino) is loaded with
 - Pages with a box become images: the text stays searchable through an
   invisible layer, but it is no longer vector text, and native documents grow
   by about 45%.
+- Character boxes are found only when their ruling is dark and continuous:
+  light grey or red dropout grids, dashed boxes and the two fax prescriptions of
+  the evaluation set are left to the page OCR (24 codici fiscali still missed on
+  plain scans, measured with the former in-pod OCR). Boxes tuned on synthetic
+  forms with 14 to 15 pt cells.
+- Upside-down pages and lines are measured only on `e056_orientamento_ocr`;
+  a page whose upside-down reading looks confident (mean above 0.8) is not read
+  again turned. Text turned by angles other than 90 and 180 degrees is not
+  handled.
 - NER depends on the AILAB NER service: names it replaces as eponyms ("Corti",
   "Vittoria"), foreign names and dense lists of patients can be missed or
   redacted in part (see "NER choice"); the text of each page leaves the pod for

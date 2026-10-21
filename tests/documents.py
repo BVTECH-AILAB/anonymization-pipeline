@@ -397,6 +397,9 @@ class FakeReader(LiteparseReader):
     def _ocr_page(self, path: Path, pno: int) -> list[Word]:
         return group_lines(list(self.words.get(pno, [])))
 
+    def _scan_page(self, path: Path, pno: int) -> list[Word]:
+        return self._ocr_page(path, pno)
+
 
 class FakeNER:
     """NER stand-in: tags the given names as persons wherever they appear."""

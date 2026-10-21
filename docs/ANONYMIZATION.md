@@ -72,7 +72,7 @@ flowchart TD
     BLOCK -.-> EDIT
 ```
 
-### 1. Text layers (`services/anonymization/reader.py`, `layers.py`)
+### 1. Text layers (`anonymization_core/reader.py`, `layers.py`)
 
 Detection runs on plain text; redaction runs on the PDF. The link is the
 **text layer**: page text in which every character keeps its box on the page.
@@ -149,7 +149,7 @@ The visual detectors work on pypdfium2 page views (`pdf_pages.py`). Measured
 against the former PyMuPDF + RapidOCR pipeline, and what is left to do:
 [PDF_BACKEND_GAPS.md](PDF_BACKEND_GAPS.md).
 
-### 2. Detection (`services/anonymization/detect/`)
+### 2. Detection (`anonymization_core/detect/`)
 
 Recall first: one detector is enough to redact.
 
@@ -162,7 +162,7 @@ Recall first: one detector is enough to redact.
 | `ensemble.py` | Person spans lose leading titles, references without a name ("la paziente") are dropped, institution names become organisations. Document-wide propagation: every name token and every redacted identifier found anywhere is searched in every layer (spaced, glued, with initials, both orders, wrapped on two lines); words ambiguous on their own (three letters or fewer, acronyms, field labels, eponyms, scales, Italian municipalities: "Ugo", "HIV", "Masson", "Napoli") are spread only as part of the full name, never alone. Also found: a surname glued to an initial in capitals ("TOKAFOR"), a full name glued to what follows ("LindaMarshRX-550"), OCR confusions 0/o, 1/l, 5/s in names and numbers ("Adebay0", "389 555 773l"), and other codes of the numbering scheme of a found identifier ("RX-550-2913" -> "RX-550-2877"). Names and places with stray symbols or numbers-only words are OCR fragments; addresses from NER need the shape of an address; facility names are organisations. Overlapping spans merge into the most specific label |
 | `visual.py` | Barcodes and QR codes (zxing), embedded images (signature or stamp; grayscale clinical pictures left to OCR, colour photos redacted whole; header logos excluded), vector signatures and stamp frames on native pages, on scans the ink that OCR does not explain (signatures), stamps (frame, coloured ink, or a cluster of words around "OMCeO" / "Medico Chirurgo") |
 
-### 3. PII taxonomy (`services/anonymization/taxonomy.py`)
+### 3. PII taxonomy (`anonymization_core/taxonomy.py`)
 
 | Label | Kind | Redacted by default |
 |---|---|---|
@@ -200,7 +200,7 @@ What each label covers (detectors and reviewers apply the same definition):
 | `FACE` | Photos of the patient's face. |
 | `HANDWRITING` | Handwritten notes. |
 
-### 4. Redaction (`services/anonymization/release.py`)
+### 4. Redaction (`anonymization_core/release.py`)
 
 - **Propagation**: every occurrence of a redacted identifier or full name gets a
   box, also where detection missed it (glued to a label, broken by OCR, in a
@@ -218,7 +218,7 @@ What each label covers (detectors and reviewers apply the same definition):
   versions (a note added and deleted, for example).
 - Hand-drawn areas are snapped to the full box of every character they touch.
 
-### 5. Verification (`services/anonymization/verify.py`)
+### 5. Verification (`anonymization_core/verify.py`)
 
 A document is released only if all checks pass:
 
@@ -309,7 +309,7 @@ An action of the other mode answers 409 `MODE_NOT_SUPPORTED`.
    result; `GET /{id}/preview` again gives the new boxes and URLs.
 4. `GET /{id}/download/pdf` (or `docx`) once `verified` is true.
 
-### Fast mode (`services/anonymization/export_markdown.py`)
+### Fast mode (`anonymization_core/export_markdown.py`)
 
 The text is the one of the Word export (native layer, or OCR on scanned pages),
 line by line, with:

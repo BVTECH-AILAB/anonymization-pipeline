@@ -158,10 +158,30 @@ Developer tools are also available directly: `uv run python -m tools --help`
 
 ## Layout
 
+A uv workspace: the engine is a package of its own, the service depends on it.
+
 ```
-src/anonmyzation_pipeline/
+packages/anonymization-core/   the engine, a library: no web framework, never imports the
+                               service or tools/ (banned in its pyproject); own tests,
+                               coverage and lint config, so it can be extracted as is
+  src/anonymization_core/
+    config.py             PipelineConfig (plain values, no environment lookup)
+    factory.py            build_pipeline, load_models
+    errors.py             engine errors (the service maps them to HTTP)
+    convert.py            upload (PDF or image) -> PDF
+    document.py           releases (PDF + Word, Markdown), manual edits, page images
+    reader.py, layers.py, geometry.py, pdf_pages.py, pdf_text.py, cells.py
+                          text layers: pypdfium2 text, LiteParse + OCR server
+    pipeline.py           analysis: text layers -> findings -> boxes
+    release.py, verify.py flatten pages with boxes + pypdf rewrite, checks
+    export_docx.py, export_markdown.py, taxonomy.py
+    detect/               rules, labels (+ labels.yaml), ner, eponyms
+                          (+ eponyms.yaml), allowlist, ensemble, visual
+    testing.py            synthetic PDFs and fake engines (extra `testing`)
+  tests/                  engine tests: `just test-core`
+src/anonmyzation_pipeline/     the service
   main.py                 create_app(), lifespan (pipeline and job manager on app.state)
-  config.py               Settings (pydantic-settings, prefix ANONPIP_)
+  config.py               Settings (pydantic-settings, prefix ANONPIP_), pipeline_config()
   errors.py               service errors, Italian messages, engine error mapping
   logging_setup.py        setup_logging, log_event, request id
   privacy.py              hashing/masking, user-text redaction, log filter
@@ -169,19 +189,10 @@ src/anonmyzation_pipeline/
   api/anonymization.py    upload, SSE progress, edits, previews, downloads
   api/web.py              demo web page (ANONPIP_UI_ENABLED)
   services/jobs.py        job lifecycle around the engine: queue, SSE, expiry, limits, KPI events
-  services/anonymization/ engine, a library that never imports the service (ruff.toml bans it):
-                          config (PipelineConfig), factory (build_pipeline, load_models),
-                          errors, convert (upload -> PDF), document (releases, edits,
-                          page images), reader (pypdfium2 text, LiteParse + OCR server),
-                          layers, geometry, pdf_pages (pypdfium2 page views), pipeline,
-                          release (flatten pages with boxes + pypdf rewrite),
-                          verify, export_docx, export_markdown
-    detect/               rules, labels (+ labels.yaml), ner, eponyms
-                          (+ eponyms.yaml), allowlist, ensemble, visual
   web/static/index.html   the page
+tests/unit/               service tests: `just test-api` (no network, no model weights)
 tools/                    dev only, on the engine (never the service): dataset/ generator,
                           evaluate.py (dev/test split), viewer.py (evaluation UI)
-tests/unit/               no network, no model weights (fake OCR server and NER)
 ocr-server/               PP-OCRv5 (RapidOCR) behind the LiteParse OCR API (own pyproject, image)
 docs/                     ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
                           deploy handover

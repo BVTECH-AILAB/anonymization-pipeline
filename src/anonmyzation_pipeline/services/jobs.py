@@ -1,6 +1,8 @@
-"""Anonymization jobs: upload -> analysis -> redaction -> verification -> exports.
+"""Anonymization jobs: upload -> analysis -> release, around the engine.
 
-Two modes: ``accurate`` releases the redacted PDF (and a Word copy) and can be
+The engine (``services.anonymization``) converts, analyses, releases and edits a
+document; this module owns what a service adds: the queue, progress over
+Server-Sent Events, expiry, limits and the KPI events. Two modes: ``accurate`` releases the redacted PDF (and a Word copy) and can be
 edited by hand; ``fast`` skips the visual detectors and the PDF redaction and
 releases only the anonymized text as Markdown.
 
@@ -12,9 +14,7 @@ file names) is ever logged: events carry only ids, counters and timings.
 """
 
 import asyncio
-import io
 import logging
-import os
 import shutil
 import tempfile
 import threading
@@ -22,14 +22,11 @@ import time
 import uuid
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Annotated, Any, Literal
 
-import pypdfium2 as pdfium
-import pypdfium2.raw as pdfium_c
 from fastapi import Depends, Request
-from PIL import Image, ImageOps
 
 from anonmyzation_pipeline.config import Settings
 from anonmyzation_pipeline.errors import (
@@ -37,39 +34,25 @@ from anonmyzation_pipeline.errors import (
     JobNotFoundError,
     JobNotReadyError,
     ModeNotSupportedError,
-    PasswordProtectedError,
     ServiceUnavailableError,
     TooManyJobsError,
-    TooManyPagesError,
-    UnreadableDocumentError,
-    UnsupportedFormatError,
+    service_error,
 )
 from anonmyzation_pipeline.logging_setup import log_event
-from anonmyzation_pipeline.services.anonymization.export_docx import export_docx
-from anonmyzation_pipeline.services.anonymization.export_markdown import (
-    export_markdown,
+from anonmyzation_pipeline.services.anonymization.convert import upload_to_pdf
+from anonmyzation_pipeline.services.anonymization.document import (
+    apply_edits,
+    display_boxes,
+    release_markdown,
+    release_pdf,
+    render_png,
 )
-from anonmyzation_pipeline.services.anonymization.pdf_pages import pdfium_locked
-from anonmyzation_pipeline.services.anonymization.pipeline import (
-    Analysis,
-    Box,
-    Pipeline,
-    from_display,
-    to_display,
-)
-from anonmyzation_pipeline.services.anonymization.release import redact_and_verify
+from anonmyzation_pipeline.services.anonymization.errors import AnonymizationError
+from anonmyzation_pipeline.services.anonymization.pipeline import Analysis, Pipeline
 from anonmyzation_pipeline.services.anonymization.taxonomy import LABELS
-from anonmyzation_pipeline.services.anonymization.verify import (
-    verify_docx,
-    verify_markdown,
-)
 
 logger = logging.getLogger(__name__)
 
-PDF_SUFFIXES = {".pdf"}
-IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".tif", ".tiff"}
-# a phone photo is about 12-50 megapixels; larger frames or pages are refused before decoding
-MAX_FRAME_PIXELS = 120_000_000
 # Share of the progress bar covered by each step.
 WEIGHTS = {
     "read": (0, 45),
@@ -143,97 +126,6 @@ class Job:
         return out
 
 
-@pdfium_locked
-def to_pdf(
-    data: bytes, suffix: str, dest: Path, max_pages: int, render_dpi: int = 300
-) -> int:
-    """Store the upload as a PDF; images become one page per frame.
-
-    Args:
-        data: Uploaded bytes.
-        suffix: Lower-case file extension.
-        dest: Where to write the PDF.
-        max_pages: Page limit.
-        render_dpi: Resolution pages are rendered at (OCR): a page too large to
-            render at it is refused.
-
-    Returns:
-        Number of pages.
-
-    Raises:
-        UnsupportedFormatError: Unknown extension.
-        UnreadableDocumentError: The file cannot be parsed.
-        PasswordProtectedError: Encrypted PDF.
-        TooManyPagesError: More pages than allowed.
-    """
-    if suffix in PDF_SUFFIXES:
-        try:
-            doc = pdfium.PdfDocument(data)
-        except pdfium.PdfiumError as exc:
-            if getattr(exc, "err_code", None) == pdfium_c.FPDF_ERR_PASSWORD:
-                raise PasswordProtectedError() from exc
-            raise UnreadableDocumentError() from exc
-        except Exception as exc:
-            raise UnreadableDocumentError() from exc
-        try:
-            pages = len(doc)
-            if pages == 0:
-                raise UnreadableDocumentError()
-            if pages > max_pages:
-                raise TooManyPagesError()
-            scale = (render_dpi / 72) ** 2
-            try:
-                too_large = any(
-                    w * h * scale > MAX_FRAME_PIXELS
-                    for w, h in (doc.get_page_size(i) for i in range(pages))
-                )
-            except Exception as exc:
-                raise UnreadableDocumentError() from exc
-            if too_large:
-                raise UnreadableDocumentError()
-        finally:
-            doc.close()
-        dest.write_bytes(data)
-        return pages
-    if suffix not in IMAGE_SUFFIXES:
-        raise UnsupportedFormatError()
-    try:
-        img = Image.open(io.BytesIO(data))
-        n_frames = getattr(img, "n_frames", 1)
-    except Exception as exc:
-        raise UnreadableDocumentError() from exc
-    if n_frames > max_pages:
-        raise TooManyPagesError()
-    doc = pdfium.PdfDocument.new()
-    try:
-        try:
-            for i in range(n_frames):
-                img.seek(i)
-                # size is read from the header: refuse before decoding (decompression bomb)
-                if img.width * img.height > MAX_FRAME_PIXELS:
-                    raise UnreadableDocumentError()
-                # phone photos: apply the EXIF rotation before anything else
-                frame = ImageOps.exif_transpose(img.copy()).convert("RGB")
-                dpi = (frame.info.get("dpi") or (200, 200))[0] or 200
-                buf = io.BytesIO()
-                frame.save(buf, "JPEG", quality=92)
-                width, height = frame.width * 72 / dpi, frame.height * 72 / dpi
-                page = doc.new_page(width, height)
-                image = pdfium.PdfImage.new(doc)
-                image.load_jpeg(io.BytesIO(buf.getvalue()), inline=True)
-                image.set_matrix(pdfium.PdfMatrix().scale(width, height))
-                page.insert_obj(image)
-                page.gen_content()
-        except UnreadableDocumentError:
-            raise
-        except Exception as exc:
-            raise UnreadableDocumentError() from exc
-        doc.save(dest)
-    finally:
-        doc.close()
-    return n_frames
-
-
 class JobManager:
     """Creates, runs, edits and expires anonymization jobs.
 
@@ -282,13 +174,16 @@ class JobManager:
         job_dir = self.work_dir / jid
         job_dir.mkdir(mode=0o700)
         try:
-            pages = to_pdf(
+            pages = upload_to_pdf(
                 data,
                 suffix,
                 job_dir / "original.pdf",
                 self.settings.max_pages,
                 self.settings.ocr_dpi,
             )
+        except AnonymizationError as exc:
+            shutil.rmtree(job_dir, ignore_errors=True)
+            raise service_error(exc) from exc
         except Exception:
             shutil.rmtree(job_dir, ignore_errors=True)
             raise
@@ -490,53 +385,28 @@ class JobManager:
         analysis = job.analysis
         if analysis is None:
             raise JobNotReadyError()
-        report = self._progress(job)
         job.verified = False
-        pdf_next = job.anonymized.with_name("anonymized.next.pdf")
-        docx_next = job.docx.with_name("anonymized.next.docx")
-        report("redact", 0)
-        release = redact_and_verify(
+        release = release_pdf(
             job.original,
             analysis,
-            pdf_next,
+            job.anonymized,
+            job.docx,
             style=self.settings.redaction_style,
             tol=self.settings.verify_pixel_tolerance,
+            progress=self._progress(job),
         )
-        report("preview", 0)
-        t1 = time.perf_counter()
-        export_docx(analysis, docx_next)
-        docx_issues = verify_docx(
-            docx_next, analysis
-        )  # the Word file is downloadable too
-        verification = release.seconds["verification"] + time.perf_counter() - t1
-        os.replace(pdf_next, job.anonymized)
-        os.replace(docx_next, job.docx)
         if edited:
             # only now: a preview cached under the new count shows the new file
             job.edits += 1
         for cached in job.dir.glob("anonymized-*.png"):
             cached.unlink()
-        timings = timings | {
-            "redaction": release.seconds["redaction"],
-            "verification": round(verification, 2),
-        }
-        rep, flattened = release.report, release.flattened
-        ok = rep.ok and not docx_issues
-        job.verified = ok
-        issues = rep.issues + docx_issues
-        job.result = self._result(job, analysis, t_start, timings, issues) | {
-            "verified": ok,
+        timings = timings | release.seconds
+        job.verified = release.verified
+        job.result = self._result(job, analysis, t_start, timings, release.issues) | {
+            "verified": release.verified,
             # pages released as images: a surgical check failed and the page was rendered
-            "flattened_pages": [p + 1 for p in flattened],
-            # boxes as shown on the rendered pages (page space differs on rotated pages)
-            "boxes": [
-                {
-                    "id": i,
-                    **asdict(b),
-                    "rect": to_display(b.rect, analysis.pages[b.page]),
-                }
-                for i, b in enumerate(analysis.boxes)
-            ],
+            "flattened_pages": [p + 1 for p in release.flattened],
+            "boxes": display_boxes(analysis),
         }
         job.percent, job.status = 100, "done"
         self._publish(job)
@@ -546,15 +416,10 @@ class JobManager:
         analysis = job.analysis
         if analysis is None:
             raise JobNotReadyError()
-        self._progress(job)("export", 0)
-        t1 = time.perf_counter()
-        md_next = job.markdown.with_name("anonymized.next.md")
-        export_markdown(analysis, md_next)
-        issues = verify_markdown(md_next, analysis)
-        os.replace(md_next, job.markdown)
-        timings = timings | {"verification": round(time.perf_counter() - t1, 2)}
-        job.verified = not issues
-        job.result = self._result(job, analysis, t_start, timings, issues)
+        release = release_markdown(analysis, job.markdown, self._progress(job))
+        timings = timings | {"verification": release.seconds}
+        job.verified = release.verified
+        job.result = self._result(job, analysis, t_start, timings, release.issues)
         job.percent, job.status = 100, "done"
         self._publish(job)
 
@@ -641,45 +506,14 @@ class JobManager:
         if analysis is None or job.result is None:
             raise JobNotReadyError()
         t0 = time.perf_counter()
-        n_pages = len(analysis.pages)
-        for i in remove:
-            if 0 <= i < len(analysis.boxes):
-                analysis.boxes[i].redact = False
-                analysis.boxes[i].sources = sorted(
-                    set(analysis.boxes[i].sources) | {"removed-by-user"}
-                )
-        for i in restore:
-            if 0 <= i < len(analysis.boxes):
-                analysis.boxes[i].redact = True
-        added = 0
-        for page, rect in add:
-            if 0 <= page < n_pages:
-                # drawn on the rendered page: back to page space
-                snapped = analysis.snap(page, from_display(rect, analysis.pages[page]))
-                analysis.boxes.append(
-                    Box(
-                        page,
-                        snapped,
-                        "PERSON",
-                        "",
-                        1.0,
-                        ["manual-area"],
-                        "manual",
-                        True,
-                    )
-                )
-                added += 1
-        found = analysis.search(search) if search else []
-        analysis.boxes += found
+        outcome = apply_edits(analysis, add, remove, restore, search)
         timings = dict(job.result["timings"])
         try:
             self._finish(job, t0, timings, edited=True)
         except Cancelled:
             raise JobNotFoundError() from None  # deleted while the edit was running
         except Exception as exc:
-            # nothing released: the job stays blocked and says so
-            for tmp in job.dir.glob("anonymized.next.*"):
-                tmp.unlink(missing_ok=True)
+            # nothing released (the engine leaves no partial file): the job stays blocked and says so
             job.result = job.result | {"verified": False}
             job.percent, job.status = 100, "done"
             self._publish(job)
@@ -687,38 +521,38 @@ class JobManager:
             raise
         result = job.result
         result["edit_seconds"] = round(time.perf_counter() - t0, 2)
-        result["search_hits"] = len(found)
+        result["search_hits"] = outcome.search_hits
         log_event(
             logger,
             "anonymization_edited",
             {
                 "job_id": job.id,
-                "added": added,
+                "added": outcome.added,
                 "removed": len(remove),
                 "restored": len(restore),
-                "search_hits": len(found),
+                "search_hits": outcome.search_hits,
                 "verified": job.verified,
                 "seconds": result["edit_seconds"],
             },
         )
         return result
 
-    @pdfium_locked
     def render_page(self, jid: str, which: str, page: int, dpi: int) -> Path:
-        """PNG of one page of the original or the anonymized document (cached)."""
+        """PNG of one page of the original or the anonymized document (cached).
+
+        Raises:
+            JobNotFoundError: Unknown job, or ``page`` outside the document.
+        """
         job = self.accurate_job(jid) if which == "anonymized" else self.ready_job(jid)
         # the anonymized version changes with every edit: the edit count is in its name
         version = job.edits if which == "anonymized" else 0
         cache = job.dir / f"{which}-{page}-{dpi}-{version}.png"
         if not cache.exists():
             src = job.original if which == "original" else job.anonymized
-            doc = pdfium.PdfDocument(src)
             try:
-                if not 0 <= page < len(doc):
-                    raise JobNotFoundError()
-                doc[page].render(scale=dpi / 72).to_pil().save(cache, "PNG")
-            finally:
-                doc.close()
+                render_png(src, page, dpi, cache)
+            except AnonymizationError as exc:
+                raise service_error(exc) from exc
         return cache
 
     def preview(self, jid: str) -> dict[str, Any]:

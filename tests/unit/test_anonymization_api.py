@@ -197,7 +197,10 @@ def test_a_failed_edit_leaves_the_job_blocked_and_clean(
     def broken(*args, **kwargs):
         raise RuntimeError("redaction failed")
 
-    monkeypatch.setattr("anonmyzation_pipeline.services.jobs.redact_and_verify", broken)
+    monkeypatch.setattr(
+        "anonmyzation_pipeline.services.anonymization.document.redact_and_verify",
+        broken,
+    )
     response = client.post(
         f"/anonymizations/{created['id']}/edits", json={"remove": [0]}
     )
@@ -492,7 +495,7 @@ def test_fast_markdown_refused_when_a_value_survives(
     client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setattr(
-        "anonmyzation_pipeline.services.jobs.verify_markdown",
+        "anonmyzation_pipeline.services.anonymization.document.verify_markdown",
         lambda *_: ["value still in the Markdown export: 'x'"],
     )
     created = upload(client, letter, mode="fast")

@@ -67,7 +67,7 @@ da `ocr-server/Dockerfile`. Lo chiama solo questo servizio: nessuna esposizione.
 | Immagine | `harbor.agenas.oci/agenas/paddle-ocr-server` (build arg `OCR_EXTRA=gpu` su nodo GPU, `cpu` altrimenti) |
 | Porta | `8829` (nome `ocr`), Service `paddle-ocr` nello stesso namespace |
 | Liveness / readiness | `GET /health` (503 finché i modelli non sono caricati) |
-| Risorse | con GPU: 1 GPU NVIDIA (picco circa 4 GB per una pagina a 300 dpi, 0,3 GB a riposo: la memoria viene rilasciata dopo ogni lettura; tetto opzionale `OCRSRV_GPU_MEM_LIMIT_MB`, almeno 4500 se usato), requests 1 CPU / 3Gi, limits 2 CPU / 6Gi. Può condividere la GPU con il servizio (NER circa 4 GB) |
+| Risorse | con GPU: 1 GPU NVIDIA (picco circa 4 GB per una pagina a 300 dpi, 0,3 GB a riposo: la memoria viene rilasciata dopo ogni lettura; tetto opzionale `OCRSRV_GPU_MEM_LIMIT_MB`, almeno 4500 se usato), requests 1 CPU / 3Gi, limits 2 CPU / 6Gi. Il servizio non usa la GPU (il NER gira nel servizio AILAB) |
 | Modelli | volume su `/models`, cartella `/models/rapidocr` (`OCRSRV_MODEL_DIR`, già nell'immagine) con `ch_PP-OCRv5_det_server.onnx`, `latin_PP-OCRv5_rec_mobile.onnx` e `ch_ppocr_mobile_v2.0_cls_mobile.onnx` (circa 90 MB). il server li carica all'avvio leggendo un'immagine di prova e, se mancano, li scarica: popolare il volume con un primo avvio con internet, poi copiarlo. Senza modelli e senza internet il container termina all'avvio |
 | Variabili | `OCRSRV_MARGIN_PT` (`60`), `OCRSRV_MARGIN_MIN_SCORE` (`0.5`), `OCRSRV_MAX_UPLOAD_MB` (`40`), `OCRSRV_DEVICE` (`auto`: GPU se utilizzabile, altrimenti CPU con un WARNING all'avvio; `gpu`: senza GPU il container termina; `cpu`), `OCRSRV_GPU_MEM_LIMIT_MB` (`0` = nessun tetto, in MiB), `OCRSRV_LOG_LEVEL` (`INFO`); nessun segreto |
 | Dati | riceve immagini di pagine (dati sanitari): non scrive su disco e non registra il testo letto |
@@ -76,7 +76,6 @@ da `ocr-server/Dockerfile`. Lo chiama solo questo servizio: nessuna esposizione.
 
 1. **Namespace**: cartella `<namespace>/` in `oke-staging` e `oke-prod` con `ns.yaml`.
 2. **Database**: non serve.
-3. **Modelli e GPU**: un nodo con GPU NVIDIA (o nodi CPU, più lenti) e un volume
 3. **Modelli e GPU**: nessuno per questo servizio. La GPU (opzionale) e il volume
    dei modelli servono solo al servizio `paddle-ocr` (sezione sotto).
 4. **Segreti**: nessuno.

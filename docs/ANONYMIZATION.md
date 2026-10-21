@@ -235,7 +235,7 @@ Errors are `ServiceError` subclasses with generic Italian messages (`errors.py`)
 
 ## Jobs and privacy (`services/jobs.py`)
 
-- One job at a time (single worker: OCR uses the GPU); edits go
+- One job at a time (single worker); edits go
   through the same worker.
 - Documents live in a private folder (`0700`) only while the job exists; they
   are deleted after `ANONPIP_JOB_TTL_MINUTES`, on `DELETE`, on cancel and on shutdown.
@@ -413,9 +413,10 @@ boxes only, so word boxes have to be estimated.
 - **Detector input size**: RapidOCR shrinks every image to a long side of 2000
   px before detection (its `Global.max_side_len`), so a 300 dpi A4 page reaches
   the detector at 1984 x 1408.
-- Measured on 12 documents per variant (RTX 5070 8 GB, OCR server and GLiNER NER
-  on the same GPU): 0.7 s per native page, 2.4 s per scanned page, 2.5 s per scan
-  with an OCR layer, verification included.
+- Measured on 12 documents per variant before the switch to the AILAB NER
+  service (RTX 5070 8 GB, OCR server and in-pod GLiNER NER on the same GPU):
+  0.7 s per native page, 2.4 s per scanned page, 2.5 s per scan with an OCR
+  layer, verification included.
 - Native pages are not read by OCR, except the pictures on them (X-rays), whose
   burned-in text is read.
 - **GPU memory**: only the OCR server uses a GPU; it peaks at about 4 GB per
@@ -489,14 +490,14 @@ part of the pipeline identical (75% coverage, laptop RTX 5070):
 | `nvidia/gliner-PII` | 0.920 | 0.959 | 0.939 | 0.628 / 0.668 | 0.73 |
 | `openai/privacy-filter` (mainly English) | 0.925 | 0.940 | 0.933 | 0.616 / 0.638 | 1.36 |
 
-| **GLiNER + GLiNER2 together** (default) | **0.948** | 0.961 | **0.954** | 0.654 / 0.653 | 0.7 |
+| **GLiNER + GLiNER2 together** (default at the time) | **0.948** | 0.961 | **0.954** | 0.654 / 0.653 | 0.7 |
 
 No single model beats GLiNER on F1; the two best together find 1.1 points more
 recall than GLiNER alone (17% fewer missed values) at the same F1: the extra
 boxes are over-redaction, the safe error. Both are multilingual: on the English
 documents of the dev split they tie the best (recall 0.964), while the
-Italian-only model drops there (0.945). `ANONPIP_NER2_ENABLED=false` keeps
-GLiNER only (precision 0.973, recall 0.937). Recall depends far more on the
+Italian-only model drops there (0.945). GLiNER alone had precision 0.973 and
+recall 0.937. Recall depends far more on the
 rules, the labels and propagation than on the NER: the models differ by 2
 points at most. GLiNER2 (`gliner2`, Apache 2.0, Fastino) is loaded with
 `from_pretrained`, like GLiNER; its API client for Fastino's cloud is never used.

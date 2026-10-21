@@ -8,6 +8,29 @@ members = [
     "anonymization-core",
 ]
 
+[manifest.dependency-groups]
+dev = [
+    { name = "anonmyzation-pipeline", editable = "apps/api" },
+    { name = "anonymization-core", extras = ["testing"], editable = "packages/anonymization-core" },
+    { name = "faker", specifier = ">=30.0" },
+    { name = "pip-audit", specifier = ">=2.7" },
+    { name = "pre-commit", specifier = ">=4.0" },
+    { name = "pycocotools", specifier = ">=2.0.11" },
+    { name = "pytest", specifier = ">=8.3" },
+    { name = "pytest-asyncio", specifier = ">=0.25" },
+    { name = "pytest-cov", specifier = ">=6.0" },
+    { name = "python-barcode", specifier = ">=0.15" },
+    { name = "qrcode", specifier = ">=8.0" },
+    { name = "reportlab", specifier = ">=4.2" },
+    { name = "ruff", specifier = ">=0.15" },
+    { name = "scikit-learn", specifier = ">=1.9.1" },
+    { name = "torch", specifier = ">=2.7", index = "https://download.pytorch.org/whl/cu128" },
+    { name = "torchmetrics", specifier = ">=1.9.0" },
+    { name = "torchvision", specifier = ">=0.22", index = "https://download.pytorch.org/whl/cu128" },
+    { name = "ty", specifier = ">=0.0.1a0" },
+    { name = "typer", specifier = ">=0.27.3" },
+]
+
 [[package]]
 name = "annotated-doc"
 version = "0.0.5"
@@ -29,7 +52,7 @@ wheels = [
 [[package]]
 name = "anonmyzation-pipeline"
 version = "0.1.0"
-source = { editable = "." }
+source = { editable = "apps/api" }
 dependencies = [
     { name = "anonymization-core" },
     { name = "fastapi" },
@@ -42,24 +65,13 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "anonymization-core", extra = ["testing"] },
-    { name = "faker" },
     { name = "httpx" },
     { name = "pip-audit" },
-    { name = "pre-commit" },
-    { name = "pycocotools" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
-    { name = "python-barcode" },
-    { name = "qrcode" },
-    { name = "reportlab" },
     { name = "ruff" },
-    { name = "scikit-learn" },
-    { name = "torch" },
-    { name = "torchmetrics" },
-    { name = "torchvision" },
     { name = "ty" },
-    { name = "typer" },
 ]
 
 [package.metadata]
@@ -75,24 +87,13 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "anonymization-core", extras = ["testing"], editable = "packages/anonymization-core" },
-    { name = "faker", specifier = ">=30.0" },
     { name = "httpx", specifier = ">=0.28" },
     { name = "pip-audit", specifier = ">=2.7" },
-    { name = "pre-commit", specifier = ">=4.0" },
-    { name = "pycocotools", specifier = ">=2.0.11" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "pytest-asyncio", specifier = ">=0.25" },
     { name = "pytest-cov", specifier = ">=6.0" },
-    { name = "python-barcode", specifier = ">=0.15" },
-    { name = "qrcode", specifier = ">=8.0" },
-    { name = "reportlab", specifier = ">=4.2" },
     { name = "ruff", specifier = ">=0.15" },
-    { name = "scikit-learn", specifier = ">=1.9.1" },
-    { name = "torch", specifier = ">=2.7", index = "https://download.pytorch.org/whl/cu128" },
-    { name = "torchmetrics", specifier = ">=1.9.0" },
-    { name = "torchvision", specifier = ">=0.22", index = "https://download.pytorch.org/whl/cu128" },
     { name = "ty", specifier = ">=0.0.1a0" },
-    { name = "typer", specifier = ">=0.27.3" },
 ]
 
 [[package]]

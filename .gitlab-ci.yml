@@ -69,8 +69,9 @@ lint:
       "uv sync --frozen &&
       uv run ruff check &&
       uv run ruff format --check &&
-      uv run ty check src tests &&
-      cd packages/anonymization-core && uv run ty check src tests"
+      uv run ty check tests &&
+      (cd packages/anonymization-core && uv run ty check src tests) &&
+      (cd apps/api && uv run ty check src tests)"
 
 tests:
   extends: .quality-base
@@ -81,21 +82,21 @@ tests:
       -e HOME=/tmp -e UV_PROJECT_ENVIRONMENT=/tmp/.venv -e UV_CACHE_DIR=/tmp/uv-cache -e CI=true
       "$UV_IMAGE" sh -c
       "uv sync --frozen &&
-      uv run pytest --cov --cov-report=xml:coverage.xml --junitxml=junit.xml -q &&
-      cd packages/anonymization-core &&
-      uv run pytest --cov --cov-report=xml:coverage.xml --junitxml=junit.xml -q"
+      uv run pytest -q &&
+      (cd packages/anonymization-core && uv run pytest --cov --cov-report=xml:coverage.xml --junitxml=junit.xml -q) &&
+      (cd apps/api && uv run pytest --cov --cov-report=xml:coverage.xml --junitxml=junit.xml -q)"
     # Paths are recorded as seen inside the container: rewrite them for Sonar.
-    - sed -i "s|/app/|$CI_PROJECT_DIR/|g" coverage.xml packages/anonymization-core/coverage.xml
+    - sed -i "s|/app/|$CI_PROJECT_DIR/|g" packages/anonymization-core/coverage.xml apps/api/coverage.xml
   artifacts:
     when: always
     expire_in: 1 day
     paths:
-      - coverage.xml
       - packages/anonymization-core/coverage.xml
+      - apps/api/coverage.xml
     reports:
       junit:
-        - junit.xml
         - packages/anonymization-core/junit.xml
+        - apps/api/junit.xml
 
 # Analysis only: allow_failure so an unreachable Sonar never blocks the pipeline.
 build-sonar:
@@ -125,7 +126,7 @@ build-image:
     - if: $CI_COMMIT_BRANCH == "dev"
   script:
     - echo "Build $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX"
-    - docker build --target runtime -t $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX .
+    - docker build -f apps/api/Dockerfile --target runtime -t $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX .
     - docker push $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX
 
 download-harbor-csv:

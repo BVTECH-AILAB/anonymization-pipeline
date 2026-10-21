@@ -22,10 +22,11 @@ dataset_*
 reports
 dataset*.zip
 .claude
-# development and CI only: the image needs src/, packages/*/src, the pyproject.toml files,
-# uv.lock and scripts/entrypoint.sh
+# development and CI only: the image needs the pyproject.toml files, uv.lock,
+# packages/*/src, apps/api/src and apps/api/scripts/entrypoint.sh
 tests
 packages/*/tests
+apps/*/tests
 scripts/start.sh
 justfile
 README.md

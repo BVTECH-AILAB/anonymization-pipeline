@@ -1,23 +1,14 @@
-[project]
-name = "anonmyzation-pipeline"
-version = "0.1.0"
-description = "AGENAS MIA service: surgical anonymization of clinical documents (C1), generated from agenas-python-template"
-requires-python = ">=3.12,<3.13"
-dependencies = [
-    "fastapi>=0.115",
-    "pydantic>=2.10",
-    "pydantic-settings>=2.7",
-    "uvicorn[standard]>=0.34",
-    "python-multipart>=0.0.20",
-    # the engine: packages/anonymization-core
-    "anonymization-core",
-]
+# uv workspace root (not a package): one lock for every member.
+#   packages/anonymization-core  the engine (library)
+#   apps/api                     the service (image anonmyzation-pipeline)
+# The dev group below is the developer environment: every member plus tools/.
+[tool.uv.workspace]
+members = ["packages/*", "apps/api"]
 
 [dependency-groups]
 dev = [
-    # synthetic PDFs and fake engines shared with the engine tests
+    "anonmyzation-pipeline",
     "anonymization-core[testing]",
-    "httpx>=0.28",
     "pip-audit>=2.7",
     "pre-commit>=4.0",
     "pytest>=8.3",
@@ -45,31 +36,18 @@ name = "pytorch-cu128"
 url = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
-[tool.uv.workspace]
-members = ["packages/*"]
-
 [tool.uv.sources]
+anonmyzation-pipeline = { workspace = true }
 anonymization-core = { workspace = true }
 torch = { index = "pytorch-cu128" }
 torchvision = { index = "pytorch-cu128" }
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/anonmyzation_pipeline"]
-
+# tools/ and its tests (tests/tools); every member has its own config.
 [tool.ruff]
 target-version = "py312"
-src = ["src", "tests", "tools"]
+src = ["tests", "tools"]
 
 [tool.ruff.lint]
-# Same base as ai-platform / llm-gateway, plus:
-#   UP  - modern 3.12 syntax
-#   T20 - no print(): everything goes through logging
-#   S   - bandit security checks
-#   PLC0415 - imports at module level only (CLAUDE.md)
 select = ["E", "F", "B", "I", "ARG", "UP", "T20", "S", "TID251", "PLC0415"]
 ignore = ["E501"]
 
@@ -84,15 +62,4 @@ ignore = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-asyncio_mode = "auto"
-asyncio_default_fixture_loop_scope = "function"
 addopts = "--strict-markers"
-
-[tool.coverage.run]
-source = ["anonmyzation_pipeline"]
-branch = true
-
-[tool.coverage.report]
-fail_under = 80
-show_missing = true
-skip_covered = true

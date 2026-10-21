@@ -72,6 +72,7 @@ ocr-server-test extra="gpu":
 # --- Quality (ruff picks each package's own config: engine boundaries included) ---
 
 core := "packages/anonymization-core"
+api := "apps/api"
 
 format:
     uv run ruff format
@@ -80,8 +81,9 @@ fix:
     uv run ruff check --fix
 
 types:
-    uv run ty check src tests
     cd {{core}} && uv run ty check src tests
+    cd {{api}} && uv run ty check src tests
+    uv run ty check tests
 
 # Fix, format and type-check: run before every commit
 lint: fix format types
@@ -90,26 +92,33 @@ lint: fix format types
 check:
     uv run ruff check
     uv run ruff format --check
-    uv run ty check src tests
     cd {{core}} && uv run ty check src tests
+    cd {{api}} && uv run ty check src tests
+    uv run ty check tests
 
 # --- Tests ---
 
-# Unit tests of the engine and of the service (no network, no model weights)
-test: test-core test-api
+# Unit tests of the engine, the service and the tools (no network, no model weights)
+test: test-core test-api test-tools
 
 # Engine tests alone, in its package: `just test-core -k release`
 test-core *args:
     cd {{core}} && uv run pytest {{args}}
 
-# Service and tools tests: `just test-api -k edits`
+# Service tests alone, in its package: `just test-api -k edits`
 test-api *args:
+    cd {{api}} && uv run pytest {{args}}
+
+# tools/ tests (tests/tools)
+test-tools *args:
     uv run pytest {{args}}
 
-# Both suites with coverage (each fails under 80%): coverage.xml and junit.xml per package, for Sonar
+# Engine and service with coverage (each fails under 80%), then the tools tests;
+# coverage.xml and junit.xml per package, for Sonar
 test-cov:
     cd {{core}} && uv run pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=junit.xml
-    uv run pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=junit.xml
+    cd {{api}} && uv run pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=junit.xml
+    uv run pytest -q
 
 # Known vulnerabilities in the dependencies
 audit:

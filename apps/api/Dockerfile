@@ -1,3 +1,6 @@
+# The service image. Build context: the repository root (the engine is a
+# workspace member): docker build -f apps/api/Dockerfile .
+# Only this package and its dependencies are installed (--package): never tools/.
 # Stages:
 #   dev      - used by docker-compose (dev dependencies, editable install, --reload)
 #   runtime  - the image CI builds and pushes to Harbor (last stage = default target)
@@ -18,10 +21,11 @@ WORKDIR /app
 FROM base AS dev
 COPY pyproject.toml uv.lock ./
 COPY packages/anonymization-core/pyproject.toml ./packages/anonymization-core/
-RUN uv sync --frozen --no-install-workspace
+COPY apps/api/pyproject.toml ./apps/api/
+RUN uv sync --frozen --package anonmyzation-pipeline --no-install-workspace
 COPY packages ./packages
-COPY src ./src
-RUN uv sync --frozen && chown -R appuser:appuser /app
+COPY apps/api/src ./apps/api/src
+RUN uv sync --frozen --package anonmyzation-pipeline && chown -R appuser:appuser /app
 ENV PATH="/app/.venv/bin:$PATH"
 USER appuser
 EXPOSE 8000
@@ -31,10 +35,11 @@ CMD ["uvicorn", "anonmyzation_pipeline.main:app", "--host", "0.0.0.0", "--port",
 FROM base AS builder
 COPY pyproject.toml uv.lock ./
 COPY packages/anonymization-core/pyproject.toml ./packages/anonymization-core/
-RUN uv sync --frozen --no-dev --no-install-workspace
+COPY apps/api/pyproject.toml ./apps/api/
+RUN uv sync --frozen --package anonmyzation-pipeline --no-dev --no-install-workspace
 COPY packages ./packages
-COPY src ./src
-RUN uv sync --frozen --no-dev --no-editable
+COPY apps/api/src ./apps/api/src
+RUN uv sync --frozen --package anonmyzation-pipeline --no-dev --no-editable
 
 FROM python:3.12-slim AS runtime
 RUN pip install --no-cache-dir --upgrade "pip>=25.3" \
@@ -42,7 +47,7 @@ RUN pip install --no-cache-dir --upgrade "pip>=25.3" \
     && useradd --uid 1000 --create-home appuser
 WORKDIR /app
 COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
-COPY --chown=appuser:appuser scripts/entrypoint.sh ./entrypoint.sh
+COPY --chown=appuser:appuser apps/api/scripts/entrypoint.sh ./entrypoint.sh
 # No model weights here: OCR runs in the OCR server (ocr-server/), NER in the AILAB NER service.
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \

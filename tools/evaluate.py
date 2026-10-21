@@ -20,6 +20,7 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
+from anonmyzation_pipeline.config import Settings, get_settings
 from anonymization_core.factory import (
     build_pipeline,
     load_models,
@@ -33,7 +34,6 @@ from anonymization_core.geometry import (
 from anonymization_core.release import redact_and_verify
 from anonymization_core.taxonomy import LABELS
 
-from anonmyzation_pipeline.config import Settings, get_settings
 from tools.dataset.scan import transform_rect
 from tools.metrics import DetectionMAP, binary_scores, coverage, word_labels
 from tools.pdf import document_words, file_content

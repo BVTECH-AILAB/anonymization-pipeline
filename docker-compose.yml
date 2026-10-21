@@ -8,6 +8,7 @@ services:
   app:
     build:
       context: .
+      dockerfile: apps/api/Dockerfile
       target: dev
     environment:
       ANONPIP_ENVIRONMENT: ${ANONPIP_ENVIRONMENT:-local}
@@ -40,14 +41,14 @@ services:
     ports:
       - "127.0.0.1:${APP_PORT:-8000}:8000"
     volumes:
-      - ./src:/app/src
+      - ./apps/api/src:/app/apps/api/src
       - ./packages:/app/packages
-      - ./tests:/app/tests
-      - ./pyproject.toml:/app/pyproject.toml:ro
+      - ./apps/api/tests:/app/apps/api/tests
+      - ./apps/api/pyproject.toml:/app/apps/api/pyproject.toml:ro
     depends_on:
       - paddle-ocr
     command: >
-      uvicorn anonmyzation_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src --reload-dir /app/packages
+      uvicorn anonmyzation_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/apps/api/src --reload-dir /app/packages
 
   # OCR server (PP-OCRv5 on RapidOCR, LiteParse OCR API): the service reads scanned pages through it
   paddle-ocr:

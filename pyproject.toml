@@ -1,20 +1,18 @@
 # uv workspace root (not a package): one lock for every member.
 #   packages/anonymization-core  the engine (library)
 #   apps/api                     the service (image anonmyzation-pipeline)
-#   apps/eval                    synthetic dataset, evaluation, viewer (dev only)
-# The dev group below is the developer environment: every member and the
-# repository-wide tools (pre-commit, audit). Each member has its own lint,
-# type, test and coverage configuration.
+# The OCR server (services/ocr-server) has its own lock. The dev group below is
+# the developer environment: every member and the repository-wide tools
+# (pre-commit, audit). Each member has its own lint, type, test and coverage
+# configuration.
 [tool.uv.workspace]
-# apps/web is not a Python package: members are listed explicitly
-members = ["packages/*", "apps/api", "apps/eval"]
+members = ["packages/*", "apps/api"]
 # own lock and ONNX Runtime extras (cpu | gpu): kept out of the workspace
 exclude = ["services/*"]
 
 [dependency-groups]
 dev = [
     "anonmyzation-pipeline",
-    "anonymization-eval",
     "anonymization-core[testing]",
     "httpx>=0.28",
     "pip-audit>=2.7",
@@ -26,15 +24,6 @@ dev = [
     "ty>=0.0.1a0",
 ]
 
-# PyTorch with CUDA 12.8 (Blackwell GPUs included); the same wheels run on CPU.
-[[tool.uv.index]]
-name = "pytorch-cu128"
-url = "https://download.pytorch.org/whl/cu128"
-explicit = true
-
 [tool.uv.sources]
 anonmyzation-pipeline = { workspace = true }
 anonymization-core = { workspace = true }
-anonymization-eval = { workspace = true }
-torch = { index = "pytorch-cu128" }
-torchvision = { index = "pytorch-cu128" }

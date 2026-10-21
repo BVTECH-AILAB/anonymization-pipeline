@@ -79,16 +79,5 @@ services:
     #           count: 1
     #           capabilities: [gpu]
 
-  # Demo page (apps/web): nginx serves it and proxies /anonymizations to the API
-  web:
-    build:
-      context: ./apps/web
-    environment:
-      API_UPSTREAM: http://app:8000
-    ports:
-      - "127.0.0.1:${WEB_PORT:-8080}:8080"
-    depends_on:
-      - app
-
 volumes:
   models:

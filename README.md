@@ -19,8 +19,12 @@ releases the redacted PDF, reviewable side by side and editable by hand; `fast`
 releases only the anonymized text as Markdown, with page delimiters, tables
 as Markdown tables and `[IMMAGINE]` placeholders.
 
-How the algorithm works, the API, the PII taxonomy, the synthetic dataset and
-the evaluation results: **[docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)**.
+How the algorithm works, the API, the PII taxonomy and the evaluation results:
+**[docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)**.
+
+This branch holds the backend only: the engine, the API and the OCR server.
+The demo page (`apps/web`) and the evaluation (`apps/eval`: synthetic dataset,
+scoring, viewer) live on `ref/mod-separation`.
 
 ## How the algorithm works
 
@@ -101,8 +105,8 @@ flowchart TD
    and stamps (embedded images, vector drawings, ink that OCR does not
    explain, framed or coloured stamps).
 4. **Boxes.** One box per line of every finding; quasi-identifiers (clinical
-   dates, age, facilities) are detected but kept by default. In the web page
-   the user can add an area, un-redact a box or search and redact a text.
+   dates, age, facilities) are detected but kept by default. Through the API
+   (`POST /{id}/edits`) the user can add an area, un-redact a box or search and redact a text.
 5. **Redaction.** Every occurrence of a redacted value gets a box. Each page
    with a box is replaced by a rendering of itself with the boxes painted in
    (only its pixels survive) plus an invisible text layer of the words left;
@@ -121,21 +125,17 @@ laptop RTX 5070, slower on CPU; see "Speed" in [docs/ANONYMIZATION.md](docs/ANON
 
 ```bash
 cp .env.example .env
-just start          # deps, synthetic dataset, API + demo page on the first free ports, browser
+just start          # deps, OCR server, API on the first free port, OpenAPI page in the browser
 ```
 
 `just start` starts the OCR server (`services/ocr-server/`, port 8829) unless one is
 already running, downloads the OCR weights on the first run (NER: set
-`ANONPIP_NER_URL` to the AILAB NER service), generates
-`dataset/` if it is missing, starts the API on `http://127.0.0.1:8000` and the
-demo page (`apps/web`: nginx in Docker on the host network, proxying to the
-API) on `http://127.0.0.1:8080` (or the next free ports), and opens the page
-once `/readyz` is ready. Without Docker only the API starts. OpenAPI on
-`/docs` of the API (off in prod).
-`just dev` and `just evaluate` need the OCR server too: `just ocr-server`.
+`ANONPIP_NER_URL` to the AILAB NER service), starts the API on
+`http://127.0.0.1:8000` (or the next free port) and opens its OpenAPI page
+(`/docs`, off in prod) once `/readyz` is ready.
+`just dev` needs the OCR server too: `just ocr-server`.
 
-With Docker: `just up` starts the API, the OCR server and the demo page
-(`http://127.0.0.1:8080`; weights cached in the `models`
+With Docker: `just up` starts the API and the OCR server (weights cached in the `models`
 volume; uncomment the GPU blocks in `docker-compose.yml` and set
 `OCR_EXTRA=gpu` to use an NVIDIA GPU).
 
@@ -143,24 +143,16 @@ volume; uncomment the GPU blocks in `docker-compose.yml` and set
 
 | Command | What it does |
 |---|---|
-| `just start` | Local demo: API + demo page, dataset if missing, browser |
+| `just start` | Local run: OCR server and API, OpenAPI page in the browser |
 | `just dev` | API on the host with reload |
-| `just up` / `just down` / `just logs` | Compose stack (API, OCR server, demo page) |
-| `just web-check` | Build the demo page image and check its nginx configuration |
+| `just up` / `just down` / `just logs` | Compose stack (API, OCR server) |
 | `just models` | Check the OCR server and the NER service (both must answer) |
 | `just ocr-server [cpu]` / `just ocr-server-test` | OCR server on the host, port 8829 / its unit tests |
 | `just lint` | ruff fix + format + ty: before every commit |
 | `just check` | Same checks without fixes (what CI runs) |
 | `just test` / `just test-cov` | Unit tests of every package / with coverage (at least 80% per package) |
-| `just test-core` / `just test-api` / `just test-eval` | One suite only (arguments go to pytest) |
-| `just dataset [--n 7 --append]` | Synthetic dataset with ground truth -> `dataset/` |
-| `just evaluate [--split dev\|test]` | Recall, precision, AP, leaks, verification, time -> `reports/evaluation.md`; `test` is the held-out 30% of the template families, never used for tuning |
-| `just eval-ui` | Evaluation viewer on `http://127.0.0.1:8765`: ground truth vs predictions per document, live while evaluating |
-| `just eval-compare a b` | Two evaluations side by side -> `reports/comparison.md` |
+| `just test-core` / `just test-api` | One suite only (arguments go to pytest) |
 | `just audit` | Vulnerabilities in the dependencies |
-
-Developer tools are also available directly: `uv run python -m anonymization_eval --help`
-(`generate`, `anonymize`, `evaluate`, `viewer`, `preview`).
 
 ## Modules
 
@@ -169,19 +161,16 @@ it can be deployed, or extracted, on its own:
 
 ```mermaid
 flowchart LR
-    WEB["apps/web<br/>demo page, nginx<br/>(image)"] -- "HTTP /anonymizations" --> API
+    CLIENT["fe or any client"] -- "HTTP /anonymizations" --> API
     API["apps/api<br/>the service: jobs, SSE, limits, KPI events<br/>(image anonmyzation-pipeline)"] -- "Python import" --> CORE
-    EVAL["apps/eval<br/>dataset, evaluation, viewer<br/>(dev only)"] -- "Python import" --> CORE
     CORE["packages/anonymization-core<br/>the engine (library)"] -- "HTTP, OCR_CONTRACT.md" --> OCR["services/ocr-server<br/>PP-OCRv5 on ONNX Runtime<br/>(image paddle-ocr-server)"]
     CORE -- "HTTP /batch_ner" --> NER["AILAB NER service"]
 ```
 
 | Package | Depends on | Never imports | Tests |
 |---|---|---|---|
-| `packages/anonymization-core` | OCR server and NER over HTTP | the service, the evaluation, any web framework | `just test-core` |
-| `apps/api` | the engine | the evaluation | `just test-api` |
-| `apps/eval` | the engine | the service | `just test-eval` |
-| `apps/web` | the API over HTTP | - | `just web-check` |
+| `packages/anonymization-core` | OCR server and NER over HTTP | the service, any web framework | `just test-core` |
+| `apps/api` | the engine | - | `just test-api` |
 | `services/ocr-server` | - (own lock, outside the workspace) | - | `just ocr-server-test` |
 
 The "never imports" column is enforced by ruff (`banned-api` in each
@@ -196,7 +185,7 @@ environment (every member).
 
 ```
 packages/anonymization-core/   the engine, a library: no web framework, never imports the
-                               service or the evaluation (banned in its pyproject); own tests,
+                               service (banned in its pyproject); own tests,
                                coverage and lint config, so it can be extracted as is
   src/anonymization_core/
     config.py             PipelineConfig (plain values, no environment lookup)
@@ -224,14 +213,6 @@ apps/api/                      the service (image anonmyzation-pipeline): Docker
     api/health.py         /healthz, /readyz (models loaded), /version
     api/anonymization.py  upload, SSE progress, edits, previews, downloads
     services/jobs.py      job lifecycle around the engine: queue, SSE, expiry, limits, KPI events
-apps/web/                      demo page (image of its own): index.html, nginx config
-                               (serves the page, proxies /anonymizations to the API,
-                               no buffering for the SSE progress), Dockerfile
-apps/eval/                     evaluation, dev only (never in an image): uses the engine,
-                               never the service (banned in its pyproject); reads the same
-                               ANONPIP_* variables (config.py); own tests (`just test-eval`)
-  src/anonymization_eval/ dataset/ generator, evaluate.py (dev/test split), metrics.py,
-                          viewer.py (evaluation UI); run from the root (`just evaluate`)
 services/ocr-server/           OCR server: PP-OCRv5 (RapidOCR) behind the LiteParse OCR API;
                                own pyproject, lock and image (ONNX Runtime, CPU or GPU),
                                outside the workspace: `just ocr-server-test`
@@ -241,7 +222,8 @@ docs/                     ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and pri
 
 ## Results
 
-`just evaluate` on the whole evaluation set (`dataset/`: 200 documents, 326
+Measured with the evaluation package (`apps/eval` on `ref/mod-separation`) on
+the whole evaluation set (200 documents, 326
 pages, each as native PDF, scan and scan with a hidden OCR layer: 600 PDFs;
 20/10/2026). The current stack (LiteParse + OCR server, AILAB NER service, OCR
 orientation and character boxes) has not been measured yet: the tables below
@@ -295,9 +277,8 @@ tessera sanitaria 91% to 100%). Compared with the earlier in-pod GLiNER +
 GLiNER2, the AILAB service has 0.5 to 1 point less recall: names it replaces as
 eponyms, foreign names and fragments taken for places (details in
 docs/ANONYMIZATION.md, "OCR choice" and "NER choice").
-Run `just evaluate` again to measure the current stack (`uv run python -m anonymization_eval
-orientation` adds `e056` to the set); `--split test` scores only the held-out
-documents.
+The current stack has not been measured as a whole yet: run the evaluation of
+`ref/mod-separation` against it.
 
 - **Box level** (scikit-learn): every required ground-truth box is found when
   redaction covers at least 75% of it; every redaction box touching no ground
@@ -313,14 +294,12 @@ documents.
   annotated separately but detected as one box.
 
 Recall is the safety metric (a missed value is a leak). Definitions, per-type
-results and the analysis are in [docs/ANONYMIZATION.md](docs/ANONYMIZATION.md);
-every miss is listed in `reports/evaluation.md`.
+results and the analysis are in [docs/ANONYMIZATION.md](docs/ANONYMIZATION.md).
 
 ## Notes
 
-- The demo page (`apps/web`) is for local testing and demos (Italian UI, it
-  follows the MIA mockups); in the platform the doctor-facing frontend is `fe`.
-  The API serves no page: the page is its own image, nginx in front of the API.
+- The API serves no page: in the platform the doctor-facing frontend is `fe`
+  (a demo page for local tests is `apps/web` on `ref/mod-separation`).
 - Licences: every component is open source; the licence audit and the few
   non-permissive transitive packages left are in
   [docs/PDF_BACKEND_GAPS.md](docs/PDF_BACKEND_GAPS.md).

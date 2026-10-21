@@ -3,8 +3,8 @@
 Surgical anonymization of clinical documents: PDFs (native or scanned) and
 images in, a redacted PDF, a Word copy or a Markdown text out, each verified
 before release. A library: no web framework, no environment lookup, no
-logging setup. The service (`apps/api`) and the evaluation (`apps/eval`) are
-built on it, and it imports neither (banned in `pyproject.toml`).
+logging setup. The service (`apps/api`) is built on it, and it never imports
+the service (banned in `pyproject.toml`).
 
 ## What it needs at run time
 

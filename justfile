@@ -6,7 +6,7 @@ set dotenv-load := true
 default:
     @just --list
 
-# --- Compose (service) ---
+# --- Compose (service + OCR server) ---
 
 # Build and start the stack in the background
 up:
@@ -22,11 +22,6 @@ down-v:
 logs:
     docker compose logs -f app
 
-# Demo page image (apps/web): build it and check its nginx configuration
-web-check:
-    docker build --quiet --tag anonpip-web:check apps/web
-    docker run --rm -e API_UPSTREAM=http://127.0.0.1:1 anonpip-web:check nginx -t
-
 # --- Local (uv) ---
 
 sync:
@@ -36,7 +31,7 @@ sync:
 dev:
     uv run uvicorn anonmyzation_pipeline.main:app --reload --port 8000
 
-# Everything for a local demo: deps, synthetic dataset if missing, API + web UI on the first free port, browser
+# Local run: deps, OCR server on the host unless one answers, API on the first free port, OpenAPI page in the browser
 start:
     bash scripts/start.sh
 
@@ -44,29 +39,7 @@ start:
 models:
     uv run python -c "from anonmyzation_pipeline.config import get_settings; from anonymization_core.factory import build_pipeline, load_models; import sys; sys.exit(0 if load_models(build_pipeline(get_settings().pipeline_config())) else 1)"
 
-# --- Synthetic dataset and evaluation (apps/eval, dev only; run from the root: dataset/ and reports/ live here) ---
-
-# Synthetic dataset: `just dataset` or `just dataset --n 7 --append`
-dataset *args:
-    uv run python -m anonymization_eval generate {{args}}
-
-# NER timeout of evaluate and eval-ui, above the one in .env (for the API): a slow page must not
-# stop a run of hours. Change it with `EVAL_NER_TIMEOUT_SECONDS=300 just evaluate`.
-eval_ner_timeout := env("EVAL_NER_TIMEOUT_SECONDS", "120")
-
-# Score the pipeline against the ground truth -> reports/evaluation.md
-evaluate *args:
-    ANONPIP_NER_TIMEOUT_SECONDS={{eval_ner_timeout}} uv run python -m anonymization_eval evaluate {{args}}
-
-# Evaluation viewer: ground truth vs predictions per document, live while evaluating
-eval-ui *args:
-    ANONPIP_NER_TIMEOUT_SECONDS={{eval_ner_timeout}} uv run python -m anonymization_eval viewer {{args}}
-
-# Two evaluations side by side: `just eval-compare reports_a reports_b` -> reports/comparison.md
-eval-compare *args:
-    uv run python -m anonymization_eval compare {{args}}
-
-# OCR server on the host, port 8829 (extra: gpu | cpu); `just dev` and `just evaluate` need it
+# OCR server on the host, port 8829 (extra: gpu | cpu); `just dev` needs it
 ocr-server extra="gpu":
     cd services/ocr-server && VIRTUAL_ENV= uv run --extra {{extra}} python -m paddle_ocr_server
 
@@ -78,7 +51,6 @@ ocr-server-test extra="gpu":
 
 core := "packages/anonymization-core"
 api := "apps/api"
-eval := "apps/eval"
 
 format:
     uv run ruff format
@@ -89,7 +61,6 @@ fix:
 types:
     cd {{core}} && uv run ty check src tests
     cd {{api}} && uv run ty check src tests
-    cd {{eval}} && uv run ty check src tests
 
 # Fix, format and type-check: run before every commit
 lint: fix format types
@@ -100,12 +71,11 @@ check:
     uv run ruff format --check
     cd {{core}} && uv run ty check src tests
     cd {{api}} && uv run ty check src tests
-    cd {{eval}} && uv run ty check src tests
 
 # --- Tests ---
 
-# Unit tests of the engine, the service and the evaluation (no network, no model weights)
-test: test-core test-api test-eval
+# Unit tests of the engine and the service (no network, no model weights)
+test: test-core test-api
 
 # Engine tests alone, in its package: `just test-core -k release`
 test-core *args:
@@ -115,16 +85,10 @@ test-core *args:
 test-api *args:
     cd {{api}} && uv run pytest {{args}}
 
-# Evaluation tests alone, in its package: `just test-eval -k viewer`
-test-eval *args:
-    cd {{eval}} && uv run pytest {{args}}
-
-# Engine and service with coverage (each fails under 80%), then the evaluation tests
-# (dev only: not gated); coverage.xml and junit.xml per package, for Sonar
+# Engine and service with coverage (each fails under 80%): coverage.xml and junit.xml per package, for Sonar
 test-cov:
     cd {{core}} && uv run pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=junit.xml
     cd {{api}} && uv run pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=junit.xml
-    cd {{eval}} && uv run pytest -q
 
 # Known vulnerabilities in the dependencies
 audit:

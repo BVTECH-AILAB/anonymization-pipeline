@@ -107,7 +107,7 @@ def test_service_starts_without_models(settings: Settings) -> None:
 
 
 def test_the_service_serves_no_web_page(settings: Settings) -> None:
-    # the demo page is apps/web (its own image), even when the old flag is set
+    # the API serves no page, even when the old ANONPIP_UI_ENABLED flag is set
     with TestClient(
         create_app(make_settings(ui_enabled=True)), raise_server_exceptions=False
     ) as client:

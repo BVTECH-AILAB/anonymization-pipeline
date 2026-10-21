@@ -1,25 +1,19 @@
 #!/usr/bin/env bash
-# Local demo: installs dependencies, prepares the synthetic dataset, starts the
-# OCR server (services/ocr-server/, port 8829) unless one already answers, the API and the
-# demo page (apps/web: nginx in Docker, host network, proxying to the API), each
-# on the first free port, then opens the browser on the page.
-#   just start                  -> page http://127.0.0.1:8080, API http://127.0.0.1:8000
-#   PORT=9000 WEB_PORT=9080 just start
+# Local run: installs dependencies, starts the OCR server (services/ocr-server/,
+# port 8829) unless one already answers and the API on the first free port,
+# then opens the OpenAPI page (/docs) once the models are ready.
+#   just start                  -> http://127.0.0.1:8000/docs
+#   PORT=9000 just start
 #   NO_BROWSER=1 just start
 #   OCR_EXTRA=cpu just start    (default: gpu when nvidia-smi is found)
-# Without Docker only the API starts. The host network needs a Linux Docker
-# engine (WSL included); with Docker Desktop use `just up` instead.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 PORT="${PORT:-8000}"
-WEB_PORT="${WEB_PORT:-8080}"
 HOST="${HOST:-127.0.0.1}"
 PIDS=()
-WEB_CONTAINER=""
 cleanup() {
   for pid in "${PIDS[@]}"; do kill "$pid" 2>/dev/null || true; done
-  [ -z "$WEB_CONTAINER" ] || docker stop "$WEB_CONTAINER" >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
 
@@ -30,11 +24,6 @@ fi
 
 echo "==> Installing dependencies (uv sync)"
 uv sync --quiet
-
-if [ ! -d dataset/native ]; then
-  echo "==> Generating the synthetic dataset (dataset/)"
-  uv run python -m anonymization_eval generate --n 21 --out dataset
-fi
 
 # first free port starting from $1 (8000, 8001, ...)
 port_busy() { (exec 3<>"/dev/tcp/${HOST}/$1") 2>/dev/null; }
@@ -60,18 +49,7 @@ if ! curl -sf -o /dev/null "${OCR_URL}/health"; then
 fi
 
 API_URL="http://${HOST}:${PORT}"
-URL="$API_URL"
-if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-  WEB_PORT="$(free_port "$WEB_PORT")"
-  echo "==> Building and starting the demo page (apps/web) at http://${HOST}:${WEB_PORT}"
-  docker build --quiet --tag anonpip-web:local apps/web >/dev/null
-  WEB_CONTAINER="anonpip-web-${WEB_PORT}"
-  docker run --detach --rm --name "$WEB_CONTAINER" --network host \
-    -e WEB_PORT="$WEB_PORT" -e API_UPSTREAM="$API_URL" anonpip-web:local >/dev/null
-  URL="http://${HOST}:${WEB_PORT}"
-else
-  echo "==> Docker not available: starting the API only (no demo page)" >&2
-fi
+URL="${API_URL}/docs"
 # open the browser once the models are loaded (WSL: wslview / explorer.exe; Linux: xdg-open)
 [ -n "${NO_BROWSER:-}" ] || (
   for _ in $(seq 1 600); do
@@ -89,5 +67,5 @@ fi
 echo "==> Starting the API at ${API_URL}; open ${URL} (Ctrl+C to stop)"
 export ANONPIP_ENVIRONMENT="${ANONPIP_ENVIRONMENT:-local}"
 export ANONPIP_OCR_SERVER_URL="$OCR_URL"
-# not exec: the trap stops the OCR server and the page when the API stops
+# not exec: the trap stops the OCR server when the API stops
 uv run uvicorn anonmyzation_pipeline.main:app --host "$HOST" --port "$PORT"

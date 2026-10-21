@@ -16,7 +16,6 @@ build
 .vscode
 docs
 CLAUDE.md
-apps/eval/src
 dataset
 dataset_*
 reports
@@ -34,6 +33,5 @@ README.md
 .pre-commit-config.yaml
 sonar-project.properties
 docker-compose.yml
-# other images, built from their own folders
+# the OCR server image is built from its own folder
 services
-apps/web

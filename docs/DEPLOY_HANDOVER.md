@@ -72,23 +72,11 @@ questo servizio: nessuna esposizione.
 | Variabili | `OCRSRV_MARGIN_PT` (`60`), `OCRSRV_MARGIN_MIN_SCORE` (`0.5`), `OCRSRV_MAX_UPLOAD_MB` (`40`), `OCRSRV_DEVICE` (`auto`: GPU se utilizzabile, altrimenti CPU con un WARNING all'avvio; `gpu`: senza GPU il container termina; `cpu`), `OCRSRV_GPU_MEM_LIMIT_MB` (`0` = nessun tetto, in MiB), `OCRSRV_LOG_LEVEL` (`INFO`); nessun segreto |
 | Dati | riceve immagini di pagine (dati sanitari): non scrive su disco e non registra il testo letto |
 
-## Terzo servizio (opzionale): pagina demo `anonymization-web`
+## Pagina demo
 
-Pagina di prova per staging (in produzione il frontend dei medici è `fe`). Prima era servita
-dall'API con `ANONPIP_UI_ENABLED=true`; ora l'API non serve nessuna pagina, e la variabile
-si può togliere dalla ConfigMap (se resta viene ignorata). Immagine costruita da
-`apps/web/Dockerfile` (contesto `apps/web`): nginx non privilegiato, serve la pagina e fa da
-reverse proxy verso l'API sulla stessa origine.
-
-| Voce | Valore |
-|---|---|
-| Immagine | `harbor.agenas.oci/agenas/anonymization-web` (nome da confermare) |
-| Porta | `8080` (`WEB_PORT`) |
-| Liveness / readiness | `GET /healthz` (del container nginx, non dell'API) |
-| Variabili | `API_UPSTREAM`: URL dell'API, es. `http://anonmyzation-pipeline:8000`; nessun segreto |
-| Ingress | al posto dell'API sull'host di staging, oppure su un host suo; l'API resta raggiungibile solo da qui |
-| Risorse | requests 50m CPU / 32Mi, limits 200m CPU / 128Mi |
-| Dati | inoltra upload e documenti all'API senza scriverli su disco (`proxy_request_buffering off`, `proxy_buffering off`) e non registra i corpi; l'access log contiene solo metodo, percorso (id casuali) e codice |
+L'API non serve più nessuna pagina: prima la serviva con `ANONPIP_UI_ENABLED=true`. La
+variabile si può togliere dalla ConfigMap (se resta viene ignorata). La pagina demo è
+un'immagine a parte (`apps/web`, nginx), sul branch `ref/mod-separation`, non in questo.
 
 ## Cosa fa il team piattaforma
 
@@ -110,13 +98,13 @@ reverse proxy verso l'API sulla stessa origine.
 ## Flusso di rilascio
 
 1. MR da feature branch verso `test`: la CI esegue lint, tipi, unit test e Sonar,
-   un job per pacchetto (`core`, `api`, `eval`, `ocr-server`, `web`), solo per i
-   pacchetti toccati e per quelli che ne dipendono.
+   un job per pacchetto (`core`, `api`, `ocr-server`), solo per i pacchetti
+   toccati e per quelli che ne dipendono.
 2. Merge su `test`: la CI costruisce e pubblica `YYYY.MM.DD-test.<epoch>`,
    Flux lo rilascia in **staging**. L'immagine del servizio si costruisce a ogni
-   merge; `paddle-ocr-server` (`OCR_EXTRA=gpu`, che senza GPU ripiega sulla CPU) e
-   `anonymization-web` solo quando cambiano `services/ocr-server/` o `apps/web/`,
-   con lo stesso schema di tag: le loro ImagePolicy restano sull'ultimo tag pubblicato.
+   merge; `paddle-ocr-server` (`OCR_EXTRA=gpu`, che senza GPU ripiega sulla CPU) solo
+   quando cambia `services/ocr-server/`, con lo stesso schema di tag: la sua
+   ImagePolicy resta sull'ultimo tag pubblicato.
 3. Validazione in staging.
 4. MR da `test` a `main`: la CI pubblica `YYYY.MM.DD`, Flux lo rilascia in **produzione**.
 

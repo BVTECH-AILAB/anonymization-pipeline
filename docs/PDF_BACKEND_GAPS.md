@@ -100,9 +100,9 @@ BSD, Apache-2.0, PSF or ISC except:
 
 | Package | Licence | Pulled by | Status |
 |---|---|---|---|
-| text-unidecode | Artistic-1.0 or GPL-2.0+ | python-codicefiscale -> python-slugify | Replace python-codicefiscale (`detect/rules.py`, `anonymization_eval/dataset/identities.py`) |
+| text-unidecode | Artistic-1.0 or GPL-2.0+ | python-codicefiscale -> python-slugify | Replace python-codicefiscale (`detect/rules.py`) |
 | certifi, tqdm | MPL-2.0 | httpx, rapidocr | Weak copyleft, used unmodified: acceptable |
-| nvidia-*, cuda-toolkit | NVIDIA proprietary (redistributable) | torch cu128 (dev only: the mAP of `apps/eval`, never in the service image), onnxruntime-gpu[cuda,cudnn] (OCR server) | Not open source; absent from the service image, a CPU OCR image drops them there |
+| nvidia-*, cuda-toolkit | NVIDIA proprietary (redistributable) | onnxruntime-gpu[cuda,cudnn] (OCR server; torch is gone) | Not open source; absent from the service image, a CPU OCR image drops them there |
 
 Model weights (OCR server only, the NER model lives in the AILAB service), all
 Apache-2.0: PP-OCRv5 server detector, Latin

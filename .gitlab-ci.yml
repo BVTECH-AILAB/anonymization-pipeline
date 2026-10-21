@@ -80,15 +80,6 @@ generate-vars:
     - pyproject.toml
     - uv.lock
     - .gitlab-ci.yml
-  eval: &eval-paths
-    - apps/eval/**/*
-    - packages/anonymization-core/**/*
-    - pyproject.toml
-    - uv.lock
-    - .gitlab-ci.yml
-  web: &web-paths
-    - apps/web/**/*
-    - .gitlab-ci.yml
   ocr: &ocr-paths
     - services/ocr-server/**/*
     - .gitlab-ci.yml
@@ -136,19 +127,6 @@ api:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
       changes: *api-paths
 
-# Dev only (never in an image): lint, types and tests, no coverage gate.
-eval:
-  extends: .uv-job
-  variables:
-    UV_SCRIPT: >-
-      uv sync --frozen --package anonymization-eval &&
-      cd apps/eval &&
-      uv run ruff check && uv run ruff format --check && uv run ty check src tests &&
-      uv run pytest -q
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
-      changes: *eval-paths
-
 # Its own lock, outside the workspace; the CPU build of ONNX Runtime is enough for the tests.
 ocr-server:
   extends: .uv-job
@@ -161,16 +139,6 @@ ocr-server:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
       changes: *ocr-paths
-
-web:
-  extends: .quality-base
-  script:
-    - docker build --tag anonymization-web:ci-$CI_PIPELINE_ID apps/web
-    - docker run --rm -e API_UPSTREAM=http://127.0.0.1:1 anonymization-web:ci-$CI_PIPELINE_ID nginx -t
-    - docker image rm anonymization-web:ci-$CI_PIPELINE_ID
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
-      changes: *web-paths
 
 # Analysis only: allow_failure so an unreachable Sonar never blocks the pipeline.
 build-sonar:
@@ -209,20 +177,8 @@ build-image:
     - docker build -f apps/api/Dockerfile --target runtime -t $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX .
     - docker push $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX
 
-# Demo page (apps/web) and OCR server (services/ocr-server): built when they
-# change, with the same tags as the service. Names to confirm with the platform
-# team (docs/DEPLOY_HANDOVER.md).
-build-image-web:
-  stage: build-image
-  variables:
-    WEB_IMAGE_NAME: anonymization-web
-  rules:
-    - if: $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
-      changes: *web-paths
-  script:
-    - docker build -t $REGISTRY/$REPO_OWNER/$WEB_IMAGE_NAME:$IMAGE_TAG_SUFFIX apps/web
-    - docker push $REGISTRY/$REPO_OWNER/$WEB_IMAGE_NAME:$IMAGE_TAG_SUFFIX
-
+# OCR server (services/ocr-server): built when it changes, with the same tags
+# as the service. Name to confirm with the platform team (docs/DEPLOY_HANDOVER.md).
 # OCR_EXTRA=gpu: CUDA wheels; on a node without a GPU the server falls back to the CPU.
 build-image-ocr:
   stage: build-image

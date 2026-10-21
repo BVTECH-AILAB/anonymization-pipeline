@@ -465,3 +465,73 @@ def record_unlocked_pdfium(monkeypatch: pytest.MonkeyPatch) -> list[str]:
     monkeypatch.setattr(pdfium.PdfDocument, "__init__", checked_open)
     monkeypatch.setattr(pdfium.PdfPage, "render", checked_render)
     return unlocked
+
+
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+class OcrServerStub:
+    """An OCR server that follows ``OCR_CONTRACT.md`` strictly, behind ``httpx.MockTransport``.
+
+    Every request is checked against the contract (method, path, multipart
+    parts, header): one that breaks it gets a 422 and is recorded in
+    ``violations``. ``requests`` keeps every request received.
+
+    Args:
+        results: What ``POST /ocr`` answers, in the contract's shape.
+        recognized: What ``POST /recognize`` answers, ``(text, confidence)``.
+        health: Status of ``GET /health``.
+    """
+
+    def __init__(
+        self,
+        results: list[dict] | None = None,
+        recognized: tuple[str, float] = ("", 0.0),
+        health: int = 200,
+    ) -> None:
+        self.results = results or []
+        self.recognized = recognized
+        self.health = health
+        self.requests: list[httpx.Request] = []
+        self.violations: list[str] = []
+
+    def client(self) -> httpx.Client:
+        """An HTTP client whose every request reaches this stub."""
+        return httpx.Client(transport=httpx.MockTransport(self))
+
+    def _violation(self, message: str) -> httpx.Response:
+        self.violations.append(message)
+        return httpx.Response(422, json={"error": message})
+
+    def _png_part(self, request: httpx.Request) -> bool:
+        body = request.content
+        return (
+            request.headers.get("content-type", "").startswith("multipart/form-data")
+            and b'name="file"' in body
+            and PNG_SIGNATURE in body
+        )
+
+    def __call__(self, request: httpx.Request) -> httpx.Response:
+        self.requests.append(request)
+        route = (request.method, request.url.path)
+        if route == ("GET", "/health"):
+            if self.health != 200:
+                return httpx.Response(self.health, json={"error": "models not loaded"})
+            return httpx.Response(200, json={"status": "healthy"})
+        if route == ("POST", "/ocr"):
+            if not self._png_part(request):
+                return self._violation("/ocr needs a PNG in the multipart part 'file'")
+            if b'name="language"' not in request.content:
+                return self._violation("/ocr needs the form field 'language'")
+            dpi = request.headers.get("x-render-dpi", "")
+            if not dpi.replace(".", "", 1).isdigit():
+                return self._violation("/ocr needs a numeric X-Render-DPI header")
+            return httpx.Response(200, json={"results": self.results})
+        if route == ("POST", "/recognize"):
+            if not self._png_part(request):
+                return self._violation("/recognize needs a PNG in the part 'file'")
+            text, confidence = self.recognized
+            return httpx.Response(200, json={"text": text, "confidence": confidence})
+        return self._violation(
+            f"{request.method} {request.url.path} is not in the contract"
+        )

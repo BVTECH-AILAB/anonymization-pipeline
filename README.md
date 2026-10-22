@@ -124,8 +124,9 @@ Requirements: `uv`, `just`. A GPU is optional (about 2.5 s per scanned page on a
 laptop RTX 5070, slower on CPU; see "Speed" in [docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)).
 
 ```bash
-cp backend/.env.example backend/.env   # the service's settings (ANONPIP_*)
-cp .env.example .env                   # OCR server and compose overrides
+cp backend/.env.example backend/.env         # the service's settings (ANONPIP_*)
+cp ocr-server/.env.example ocr-server/.env   # the OCR server's settings (OCRSRV_*)
+cp .env.example .env                         # compose overrides
 just start          # deps, OCR server, API on the first free port, OpenAPI page in the browser
 ```
 
@@ -134,7 +135,7 @@ already running, downloads the OCR weights on the first run (NER: set
 `ANONPIP_NER_URL` to the AILAB NER service), starts the API on
 `http://127.0.0.1:8000` (or the next free port) and opens its OpenAPI page
 (`/docs`, off in prod) once `/readyz` is ready.
-`just backend::dev` needs the OCR server too: `just ocr-server`.
+`just backend::dev` needs the OCR server too: `just ocr::serve`.
 
 With Docker: `just up` starts the API and the OCR server (weights cached in the `models`
 volume; uncomment the GPU blocks in `docker-compose.yml` and set
@@ -149,7 +150,8 @@ From the repository root; each service also has its own `justfile`
 |---|---|
 | `just start` | Local run: OCR server and API, OpenAPI page in the browser |
 | `just up` / `just down` / `just logs` | Compose stack (API, OCR server) |
-| `just ocr-server [cpu]` / `just ocr-server-test` | OCR server on the host, port 8829 / its unit tests |
+| `just ocr::serve [cpu]` / `just ocr::test [cpu]` | OCR server on the host, port 8829 / its unit tests (`gpu` by default) |
+| `just ocr::lint` / `just ocr::check` | ruff + ty of the OCR server |
 | `just backend::dev` | API on the host with reload |
 | `just backend::models` | Check the OCR server and the NER service (both must answer) |
 | `just backend::lint` / `just backend::check` | ruff fix + format + ty (before every commit) / the same without fixes (CI) |
@@ -204,9 +206,16 @@ backend/                pod 1, image anonymization-pipeline (build context: back
     utils/              logging_setup.py, privacy.py, request_context.py (request id)
   tests/                mirrors src/; documents.py: synthetic PDFs and fake engines
   evals/                evaluation CLI (python -m evals): evaluate.py, metrics.py, pdf.py; tests/
-ocr-server/             pod 2, image paddle-ocr-server: PP-OCRv5 (RapidOCR) behind the
-                        LiteParse OCR API; own pyproject, lock and Dockerfile (ONNX
-                        Runtime, CPU or GPU): `just ocr-server-test`
+ocr-server/             pod 2, image paddle-ocr-server (build context: ocr-server/), same structure:
+  pyproject.toml uv.lock  one project; ONNX Runtime as an extra (cpu | gpu)
+  Dockerfile.api justfile AGENTS.md .env.example
+  src/
+    main.py lifespan.py config.py (OCRSRV_) errors.py
+    router/             ocr.py (/ocr, /recognize), health.py (/health), errors.py
+    models/             ocr.py: wire models of the contract
+    services/           ocr.py (page, margins, text upside down), words.py
+    llms/               rapidocr.py: PP-OCRv5 on RapidOCR, GPU memory
+  tests/                mirrors src/, contract test included
 docs/                   ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
                         deploy handover
 scripts/                start.sh: OCR server and API on the host (`just start`)

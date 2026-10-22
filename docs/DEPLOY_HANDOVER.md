@@ -59,7 +59,7 @@ Il servizio non ha credenziali: nessun segreto da Vault.
 ## Secondo servizio: `paddle-ocr`
 
 Server OCR (modelli PP-OCRv5 su RapidOCR e ONNX Runtime, dietro l'API OCR di LiteParse `POST /ocr`, più
-`POST /recognize` per rileggere una sola riga), immagine costruita da `ocr-server/Dockerfile`. Lo chiama solo
+`POST /recognize` per rileggere una sola riga), immagine costruita da `ocr-server/Dockerfile.api` (contesto `ocr-server/`, `uvicorn src.main:app`). Lo chiama solo
 questo servizio: nessuna esposizione.
 
 | Voce | Valore |

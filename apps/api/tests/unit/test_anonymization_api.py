@@ -1,10 +1,12 @@
 import io
 import json
+import shutil
 import time
 from pathlib import Path
 
 import pypdfium2 as pdfium
 import pytest
+from anonymization_core.errors import NerUnavailableError
 from anonymization_core.pipeline import Pipeline
 from anonymization_core.reader import LiteparseReader
 from anonymization_core.testing import (
@@ -22,6 +24,7 @@ from docx import Document
 from fastapi.testclient import TestClient
 from PIL import Image
 
+from anonmyzation_pipeline.api.anonymization import open_file_response
 from anonmyzation_pipeline.errors import (
     FileTooLargeError,
     ServiceUnavailableError,
@@ -580,3 +583,86 @@ def test_preview_before_completion_is_refused(
 
     assert response.status_code == 409
     assert response.json()["code"] == "JOB_NOT_READY"
+
+
+def test_a_dependency_down_is_reported_with_its_code(
+    client: TestClient, jobs: JobManager, letter: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def ner_down(path: Path, progress, visual: bool = True) -> object:
+        raise NerUnavailableError()
+
+    monkeypatch.setattr(jobs.pipeline, "analyze", ner_down)
+    created = upload(client, letter, mode="fast")
+    state = wait_done(client, created["id"])
+
+    assert state["status"] == "error"
+    assert state["error_code"] == "NER_UNAVAILABLE"
+
+
+def test_download_during_an_edit_is_not_ready(
+    client: TestClient, jobs: JobManager, letter: Path
+) -> None:
+    created = upload(client, letter)
+    wait_done(client, created["id"])
+    jobs.get(created["id"]).pending_edits = 1
+
+    response = client.get(f"/anonymizations/{created['id']}/download/pdf")
+
+    assert response.status_code == 409
+    assert response.json()["code"] == "JOB_NOT_READY"
+
+
+def test_edits_leave_no_pending_count(
+    client: TestClient, jobs: JobManager, letter: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    created = upload(client, letter)
+    wait_done(client, created["id"])
+    client.post(f"/anonymizations/{created['id']}/edits", json={"remove": [0]})
+
+    def broken(*args, **kwargs):
+        raise RuntimeError("redaction failed")
+
+    monkeypatch.setattr("anonymization_core.document.redact_and_verify", broken)
+    client.post(f"/anonymizations/{created['id']}/edits", json={"remove": [1]})
+
+    assert jobs.get(created["id"]).pending_edits == 0
+
+
+@pytest.mark.parametrize(
+    ("mode", "path"),
+    [
+        ("accurate", "download/pdf"),
+        ("accurate", "download/docx"),
+        ("fast", "download/md"),
+        ("accurate", "pages/original/0"),
+        ("accurate", "pages/anonymized/0"),
+    ],
+)
+def test_files_deleted_under_a_request_are_not_found(
+    client: TestClient, jobs: JobManager, letter: Path, mode: str, path: str
+) -> None:
+    created = upload(client, letter, mode=mode)
+    wait_done(client, created["id"])
+    shutil.rmtree(jobs.get(created["id"]).dir)  # expired between lookup and read
+
+    response = client.get(f"/anonymizations/{created['id']}/{path}")
+
+    assert response.status_code == 404
+    assert response.json()["code"] == "JOB_NOT_FOUND"
+
+
+async def test_a_file_deleted_while_it_is_sent_is_sent_whole(tmp_path: Path) -> None:
+    path = tmp_path / "anonymized.pdf"
+    data = bytes(range(256)) * 1000  # several chunks
+    path.write_bytes(data)
+
+    response = open_file_response(path, "application/pdf", "documento.pdf")
+    path.unlink()  # the job expires after the response was built
+    chunks = [chunk async for chunk in response.body_iterator]
+    body = b"".join(c for c in chunks if isinstance(c, bytes))
+
+    assert all(isinstance(c, bytes) for c in chunks)
+
+    assert body == data
+    assert response.headers["content-length"] == str(len(data))
+    assert 'filename="documento.pdf"' in response.headers["content-disposition"]

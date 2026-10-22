@@ -8,15 +8,19 @@ file names.
 
 import asyncio
 import json
-from collections.abc import AsyncIterator
-from typing import Annotated, Any, Literal
+import os
+import pathlib
+from collections.abc import AsyncIterator, Iterator
+from typing import Annotated, Any, BinaryIO, Literal
 
 from anonymization_core.taxonomy import LABELS
 from fastapi import APIRouter, File, Path, Query, Request, Response, UploadFile
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from anonmyzation_pipeline.errors import (
+    JobNotFoundError,
+    JobNotReadyError,
     ModeNotSupportedError,
     VerificationFailedError,
 )
@@ -39,6 +43,38 @@ MEDIA_TYPES = {
 # the downloads each mode produces
 FORMATS: dict[str, set[str]] = {"accurate": {"pdf", "docx"}, "fast": {"md"}}
 SSE_KEEPALIVE_SECONDS = 15
+CHUNK_BYTES = 64 * 1024
+
+
+def open_file_response(
+    path: pathlib.Path, media_type: str, filename: str | None = None
+) -> StreamingResponse:
+    """Stream a job file from a handle opened now.
+
+    The job can expire or be deleted at any moment: a file already gone is a
+    404, and a file deleted while it is sent is still sent whole (the open
+    handle keeps it).
+
+    Raises:
+        JobNotFoundError: The file no longer exists.
+    """
+    try:
+        fh = path.open("rb")
+    except FileNotFoundError:
+        raise JobNotFoundError() from None
+    headers = {
+        "Cache-Control": "no-store",
+        "Content-Length": str(os.fstat(fh.fileno()).st_size),
+    }
+    if filename:
+        headers["Content-Disposition"] = f'attachment; filename="{filename}"'
+    return StreamingResponse(_chunks(fh), media_type=media_type, headers=headers)
+
+
+def _chunks(fh: BinaryIO) -> Iterator[bytes]:
+    with fh:
+        while chunk := fh.read(CHUNK_BYTES):
+            yield chunk
 
 
 class LabelInfo(BaseModel):
@@ -228,34 +264,28 @@ def page_image(
     page: Annotated[int, Path(ge=0, le=500)],
     jobs: JobManagerDep,
     dpi: Annotated[int, Query(ge=50, le=200)] = 110,
-) -> FileResponse:
+) -> StreamingResponse:
     """PNG preview of one page; the anonymized one only in accurate mode."""
-    path = jobs.render_page(job_id, which, page, dpi)
-    return FileResponse(
-        path, media_type="image/png", headers={"Cache-Control": "no-store"}
-    )
+    return open_file_response(jobs.render_page(job_id, which, page, dpi), "image/png")
 
 
 @router.get("/{job_id}/download/{fmt}")
 def download(
     job_id: JobId, fmt: Literal["pdf", "docx", "md"], jobs: JobManagerDep
-) -> FileResponse:
+) -> StreamingResponse:
     """The anonymized document: pdf or docx (accurate), md (fast).
 
-    Refused when verification failed (fail-closed).
+    Refused while an edit is replacing it, and when verification failed (fail-closed).
     """
     job = jobs.ready_job(job_id)
     if fmt not in FORMATS[job.mode]:
         raise ModeNotSupportedError()
+    if job.pending_edits:
+        raise JobNotReadyError()
     if not job.verified:
         raise VerificationFailedError()
     path = {"pdf": job.anonymized, "docx": job.docx, "md": job.markdown}[fmt]
-    return FileResponse(
-        path,
-        media_type=MEDIA_TYPES[fmt],
-        filename=DOWNLOAD_NAMES[fmt],
-        headers={"Cache-Control": "no-store"},
-    )
+    return open_file_response(path, MEDIA_TYPES[fmt], DOWNLOAD_NAMES[fmt])
 
 
 @router.delete("/{job_id}", status_code=204)

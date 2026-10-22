@@ -278,6 +278,12 @@ Two modes, chosen at upload with `?mode=` (default `accurate`):
 
 An action of the other mode answers 409 `MODE_NOT_SUPPORTED`.
 
+A failed job has `status: "error"` and an `error_code`: `NER_UNAVAILABLE` or
+`SERVICE_UNAVAILABLE` when a dependency was down (retry later), otherwise
+`PROCESSING_FAILED`. A download asked while an edit is replacing the files
+answers 409 `JOB_NOT_READY`; a file of a job that expired or was deleted in
+the meantime answers 404 `JOB_NOT_FOUND`.
+
 ### Side-by-side review (frontend contract)
 
 1. `POST /anonymizations?mode=accurate`, then follow `/events` (or poll `GET /{id}`)
@@ -306,7 +312,7 @@ An action of the other mode answers 409 `MODE_NOT_SUPPORTED`.
    box to remove or restore it: `POST /{id}/edits` with `add` (rectangles in the
    same space as `rect`), `remove` / `restore` (box ids). The answer is the new
    result; `GET /{id}/preview` again gives the new boxes and URLs.
-4. `GET /{id}/download/pdf` (or `docx`) once `verified` is true.
+4. `GET /{id}/download/pdf` (or `docx`) once `verified` is true and no edit is running.
 
 ### Fast mode (`anonymization_core/export_markdown.py`)
 

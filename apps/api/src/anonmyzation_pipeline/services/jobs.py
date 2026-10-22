@@ -45,6 +45,7 @@ from anonmyzation_pipeline.errors import (
     JobNotFoundError,
     JobNotReadyError,
     ModeNotSupportedError,
+    ServiceError,
     ServiceUnavailableError,
     TooManyJobsError,
     service_error,
@@ -87,6 +88,8 @@ class Job:
     percent: int = 0
     error_code: str | None = None
     edits: int = 0
+    # edits submitted and not finished: the released files are being replaced
+    pending_edits: int = 0
     verified: bool = False
     analysis: Analysis | None = None
     result: dict[str, Any] | None = None
@@ -362,7 +365,11 @@ class JobManager:
             logger.error(
                 "Anonymization failed: job_id=%s error=%s", job.id, type(exc).__name__
             )
-            job.status, job.error_code = "error", "PROCESSING_FAILED"
+            # a known cause (NER or OCR down) keeps its code: the client can retry later
+            error = service_error(exc) if isinstance(exc, AnonymizationError) else exc
+            known = isinstance(error, ServiceError) and type(error) is not ServiceError
+            code = error.code if known else "PROCESSING_FAILED"
+            job.status, job.error_code = "error", code
             self._publish(job)
             log_event(
                 logger,
@@ -489,10 +496,16 @@ class JobManager:
             The new result, with ``edit_seconds`` and ``search_hits``.
         """
         job = self.accurate_job(jid)
-        future = self._executor.submit(
-            self._apply_edit, job, add, remove, restore, search
-        )
-        return future.result()
+        with self._jobs_lock:
+            job.pending_edits += 1
+        try:
+            future = self._executor.submit(
+                self._apply_edit, job, add, remove, restore, search
+            )
+            return future.result()
+        finally:
+            with self._jobs_lock:
+                job.pending_edits -= 1
 
     def _apply_edit(
         self,
@@ -541,18 +554,25 @@ class JobManager:
         """PNG of one page of the original or the anonymized document (cached).
 
         Raises:
-            JobNotFoundError: Unknown job, or ``page`` outside the document.
+            JobNotFoundError: Unknown or expired id, no such page, or the job
+                was deleted while the page was rendered.
         """
         job = self.accurate_job(jid) if which == "anonymized" else self.ready_job(jid)
         # the anonymized version changes with every edit: the edit count is in its name
         version = job.edits if which == "anonymized" else 0
         cache = job.dir / f"{which}-{page}-{dpi}-{version}.png"
-        if not cache.exists():
-            src = job.original if which == "original" else job.anonymized
-            try:
-                render_png(src, page, dpi, cache)
-            except AnonymizationError as exc:
-                raise service_error(exc) from exc
+        if cache.exists():
+            return cache
+        src = job.original if which == "original" else job.anonymized
+        try:
+            render_png(src, page, dpi, cache)
+        except AnonymizationError as exc:
+            raise service_error(exc) from exc
+        except Exception:
+            # PDFium fails on a source removed by expiry or deletion: not an error
+            if job.dir.exists():
+                raise
+            raise JobNotFoundError() from None
         return cache
 
     def preview(self, jid: str) -> dict[str, Any]:

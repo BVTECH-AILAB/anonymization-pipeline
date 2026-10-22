@@ -33,19 +33,18 @@ services:
   paddle-ocr:
     build:
       context: ./ocr-server
+      dockerfile: Dockerfile.api
       args:
         # cpu works everywhere; gpu (CUDA 12 wheels) needs the deploy block below
         OCR_EXTRA: ${OCR_EXTRA:-cpu}
+    # the server's settings (OCRSRV_*): ocr-server/.env, copied from ocr-server/.env.example;
+    # without it the defaults of src/config.py apply
+    env_file:
+      - path: ./ocr-server/.env
+        required: false
     environment:
-      OCRSRV_LOG_LEVEL: ${OCRSRV_LOG_LEVEL:-INFO}
-      OCRSRV_DEVICE: ${OCRSRV_DEVICE:-auto}
-      OCRSRV_DET_MODEL: ${OCRSRV_DET_MODEL:-PP-OCRv5_server_det}
-      OCRSRV_MARGIN_PT: ${OCRSRV_MARGIN_PT:-60}
-      OCRSRV_MARGIN_MIN_SCORE: ${OCRSRV_MARGIN_MIN_SCORE:-0.5}
-      OCRSRV_MAX_UPLOAD_MB: ${OCRSRV_MAX_UPLOAD_MB:-40}
-      OCRSRV_GPU_MEM_LIMIT_MB: ${OCRSRV_GPU_MEM_LIMIT_MB:-0}
       # weights download there on the first start (about 90 MB)
-      OCRSRV_MODEL_DIR: ${OCRSRV_MODEL_DIR:-/models/rapidocr}
+      OCRSRV_MODEL_DIR: /models/rapidocr
     ports:
       - "127.0.0.1:${OCR_PORT:-8829}:8829"
     volumes:

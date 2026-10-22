@@ -119,7 +119,8 @@ ocr-server:
       cd ocr-server &&
       uv sync --frozen --extra cpu &&
       uv run --extra cpu ruff check && uv run --extra cpu ruff format --check &&
-      uv run --extra cpu pytest -q
+      uv run --extra cpu ty check src tests &&
+      uv run --extra cpu pytest --cov -q
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
       changes: *ocr-paths
@@ -170,7 +171,7 @@ build-image-ocr:
     - if: $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
       changes: *ocr-paths
   script:
-    - docker build --build-arg OCR_EXTRA=$OCR_EXTRA -t $REGISTRY/$REPO_OWNER/$OCR_IMAGE_NAME:$IMAGE_TAG_SUFFIX ocr-server
+    - docker build -f ocr-server/Dockerfile.api --build-arg OCR_EXTRA=$OCR_EXTRA -t $REGISTRY/$REPO_OWNER/$OCR_IMAGE_NAME:$IMAGE_TAG_SUFFIX ocr-server
     - docker push $REGISTRY/$REPO_OWNER/$OCR_IMAGE_NAME:$IMAGE_TAG_SUFFIX
 
 download-harbor-csv:

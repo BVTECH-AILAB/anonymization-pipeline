@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from paddle_ocr_server.words import (
+from src.services.words import (
     Line,
     is_vertical,
     line_words,

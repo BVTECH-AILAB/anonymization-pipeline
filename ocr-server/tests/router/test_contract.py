@@ -12,29 +12,27 @@ import numpy as np
 from fastapi.testclient import TestClient
 from PIL import Image
 
-from paddle_ocr_server.app import create_app
-from paddle_ocr_server.config import Settings
-from paddle_ocr_server.words import Line, results
+from src.config import Settings
+from src.main import create_app
+from src.services.words import Line
 
 H_QUAD = ((10.0, 20.0), (110.0, 20.0), (110.0, 40.0), (10.0, 40.0))
 V_QUAD = ((200.0, 10.0), (200.0, 210.0), (180.0, 210.0), (180.0, 10.0))
 
 
 class ContractEngine:
-    """Answers with what the real word splitting produces."""
+    """Reads two fixed lines; the real page reading builds the answer."""
 
     ready = True
 
     def load(self) -> None:
         return None
 
-    def read(self, _img: np.ndarray, _dpi: float) -> list[dict]:
-        return results(
-            [
-                Line("Mario Rossi", 0.91, H_QUAD),
-                Line("Stampato da Rossi", 0.8, V_QUAD),
-            ]
-        )
+    def predict(self, _img: np.ndarray) -> list[Line]:
+        return [
+            Line("Mario Rossi", 0.91, H_QUAD),
+            Line("Stampato da Rossi", 0.8, V_QUAD),
+        ]
 
     def recognize(self, _img: np.ndarray) -> tuple[str, float]:
         return "RSSMRA85M01H501U", 0.91234
@@ -47,7 +45,8 @@ def _png() -> bytes:
 
 
 def _client() -> TestClient:
-    return TestClient(create_app(Settings(), ContractEngine()))  # type: ignore[arg-type]
+    # no margin pass: the two lines come back once
+    return TestClient(create_app(Settings(margin_pt=0), ContractEngine()))  # type: ignore[arg-type]
 
 
 def _number(value: Any) -> bool:

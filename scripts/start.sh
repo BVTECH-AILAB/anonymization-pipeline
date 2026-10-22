@@ -44,7 +44,9 @@ if ! curl -sf -o /dev/null "${OCR_URL}/health"; then
     if command -v nvidia-smi >/dev/null 2>&1; then OCR_EXTRA=gpu; else OCR_EXTRA=cpu; fi
   fi
   echo "==> Starting the OCR server (${OCR_EXTRA}) at ${OCR_URL}; first run downloads the models"
-  (cd ocr-server && VIRTUAL_ENV= uv run --quiet --extra "$OCR_EXTRA" python -m paddle_ocr_server) &
+  # ocr-server/.env (OCRSRV_*), when present, as `just ocr::serve` reads it
+  (cd ocr-server && { [ ! -f .env ] || { set -a; . ./.env; set +a; }; } \
+    && VIRTUAL_ENV= uv run --quiet --extra "$OCR_EXTRA" uvicorn src.main:app --host 127.0.0.1 --port 8829) &
   PIDS+=("$!")
 fi
 

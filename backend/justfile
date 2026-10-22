@@ -12,7 +12,7 @@ default:
 sync:
     uv sync
 
-# Run the API on the host, with reload (needs the OCR server: `just ocr-server` from the root)
+# Run the API on the host, with reload (needs the OCR server: `just ocr::serve` from the root)
 dev:
     uv run uvicorn src.main:app --reload --port 8000
 

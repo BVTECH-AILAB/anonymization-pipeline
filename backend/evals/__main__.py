@@ -22,7 +22,7 @@ from evals.log import setup_logging
 logger = logging.getLogger("evals")
 app = typer.Typer(help="Evaluation of the anonymization engine.", no_args_is_help=True)
 
-# `just ocr-server` and `just start` serve the OCR API here
+# `just ocr::serve` and `just start` serve the OCR API here
 LOCAL_OCR_SERVER = "http://127.0.0.1:8829"
 
 

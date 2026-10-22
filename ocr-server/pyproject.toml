@@ -1,3 +1,6 @@
+# The OCR server (second pod): one project, imported as `src.*` and served as
+# `src.main:app` on port 8829, like the backend and ai-platform-v2. Not installed
+# as a package: no build backend.
 [project]
 name = "paddle-ocr-server"
 version = "0.1.0"
@@ -24,22 +27,18 @@ gpu = ["onnxruntime-gpu[cuda,cudnn]>=1.22,<1.24"]
 [dependency-groups]
 dev = [
     "pytest>=8.3",
+    "pytest-cov>=6.0",
     "httpx>=0.28",
     "ruff>=0.15",
+    "ty>=0.0.1a0",
 ]
 
 [tool.uv]
 conflicts = [[{ extra = "cpu" }, { extra = "gpu" }]]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/paddle_ocr_server"]
-
 [tool.ruff]
 target-version = "py312"
+src = ["."]
 
 [tool.ruff.lint]
 select = ["E", "F", "B", "I", "ARG", "UP", "T20", "S", "PLC0415"]
@@ -49,3 +48,15 @@ select = ["E", "F", "B", "I", "ARG", "UP", "T20", "S", "PLC0415"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# the root of this service: `src` and `tests` are imported from here
+pythonpath = ["."]
+addopts = "--strict-markers"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+skip_covered = true

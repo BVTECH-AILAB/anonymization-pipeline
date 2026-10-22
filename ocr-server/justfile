@@ -1,0 +1,39 @@
+# Task runner of the OCR server. Run `just` here, or `just ocr::<recipe>` from the
+# repository root: the recipes always run in ocr-server/.
+# ONNX Runtime comes as an extra: gpu (CUDA wheels) or cpu.
+
+# Reads OCRSRV_* from ocr-server/.env: no credentials in this file.
+set dotenv-load := true
+
+default:
+    @just --list
+
+# The OCR server on the host, port 8829 (the backend's `just backend::dev` needs it)
+serve extra="gpu":
+    VIRTUAL_ENV= uv run --extra {{extra}} uvicorn src.main:app --host 127.0.0.1 --port 8829
+
+format extra="gpu":
+    VIRTUAL_ENV= uv run --extra {{extra}} ruff format
+
+fix extra="gpu":
+    VIRTUAL_ENV= uv run --extra {{extra}} ruff check --fix
+
+types extra="gpu":
+    VIRTUAL_ENV= uv run --extra {{extra}} ty check src tests
+
+# Fix, format and type-check: run before every commit
+lint: fix format types
+
+# CI mode: no fixes, fails on any finding
+check extra="gpu":
+    VIRTUAL_ENV= uv run --extra {{extra}} ruff check
+    VIRTUAL_ENV= uv run --extra {{extra}} ruff format --check
+    VIRTUAL_ENV= uv run --extra {{extra}} ty check src tests
+
+# Unit tests (no model weights: fake engines): `just test gpu -k margin`
+test extra="gpu" *args:
+    VIRTUAL_ENV= uv run --extra {{extra}} pytest {{args}}
+
+# Unit tests with coverage (fails under 80%)
+test-cov extra="gpu":
+    VIRTUAL_ENV= uv run --extra {{extra}} pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=junit.xml

@@ -17,6 +17,8 @@ fa il provisioning.
 | Readiness probe | `GET /readyz` (503 finché il server OCR non risponde e il servizio NER non risponde a `/health`; il controllo viene ritentato ogni 30 s) |
 | Serve un database? | **no**: servizio stateless, i job vivono in memoria e i documenti in una cartella privata fino alla scadenza (`ANONPIP_JOB_TTL_MINUTES`) |
 | Esposizione | solo interna (`traefik-int`) / tramite WSO2 API Manager |
+| API | `/anonymizations/sessions/...` nello stile del document agent di ai-platform-v2: sessione creata dall'upload, lavoro dentro stream SSE (`status`, `done`, `error`), `preview` e `download?format=`. Contratto in `docs/ANONYMIZATION.md`, sezione API; sostituisce i vecchi `/anonymizations/{id}/...` |
+| Configurazione | variabili `ANONPIP_*` (tabella sotto); in locale `backend/.env`, da `backend/.env.example` |
 | Chi lo chiama | |
 | Chi chiama (dipendenze) | il servizio **`paddle-ocr`** (sotto, stesso namespace) su `ANONPIP_OCR_SERVER_URL`: legge le pagine scansionate. Se non risponde, `/readyz` è 503 e nessun documento viene elaborato senza OCR. Il **servizio NER AILAB** (`POST /batch_ner`, `GET /health`): riceve il testo estratto dalle pagine, quindi va raggiunto all'interno del cluster. In staging risponde su `ner.agenas-stg.oci`, ma il suo certificato HTTPS non è verificabile (il server non presenta la CA): serve l'URL interno del Service oppure la CA in `ANONPIP_NER_CA_BUNDLE`. Se non risponde, i job falliscono senza rilasciare nulla (fail-closed) |
 | Repliche | **1**, oppure 2+ con session affinity sull'ingress: i job sono in memoria del pod che li ha creati |

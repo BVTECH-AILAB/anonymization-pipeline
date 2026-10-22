@@ -126,7 +126,7 @@ laptop RTX 5070, slower on CPU; see "Speed" in [docs/ANONYMIZATION.md](docs/ANON
 ```bash
 cp backend/.env.example backend/.env         # the service's settings (ANONPIP_*)
 cp ocr-server/.env.example ocr-server/.env   # the OCR server's settings (OCRSRV_*)
-cp .env.example .env                         # compose overrides
+cp infra/.env.example infra/.env             # compose variables (OCR_EXTRA, ports)
 just start          # deps, OCR server, API on the first free port, OpenAPI page in the browser
 ```
 
@@ -137,8 +137,9 @@ already running, downloads the OCR weights on the first run (NER: set
 (`/docs`, off in prod) once `/readyz` is ready.
 `just backend::dev` needs the OCR server too: `just ocr::serve`.
 
-With Docker: `just up` starts the API and the OCR server (weights cached in the `models`
-volume; uncomment the GPU blocks in `docker-compose.yml` and set
+With Docker: `just up` starts the API and the OCR server from
+`infra/docker-compose.yml` (weights cached in the `models` volume; uncomment
+the GPU block in `infra/docker-compose.yml` and set
 `OCR_EXTRA=gpu` to use an NVIDIA GPU).
 
 ## Commands
@@ -149,7 +150,7 @@ From the repository root; each service also has its own `justfile`
 | Command | What it does |
 |---|---|
 | `just start` | Local run: OCR server and API, OpenAPI page in the browser |
-| `just up` / `just down` / `just logs` | Compose stack (API, OCR server) |
+| `just up` / `just down` / `just logs` | Compose stack (`infra/docker-compose.yml`: API, OCR server) |
 | `just ocr::serve [cpu]` / `just ocr::test [cpu]` | OCR server on the host, port 8829 / its unit tests (`gpu` by default) |
 | `just ocr::lint` / `just ocr::check` | ruff + ty of the OCR server |
 | `just backend::dev` | API on the host with reload |
@@ -216,6 +217,7 @@ ocr-server/             pod 2, image paddle-ocr-server (build context: ocr-serve
     services/           ocr.py (page, margins, text upside down), words.py
     llms/               rapidocr.py: PP-OCRv5 on RapidOCR, GPU memory
   tests/                mirrors src/, contract test included
+infra/                  docker-compose.yml (both pods) and .env.example (compose variables)
 docs/                   ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
                         deploy handover
 scripts/                start.sh: OCR server and API on the host (`just start`)

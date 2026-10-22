@@ -37,7 +37,7 @@ def test_version(client: TestClient) -> None:
 
 
 def test_not_found_is_italian(client: TestClient) -> None:
-    response = client.get(f"/anonymizations/{'0' * 32}")
+    response = client.get(f"/anonymizations/sessions/{'0' * 32}")
 
     assert response.status_code == 404
     assert response.json() == {
@@ -48,7 +48,8 @@ def test_not_found_is_italian(client: TestClient) -> None:
 
 def test_validation_error_does_not_echo_input(client: TestClient) -> None:
     response = client.post(
-        f"/anonymizations/{'0' * 32}/edits", json={"search": FAKE_CF * 20}
+        f"/anonymizations/sessions/{'0' * 32}/edits/stream",
+        json={"search": FAKE_CF * 20},
     )
 
     assert response.status_code == 422
@@ -57,7 +58,7 @@ def test_validation_error_does_not_echo_input(client: TestClient) -> None:
 
 
 def test_job_id_must_look_like_an_id(client: TestClient) -> None:
-    response = client.get(f"/anonymizations/{FAKE_CF}")
+    response = client.get(f"/anonymizations/sessions/{FAKE_CF}")
 
     assert response.status_code == 422
     assert FAKE_CF not in response.text
@@ -81,7 +82,7 @@ def test_unhandled_error_is_generic(settings: Settings, log_stream) -> None:
 
 def test_request_id_is_propagated(client: TestClient, log_stream) -> None:
     response = client.get(
-        f"/anonymizations/{'0' * 32}", headers={"X-Request-ID": "abcdef123456"}
+        f"/anonymizations/sessions/{'0' * 32}", headers={"X-Request-ID": "abcdef123456"}
     )
 
     assert response.headers["x-request-id"] == "abcdef123456"
@@ -118,18 +119,6 @@ def test_the_service_serves_no_web_page(settings: Settings) -> None:
 
     assert response.status_code == 404
     assert not hasattr(settings, "ui_enabled")
-
-
-def test_labels(client: TestClient) -> None:
-    labels = client.get("/anonymizations/labels").json()
-
-    assert labels["FISCAL_CODE"] == {
-        "it": "Codice fiscale",
-        "kind": "text",
-        "redact": True,
-    }
-    assert labels["SIGNATURE"]["kind"] == "visual"
-    assert labels["DATE"]["redact"] is False
 
 
 def test_version_matches_the_project() -> None:

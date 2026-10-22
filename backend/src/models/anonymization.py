@@ -1,33 +1,70 @@
-"""Wire models of the anonymization API (requests, responses, previews)."""
+"""Wire models of the anonymization API, shaped like the document agent's.
+
+A session is created by the upload; its work runs inside an SSE stream whose
+frames are ``status`` (``StatusEvent``), ``done`` (``AnonymizationTurnResponse``
+or ``EditTurnResponse``) and ``error`` (``AnonymizationErrorEvent``).
+"""
 
 from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, Field
 
-from src.services.anonymization import Mode
+from src.services.anonymization import Mode, Status
 
 
-class LabelInfo(BaseModel):
-    it: str
+class LabelView(BaseModel):
+    """One PII label: Italian title, kind and default policy."""
+
+    code: str
+    title: str
     kind: Literal["text", "visual"]
     redact: bool
 
 
-class JobCreated(BaseModel):
-    id: str
-    pages: int
-    size: int
-    mode: Mode
+class AnonymizationSessionResponse(BaseModel):
+    """A session: its state and, once done, the result (``verified`` says if it can be released)."""
 
-
-class JobStatus(BaseModel):
-    id: str
+    session_id: str
     mode: Mode
-    status: str
+    status: Status
     step: str
     percent: int
     error_code: str | None = None
+    pages: int
+    size: int
     result: dict[str, Any] | None = None
+
+
+class StatusEvent(BaseModel):
+    """SSE frame ``status``: progress of the running step."""
+
+    step: str
+    percent: int
+    text: str
+
+
+class AnonymizationTurnResponse(BaseModel):
+    """SSE frame ``done`` of an anonymization."""
+
+    session: AnonymizationSessionResponse
+    elapsed_ms: int
+
+
+class EditTurnResponse(BaseModel):
+    """SSE frame ``done`` of an edit."""
+
+    session: AnonymizationSessionResponse
+    search_hits: int
+    edit_seconds: float
+    elapsed_ms: int
+
+
+class AnonymizationErrorEvent(BaseModel):
+    """SSE frame ``error``: generic Italian title and message, stable code."""
+
+    error_title: str
+    error_message: str
+    error_code: str
 
 
 Coordinate = Annotated[float, Field(ge=-100, le=20000, allow_inf_nan=False)]
@@ -45,7 +82,7 @@ class EditRequest(BaseModel):
     search: str = Field(default="", max_length=200)
 
 
-class PreviewPage(BaseModel):
+class ReviewPage(BaseModel):
     """One page: size in PDF points (display space) and the URLs of its two renderings."""
 
     index: int
@@ -55,7 +92,7 @@ class PreviewPage(BaseModel):
     anonymized: str
 
 
-class PreviewBox(BaseModel):
+class ReviewBox(BaseModel):
     """A detected or manual area; ``rect`` is ``(x0, y0, x1, y1)`` in points, top-left origin."""
 
     id: int
@@ -66,13 +103,13 @@ class PreviewBox(BaseModel):
     redact: bool
 
 
-class PreviewManifest(BaseModel):
+class ReviewManifest(BaseModel):
     """Everything the side-by-side review needs; ``version`` changes with every edit."""
 
-    id: str
+    session_id: str
     mode: Mode
     version: int
     verified: bool
-    pages: list[PreviewPage]
-    boxes: list[PreviewBox]
+    pages: list[ReviewPage]
+    boxes: list[ReviewBox]
     labels: dict[str, str]

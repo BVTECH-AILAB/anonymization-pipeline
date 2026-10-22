@@ -1,3 +1,9 @@
+"""The anonymization API, shaped like the document agent of ai-platform-v2.
+
+A session is created by the upload; its work runs inside an SSE stream whose
+frames are ``status`` (progress), ``done`` (the result) or ``error``.
+"""
+
 import io
 import json
 import shutil
@@ -33,32 +39,7 @@ from tests.documents import (
     native_words,
     scanned_pdf,
 )
-
-
-def upload(
-    client: TestClient,
-    path: Path,
-    name: str | None = None,
-    mime: str = "application/pdf",
-    mode: str = "accurate",
-) -> dict:
-    with path.open("rb") as f:
-        response = client.post(
-            f"/anonymizations?mode={mode}",
-            files={"file": (name or path.name, f, mime)},
-        )
-    assert response.status_code == 202, response.text
-    return response.json()
-
-
-def wait_done(client: TestClient, job_id: str, timeout: float = 60) -> dict:
-    deadline = time.monotonic() + timeout
-    while time.monotonic() < deadline:
-        state = client.get(f"/anonymizations/{job_id}").json()
-        if state["status"] in ("done", "error", "cancelled"):
-            return state
-        time.sleep(0.05)
-    raise AssertionError("job did not finish")
+from tests.sessions import BASE, anonymize, create, edit, frames, run
 
 
 def pdf_text(data: bytes) -> str:
@@ -68,19 +49,50 @@ def pdf_text(data: bytes) -> str:
         )
 
 
-def test_upload_progress_and_result(client: TestClient, letter: Path) -> None:
-    created = upload(client, letter)
+# --- sessions and the anonymization stream ----------------------------------
 
-    with client.stream("GET", f"/anonymizations/{created['id']}/events") as stream:
-        events = [
-            json.loads(line[5:])
-            for line in stream.iter_lines()
-            if line.startswith("data:")
-        ]
 
-    assert events[-1]["status"] == "done"
-    assert [e["percent"] for e in events] == sorted(e["percent"] for e in events)
-    result = events[-1]["result"]
+def test_labels(client: TestClient) -> None:
+    labels = {lab["code"]: lab for lab in client.get("/anonymizations/labels").json()}
+
+    assert labels["FISCAL_CODE"] == {
+        "code": "FISCAL_CODE",
+        "title": "Codice fiscale",
+        "kind": "text",
+        "redact": True,
+    }
+    assert labels["SIGNATURE"]["kind"] == "visual"
+
+
+def test_a_new_session_waits_for_its_stream(client: TestClient, letter: Path) -> None:
+    session = create(client, letter)
+
+    assert session["status"] == "created"
+    assert session["mode"] == "accurate"
+    assert session["pages"] == 1
+    assert session["result"] is None
+    assert client.get(f"{BASE}/{session['session_id']}").json()["status"] == "created"
+
+
+def test_the_stream_reports_progress_then_the_result(
+    client: TestClient, letter: Path
+) -> None:
+    session_id = create(client, letter)["session_id"]
+
+    stream = anonymize(client, session_id)
+
+    events = [event for event, _ in stream]
+    assert events[-1] == "done"
+    assert set(events[:-1]) == {"status"}
+    percents = [data["percent"] for event, data in stream if event == "status"]
+    assert percents == sorted(percents)
+    assert all(data["text"] for event, data in stream if event == "status")
+    done = stream[-1][1]
+    assert done["elapsed_ms"] >= 0
+    session = done["session"]
+    assert session["session_id"] == session_id
+    assert session["status"] == "done"
+    result = session["result"]
     assert result["verified"] is True
     assert result["counts"]["FISCAL_CODE"] == 1
     assert result["counts"]["PERSON"] >= 2
@@ -95,191 +107,77 @@ def test_upload_progress_and_result(client: TestClient, letter: Path) -> None:
     }
 
 
-def test_events_of_a_finished_job_end_immediately(
+def test_the_stream_of_a_finished_session_ends_at_once(
     client: TestClient, letter: Path
 ) -> None:
-    created = upload(client, letter)
-    wait_done(client, created["id"])
+    session_id = create(client, letter)["session_id"]
+    anonymize(client, session_id)
 
-    with client.stream("GET", f"/anonymizations/{created['id']}/events") as stream:
-        lines = [line for line in stream.iter_lines() if line.startswith("data:")]
+    again = anonymize(client, session_id)
 
-    assert len(lines) == 1
-    assert json.loads(lines[0][5:])["status"] == "done"
+    assert [event for event, _ in again] == ["done"]
 
 
-def test_download_pdf_without_pii_and_with_generic_name(
-    client: TestClient, letter: Path
+def test_a_second_stream_while_running_is_busy(
+    client: TestClient, jobs: JobManager, letter: Path
 ) -> None:
-    created = upload(client, letter, name=f"referto_{PATIENT}_{FAKE_CF}.pdf")
-    wait_done(client, created["id"])
+    session_id = create(client, letter)["session_id"]
+    jobs.get(session_id).status = "running"
 
-    response = client.get(f"/anonymizations/{created['id']}/download/pdf")
+    stream = anonymize(client, session_id)
 
-    assert response.status_code == 200
-    assert "documento_anonimizzato.pdf" in response.headers["content-disposition"]
-    assert FAKE_CF not in response.headers["content-disposition"]
-    text = pdf_text(response.content)
-    for value in (FAKE_CF, PATIENT, PHONE, "Rossi"):
-        assert value not in text
-    assert "morbo di Crohn" in text
-    assert "Babinski" in text
-    assert "LETTERA DI DIMISSIONE" in text
-
-
-def test_download_docx(client: TestClient, letter: Path) -> None:
-    created = upload(client, letter)
-    wait_done(client, created["id"])
-
-    response = client.get(f"/anonymizations/{created['id']}/download/docx")
-
-    assert response.status_code == 200
-    text = " ".join(p.text for p in Document(io.BytesIO(response.content)).paragraphs)
-    assert FAKE_CF not in text
-    assert "█" in text
-    assert "Crohn" in text
+    assert stream == [
+        (
+            "error",
+            {
+                "error_title": "Elaborazione in corso",
+                "error_message": "Il documento è già in elaborazione: attendi che finisca.",
+                "error_code": "SESSION_BUSY",
+            },
+        )
+    ]
 
 
-def test_pages_with_boxes_are_released_as_images(
-    client: TestClient, letter: Path
-) -> None:
-    created = upload(client, letter)
-    state = wait_done(client, created["id"])
+def test_an_unknown_session_is_not_found(client: TestClient) -> None:
+    response = client.post(f"{BASE}/{'0' * 32}/anonymize/stream")
 
-    assert state["result"]["verified"] is True
-    assert state["result"]["flattened_pages"] == [1]  # 1-based, as shown to the user
-    pdf = client.get(f"/anonymizations/{created['id']}/download/pdf").content
-    assert PATIENT not in pdf_text(pdf)
-    with pdfium.PdfDocument(pdf) as doc:  # rendered page: still a document, not blank
-        assert doc[0].render(scale=1).to_numpy().mean() < 255
+    assert response.status_code == 404
+    assert response.json()["code"] == "JOB_NOT_FOUND"
 
 
-def test_download_refused_when_a_check_fails(
-    client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    def failing(*args, **kwargs) -> Report:
-        rep = Report()
-        rep.fail("value still in text: 'x'")
-        return rep
-
-    monkeypatch.setattr("src.services.anonymizer.release.verify", failing)
-    created = upload(client, letter)
-    state = wait_done(client, created["id"])
-
-    assert state["result"]["verified"] is False
-    assert state["result"]["issues"]
-    response = client.get(f"/anonymizations/{created['id']}/download/pdf")
-    assert response.status_code == 409
-    assert response.json()["code"] == "VERIFICATION_FAILED"
-
-
-def test_verification_time_is_measured(
-    client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    def slow_verify(*args, **kwargs):
-        time.sleep(0.05)
-        return verify(*args, **kwargs)
-
-    monkeypatch.setattr("src.services.anonymizer.release.verify", slow_verify)
-    created = upload(client, letter)
-    timings = wait_done(client, created["id"])["result"]["timings"]
-
-    assert timings["verification"] >= 0.05
-
-
-def test_a_failed_edit_leaves_the_job_blocked_and_clean(
+def test_processing_error_is_an_error_frame(
     client: TestClient, jobs: JobManager, letter: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    created = upload(client, letter)
-    wait_done(client, created["id"])
+    def broken(path: Path, progress, visual: bool = True) -> object:
+        raise RuntimeError(f"cannot read {FAKE_CF}")
 
-    def broken(*args, **kwargs):
-        raise RuntimeError("redaction failed")
+    monkeypatch.setattr(jobs.pipeline, "analyze", broken)
+    session_id = create(client, letter)["session_id"]
 
-    monkeypatch.setattr(
-        "src.services.anonymizer.document.redact_and_verify",
-        broken,
-    )
-    response = client.post(
-        f"/anonymizations/{created['id']}/edits", json={"remove": [0]}
-    )
+    stream = anonymize(client, session_id)
 
-    assert response.status_code == 500
-    state = client.get(f"/anonymizations/{created['id']}").json()
-    assert state["result"]["verified"] is False
-    assert state["result"]["edits"] == 0
-    assert (
-        client.get(f"/anonymizations/{created['id']}/download/pdf").status_code == 409
-    )
-    assert not list(jobs.get(created["id"]).dir.glob("anonymized.next.*"))
+    event, data = stream[-1]
+    assert event == "error"
+    assert data["error_code"] == "PROCESSING_FAILED"
+    assert data["error_title"] and data["error_message"]
+    assert FAKE_CF not in json.dumps(stream)
+    state = client.get(f"{BASE}/{session_id}").json()
+    assert (state["status"], state["error_code"]) == ("error", "PROCESSING_FAILED")
 
 
-def test_page_previews(client: TestClient, letter: Path) -> None:
-    created = upload(client, letter)
-    wait_done(client, created["id"])
-
-    for which in ("original", "anonymized"):
-        response = client.get(f"/anonymizations/{created['id']}/pages/{which}/0?dpi=60")
-        assert response.status_code == 200
-        assert response.headers["content-type"] == "image/png"
-    assert (
-        client.get(f"/anonymizations/{created['id']}/pages/original/3").status_code
-        == 404
-    )
-
-
-def test_edits_add_remove_and_search(client: TestClient, letter: Path) -> None:
-    created = upload(client, letter)
-    result = wait_done(client, created["id"])["result"]
-    person = next(b for b in result["boxes"] if b["label"] == "PERSON" and b["redact"])
-
-    edited = client.post(
-        f"/anonymizations/{created['id']}/edits",
-        json={
-            "add": [{"page": 0, "rect": [40, 300, 200, 320]}],
-            "remove": [person["id"]],
-            "search": "Medicina Interna",
-        },
-    ).json()
-
-    assert edited["edits"] == 1
-    assert edited["search_hits"] == 1
-    assert edited["edit_seconds"] >= 0
-    boxes = edited["boxes"]
-    assert boxes[person["id"]]["redact"] is False
-    assert "removed-by-user" in boxes[person["id"]]["sources"]
-    assert any(b["sources"] == ["manual-area"] for b in boxes)
-    text = pdf_text(client.get(f"/anonymizations/{created['id']}/download/pdf").content)
-    assert "Medicina Interna" not in text
-
-    restored = client.post(
-        f"/anonymizations/{created['id']}/edits", json={"restore": [person["id"]]}
-    ).json()
-    assert restored["boxes"][person["id"]]["redact"] is True
-
-
-def test_edits_before_completion_are_refused(
-    client: TestClient, jobs: JobManager, letter: Path
+def test_a_dependency_down_is_reported_with_its_code(
+    client: TestClient, jobs: JobManager, letter: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    job = jobs.create(letter.read_bytes(), "a.pdf")
-    job.status = "running"
+    def ner_down(path: Path, progress, visual: bool = True) -> object:
+        raise NerUnavailableError()
 
-    response = client.post(f"/anonymizations/{job.id}/edits", json={"search": "Rossi"})
+    monkeypatch.setattr(jobs.pipeline, "analyze", ner_down)
+    session_id = create(client, letter, mode="fast")["session_id"]
 
-    assert response.status_code == 409
-    assert response.json()["code"] == "JOB_NOT_READY"
+    event, data = anonymize(client, session_id)[-1]
 
-
-def test_delete_removes_files(
-    client: TestClient, jobs: JobManager, letter: Path
-) -> None:
-    created = upload(client, letter)
-    wait_done(client, created["id"])
-    job_dir = jobs.get(created["id"]).dir
-
-    assert client.delete(f"/anonymizations/{created['id']}").status_code == 204
-    assert not job_dir.exists()
-    assert client.get(f"/anonymizations/{created['id']}").status_code == 404
+    assert (event, data["error_code"]) == ("error", "NER_UNAVAILABLE")
+    assert data["error_title"] == "Servizio non disponibile"
 
 
 def test_cancel(
@@ -294,29 +192,50 @@ def test_cancel(
         return original(path, progress, visual)
 
     monkeypatch.setattr(jobs.pipeline, "analyze", slow_analyze)
-    created = upload(client, letter)
-    assert client.post(f"/anonymizations/{created['id']}/cancel").status_code == 202
+    session_id = create(client, letter)["session_id"]
+    jobs.start(session_id)
+
+    assert client.post(f"{BASE}/{session_id}/cancel").status_code == 202
     deadline = time.monotonic() + 10
-    while created["id"] in jobs.jobs and time.monotonic() < deadline:
+    while session_id in jobs.jobs and time.monotonic() < deadline:
         time.sleep(0.05)
 
-    assert created["id"] not in jobs.jobs
-    assert client.get(f"/anonymizations/{created['id']}").status_code == 404
+    assert session_id not in jobs.jobs
+    assert client.get(f"{BASE}/{session_id}").status_code == 404
 
 
-def test_processing_error_is_reported(
-    client: TestClient, jobs: JobManager, letter: Path, monkeypatch: pytest.MonkeyPatch
+def test_cancel_before_the_stream_deletes_the_session(
+    client: TestClient, jobs: JobManager, letter: Path
 ) -> None:
-    def broken(path: Path, progress, visual: bool = True) -> object:
-        raise RuntimeError(f"cannot read {FAKE_CF}")
+    session_id = create(client, letter)["session_id"]
+    job_dir = jobs.get(session_id).dir
 
-    monkeypatch.setattr(jobs.pipeline, "analyze", broken)
-    created = upload(client, letter)
-    state = wait_done(client, created["id"])
+    assert client.post(f"{BASE}/{session_id}/cancel").status_code == 202
 
-    assert state["status"] == "error"
-    assert state["error_code"] == "PROCESSING_FAILED"
-    assert FAKE_CF not in json.dumps(state)
+    assert not job_dir.exists()
+    assert client.get(f"{BASE}/{session_id}").status_code == 404
+
+
+def test_delete_removes_files(
+    client: TestClient, jobs: JobManager, letter: Path
+) -> None:
+    session_id = run(client, letter)["session_id"]
+    job_dir = jobs.get(session_id).dir
+
+    assert client.delete(f"{BASE}/{session_id}").status_code == 204
+    assert not job_dir.exists()
+    assert client.get(f"{BASE}/{session_id}").status_code == 404
+
+
+def test_without_a_job_manager_the_api_is_unavailable(client: TestClient) -> None:
+    client.app.state.jobs = None
+
+    response = client.get(f"{BASE}/{'0' * 32}")
+
+    assert response.status_code == 503
+
+
+# --- uploads ----------------------------------------------------------------
 
 
 @pytest.mark.parametrize(
@@ -331,7 +250,7 @@ def test_upload_errors(
     client: TestClient, name: str, data: bytes, status: int, code: str
 ) -> None:
     response = client.post(
-        "/anonymizations", files={"file": (name, data, "application/octet-stream")}
+        BASE, files={"file": (name, data, "application/octet-stream")}
     )
 
     assert response.status_code == status
@@ -343,8 +262,7 @@ def test_password_protected_pdf(client: TestClient, tmp_path: Path) -> None:
     edit_pdf(path, password="pw")
 
     response = client.post(
-        "/anonymizations",
-        files={"file": ("locked.pdf", path.read_bytes(), "application/pdf")},
+        BASE, files={"file": ("locked.pdf", path.read_bytes(), "application/pdf")}
     )
 
     assert response.status_code == 422
@@ -383,24 +301,20 @@ def test_image_upload_becomes_a_pdf(
 ) -> None:
     with pdfium.PdfDocument(letter) as doc:
         img = doc[0].render(scale=80 / 72).to_pil().convert("RGB")
-    buf = io.BytesIO()
-    img.save(buf, "PNG")
+    photo = tmp_path / "foto.png"
+    img.save(photo, "PNG")
 
-    response = client.post(
-        "/anonymizations", files={"file": ("foto.png", buf.getvalue(), "image/png")}
-    )
+    state = run(client, photo, mime="image/png")
 
-    assert response.status_code == 202
-    state = wait_done(client, response.json()["id"])
     assert state["status"] == "done"
     assert state["result"]["pages"][0]["scanned"] is True
 
 
 def test_image_with_too_many_frames(jobs: JobManager) -> None:
     jobs.settings = jobs.settings.model_copy(update={"max_pages": 1})
-    frames = [Image.new("RGB", (40, 40), c) for c in ("white", "black")]
+    frames_ = [Image.new("RGB", (40, 40), c) for c in ("white", "black")]
     buf = io.BytesIO()
-    frames[0].save(buf, "TIFF", save_all=True, append_images=frames[1:])
+    frames_[0].save(buf, "TIFF", save_all=True, append_images=frames_[1:])
 
     with pytest.raises(TooManyPagesError):
         jobs.create(buf.getvalue(), "scan.tiff")
@@ -420,8 +334,7 @@ def test_scanned_upload_uses_ocr(
     scan = scanned_pdf(native, tmp_path / "scan.pdf")
     fake_reader.words = native_words(native)
 
-    created = upload(client, scan)
-    result = wait_done(client, created["id"])["result"]
+    result = run(client, scan)["result"]
 
     assert result["verified"] is True
     assert result["pages"][0]["scanned"] is True
@@ -447,37 +360,153 @@ def test_upload_refused_while_models_load(
 def test_mode_defaults_to_accurate(client: TestClient, letter: Path) -> None:
     with letter.open("rb") as f:
         created = client.post(
-            "/anonymizations", files={"file": ("a.pdf", f, "application/pdf")}
+            BASE, files={"file": ("a.pdf", f, "application/pdf")}
         ).json()
 
     assert created["mode"] == "accurate"
-    assert client.get(f"/anonymizations/{created['id']}").json()["mode"] == "accurate"
+    assert client.get(f"{BASE}/{created['session_id']}").json()["mode"] == "accurate"
 
 
 def test_unknown_mode_is_refused(client: TestClient, letter: Path) -> None:
     with letter.open("rb") as f:
         response = client.post(
-            "/anonymizations?mode=turbo",
+            BASE,
             files={"file": ("a.pdf", f, "application/pdf")},
+            data={"mode": "turbo"},
         )
 
     assert response.status_code == 422
 
 
+# --- downloads and preview --------------------------------------------------
+
+
+def test_download_pdf_without_pii_and_with_generic_name(
+    client: TestClient, letter: Path
+) -> None:
+    session_id = run(client, letter, name=f"referto_{PATIENT}_{FAKE_CF}.pdf")[
+        "session_id"
+    ]
+
+    response = client.get(f"{BASE}/{session_id}/download")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/pdf"
+    disposition = response.headers["content-disposition"]
+    assert disposition == "attachment; filename*=UTF-8''documento_anonimizzato.pdf"
+    assert response.headers["cache-control"] == "no-store"
+    text = pdf_text(response.content)
+    for value in (FAKE_CF, PATIENT, PHONE, "Rossi"):
+        assert value not in text
+    assert "morbo di Crohn" in text
+    assert "Babinski" in text
+    assert "LETTERA DI DIMISSIONE" in text
+
+
+def test_download_docx(client: TestClient, letter: Path) -> None:
+    session_id = run(client, letter)["session_id"]
+
+    response = client.get(f"{BASE}/{session_id}/download?format=docx")
+
+    assert response.status_code == 200
+    text = " ".join(p.text for p in Document(io.BytesIO(response.content)).paragraphs)
+    assert FAKE_CF not in text
+    assert "█" in text
+    assert "Crohn" in text
+
+
+def test_preview_is_the_released_pdf_inline(client: TestClient, letter: Path) -> None:
+    session_id = run(client, letter)["session_id"]
+
+    response = client.get(f"{BASE}/{session_id}/preview")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/pdf"
+    assert response.headers["content-disposition"].startswith("inline;")
+    assert PATIENT not in pdf_text(response.content)
+
+
+def test_pages_with_boxes_are_released_as_images(
+    client: TestClient, letter: Path
+) -> None:
+    state = run(client, letter)
+
+    assert state["result"]["verified"] is True
+    assert state["result"]["flattened_pages"] == [1]  # 1-based, as shown to the user
+    pdf = client.get(f"{BASE}/{state['session_id']}/download").content
+    assert PATIENT not in pdf_text(pdf)
+    with pdfium.PdfDocument(pdf) as doc:  # rendered page: still a document, not blank
+        assert doc[0].render(scale=1).to_numpy().mean() < 255
+
+
+@pytest.mark.parametrize("path", ["download", "preview"])
+def test_release_refused_when_a_check_fails(
+    client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch, path: str
+) -> None:
+    def failing(*args, **kwargs) -> Report:
+        rep = Report()
+        rep.fail("value still in text: 'x'")
+        return rep
+
+    monkeypatch.setattr("src.services.anonymizer.release.verify", failing)
+    state = run(client, letter)
+
+    assert state["result"]["verified"] is False
+    assert state["result"]["issues"]
+    response = client.get(f"{BASE}/{state['session_id']}/{path}")
+    assert response.status_code == 409
+    assert response.json()["code"] == "VERIFICATION_FAILED"
+
+
+def test_verification_time_is_measured(
+    client: TestClient, letter: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def slow_verify(*args, **kwargs):
+        time.sleep(0.05)
+        return verify(*args, **kwargs)
+
+    monkeypatch.setattr("src.services.anonymizer.release.verify", slow_verify)
+    timings = run(client, letter)["result"]["timings"]
+
+    assert timings["verification"] >= 0.05
+
+
+def test_release_before_completion_is_refused(client: TestClient, letter: Path) -> None:
+    session_id = create(client, letter)["session_id"]
+
+    response = client.get(f"{BASE}/{session_id}/download")
+
+    assert response.status_code == 409
+    assert response.json()["code"] == "JOB_NOT_READY"
+
+
+def test_download_during_an_edit_is_not_ready(
+    client: TestClient, jobs: JobManager, letter: Path
+) -> None:
+    session_id = run(client, letter)["session_id"]
+    jobs.get(session_id).pending_edits = 1
+
+    response = client.get(f"{BASE}/{session_id}/download")
+
+    assert response.status_code == 409
+    assert response.json()["code"] == "JOB_NOT_READY"
+
+
+# --- fast mode ---------------------------------------------------------------
+
+
 def test_fast_mode_releases_anonymized_markdown(
     client: TestClient, letter: Path
 ) -> None:
-    created = upload(client, letter, name=f"referto_{FAKE_CF}.pdf", mode="fast")
-    state = wait_done(client, created["id"])
+    state = run(client, letter, name=f"referto_{FAKE_CF}.pdf", mode="fast")
 
-    assert created["mode"] == "fast"
     assert state["mode"] == "fast"
     result = state["result"]
     assert result["verified"] is True
     assert result["counts"]["FISCAL_CODE"] == 1
     assert "boxes" not in result
     assert "QRCODE" not in result["counts"]  # no visual detection in fast mode
-    response = client.get(f"/anonymizations/{created['id']}/download/md")
+    response = client.get(f"{BASE}/{state['session_id']}/download")
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/markdown")
     assert "documento_anonimizzato.md" in response.headers["content-disposition"]
@@ -488,6 +517,9 @@ def test_fast_mode_releases_anonymized_markdown(
     for value in (FAKE_CF, PATIENT, PHONE):
         assert value not in md
     assert "Crohn" in md
+    preview = client.get(f"{BASE}/{state['session_id']}/preview")
+    assert preview.headers["content-disposition"].startswith("inline;")
+    assert preview.text == md
 
 
 def test_fast_markdown_refused_when_a_value_survives(
@@ -497,75 +529,89 @@ def test_fast_markdown_refused_when_a_value_survives(
         "src.services.anonymizer.document.verify_markdown",
         lambda *_: ["value still in the Markdown export: 'x'"],
     )
-    created = upload(client, letter, mode="fast")
-    state = wait_done(client, created["id"])
+    state = run(client, letter, mode="fast")
 
     assert state["result"]["verified"] is False
-    response = client.get(f"/anonymizations/{created['id']}/download/md")
+    response = client.get(f"{BASE}/{state['session_id']}/download?format=md")
     assert response.status_code == 409
     assert response.json()["code"] == "VERIFICATION_FAILED"
 
 
 @pytest.mark.parametrize(
-    ("mode", "method", "path"),
+    ("mode", "path"),
     [
-        ("fast", "get", "download/pdf"),
-        ("fast", "get", "download/docx"),
-        ("fast", "get", "preview"),
-        ("fast", "get", "pages/anonymized/0"),
-        ("fast", "post", "edits"),
-        ("accurate", "get", "download/md"),
+        ("fast", "download?format=pdf"),
+        ("fast", "download?format=docx"),
+        ("fast", "review"),
+        ("fast", "pages/anonymized/0"),
+        ("accurate", "download?format=md"),
     ],
 )
 def test_actions_of_the_other_mode_are_refused(
-    client: TestClient, letter: Path, mode: str, method: str, path: str
+    client: TestClient, letter: Path, mode: str, path: str
 ) -> None:
-    created = upload(client, letter, mode=mode)
-    wait_done(client, created["id"])
+    session_id = run(client, letter, mode=mode)["session_id"]
 
-    url = f"/anonymizations/{created['id']}/{path}"
-    response = client.post(url, json={}) if method == "post" else client.get(url)
+    response = client.get(f"{BASE}/{session_id}/{path}")
 
     assert response.status_code == 409
     assert response.json()["code"] == "MODE_NOT_SUPPORTED"
 
 
-def test_fast_job_keeps_the_original_preview(client: TestClient, letter: Path) -> None:
-    created = upload(client, letter, mode="fast")
-    wait_done(client, created["id"])
+def test_edits_of_a_fast_session_are_refused(client: TestClient, letter: Path) -> None:
+    session_id = run(client, letter, mode="fast")["session_id"]
 
-    response = client.get(f"/anonymizations/{created['id']}/pages/original/0?dpi=60")
+    response = client.post(f"{BASE}/{session_id}/edits/stream", json={})
+
+    assert response.status_code == 409
+    assert response.json()["code"] == "MODE_NOT_SUPPORTED"
+
+
+def test_fast_session_keeps_the_original_page(client: TestClient, letter: Path) -> None:
+    session_id = run(client, letter, mode="fast")["session_id"]
+
+    response = client.get(f"{BASE}/{session_id}/pages/original/0?dpi=60")
 
     assert response.status_code == 200
 
 
-def test_preview_manifest(client: TestClient, letter: Path) -> None:
-    created = upload(client, letter)
-    wait_done(client, created["id"])
-    url = f"/anonymizations/{created['id']}/preview"
+# --- review and edits ----------------------------------------------------------
 
-    preview = client.get(url).json()
 
-    assert preview["id"] == created["id"]
-    assert preview["mode"] == "accurate"
-    assert preview["version"] == 0
-    assert preview["verified"] is True
-    page = preview["pages"][0]
+def test_page_images(client: TestClient, letter: Path) -> None:
+    session_id = run(client, letter)["session_id"]
+
+    for which in ("original", "anonymized"):
+        response = client.get(f"{BASE}/{session_id}/pages/{which}/0?dpi=60")
+        assert response.status_code == 200
+        assert response.headers["content-type"] == "image/png"
+    assert client.get(f"{BASE}/{session_id}/pages/original/3").status_code == 404
+
+
+def test_review_manifest(client: TestClient, letter: Path) -> None:
+    session_id = run(client, letter)["session_id"]
+    url = f"{BASE}/{session_id}/review"
+
+    review = client.get(url).json()
+
+    assert review["session_id"] == session_id
+    assert review["mode"] == "accurate"
+    assert review["version"] == 0
+    assert review["verified"] is True
+    page = review["pages"][0]
     assert page["index"] == 0
     assert (page["width"], page["height"]) == (595, 842)
-    assert page["original"] == f"/anonymizations/{created['id']}/pages/original/0"
-    assert page["anonymized"] == (
-        f"/anonymizations/{created['id']}/pages/anonymized/0?v=0"
-    )
+    assert page["original"] == f"{BASE}/{session_id}/pages/original/0"
+    assert page["anonymized"] == f"{BASE}/{session_id}/pages/anonymized/0?v=0"
     assert client.get(page["original"]).status_code == 200
     assert client.get(page["anonymized"]).status_code == 200
-    box = preview["boxes"][0]
+    box = review["boxes"][0]
     assert set(box) == {"id", "page", "rect", "label", "layer", "redact"}
-    assert preview["labels"]["PERSON"] == "Nomi"
-    assert FAKE_CF not in json.dumps(preview)
-    assert PATIENT not in json.dumps(preview)
+    assert review["labels"]["PERSON"] == "Nomi"
+    assert FAKE_CF not in json.dumps(review)
+    assert PATIENT not in json.dumps(review)
 
-    client.post(f"/anonymizations/{created['id']}/edits", json={"remove": [0]})
+    edit(client, session_id, {"remove": [0]})
     edited = client.get(url).json()
 
     assert edited["version"] == 1
@@ -573,67 +619,102 @@ def test_preview_manifest(client: TestClient, letter: Path) -> None:
     assert edited["boxes"][0]["redact"] is False
 
 
-def test_preview_before_completion_is_refused(
-    client: TestClient, jobs: JobManager, letter: Path
-) -> None:
-    job = jobs.create(letter.read_bytes(), "a.pdf")
-    job.status = "running"
+def test_review_before_completion_is_refused(client: TestClient, letter: Path) -> None:
+    session_id = create(client, letter)["session_id"]
 
-    response = client.get(f"/anonymizations/{job.id}/preview")
+    response = client.get(f"{BASE}/{session_id}/review")
 
     assert response.status_code == 409
     assert response.json()["code"] == "JOB_NOT_READY"
 
 
-def test_a_dependency_down_is_reported_with_its_code(
-    client: TestClient, jobs: JobManager, letter: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    def ner_down(path: Path, progress, visual: bool = True) -> object:
-        raise NerUnavailableError()
+def test_edits_add_remove_and_search(client: TestClient, letter: Path) -> None:
+    state = run(client, letter)
+    session_id = state["session_id"]
+    person = next(
+        b for b in state["result"]["boxes"] if b["label"] == "PERSON" and b["redact"]
+    )
 
-    monkeypatch.setattr(jobs.pipeline, "analyze", ner_down)
-    created = upload(client, letter, mode="fast")
-    state = wait_done(client, created["id"])
+    stream = edit(
+        client,
+        session_id,
+        {
+            "add": [{"page": 0, "rect": [40, 300, 200, 320]}],
+            "remove": [person["id"]],
+            "search": "Medicina Interna",
+        },
+    )
 
-    assert state["status"] == "error"
-    assert state["error_code"] == "NER_UNAVAILABLE"
+    assert {event for event, _ in stream[:-1]} <= {"status"}
+    event, done = stream[-1]
+    assert event == "done"
+    assert done["search_hits"] == 1
+    assert done["edit_seconds"] >= 0
+    result = done["session"]["result"]
+    assert result["edits"] == 1
+    boxes = result["boxes"]
+    assert boxes[person["id"]]["redact"] is False
+    assert "removed-by-user" in boxes[person["id"]]["sources"]
+    assert any(b["sources"] == ["manual-area"] for b in boxes)
+    text = pdf_text(client.get(f"{BASE}/{session_id}/download").content)
+    assert "Medicina Interna" not in text
+
+    restored = edit(client, session_id, {"restore": [person["id"]]})[-1][1]
+    assert restored["session"]["result"]["boxes"][person["id"]]["redact"] is True
 
 
-def test_download_during_an_edit_is_not_ready(
-    client: TestClient, jobs: JobManager, letter: Path
-) -> None:
-    created = upload(client, letter)
-    wait_done(client, created["id"])
-    jobs.get(created["id"]).pending_edits = 1
+def test_edits_before_completion_are_refused(client: TestClient, letter: Path) -> None:
+    session_id = create(client, letter)["session_id"]
 
-    response = client.get(f"/anonymizations/{created['id']}/download/pdf")
+    response = client.post(f"{BASE}/{session_id}/edits/stream", json={"search": "x"})
 
     assert response.status_code == 409
     assert response.json()["code"] == "JOB_NOT_READY"
 
 
-def test_edits_leave_no_pending_count(
+def test_a_second_edit_while_one_runs_is_busy(
+    client: TestClient, jobs: JobManager, letter: Path
+) -> None:
+    session_id = run(client, letter)["session_id"]
+    jobs.get(session_id).pending_edits = 1
+
+    stream = edit(client, session_id, {"remove": [0]})
+
+    assert [(e, d["error_code"]) for e, d in stream] == [("error", "SESSION_BUSY")]
+
+
+def test_a_failed_edit_leaves_the_session_blocked_and_clean(
     client: TestClient, jobs: JobManager, letter: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    created = upload(client, letter)
-    wait_done(client, created["id"])
-    client.post(f"/anonymizations/{created['id']}/edits", json={"remove": [0]})
+    session_id = run(client, letter)["session_id"]
 
     def broken(*args, **kwargs):
-        raise RuntimeError("redaction failed")
+        raise RuntimeError(f"redaction failed on {FAKE_CF}")
 
     monkeypatch.setattr("src.services.anonymizer.document.redact_and_verify", broken)
-    client.post(f"/anonymizations/{created['id']}/edits", json={"remove": [1]})
+    stream = edit(client, session_id, {"remove": [0]})
 
-    assert jobs.get(created["id"]).pending_edits == 0
+    event, data = stream[-1]
+    assert (event, data["error_code"]) == ("error", "PROCESSING_FAILED")
+    assert FAKE_CF not in json.dumps(stream)
+    state = client.get(f"{BASE}/{session_id}").json()
+    assert state["result"]["verified"] is False
+    assert state["result"]["edits"] == 0
+    assert client.get(f"{BASE}/{session_id}/download").status_code == 409
+    assert not list(jobs.get(session_id).dir.glob("anonymized.next.*"))
+    assert jobs.get(session_id).pending_edits == 0
+
+
+# --- files that disappear --------------------------------------------------------
 
 
 @pytest.mark.parametrize(
     ("mode", "path"),
     [
-        ("accurate", "download/pdf"),
-        ("accurate", "download/docx"),
-        ("fast", "download/md"),
+        ("accurate", "download"),
+        ("accurate", "download?format=docx"),
+        ("accurate", "preview"),
+        ("fast", "download"),
         ("accurate", "pages/original/0"),
         ("accurate", "pages/anonymized/0"),
     ],
@@ -641,11 +722,10 @@ def test_edits_leave_no_pending_count(
 def test_files_deleted_under_a_request_are_not_found(
     client: TestClient, jobs: JobManager, letter: Path, mode: str, path: str
 ) -> None:
-    created = upload(client, letter, mode=mode)
-    wait_done(client, created["id"])
-    shutil.rmtree(jobs.get(created["id"]).dir)  # expired between lookup and read
+    session_id = run(client, letter, mode=mode)["session_id"]
+    shutil.rmtree(jobs.get(session_id).dir)  # expired between lookup and read
 
-    response = client.get(f"/anonymizations/{created['id']}/{path}")
+    response = client.get(f"{BASE}/{session_id}/{path}")
 
     assert response.status_code == 404
     assert response.json()["code"] == "JOB_NOT_FOUND"
@@ -662,7 +742,15 @@ async def test_a_file_deleted_while_it_is_sent_is_sent_whole(tmp_path: Path) -> 
     body = b"".join(c for c in chunks if isinstance(c, bytes))
 
     assert all(isinstance(c, bytes) for c in chunks)
-
     assert body == data
     assert response.headers["content-length"] == str(len(data))
-    assert 'filename="documento.pdf"' in response.headers["content-disposition"]
+    assert (
+        response.headers["content-disposition"]
+        == "attachment; filename*=UTF-8''documento.pdf"
+    )
+
+
+def test_frames_parser_skips_keep_alive() -> None:
+    body = ': keep-alive\n\nevent: status\ndata: {"percent": 1}\n\n'
+
+    assert frames(body) == [("status", {"percent": 1})]

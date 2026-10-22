@@ -10,10 +10,15 @@ from src.services.anonymizer import errors as engine
 
 
 class ServiceError(Exception):
-    """Base class for errors with a known HTTP mapping."""
+    """Base class for errors with a known HTTP mapping.
+
+    ``user_title`` heads the ``error`` frame of an SSE stream, where the error
+    arrives after the response started and has no HTTP status of its own.
+    """
 
     status_code: int = 500
     code: str = "INTERNAL_ERROR"
+    user_title: str = "Errore temporaneo"
     user_message: str = "Si è verificato un errore interno. Riprova più tardi."
 
 
@@ -26,6 +31,7 @@ class NotFoundError(ServiceError):
 class ServiceUnavailableError(ServiceError):
     status_code = 503
     code = "SERVICE_UNAVAILABLE"
+    user_title = "Servizio non disponibile"
     user_message = "Servizio temporaneamente non disponibile. Riprova più tardi."
 
 
@@ -76,6 +82,7 @@ class TooManyJobsError(ServiceError):
 class JobNotFoundError(ServiceError):
     status_code = 404
     code = "JOB_NOT_FOUND"
+    user_title = "Documento non trovato"
     user_message = "Documento non trovato o scaduto."
 
 
@@ -94,9 +101,38 @@ class ModeNotSupportedError(ServiceError):
 class VerificationFailedError(ServiceError):
     status_code = 409
     code = "VERIFICATION_FAILED"
+    user_title = "Verifica non superata"
     user_message = (
         "Verifica non superata: il documento anonimizzato non viene rilasciato."
     )
+
+
+class SessionBusyError(ServiceError):
+    """The session is already being anonymized or edited."""
+
+    status_code = 409
+    code = "SESSION_BUSY"
+    user_title = "Elaborazione in corso"
+    user_message = "Il documento è già in elaborazione: attendi che finisca."
+
+
+class ProcessingFailedError(ServiceError):
+    """The anonymization or an edit failed for an unexpected reason."""
+
+    code = "PROCESSING_FAILED"
+    user_title = "Elaborazione non riuscita"
+    user_message = (
+        "Non è stato possibile anonimizzare il documento. Riprova o caricalo di nuovo."
+    )
+
+
+class JobCancelledError(ServiceError):
+    """The session was cancelled while it was being anonymized."""
+
+    status_code = 409
+    code = "CANCELLED"
+    user_title = "Elaborazione annullata"
+    user_message = "L'elaborazione è stata annullata e il documento eliminato."
 
 
 _ENGINE_ERRORS: dict[type[engine.AnonymizationError], type[ServiceError]] = {
@@ -114,4 +150,15 @@ def service_error(exc: engine.AnonymizationError) -> ServiceError:
     for engine_error, error in _ENGINE_ERRORS.items():
         if isinstance(exc, engine_error):
             return error()
+    return ServiceError()
+
+
+def error_for_code(code: str | None) -> ServiceError:
+    """The service error of a stable code (the ``error_code`` of a job); unknown: generic."""
+    pending = list(ServiceError.__subclasses__())
+    while pending:
+        cls = pending.pop()
+        if cls.code == code:
+            return cls()
+        pending += cls.__subclasses__()
     return ServiceError()

@@ -1,13 +1,15 @@
-"""Anonymization jobs: upload -> analysis -> release, around the engine.
+"""Anonymization sessions: upload -> analysis -> release, around the engine.
 
 The engine (``src.services.anonymizer``) converts, analyses, releases and edits a
-document; this module owns what a service adds: the queue, progress over
-Server-Sent Events, expiry, limits and the KPI events. Two modes: ``accurate`` releases the redacted PDF (and a Word copy) and can be
+document; this module owns what a service adds: the queue, progress for the
+SSE streams, expiry, limits and the KPI events. A session (a job) is created
+by the upload and started by ``start``; edits run through ``start_edit``. Two
+modes: ``accurate`` releases the redacted PDF (and a Word copy) and can be
 edited by hand; ``fast`` skips the visual detectors and the PDF redaction and
 releases only the anonymized text as Markdown.
 
 One job runs at a time (single worker: the models share one GPU). Progress
-is pushed to Server-Sent Events subscribers. Documents live in a private
+is pushed to the subscribers of a job. Documents live in a private
 work folder only while the job exists and are deleted after
 ``job_ttl_minutes`` or on request. Nothing about the content (text, values,
 file names) is ever logged: events carry only ids, counters and timings.
@@ -21,12 +23,10 @@ import threading
 import time
 import uuid
 from collections.abc import Callable
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Annotated, Any, Literal
-
-from fastapi import Depends, Request
+from typing import Any, Literal
 
 from src.config import Settings
 from src.errors import (
@@ -36,6 +36,7 @@ from src.errors import (
     ModeNotSupportedError,
     ServiceError,
     ServiceUnavailableError,
+    SessionBusyError,
     TooManyJobsError,
     service_error,
 )
@@ -63,7 +64,7 @@ WEIGHTS = {
     "export": (80, 100),  # fast mode: Markdown instead of redaction and previews
 }
 TERMINAL = {"done", "error", "cancelled"}
-Status = Literal["queued", "running", "done", "error", "cancelled"]
+Status = Literal["created", "queued", "running", "done", "error", "cancelled"]
 Mode = Literal["fast", "accurate"]
 
 
@@ -83,7 +84,7 @@ class Job:
     source_format: str
     mode: Mode = "accurate"
     created: float = field(default_factory=time.monotonic)
-    status: Status = "queued"
+    status: Status = "created"
     step: str = "read"
     percent: int = 0
     error_code: str | None = None
@@ -123,6 +124,8 @@ class Job:
             "step": self.step,
             "percent": self.percent,
             "error_code": self.error_code,
+            "pages": self.pages,
+            "size": self.size,
         }
         if self.status == "done":
             out["result"] = self.result
@@ -156,7 +159,7 @@ class JobManager:
 
     # -- lifecycle -----------------------------------------------------------
     def create(self, data: bytes, filename: str, mode: Mode = "accurate") -> Job:
-        """Validate and store an upload, then queue it in ``mode``.
+        """Validate and store an upload as a new session in ``mode``; ``start`` runs it.
 
         Raises:
             FileTooLargeError, UnsupportedFormatError, UnreadableDocumentError,
@@ -207,6 +210,22 @@ class JobManager:
                 "mode": mode,
             },
         )
+        return job
+
+    def start(self, jid: str) -> Job:
+        """Queue the anonymization of a new session; a finished one is left as it is.
+
+        Raises:
+            JobNotFoundError: Unknown or expired id.
+            SessionBusyError: Already queued or running, or an edit is running.
+        """
+        job = self.get(jid)
+        with self._jobs_lock:
+            if job.status in ("queued", "running") or job.pending_edits:
+                raise SessionBusyError()
+            if job.status != "created":
+                return job
+            job.status = "queued"
         self._executor.submit(self._run, job)
         return job
 
@@ -248,9 +267,20 @@ class JobManager:
         return job
 
     def cancel(self, jid: str) -> None:
-        """Ask the worker to stop the job at the next step; a finished job is left as it is."""
+        """Stop the job at the next step; a session never started is deleted now.
+
+        A finished job is left as it is.
+        """
         job = self.get(jid)
-        if job.status not in TERMINAL:
+        with self._jobs_lock:
+            never_started = job.status == "created"
+            if never_started:
+                job.status = "cancelled"
+                self.jobs.pop(job.id, None)
+        if never_started:
+            shutil.rmtree(job.dir, ignore_errors=True)
+            log_event(logger, "anonymization_cancelled", {"job_id": job.id})
+        elif job.status not in TERMINAL:
             job.cancel.set()
 
     def delete(self, jid: str) -> None:
@@ -475,15 +505,18 @@ class JobManager:
             "mode": job.mode,
         }
 
-    def edit(
+    def start_edit(
         self,
         jid: str,
         add: list[tuple[int, tuple[float, float, float, float]]],
         remove: list[int],
         restore: list[int],
         search: str,
-    ) -> dict[str, Any]:
-        """Apply manual corrections, then redact and verify again (no new detection).
+    ) -> Future[dict[str, Any]]:
+        """Queue manual corrections, then redaction and verification (no new detection).
+
+        Progress goes to the job's subscribers; until the future is done nothing
+        is downloadable.
 
         Args:
             jid: Job id.
@@ -493,19 +526,53 @@ class JobManager:
             search: Text whose every occurrence is redacted ("" for none).
 
         Returns:
-            The new result, with ``edit_seconds`` and ``search_hits``.
+            A future of the new result, with ``edit_seconds`` and ``search_hits``.
+
+        Raises:
+            JobNotFoundError, JobNotReadyError, ModeNotSupportedError.
+            SessionBusyError: Another edit is running.
         """
         job = self.accurate_job(jid)
         with self._jobs_lock:
+            if job.pending_edits:
+                raise SessionBusyError()
             job.pending_edits += 1
         try:
-            future = self._executor.submit(
-                self._apply_edit, job, add, remove, restore, search
+            return self._executor.submit(
+                self._run_edit, job, add, remove, restore, search
             )
-            return future.result()
+        except BaseException:
+            self._edit_finished(job)
+            raise
+
+    def edit(
+        self,
+        jid: str,
+        add: list[tuple[int, tuple[float, float, float, float]]],
+        remove: list[int],
+        restore: list[int],
+        search: str,
+    ) -> dict[str, Any]:
+        """``start_edit`` and wait for its result."""
+        return self.start_edit(jid, add, remove, restore, search).result()
+
+    def _edit_finished(self, job: Job) -> None:
+        with self._jobs_lock:
+            job.pending_edits -= 1
+
+    def _run_edit(
+        self,
+        job: Job,
+        add: list[tuple[int, tuple[float, float, float, float]]],
+        remove: list[int],
+        restore: list[int],
+        search: str,
+    ) -> dict[str, Any]:
+        """Worker: the edit, then the pending count down before the result is visible."""
+        try:
+            return self._apply_edit(job, add, remove, restore, search)
         finally:
-            with self._jobs_lock:
-                job.pending_edits -= 1
+            self._edit_finished(job)
 
     def _apply_edit(
         self,
@@ -575,7 +642,7 @@ class JobManager:
             raise JobNotFoundError() from None
         return cache
 
-    def preview(self, jid: str) -> dict[str, Any]:
+    def review(self, jid: str) -> dict[str, Any]:
         """What the side-by-side review needs: page sizes, boxes, label names.
 
         Boxes are in display space, as drawn on the rendered pages, and carry
@@ -603,11 +670,3 @@ class JobManager:
             ],
             "labels": {code: label.it for code, label in LABELS.items()},
         }
-
-
-def get_job_manager(request: Request) -> JobManager:
-    """FastAPI dependency. Unit tests override it with a manager built on fake engines."""
-    return request.app.state.jobs
-
-
-JobManagerDep = Annotated[JobManager, Depends(get_job_manager)]

@@ -1,7 +1,6 @@
 import io
 import json
 import logging
-import time
 from pathlib import Path
 
 import pytest
@@ -10,6 +9,7 @@ from fastapi.testclient import TestClient
 from src.utils.logging_setup import log_event, setup_logging
 from tests.conftest import FAKE_CF, make_settings
 from tests.documents import EMAIL, PATIENT, PHONE, letter_pdf
+from tests.sessions import BASE, anonymize, create, edit, run
 
 
 def test_log_event_format(log_stream: io.StringIO) -> None:
@@ -54,17 +54,10 @@ def test_anonymization_never_logs_document_content(
     name = f"referto_{PATIENT.replace(' ', '_')}_{FAKE_CF}.pdf"
     src = letter_pdf(tmp_path / "in.pdf")
 
-    created = client.post(
-        "/anonymizations", files={"file": (name, src.read_bytes(), "application/pdf")}
-    ).json()
-    deadline = time.monotonic() + 30
-    while (
-        client.get(f"/anonymizations/{created['id']}").json()["status"] != "done"
-        and time.monotonic() < deadline
-    ):
-        time.sleep(0.05)
-    client.post(f"/anonymizations/{created['id']}/edits", json={"search": "Garibaldi"})
-    client.get(f"/anonymizations/{created['id']}/download/pdf")
+    session_id = create(client, src, name=name)["session_id"]
+    anonymize(client, session_id)
+    edit(client, session_id, {"search": "Garibaldi"})
+    client.get(f"{BASE}/{session_id}/download")
 
     logs = log_stream.getvalue()
     assert "anonymization_job_created" in logs
@@ -81,17 +74,9 @@ def test_fast_anonymization_never_logs_document_content(
     name = f"referto_{PATIENT.replace(' ', '_')}_{FAKE_CF}.pdf"
     src = letter_pdf(tmp_path / "in.pdf")
 
-    created = client.post(
-        "/anonymizations?mode=fast",
-        files={"file": (name, src.read_bytes(), "application/pdf")},
-    ).json()
-    deadline = time.monotonic() + 30
-    while (
-        client.get(f"/anonymizations/{created['id']}").json()["status"] != "done"
-        and time.monotonic() < deadline
-    ):
-        time.sleep(0.05)
-    client.get(f"/anonymizations/{created['id']}/download/md")
+    session_id = create(client, src, name=name, mode="fast")["session_id"]
+    anonymize(client, session_id)
+    client.get(f"{BASE}/{session_id}/download")
 
     logs = log_stream.getvalue()
     assert "anonymization_completed" in logs
@@ -105,16 +90,7 @@ def test_kpi_events_keep_their_keys(
 ) -> None:
     """Event names and keys are a contract with KPI-dashboard."""
     src = letter_pdf(tmp_path / "in.pdf")
-    created = client.post(
-        "/anonymizations",
-        files={"file": ("a.pdf", src.read_bytes(), "application/pdf")},
-    ).json()
-    deadline = time.monotonic() + 30
-    while (
-        client.get(f"/anonymizations/{created['id']}").json()["status"] != "done"
-        and time.monotonic() < deadline
-    ):
-        time.sleep(0.05)
+    run(client, src, name="a.pdf")
 
     lines = log_stream.getvalue().splitlines()
     created_event = next(

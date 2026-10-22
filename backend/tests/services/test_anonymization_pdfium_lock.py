@@ -38,13 +38,13 @@ def lock_checked(monkeypatch: pytest.MonkeyPatch) -> list[str]:
 def test_service_uses_pdfium_only_under_the_lock(
     letter: Path, jobs: JobManager, lock_checked: list[str]
 ) -> None:
-    job = jobs.create(letter.read_bytes(), "lettera.pdf")  # validation
+    job = jobs.start(jobs.create(letter.read_bytes(), "lettera.pdf").id)  # validation
     _wait(job)  # analysis, redaction, verification
     jobs.render_page(job.id, "original", 0, 80)
     jobs.render_page(job.id, "anonymized", 0, 80)
-    photo = jobs.create(_png(), "foto.png")  # image -> PDF
+    photo = jobs.start(jobs.create(_png(), "foto.png").id)  # image -> PDF
     _wait(photo)
-    fast = jobs.create(letter.read_bytes(), "lettera.pdf", "fast")  # Markdown export
+    fast = jobs.start(jobs.create(letter.read_bytes(), "lettera.pdf", "fast").id)
     _wait(fast)
     jobs.render_page(fast.id, "original", 0, 80)
     assert lock_checked == []
@@ -54,7 +54,7 @@ def test_previews_and_uploads_while_the_worker_runs(
     letter: Path, jobs: JobManager
 ) -> None:
     # the scenario that crashed the service in a few seconds
-    done = jobs.create(letter.read_bytes(), "a.pdf")
+    done = jobs.start(jobs.create(letter.read_bytes(), "a.pdf").id)
     _wait(done)
     data = letter.read_bytes()
     errors: list[BaseException] = []
@@ -72,7 +72,7 @@ def test_previews_and_uploads_while_the_worker_runs(
     threads = [threading.Thread(target=previews, args=(n,)) for n in range(4)]
     for t in threads:
         t.start()
-    queued = [jobs.create(data, f"{i}.pdf") for i in range(3)]
+    queued = [jobs.start(jobs.create(data, f"{i}.pdf").id) for i in range(3)]
     for t in threads:
         t.join()
     for job in queued:

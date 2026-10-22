@@ -18,7 +18,7 @@ from pydantic_settings import BaseSettings, PydanticBaseSettingsSource
 
 from src.config import Settings
 from src.main import create_app
-from src.services.anonymization import JobManager, get_job_manager
+from src.services.anonymization import JobManager
 from src.services.anonymizer.pipeline import Pipeline
 from src.utils.logging_setup import setup_logging
 from tests.documents import FAKE_CF, FakeNER, FakeReader, letter_pdf
@@ -113,8 +113,9 @@ def jobs(
 @pytest.fixture
 def client(settings: Settings, jobs: JobManager) -> Iterator[TestClient]:
     app = create_app(settings)
-    app.dependency_overrides[get_job_manager] = lambda: jobs
     with TestClient(app, raise_server_exceptions=False) as test_client:
+        # after the startup: the lifespan built a manager on the real engines
+        app.state.jobs = jobs
         yield test_client
 
 

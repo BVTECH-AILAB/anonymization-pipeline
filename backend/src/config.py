@@ -5,8 +5,9 @@ prefix (``ANONPIP_LOG_LEVEL``, ``ANONPIP_MAX_UPLOAD_MB`` ...). Every field
 has a safe default: a pod must never crash on startup because a variable is
 missing from its ConfigMap.
 
-When you add a setting, add it in three places: here, ``.env.example`` and
-``docker-compose.yml`` (``${VAR:-default}`` syntax).
+When you add a setting, add it here and in ``backend/.env.example`` (compose
+reads ``backend/.env`` through ``env_file``), then list it in
+``docs/DEPLOY_HANDOVER.md``.
 """
 
 from functools import lru_cache

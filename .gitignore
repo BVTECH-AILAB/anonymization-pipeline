@@ -16,7 +16,7 @@ build/
 .idea/
 .vscode/
 
-# Evaluation dataset and output (just evaluate)
+# Evaluation dataset and output (just backend::evaluate)
 /dataset/
 /dataset_*/
 /dataset*.zip

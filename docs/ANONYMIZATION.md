@@ -252,7 +252,11 @@ pages are redacted where the text really is.
 
 ## API
 
-Two modes, chosen at upload with `?mode=` (default `accurate`):
+The endpoints follow the document agent of ai-platform-v2 (`/documents/*`): a
+session is created by the upload, its work runs inside a POST that streams
+Server-Sent Events, and the result is read with `preview` and `download`.
+
+Two modes, chosen at upload with the form field `mode` (default `accurate`):
 
 - **`accurate`**: the whole pipeline above; releases the redacted PDF and a Word
   copy, and supports the side-by-side review with manual edits.
@@ -260,41 +264,57 @@ Two modes, chosen at upload with `?mode=` (default `accurate`):
   propagation), without the visual detectors, the redaction of the PDF and its
   pixel checks; releases only the anonymized text as Markdown (see "Fast mode").
 
+All paths start with `/anonymizations`:
+
 | Method and path | What it does | Modes |
 |---|---|---|
-| `POST /anonymizations?mode=accurate\|fast` (multipart `file`) | Upload and start; 202 with `{id, pages, size, mode}` | both |
-| `GET /anonymizations/{id}` | State; includes the result when done | both |
-| `GET /anonymizations/{id}/events` | Server-Sent Events: one message per progress change, then the final state | both |
-| `POST /anonymizations/{id}/cancel` | Stop at the next step; files deleted | both |
-| `GET /anonymizations/{id}/preview` | Manifest of the side-by-side review (see below) | accurate |
-| `GET /anonymizations/{id}/pages/original/{page}?dpi=` | PNG of the original page | both |
-| `GET /anonymizations/{id}/pages/anonymized/{page}?dpi=` | PNG of the anonymized page | accurate |
-| `POST /anonymizations/{id}/edits` | `{add: [{page, rect}], remove: [box ids], restore: [box ids], search: "text"}`: redaction and verification only, no new detection | accurate |
-| `GET /anonymizations/{id}/download/{pdf\|docx}` | Anonymized document (refused when not verified) | accurate |
-| `GET /anonymizations/{id}/download/md` | Anonymized text as Markdown (refused when not verified) | fast |
-| `DELETE /anonymizations/{id}` | Delete now | both |
-| `GET /anonymizations/labels` | Taxonomy with Italian names | - |
+| `GET /labels` | Taxonomy: `[{code, title, kind, redact}]` | - |
+| `POST /sessions` (multipart `file`, form `mode`) | Store the upload and create the session; 201 with the session (`status: "created"`) | both |
+| `GET /sessions/{id}` | The session: `{session_id, mode, status, step, percent, error_code, pages, size, result}` | both |
+| `POST /sessions/{id}/anonymize/stream` | Run the anonymization; SSE frames below | both |
+| `POST /sessions/{id}/edits/stream` | `{add: [{page, rect}], remove: [box ids], restore: [box ids], search: "text"}`: redaction and verification only, no new detection; SSE frames below | accurate |
+| `POST /sessions/{id}/cancel` | Stop at the next step; the session and its files are deleted | both |
+| `GET /sessions/{id}/preview` | The released document inline: PDF (accurate) or Markdown (fast) | both |
+| `GET /sessions/{id}/download?format=pdf\|docx\|md` | The released document as an attachment (`documento_anonimizzato.<ext>`); default `pdf` (accurate), `md` (fast) | both |
+| `GET /sessions/{id}/review` | Manifest of the side-by-side review (see below) | accurate |
+| `GET /sessions/{id}/pages/original/{page}?dpi=` | PNG of the original page | both |
+| `GET /sessions/{id}/pages/anonymized/{page}?dpi=` | PNG of the anonymized page | accurate |
+| `DELETE /sessions/{id}` | Delete now | both |
 
-An action of the other mode answers 409 `MODE_NOT_SUPPORTED`.
+**Streams.** Each frame is `event: <name>` plus a JSON `data` line:
 
-A failed job has `status: "error"` and an `error_code`: `NER_UNAVAILABLE` or
-`SERVICE_UNAVAILABLE` when a dependency was down (retry later), otherwise
-`PROCESSING_FAILED`. A download asked while an edit is replacing the files
-answers 409 `JOB_NOT_READY`; a file of a job that expired or was deleted in
-the meantime answers 404 `JOB_NOT_FOUND`.
+| Event | Data |
+|---|---|
+| `status` | `{step, percent, text}`: `read`, `detect`, `redact`, `preview` (accurate) or `export` (fast), with an Italian `text` |
+| `done` | Anonymization: `{session, elapsed_ms}`. Edit: `{session, search_hits, edit_seconds, elapsed_ms}` |
+| `error` | `{error_title, error_message, error_code}`, generic Italian title and message |
+
+The stream of a finished session answers `done` at once. A session already
+being anonymized or edited answers `error` `SESSION_BUSY`. A client that
+disconnects stops only its stream: the work goes on, and `GET /sessions/{id}`
+reports it. Error codes in the frames: `NER_UNAVAILABLE` or
+`SERVICE_UNAVAILABLE` when a dependency was down (retry later),
+`PROCESSING_FAILED`, `CANCELLED`, `SESSION_BUSY`, `JOB_NOT_FOUND` (deleted
+during an edit).
+
+**Releases are fail-closed.** `preview` and `download` answer 409
+`VERIFICATION_FAILED` when verification failed, `JOB_NOT_READY` before the end
+or while an edit replaces the files, and 404 `JOB_NOT_FOUND` when the session
+expired or was deleted in the meantime. An action of the other mode answers
+409 `MODE_NOT_SUPPORTED`.
 
 ### Side-by-side review (frontend contract)
 
-1. `POST /anonymizations?mode=accurate`, then follow `/events` (or poll `GET /{id}`)
-   until `status` is `done`.
-2. `GET /{id}/preview`:
+1. `POST /anonymizations/sessions` with `mode=accurate`, then
+   `POST /anonymizations/sessions/{id}/anonymize/stream` until the `done` frame.
+2. `GET /anonymizations/sessions/{id}/review`:
 
    ```json
    {
-     "id": "<32 hex>", "mode": "accurate", "version": 0, "verified": true,
+     "session_id": "<32 hex>", "mode": "accurate", "version": 0, "verified": true,
      "pages": [{"index": 0, "width": 595.0, "height": 842.0,
-                "original": "/anonymizations/<id>/pages/original/0",
-                "anonymized": "/anonymizations/<id>/pages/anonymized/0?v=0"}],
+                "original": "/anonymizations/sessions/<id>/pages/original/0",
+                "anonymized": "/anonymizations/sessions/<id>/pages/anonymized/0?v=0"}],
      "boxes": [{"id": 0, "page": 0, "rect": [40.0, 92.1, 120.5, 103.0],
                 "label": "PERSON", "layer": "native", "redact": true}],
      "labels": {"PERSON": "Nomi", "FISCAL_CODE": "Codice fiscale"}
@@ -308,10 +328,12 @@ the meantime answers 404 `JOB_NOT_FOUND`.
    - Boxes carry no text: the value is visible on the original page.
    - `version` changes with every edit, and so do the anonymized URLs (no stale cache).
 3. The reviewer draws a rectangle on the original page to redact it, or clicks a
-   box to remove or restore it: `POST /{id}/edits` with `add` (rectangles in the
-   same space as `rect`), `remove` / `restore` (box ids). The answer is the new
-   result; `GET /{id}/preview` again gives the new boxes and URLs.
-4. `GET /{id}/download/pdf` (or `docx`) once `verified` is true and no edit is running.
+   box to remove or restore it: `POST /sessions/{id}/edits/stream` with `add`
+   (rectangles in the same space as `rect`), `remove` / `restore` (box ids). The
+   `done` frame carries the new result; `GET /sessions/{id}/review` again gives
+   the new boxes and URLs.
+4. `GET /sessions/{id}/download` (or `?format=docx`) once `verified` is true and
+   no edit is running.
 
 ### Fast mode (`backend/src/services/anonymizer/export_markdown.py`)
 
@@ -337,9 +359,10 @@ Errors are `ServiceError` subclasses with generic Italian messages (`errors.py`)
 `UNSUPPORTED_FORMAT` 415, `FILE_TOO_LARGE` 413, `TOO_MANY_PAGES` 413,
 `UNREADABLE_DOCUMENT` 422, `PASSWORD_PROTECTED` 422, `TOO_MANY_JOBS` 429,
 `JOB_NOT_FOUND` 404, `JOB_NOT_READY` 409, `MODE_NOT_SUPPORTED` 409,
-`VERIFICATION_FAILED` 409.
+`VERIFICATION_FAILED` 409; in the SSE frames also `SESSION_BUSY`,
+`PROCESSING_FAILED`, `CANCELLED`.
 
-## Jobs and privacy (`services/jobs.py`)
+## Sessions and privacy (`backend/src/services/anonymization.py`)
 
 - One job at a time (single worker); edits go
   through the same worker.

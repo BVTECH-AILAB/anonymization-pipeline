@@ -16,7 +16,7 @@ build/
 .idea/
 .vscode/
 
-# Evaluation dataset and output (anchored: tools/dataset/ is source code)
+# Evaluation dataset and output (just evaluate)
 /dataset/
 /dataset_*/
 /dataset*.zip

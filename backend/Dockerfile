@@ -1,6 +1,6 @@
 # The service image. Build context: the repository root (the engine is a
 # workspace member): docker build -f backend/Dockerfile .
-# Only this package and its dependencies are installed (--package).
+# Only this package and its dependencies are installed (--package): never evaluation/.
 # uv needs the pyproject.toml of every workspace member to read the lock.
 # Stages:
 #   dev      - used by docker-compose (dev dependencies, editable install, --reload)
@@ -23,6 +23,7 @@ FROM base AS dev
 COPY pyproject.toml uv.lock ./
 COPY backend/core/pyproject.toml ./backend/core/
 COPY backend/api/pyproject.toml ./backend/api/
+COPY evaluation/pyproject.toml ./evaluation/
 RUN uv sync --frozen --package anonymization-pipeline --no-install-workspace
 COPY backend/core ./backend/core
 COPY backend/api/src ./backend/api/src
@@ -37,6 +38,7 @@ FROM base AS builder
 COPY pyproject.toml uv.lock ./
 COPY backend/core/pyproject.toml ./backend/core/
 COPY backend/api/pyproject.toml ./backend/api/
+COPY evaluation/pyproject.toml ./evaluation/
 RUN uv sync --frozen --package anonymization-pipeline --no-dev --no-install-workspace
 COPY backend/core ./backend/core
 COPY backend/api/src ./backend/api/src

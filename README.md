@@ -22,9 +22,9 @@ as Markdown tables and `[IMMAGINE]` placeholders.
 How the algorithm works, the API, the PII taxonomy and the evaluation results:
 **[docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)**.
 
-This branch holds the backend only: the engine, the API and the OCR server.
-The demo page (`apps/web`) and the evaluation (`apps/eval`: synthetic dataset,
-scoring, viewer) live on `ref/mod-separation`.
+This branch holds the engine, the API, the OCR server and the evaluation CLI
+(`evaluation/`: scoring against the dataset). The demo page (`apps/web`), the
+synthetic dataset generator and the evaluation viewer live on `ref/mod-separation`.
 
 ## How the algorithm works
 
@@ -151,7 +151,9 @@ volume; uncomment the GPU blocks in `docker-compose.yml` and set
 | `just lint` | ruff fix + format + ty: before every commit |
 | `just check` | Same checks without fixes (what CI runs) |
 | `just test` / `just test-cov` | Unit tests of every package / with coverage (at least 80% per package) |
-| `just test-core` / `just test-api` | One suite only (arguments go to pytest) |
+| `just test-core` / `just test-api` / `just test-eval` | One suite only (arguments go to pytest) |
+| `just evaluate [--variants scan --split test --limit 20]` | Score the engine against `dataset/` -> `reports/evaluation.md` (needs the OCR server and NER) |
+| `just eval-compare reports_a reports_b` | Two evaluations side by side -> `reports/comparison.md` |
 | `just audit` | Vulnerabilities in the dependencies |
 
 ## Modules
@@ -174,6 +176,7 @@ flowchart LR
 | `backend/core` | OCR server and NER over HTTP | the service, any web framework | `just test-core` |
 | `backend/api` | the engine | - | `just test-api` |
 | `ocr-server` | - (own lock, outside the workspace) | - | `just ocr-server-test` |
+| `evaluation` | the engine (dev only, never in an image) | the service | `just test-eval` |
 
 The "never imports" column is enforced by ruff (`banned-api` in each
 `pyproject.toml`). To extract the engine, copy its folder: see
@@ -181,7 +184,7 @@ The "never imports" column is enforced by ruff (`banned-api` in each
 
 ## Layout
 
-The backend packages form a uv workspace: one lock, each package with its own
+The backend packages and the evaluation form a uv workspace: one lock, each package with its own
 dependencies, tests and lint config. The root is not a package: its dev group is
 the developer environment (every member). The OCR server has its own lock.
 
@@ -221,12 +224,18 @@ ocr-server/             pod 2, image paddle-ocr-server: PP-OCRv5 (RapidOCR) behi
                         Runtime, CPU or GPU), outside the workspace: `just ocr-server-test`
 docs/                   ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
                         deploy handover
+evaluation/             evaluation CLI (dev only, never in an image): `just evaluate`,
+                        `just eval-compare`; reads `dataset/`, writes `reports/`
+  src/anonymization_eval/
+    evaluate.py           scoring per variant, Markdown report, comparison of two runs
+    metrics.py            box and word level scores (scikit-learn), AP / mAP (torchmetrics)
+    pdf.py                the judge: words and file content of the output PDFs
 scripts/                start.sh: OCR server and API on the host (`just start`)
 ```
 
 ## Results
 
-Measured with the evaluation package (`apps/eval` on `ref/mod-separation`) on
+Measured with the evaluation package (`evaluation/`, `just evaluate`) on
 the whole evaluation set (200 documents, 326
 pages, each as native PDF, scan and scan with a hidden OCR layer: 600 PDFs;
 20/10/2026). The current stack (LiteParse + OCR server, AILAB NER service, OCR
@@ -281,8 +290,8 @@ tessera sanitaria 91% to 100%). Compared with the earlier in-pod GLiNER +
 GLiNER2, the AILAB service has 0.5 to 1 point less recall: names it replaces as
 eponyms, foreign names and fragments taken for places (details in
 docs/ANONYMIZATION.md, "OCR choice" and "NER choice").
-The current stack has not been measured as a whole yet: run the evaluation of
-`ref/mod-separation` against it.
+The current stack has not been measured as a whole yet: run `just evaluate`
+against it.
 
 - **Box level** (scikit-learn): every required ground-truth box is found when
   redaction covers at least 75% of it; every redaction box touching no ground

@@ -79,6 +79,12 @@ generate-vars:
     - pyproject.toml
     - uv.lock
     - .gitlab-ci.yml
+  eval: &eval-paths
+    - evaluation/**/*
+    - backend/core/**/*
+    - pyproject.toml
+    - uv.lock
+    - .gitlab-ci.yml
   ocr: &ocr-paths
     - ocr-server/**/*
     - .gitlab-ci.yml
@@ -125,6 +131,19 @@ api:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
       changes: *api-paths
+
+# Dev only, never in an image: lint, types and tests, no coverage gate.
+eval:
+  extends: .uv-job
+  variables:
+    UV_SCRIPT: >-
+      uv sync --frozen --package anonymization-eval &&
+      cd evaluation &&
+      uv run ruff check && uv run ruff format --check && uv run ty check src tests &&
+      uv run pytest -q
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
+      changes: *eval-paths
 
 # Its own lock, outside the workspace; the CPU build of ONNX Runtime is enough for the tests.
 ocr-server:

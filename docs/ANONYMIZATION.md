@@ -368,8 +368,8 @@ Errors are `ServiceError` subclasses with generic Italian messages (`errors.py`)
 
 ## Synthetic dataset and evaluation
 
-The generator, the scoring and the viewer are the evaluation package
-(`apps/eval`), which lives on `ref/mod-separation`, not in this branch. What
+The scoring is the evaluation CLI of `evaluation/` (`just evaluate`, `just
+eval-compare`); the generator and the viewer live on `ref/mod-separation`. What
 follows describes how the engine was measured and the results.
 
 **Dataset**: seven Italian document types (discharge
@@ -454,7 +454,7 @@ comparable between runs.
 
 The hidden value left is a foreign surname in a hidden channel of a scan
 ("Okafor"), which the NER service does not always find (see "Known limits").
-The evaluation of `ref/mod-separation` refreshes the table; `--split test`
+`just evaluate` refreshes the table; `--split test`
 scores only the 78 held-out documents.
 
 Reading the numbers:

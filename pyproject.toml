@@ -1,18 +1,20 @@
 # uv workspace root (not a package): one lock for every member.
 #   backend/core  the engine (library)
 #   backend/api   the service; with the engine, the image anonymization-pipeline
+#   evaluation    scoring of the engine against the dataset (dev only, CLI)
 # The OCR server (ocr-server/, the second pod) has its own lock. The dev group below is
 # the developer environment: every member and the repository-wide tools
 # (pre-commit, audit). Each member has its own lint, type, test and coverage
 # configuration.
 [tool.uv.workspace]
-members = ["backend/core", "backend/api"]
+members = ["backend/core", "backend/api", "evaluation"]
 # own lock and ONNX Runtime extras (cpu | gpu): kept out of the workspace
 exclude = ["ocr-server"]
 
 [dependency-groups]
 dev = [
     "anonymization-pipeline",
+    "anonymization-eval",
     "anonymization-core[testing]",
     "httpx>=0.28",
     "pip-audit>=2.7",
@@ -24,6 +26,15 @@ dev = [
     "ty>=0.0.1a0",
 ]
 
+# PyTorch with CUDA 12.8 (Blackwell GPUs included); the same wheels run on CPU.
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
 [tool.uv.sources]
 anonymization-pipeline = { workspace = true }
 anonymization-core = { workspace = true }
+anonymization-eval = { workspace = true }
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }

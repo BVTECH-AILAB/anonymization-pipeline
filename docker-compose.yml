@@ -1,53 +1,33 @@
 # Local development stack: the anonymization service (no database: jobs live
 # in memory and documents in a private folder until they expire).
-# Settings have defaults (${VAR:-default}); this service has no credentials.
+# Settings have defaults; this service has no credentials.
 # Model weights are cached in the "models" volume, so they download once.
 name: anonymization-pipeline
 
 services:
   app:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile.api
       target: dev
+    # the service's settings (ANONPIP_*): backend/.env, copied from backend/.env.example;
+    # without it the defaults of src/config.py apply (no credentials in this service)
+    env_file:
+      - path: ./backend/.env
+        required: false
     environment:
+      # inside compose: the OCR server is the paddle-ocr service, the logs are local
       ANONPIP_ENVIRONMENT: ${ANONPIP_ENVIRONMENT:-local}
-      ANONPIP_LOG_LEVEL: ${ANONPIP_LOG_LEVEL:-DEBUG}
-      ANONPIP_EXTENDED_LOG_CONTEXT: ${ANONPIP_EXTENDED_LOG_CONTEXT:-false}
-      ANONPIP_LOG_MASK_PREFIX: ${ANONPIP_LOG_MASK_PREFIX:-1}
-      ANONPIP_LOG_MASK_SUFFIX: ${ANONPIP_LOG_MASK_SUFFIX:-1}
-      ANONPIP_PRELOAD_MODELS: ${ANONPIP_PRELOAD_MODELS:-true}
-      ANONPIP_OCR_SERVER_URL: ${ANONPIP_OCR_SERVER_URL:-http://paddle-ocr:8829}
-      ANONPIP_OCR_DPI: ${ANONPIP_OCR_DPI:-300}
-      ANONPIP_NER_ENABLED: ${ANONPIP_NER_ENABLED:-true}
-      ANONPIP_NER_URL: ${ANONPIP_NER_URL:-}
-      ANONPIP_NER_TIMEOUT_SECONDS: ${ANONPIP_NER_TIMEOUT_SECONDS:-30}
-      ANONPIP_NER_RETRIES: ${ANONPIP_NER_RETRIES:-2}
-      ANONPIP_NER_RETRY_BACKOFF_SECONDS: ${ANONPIP_NER_RETRY_BACKOFF_SECONDS:-1}
-      ANONPIP_NER_CA_BUNDLE: ${ANONPIP_NER_CA_BUNDLE:-}
-      ANONPIP_NER_THRESHOLD: ${ANONPIP_NER_THRESHOLD:-0.5}
-      ANONPIP_NER_PERSON_THRESHOLD: ${ANONPIP_NER_PERSON_THRESHOLD:-0.4}
-      ANONPIP_MAX_UPLOAD_MB: ${ANONPIP_MAX_UPLOAD_MB:-30}
-      ANONPIP_MAX_PAGES: ${ANONPIP_MAX_PAGES:-50}
-      ANONPIP_JOB_TTL_MINUTES: ${ANONPIP_JOB_TTL_MINUTES:-30}
-      ANONPIP_MAX_JOBS: ${ANONPIP_MAX_JOBS:-20}
-      ANONPIP_WORK_DIR: ${ANONPIP_WORK_DIR:-}
-      ANONPIP_REDACT_CLINICAL_DATES: ${ANONPIP_REDACT_CLINICAL_DATES:-false}
-      ANONPIP_REDACT_AGE: ${ANONPIP_REDACT_AGE:-false}
-      ANONPIP_REDACT_ORGANIZATIONS: ${ANONPIP_REDACT_ORGANIZATIONS:-false}
-      ANONPIP_REDACTION_STYLE: ${ANONPIP_REDACTION_STYLE:-black}
-      ANONPIP_VERIFY_PIXEL_TOLERANCE: ${ANONPIP_VERIFY_PIXEL_TOLERANCE:-0.0002}
+      ANONPIP_OCR_SERVER_URL: http://paddle-ocr:8829
     ports:
       - "127.0.0.1:${APP_PORT:-8000}:8000"
     volumes:
-      - ./backend/api/src:/app/backend/api/src
-      - ./backend/core:/app/backend/core
-      - ./backend/api/tests:/app/backend/api/tests
-      - ./backend/api/pyproject.toml:/app/backend/api/pyproject.toml:ro
+      - ./backend/src:/app/src
+      - ./backend/tests:/app/tests
     depends_on:
       - paddle-ocr
     command: >
-      uvicorn anonymization_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/backend/api/src --reload-dir /app/backend/core/src
+      uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/src
 
   # OCR server (PP-OCRv5 on RapidOCR, LiteParse OCR API): the service reads scanned pages through it
   paddle-ocr:

@@ -1,0 +1,17 @@
+# The engine stays a self-contained sub-package: it never imports the service
+# around it (router, session service, app, configuration) or a web framework.
+extend = "../../../pyproject.toml"
+
+[lint.flake8-tidy-imports.banned-api]
+"logging.basicConfig".msg = "The engine never configures logging: its caller does."
+"os.getenv".msg = "The engine takes a PipelineConfig: it never reads the environment."
+"fastapi".msg = "The engine has no web framework: raise an engine error from errors.py."
+"starlette".msg = "The engine has no web framework: raise an engine error from errors.py."
+"src.router".msg = "The engine never imports the HTTP layer."
+"src.main".msg = "The engine never imports the app."
+"src.lifespan".msg = "The engine never imports the app."
+"src.config".msg = "The engine takes a PipelineConfig, never the service Settings."
+"src.errors".msg = "Raise an engine error from services/anonymizer/errors.py."
+"src.services.anonymization".msg = "The engine never imports the session service built on it."
+"src.utils".msg = "The engine only logs through logging.getLogger(__name__)."
+"evals".msg = "The engine never imports the evaluation."

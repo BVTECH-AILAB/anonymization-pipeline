@@ -22,8 +22,8 @@ if ! command -v uv >/dev/null 2>&1; then
   exit 1
 fi
 
-echo "==> Installing dependencies (uv sync)"
-uv sync --quiet
+echo "==> Installing the dependencies of the service (backend/: uv sync)"
+(cd backend && uv sync --quiet)
 
 # first free port starting from $1 (8000, 8001, ...)
 port_busy() { (exec 3<>"/dev/tcp/${HOST}/$1") 2>/dev/null; }
@@ -67,5 +67,5 @@ URL="${API_URL}/docs"
 echo "==> Starting the API at ${API_URL}; open ${URL} (Ctrl+C to stop)"
 export ANONPIP_ENVIRONMENT="${ANONPIP_ENVIRONMENT:-local}"
 export ANONPIP_OCR_SERVER_URL="$OCR_URL"
-# not exec: the trap stops the OCR server when the API stops
-uv run uvicorn anonymization_pipeline.main:app --host "$HOST" --port "$PORT"
+# not exec: the trap stops the OCR server when the API stops; backend/.env is read from there
+(cd backend && uv run uvicorn src.main:app --host "$HOST" --port "$PORT")

@@ -14,7 +14,7 @@ variables:
   REPO_OWNER: agenas
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
   GIT_DEPTH: "0"
-  # pinned: the same uv as backend/Dockerfile (the unversioned bookworm tag stopped at uv 0.9)
+  # pinned: the same uv as backend/Dockerfile.api (the unversioned bookworm tag stopped at uv 0.9)
   UV_IMAGE: ghcr.io/astral-sh/uv:0.12.18-python3.12-trixie-slim
 
 stages:
@@ -54,8 +54,8 @@ generate-vars:
     - docker run --rm -v "$CI_PROJECT_DIR":/app "$UV_IMAGE" rm -rf /app/.ruff_cache /app/.venv /app/.pytest_cache 2>/dev/null || true
     - docker info
 
-# One job per package: lint, types and tests of that package only, in its own
-# environment (uv sync --package). UV_SCRIPT runs in the uv image, in the repo.
+# One job per service: lint, types and tests of that service only, in its own
+# environment. UV_SCRIPT runs in the uv image, in the repo.
 .uv-job:
   extends: .quality-base
   script:
@@ -65,87 +65,53 @@ generate-vars:
       -e HOME=/tmp -e UV_PROJECT_ENVIRONMENT=/tmp/.venv -e UV_CACHE_DIR=/tmp/uv-cache -e RUFF_CACHE_DIR=/tmp/ruff-cache -e CI=true
       "$UV_IMAGE" sh -c "$UV_SCRIPT"
 
-# A job runs when its package (or one it depends on) changes. On main, test
-# and dev the comparison is with the previous push, so a merge runs every job
-# its changes touch.
+# A job runs when its service changes. On main, test and dev the comparison is
+# with the previous push, so a merge runs every job its changes touch.
 .paths:
-  core: &core-paths
-    - backend/core/**/*
-    - pyproject.toml
-    - uv.lock
-    - .gitlab-ci.yml
-  api: &api-paths
+  backend: &backend-paths
     - backend/**/*
-    - pyproject.toml
-    - uv.lock
-    - .gitlab-ci.yml
-  eval: &eval-paths
-    - evaluation/**/*
-    - backend/core/**/*
-    - pyproject.toml
-    - uv.lock
     - .gitlab-ci.yml
   ocr: &ocr-paths
     - ocr-server/**/*
     - .gitlab-ci.yml
 
-core:
+backend:
   extends: .uv-job
   variables:
     UV_SCRIPT: >-
-      uv sync --frozen --package anonymization-core &&
-      cd backend/core &&
+      cd backend &&
+      uv sync --frozen &&
       uv run ruff check && uv run ruff format --check && uv run ty check src tests &&
       uv run pytest --cov --cov-report=xml:coverage.xml --junitxml=junit.xml -q
   after_script:
     # Paths are recorded as seen inside the container: rewrite them for Sonar.
-    - sed -i "s|/app/|$CI_PROJECT_DIR/|g" backend/core/coverage.xml || true
+    - sed -i "s|/app/|$CI_PROJECT_DIR/|g" backend/coverage.xml || true
   artifacts:
     when: always
     expire_in: 1 day
     paths:
-      - backend/core/coverage.xml
+      - backend/coverage.xml
     reports:
-      junit: backend/core/junit.xml
+      junit: backend/junit.xml
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
-      changes: *core-paths
+      changes: *backend-paths
 
-api:
+# The evaluation (backend/evals, dev only, never in an image): lint, types and tests with
+# the evals group (torch, scikit-learn), no coverage gate.
+backend-evals:
   extends: .uv-job
   variables:
     UV_SCRIPT: >-
-      uv sync --frozen --package anonymization-pipeline &&
-      cd backend/api &&
-      uv run ruff check && uv run ruff format --check && uv run ty check src tests &&
-      uv run pytest --cov --cov-report=xml:coverage.xml --junitxml=junit.xml -q
-  after_script:
-    - sed -i "s|/app/|$CI_PROJECT_DIR/|g" backend/api/coverage.xml || true
-  artifacts:
-    when: always
-    expire_in: 1 day
-    paths:
-      - backend/api/coverage.xml
-    reports:
-      junit: backend/api/junit.xml
+      cd backend &&
+      uv sync --frozen --group evals &&
+      uv run ty check evals &&
+      uv run pytest evals/tests -q
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
-      changes: *api-paths
+      changes: *backend-paths
 
-# Dev only, never in an image: lint, types and tests, no coverage gate.
-eval:
-  extends: .uv-job
-  variables:
-    UV_SCRIPT: >-
-      uv sync --frozen --package anonymization-eval &&
-      cd evaluation &&
-      uv run ruff check && uv run ruff format --check && uv run ty check src tests &&
-      uv run pytest -q
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
-      changes: *eval-paths
-
-# Its own lock, outside the workspace; the CPU build of ONNX Runtime is enough for the tests.
+# Its own lock; the CPU build of ONNX Runtime is enough for the tests.
 ocr-server:
   extends: .uv-job
   variables:
@@ -161,12 +127,9 @@ ocr-server:
 # Analysis only: allow_failure so an unreachable Sonar never blocks the pipeline.
 build-sonar:
   stage: build-sonar
-  # coverage of the packages whose job ran in this pipeline
+  # coverage of the backend, when its job ran in this pipeline
   needs:
-    - job: core
-      optional: true
-      artifacts: true
-    - job: api
+    - job: backend
       optional: true
       artifacts: true
   cache:
@@ -192,7 +155,7 @@ build-image:
     - if: $CI_COMMIT_BRANCH == "dev"
   script:
     - echo "Build $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX"
-    - docker build -f backend/Dockerfile --target runtime -t $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX .
+    - docker build -f backend/Dockerfile.api --target runtime -t $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX backend
     - docker push $REGISTRY/$REPO_OWNER/$IMAGE_NAME:$IMAGE_TAG_SUFFIX
 
 # OCR server (ocr-server): built when it changes, with the same tags

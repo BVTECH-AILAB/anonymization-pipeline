@@ -1,0 +1,11 @@
+# The evaluation measures the engine: it never imports the service around it.
+extend = "../pyproject.toml"
+
+[lint.flake8-tidy-imports.banned-api]
+"logging.basicConfig".msg = "Use evals.log.setup_logging."
+"os.getenv".msg = "Read configuration through EvalSettings in evals/config.py, so every variable has a typed default."
+"src.router".msg = "The evaluation uses the engine (src.services.anonymizer), never the service."
+"src.main".msg = "The evaluation uses the engine, never the service."
+"src.lifespan".msg = "The evaluation uses the engine, never the service."
+"src.config".msg = "The evaluation reads EvalSettings, never the service Settings."
+"src.services.anonymization".msg = "The evaluation uses the engine, never the session service."

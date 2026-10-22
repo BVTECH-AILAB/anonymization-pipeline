@@ -3,21 +3,21 @@ repos:
     hooks:
       - id: ruff-format
         name: ruff format
-        entry: just format
+        entry: just backend::format
         language: system
         pass_filenames: false
         types: [python]
 
       - id: ruff-check
         name: ruff check --fix
-        entry: just fix
+        entry: just backend::fix
         language: system
         pass_filenames: false
         types: [python]
 
       - id: ty-check
         name: ty check
-        entry: just types
+        entry: just backend::types
         language: system
         pass_filenames: false
         types: [python]

@@ -1,0 +1,227 @@
+"""Detection metrics for the anonymization evaluation, computed with standard libraries.
+
+* Precision, recall, F1 and accuracy: scikit-learn, on binary labels.
+  - box level (label-agnostic): every required ground-truth box is a positive
+    (predicted positive when redaction boxes cover enough of it); every
+    redaction box that touches no ground truth is a false positive; boxes that
+    only overlap quasi-identifiers (clinical dates, facility addresses) are ignored;
+  - word level: every word of the page is PII or not and redacted or not; the
+    only level with true negatives, hence the only meaningful accuracy.
+* AP and mAP: torchmetrics ``MeanAveragePrecision`` (COCO protocol, pycocotools),
+  IoU 0.5, each page an image, quasi-identifiers passed as ``iscrowd`` ignore
+  regions. Label-agnostic AP (PII vs not) and mAP over the PII labels.
+  Duplicate detections of the same value (a scan's hidden OCR layer and our
+  OCR both find it, and both must be redacted) are collapsed first with
+  non-maximum suppression (torchvision), as usual before a COCO evaluation.
+
+Only the matching between boxes and labels is ours: it is specific to redaction.
+"""
+
+from collections.abc import Iterable
+from dataclasses import dataclass, field
+from typing import TypedDict
+
+import torch
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from torchmetrics.detection import MeanAveragePrecision
+from torchvision.ops import nms
+
+from src.services.anonymizer.geometry import (
+    Rect,
+    area,
+    intersects,
+    is_empty,
+    overlap_area,
+)
+
+
+def coverage(target: Rect, rects: Iterable[Rect]) -> float:
+    """Share of ``target`` covered by the union of ``rects`` (sampled on a 24x24 grid).
+
+    A sample on the right or bottom edge of a rectangle is outside it.
+    """
+    rects = [r for r in rects if not is_empty(r)]
+    if is_empty(target):
+        return 1.0
+    x0, y0, x1, y1 = target
+    n, hit = 24, 0
+    for i in range(n):
+        for j in range(n):
+            x = x0 + (i + 0.5) * (x1 - x0) / n
+            y = y0 + (j + 0.5) * (y1 - y0) / n
+            hit += any(r[0] <= x < r[2] and r[1] <= y < r[3] for r in rects)
+    return hit / (n * n)
+
+
+def overlap(a: Rect, b: Rect) -> float:
+    """Intersection area divided by the area of ``a``."""
+    whole = area(a)
+    return overlap_area(a, b) / whole if whole else 0.0
+
+
+def binary_scores(y_true: list[int], y_pred: list[int]) -> dict[str, float | int]:
+    """Precision, recall, F1 (positive class = PII) and accuracy with scikit-learn."""
+    if not y_true:
+        return {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "accuracy": 0.0,
+            "support": 0,
+        }
+    p, r, f, _ = precision_recall_fscore_support(
+        y_true, y_pred, average="binary", pos_label=1, zero_division=0
+    )
+    return {
+        "precision": round(float(p), 4),
+        "recall": round(float(r), 4),
+        "f1": round(float(f), 4),
+        "accuracy": round(float(accuracy_score(y_true, y_pred)), 4),
+        "support": int(sum(y_true)),
+    }
+
+
+def word_labels(
+    words: list[Rect],
+    pii: list[Rect],
+    ignore: list[Rect],
+    redacted: list[Rect],
+) -> tuple[list[int], list[int]]:
+    """Binary labels of the words of one page.
+
+    A word is PII when at least half of it lies in a required ground-truth box,
+    skipped when it lies in a quasi-identifier box, redacted when at least half
+    of it is covered by redaction boxes.
+
+    Returns:
+        ``(y_true, y_pred)``.
+    """
+    y_true, y_pred = [], []
+    for w in words:
+        is_pii = any(overlap(w, g) >= 0.5 for g in pii)
+        if not is_pii and any(overlap(w, g) >= 0.5 for g in ignore):
+            continue
+        y_true.append(int(is_pii))
+        y_pred.append(
+            int(coverage(w, [r for r in redacted if intersects(r, w)]) >= 0.5)
+        )
+    return y_true, y_pred
+
+
+class MapResult(TypedDict):
+    ap_pii: float
+    map: float
+    ap_per_label: dict[str, float]
+
+
+@dataclass
+class DetectionMAP:
+    """COCO mAP at IoU 0.5 over the pages of a dataset (torchmetrics).
+
+    Args:
+        labels: Label names; their index is the class id.
+        nms_iou: IoU above which overlapping detections are duplicates (None: no NMS).
+    """
+
+    labels: list[str]
+    nms_iou: float | None = 0.5
+    _per_class: MeanAveragePrecision = field(init=False)
+    _agnostic: MeanAveragePrecision = field(init=False)
+
+    def __post_init__(self) -> None:
+        def metric(class_metrics: bool) -> MeanAveragePrecision:
+            return MeanAveragePrecision(
+                box_format="xyxy",
+                iou_type="bbox",
+                iou_thresholds=[0.5],
+                max_detection_thresholds=[
+                    10,
+                    100,
+                    1000,
+                ],  # a page can hold more than 100 boxes
+                class_metrics=class_metrics,
+            )
+
+        self._per_class = metric(True)
+        self._agnostic = metric(False)
+
+    def add_page(
+        self,
+        preds: list[tuple[Rect, str, float]],
+        truths: list[tuple[Rect, str]],
+        ignore: list[tuple[Rect, str]],
+    ) -> None:
+        """One page: predictions ``(rect, label, score)``, required truths and ignore regions ``(rect, label)``."""
+
+        def boxes(rects: list[Rect]) -> torch.Tensor:
+            return torch.tensor([list(r) for r in rects], dtype=torch.float32).reshape(
+                -1, 4
+            )
+
+        ids = {name: i for i, name in enumerate(self.labels)}
+        if preds and self.nms_iou is not None:
+            keep = nms(
+                boxes([p[0] for p in preds]),
+                torch.tensor([p[2] for p in preds], dtype=torch.float32),
+                self.nms_iou,
+            )
+            preds = [preds[i] for i in keep.tolist()]
+        gts = truths + ignore
+        crowd = torch.tensor([0] * len(truths) + [1] * len(ignore), dtype=torch.int64)
+        pred_boxes = boxes([p[0] for p in preds])
+        scores = torch.tensor([p[2] for p in preds], dtype=torch.float32)
+        gt_boxes = boxes([g[0] for g in gts])
+        # torchmetrics wraps update/compute on the instance: ty sees the unbound methods
+        self._per_class.update(
+            [  # ty: ignore[invalid-argument-type]
+                {
+                    "boxes": pred_boxes,
+                    "scores": scores,
+                    "labels": torch.tensor(
+                        [ids[p[1]] for p in preds], dtype=torch.int64
+                    ),
+                }
+            ],
+            [
+                {
+                    "boxes": gt_boxes,
+                    "labels": torch.tensor([ids[g[1]] for g in gts], dtype=torch.int64),
+                    "iscrowd": crowd,
+                }
+            ],
+        )
+        self._agnostic.update(
+            [  # ty: ignore[invalid-argument-type]
+                {
+                    "boxes": pred_boxes,
+                    "scores": scores,
+                    "labels": torch.zeros(len(preds), dtype=torch.int64),
+                }
+            ],
+            [
+                {
+                    "boxes": gt_boxes,
+                    "labels": torch.zeros(len(gts), dtype=torch.int64),
+                    "iscrowd": crowd,
+                }
+            ],
+        )
+
+    def compute(self) -> MapResult:
+        """``ap_pii`` (label-agnostic AP@0.5), ``map`` (mean over labels) and ``ap_per_label``."""
+        agnostic = self._agnostic.compute()  # ty: ignore[missing-argument]
+        per_class = self._per_class.compute()  # ty: ignore[missing-argument]
+        classes = per_class["classes"].reshape(-1).tolist()
+        values = per_class["map_per_class"].reshape(-1).tolist()
+        per_label = {
+            self.labels[c]: round(v, 4)
+            for c, v in zip(classes, values, strict=True)
+            if v >= 0
+        }
+        return {
+            "ap_pii": round(float(agnostic["map_50"]), 4),
+            "map": round(sum(per_label.values()) / len(per_label), 4)
+            if per_label
+            else 0.0,
+            "ap_per_label": per_label,
+        }

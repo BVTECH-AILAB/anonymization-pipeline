@@ -7,7 +7,7 @@ are replaced by an image of themselves with black boxes painted in (layout,
 colours and tables look identical; an invisible text layer keeps them
 searchable); pages without it stay as they are. Every output is verified before
 it can be downloaded (fail-closed). Everything runs on-prem, on open-source
-components with permissive licences (no PyMuPDF): the other services are
+components with permissive licences: the other services are
 the OCR server of `ocr-server/`, deployed next to this one, and the AILAB NER
 service.
 
@@ -145,9 +145,8 @@ A detected span `(start, end)` becomes one rectangle per line.
   the words inside the picture are kept, and they are redacted like on a scan. Colour
   photos may show a person and are redacted whole (FACE).
 
-The visual detectors work on pypdfium2 page views (`pdf_pages.py`). Measured
-against the former PyMuPDF + RapidOCR pipeline, and what is left to do:
-[PDF_BACKEND_GAPS.md](PDF_BACKEND_GAPS.md).
+The visual detectors work on pypdfium2 page views (`pdf_pages.py`). Components,
+open points and licences: [PDF_BACKEND_GAPS.md](PDF_BACKEND_GAPS.md).
 
 ### 2. Detection (`anonymization_core/detect/`)
 
@@ -156,8 +155,8 @@ Recall first: one detector is enough to redact.
 | Detector | What it finds |
 |---|---|
 | `rules.py` | Formats: codice fiscale (strict with checksum, plus an OCR-tolerant pattern), tessera sanitaria, phones (Italian, foreign "+234 ...", North American, extensions; never across lines, dates excluded), email, IBAN, URLs with personal tokens, dates (date of birth from context, also ISO, compact and "30-Nov-1966"), age, street addresses, CAP + municipality, professional registrations ("OMCeO MI n.", "Ord. Med. RN n.", "Albo PE n."), NRE, DICOM header fields ("(0010,0010) PatientName", also with the keyword split into words), places and names in typical phrasings |
-| `labels.py` + `labels.yaml` | The value after a label: about 60 groups of Italian and English form and report labels ("Cognome:", "COGNOME / SURNAME" with the value below, "N. accettazione", "Prenotazione CUP", "Medicaid ID", "Permesso di soggiorno", "Medico curante", "Mediatore linguistico") with the shape of the value (name, place, address, organisation, identifier, date, phone). A single word after a generic role label ("Medico Ostetrico") needs ":" or capitals. A label with no value on its line takes the next line only if that line is not a sentence ("Mediatore linguistico:" followed by "Acconsento al test HIV" is not a name). An address needs a street type, "c/o" or "presso", a number, or the shape of a place name ("San Giovanni in Fiore"), so prose after "domicilio" is not one. Vocabulary ported from feat/reconstructed-architecture |
-| `ner.py` | Client of the AILAB NER service (`POST /batch_ner`, one request per page, chunks of whole lines). Entity groups mapped to the taxonomy (NOME/COGNOME -> PERSON, LUOGO, INDIRIZZO, RAGIONE_SOCIALE ...), the others ignored; adjacent name and surname joined. The service preprocesses the text (eponyms become `EPONYMn`, emails a placeholder), so its offsets drift: word pieces are joined first ("Mo" + "##cenigo"), then each entity is checked against the original text and moved to the nearest occurrence of its word, or dropped. The service reads line breaks as spaces: a span is cut where the next line starts another field ("Grippo" + "Visto:", a stop word of `labels.yaml`, punctuation), while a value wrapped on two lines stays whole. Timeouts, connection errors and 502/503/504 are retried (`ANONPIP_NER_RETRIES`, waits doubling from `ANONPIP_NER_RETRY_BACKOFF_SECONDS`); then fail-closed: a service down fails the job. See "NER choice" |
+| `labels.py` + `labels.yaml` | The value after a label: about 60 groups of Italian and English form and report labels ("Cognome:", "COGNOME / SURNAME" with the value below, "N. accettazione", "Prenotazione CUP", "Medicaid ID", "Permesso di soggiorno", "Medico curante", "Mediatore linguistico") with the shape of the value (name, place, address, organisation, identifier, date, phone). A single word after a generic role label ("Medico Ostetrico") needs ":" or capitals. A label with no value on its line takes the next line only if that line is not a sentence ("Mediatore linguistico:" followed by "Acconsento al test HIV" is not a name). An address needs a street type, "c/o" or "presso", a number, or the shape of a place name ("San Giovanni in Fiore"), so prose after "domicilio" is not one. |
+| `ner.py` | Client of the AILAB NER service (`POST /batch_ner`, one request per page, chunks of whole lines). Entity groups mapped to the taxonomy (NOME/COGNOME -> PERSON, LUOGO, INDIRIZZO, RAGIONE_SOCIALE ...), the others ignored; adjacent name and surname joined. The service preprocesses the text (eponyms become `EPONYMn`, emails a placeholder), so its offsets drift: word pieces are joined first ("Mo" + "##cenigo"), then each entity is checked against the original text and moved to the nearest occurrence of its word, or dropped. The service reads line breaks as spaces: a span is cut where the next line starts another field ("Grippo" + "Visto:", a stop word of `labels.yaml`, punctuation), while a value wrapped on two lines stays whole. Timeouts, connection errors and 502/503/504 are retried (`ANONPIP_NER_RETRIES`, waits doubling from `ANONPIP_NER_RETRY_BACKOFF_SECONDS`); then fail-closed: a service down fails the job. See "NER" |
 | `eponyms.py` + `eponyms.yaml`, `allowlist.py` | Per occurrence: eponyms and scales are not persons only in a clinical context ("segno di Giordano negativo", "Glasgow 15", "Wolff-Parkinson-White"), drug brands never are, common words only in lowercase ("globuli rossi"); "Sig. Giordano" stays a person. About 400 eponyms, 50 scales, 200 drug brands. Plus saints in facility names and clinical vocabulary |
 | `ensemble.py` | Person spans lose leading titles, references without a name ("la paziente") are dropped, institution names become organisations. Document-wide propagation: every name token and every redacted identifier found anywhere is searched in every layer (spaced, glued, with initials, both orders, wrapped on two lines); words ambiguous on their own (three letters or fewer, acronyms, field labels, eponyms, scales, Italian municipalities: "Ugo", "HIV", "Masson", "Napoli") are spread only as part of the full name, never alone. Also found: a surname glued to an initial in capitals ("TOKAFOR"), a full name glued to what follows ("LindaMarshRX-550"), OCR confusions 0/o, 1/l, 5/s in names and numbers ("Adebay0", "389 555 773l"), and other codes of the numbering scheme of a found identifier ("RX-550-2913" -> "RX-550-2877"). Names and places with stray symbols or numbers-only words are OCR fragments; addresses from NER need the shape of an address; facility names are organisations. Overlapping spans merge into the most specific label |
 | `visual.py` | Barcodes and QR codes (zxing), embedded images (signature or stamp; grayscale clinical pictures left to OCR, colour photos redacted whole; header logos excluded), vector signatures and stamp frames on native pages, on scans the ink that OCR does not explain (signatures), stamps (frame, coloured ink, or a cluster of words around "OMCeO" / "Medico Chirurgo") |
@@ -369,8 +368,7 @@ Errors are `ServiceError` subclasses with generic Italian messages (`errors.py`)
 ## Synthetic dataset and evaluation
 
 The scoring is the evaluation CLI of `evaluation/` (`just evaluate`, `just
-eval-compare`); the generator and the viewer live on `ref/mod-separation`. What
-follows describes how the engine was measured and the results.
+eval-compare`). What follows describes the dataset, the metrics and the results.
 
 **Dataset**: seven Italian document types (discharge
 letter, lab report, radiology report, ER report, referral letter, sick-leave
@@ -390,26 +388,22 @@ The dataset PDF is the second, clean copy, with pure colours: a check asserts
 that both copies have identical words and positions. Ground truth lives in
 `dataset/ground_truth/`, separate from the inputs.
 
-**Evaluation dataset** (`dataset/`): 201 documents (329 pages), each in the
-three variants above with ground truth in the same format: 603 PDFs.
-186 are Italian and 15 English. The test split (`--split test`) holds the
+**Evaluation dataset** (`dataset/`): 200 documents (326 pages), each in the
+three variants above with ground truth in the same format: 600 PDFs.
+185 are Italian and 15 English. The test split (`--split test`) holds the
 held-out documents: the split is fixed by template family
-(about 30% of the 51 families, 78 documents), so no sibling of a test document
-is ever seen while tuning; `--split dev` is the rest (123 documents). One
-exception: `e056_orientamento_ocr` falls in the test split by its family but was
-used to develop the orientation fixes, so the test split holds one document seen
-while tuning. The `doc_id` prefix tells
-the sources apart (the generator rebuilds only the `NNN_` documents):
+(about 30% of the families, 77 documents), so no sibling of a test document
+is ever seen while tuning; `--split dev` is the rest (123 documents). The
+`doc_id` prefix tells the sources apart:
 
 | Prefix | Documents | Content |
 |---|---|---|
-| `NNN_` | 42 | the generator above, 6 of each of its 7 types |
+| `NNN_` | 42 | the seven synthetic types above, 6 of each |
 | none | 96 | eight Italian report types in three difficulty levels (facile, media, complessa): repeated headers and footers, codice fiscale in character boxes, stamps, signatures, barcodes and QR codes, eponyms. Boxes recovered from a value-level ground truth; clinical content (diagnoses, drugs, lab values) is not PII, so redacting it counts as over-redaction |
-| `eNNN_` | 57 | edge cases: fax with the codice fiscale in character boxes, phone photo with perspective and handwritten PII, landscape table on a `/Rotate 90` page, PII in AcroForm fields, X-ray with PII burned into the pixels and a DICOM header dump, handwritten note on a scan plus the same scan with an OCR layer, PII in metadata, attachments, sticky notes, white text, text under an image and a 2 pt footer, surnames that are cities or words, foreign patients (STP/ENI, passports, diacritics), US and UK documents, and `e056_orientamento_ocr`: a patient label pasted upside down, codice fiscale and date of birth in character boxes, a page scanned upside down and a page sent by fax |
+| `eNNN_` | 56 | edge cases: fax with the codice fiscale in character boxes, phone photo with perspective and handwritten PII, landscape table on a `/Rotate 90` page, PII in AcroForm fields, X-ray with PII burned into the pixels and a DICOM header dump, handwritten note on a scan plus the same scan with an OCR layer, PII in metadata, attachments, sticky notes, white text, text under an image and a 2 pt footer, surnames that are cities or words, foreign patients (STP/ENI, passports, diacritics), US and UK documents |
 | `d3_` | 6 | hand-annotated worst cases: mixed scanned and native pages, phone photo, fax, hidden channels, US forms |
 
-The dataset is not regenerable as a whole (only the `NNN_` documents are), so
-back up `dataset/` before deleting it. On the documents whose native PDF is
+The dataset is not in git: back up `dataset/` before deleting it. On the documents whose native PDF is
 already an image (fax, photo, scans) the `scan_ocr` variant has no OCR layer.
 
 **Evaluation** (metrics from standard libraries):
@@ -424,43 +418,54 @@ already an image (fax, photo, scans) the `scan_ocr` variant has no OCR layer.
 Plus hidden PII leaked (white text, metadata, deleted notes), eponyms wrongly
 redacted, verified documents and seconds per page.
 
-Results on the whole evaluation set (201 documents x 3
-variants, 603 PDFs; 21/10/2026), with the AILAB NER service. In brackets the
-results before the OCR orientation and character-box changes (200 documents,
-20/10/2026, same NER service; see "OCR choice"):
+Results on the whole evaluation set (200 documents x 3 variants, 600 PDFs;
+22/10/2026), with the AILAB NER service and the OCR server on a laptop RTX 5070
+(8 GB):
 
 | | native | scan | scan + OCR layer |
 |---|---|---|---|
-| Recall (box, required PII) | 0.940 (0.938) | 0.931 (0.909) | 0.942 (0.939) |
-| Precision (box) | 0.960 (0.959) | 0.940 (0.928) | 0.893 (0.884) |
-| F1 (box) | 0.950 (0.948) | 0.935 (0.918) | 0.917 (0.911) |
-| Precision / recall / F1 (word) | 0.947 / 0.950 / 0.948 | 0.791 / 0.947 / 0.862 | 0.743 / 0.956 / 0.836 |
-| Accuracy (word) | 0.987 (0.987) | 0.961 (0.950) | 0.952 (0.943) |
-| AP@0.5 (PII, label-agnostic) | 0.657 (0.658) | 0.586 (0.576) | 0.504 (0.502) |
-| mAP@0.5 (mean over PII types) | 0.672 (0.670) | 0.587 (0.564) | 0.566 (0.559) |
-| Hidden PII leaked (white text, metadata, OCR layers) | 0/324 (0/324) | n/a | 1/324 (1/324) |
-| Eponyms wrongly redacted | 53/416 (54/415) | 75/416 (72/415) | 102/416 (100/415) |
-| Documents passing verification | 201/201 | 201/201 | 201/201 |
-| Seconds per page (laptop RTX 5090, 24 GB) | 0.6 | 3.0 | 3.9 |
+| Recall (box, required PII) | 0.940 | 0.918 | 0.933 |
+| Precision (box) | 0.954 | 0.926 | 0.872 |
+| F1 (box) | 0.947 | 0.922 | 0.902 |
+| Precision / recall / F1 (word) | 0.941 / 0.952 / 0.946 | 0.785 / 0.941 / 0.856 | 0.737 / 0.954 / 0.832 |
+| Accuracy (word) | 0.986 | 0.960 | 0.951 |
+| AP@0.5 (PII, label-agnostic) | 0.663 | 0.595 | 0.519 |
+| mAP@0.5 (mean over PII types) | 0.674 | 0.582 | 0.568 |
+| Hidden PII leaked (white text, metadata, OCR layers) | 1/324 | n/a | 0/324 |
+| Boxes with no PII (over-redaction) | 305 | 494 | 922 |
+| Eponyms wrongly redacted | 65/415 | 77/415 | 108/415 |
+| Documents passing verification | 200/200 | 200/200 | 200/200 |
+| Seconds per page | 0.75 | 2.54 | 2.67 |
 
-The OCR changes act on scans: on plain scans recall goes from 0.909 to 0.931
-(codice fiscale 93% to 98%, tessera sanitaria 91% to 100%, persons 94% to 96%)
-and precision rises too, because lines that were dropped or read as fragments
-are now read whole. On scans with a hidden OCR layer the gain is smaller: that
-layer already gave the text. Native pages are not read by OCR; their small
-changes are run-to-run variation of the NER service. Seconds per page depend on
-the load of the machine and of the NER service during the run, so they are not
-comparable between runs.
+Recall per type (native / scan / scan + OCR layer):
 
-The hidden value left is a foreign surname in a hidden channel of a scan
-("Okafor"), which the NER service does not always find (see "Known limits").
-`just evaluate` refreshes the table; `--split test`
-scores only the 78 held-out documents.
+| Type | Recall | Type | Recall |
+|---|---|---|---|
+| PERSON | 96% / 96% / 97% | FISCAL_CODE | 99% / 94% / 96% |
+| HEALTH_CARD | 100% / 100% / 100% | DATE_OF_BIRTH | 93% / 91% / 92% |
+| ADDRESS | 96% / 93% / 94% | LOCATION | 94% / 93% / 94% |
+| PHONE | 93% / 90% / 92% | EMAIL | 92% / 87% / 95% |
+| MEDICAL_RECORD | 79% / 74% / 76% | PRESCRIPTION_ID | 90% / 92% / 92% |
+| PROFESSIONAL_ID | 88% / 94% / 94% | ID_DOCUMENT | 91% / 70% / 91% |
+| IBAN, URL, QRCODE | 100% everywhere | BARCODE | 97% / 100% / 100% |
+| SIGNATURE | 97% / 89% / 89% | STAMP | 96% / 97% / 97% |
+| HANDWRITING | 0% (0 of 21) | | |
+
+The hidden value left is a name in a hidden channel of a native document
+("Linda Marsh" in `d3_L04_radiology_report_native_hidden_channels`), which the
+NER service does not find (see "Known limits"). `--split test` scores only the
+77 held-out documents.
 
 Reading the numbers:
 
 - Recall is the safety metric (a missed value is a leak); precision measures
   over-redaction, mostly facility addresses and phones in the headers.
+- MEDICAL_RECORD is the weakest text type: among the misses are internal
+  record, accession and authorisation numbers with no label, or with a label
+  `labels.yaml` does not know ("R.G. 2187/2024", "CDA-OSP-26-4471").
+- On plain scans identity documents (70%) and codici fiscali (94%, against 99%
+  on native pages) lose to OCR: the same documents read from their text layer
+  score higher.
 - AP is lower than recall because it also scores localisation (IoU 0.5) and
   ranking, which redaction does not need. On scans with a hidden OCR layer the
   boxes of that layer are misaligned with the visible text: they are real
@@ -468,27 +473,27 @@ Reading the numbers:
   boxes that overlap less than 0.5). On scans signatures are covered by an ink
   box smaller than the image box of the ground truth. Address, CAP and city are
   annotated separately but often detected as one box.
-- Per-type recall, every miss and AP per type are listed in the report the
-  evaluation writes (`reports/evaluation.md`).
+- Per-type AP and every miss are listed in the report the evaluation writes
+  (`reports/evaluation.md`); `just eval-compare` compares two runs.
 
 ## OCR choice
 
-Measured in October 2026, before the move to LiteParse, on the 120 scanned
-documents of the first dev split, with the pipeline of the time (a box is found when redaction covers 75% of it), only the
-OCR changing, on a laptop RTX 5070 (8 GB) with nothing else running:
+Measured in October 2026 on the 120 scanned documents of the dev split, with
+only the OCR changing (a box is found when redaction covers 75% of it), on a
+laptop RTX 5070 (8 GB) with nothing else running:
 
 | OCR | Recall | Missed PII boxes | Precision | F1 | AP@0.5 / mAP@0.5 | s/page |
 |---|---|---|---|---|---|---|
-| docTR (db_resnet50 + parseq), the former default | 0.875 | 535 | 0.947 | 0.909 | 0.597 / 0.512 | 1.8 |
+| docTR (db_resnet50 + parseq) | 0.875 | 535 | 0.947 | 0.909 | 0.597 / 0.512 | 1.8 |
 | **PaddleOCR PP-OCRv5, server detector (RapidOCR)** | **0.900** | **426** | 0.947 | **0.923** | 0.584 / **0.571** | 4.0 |
 | PaddleOCR PP-OCRv6 medium (official package), first 90 documents | 0.750 | | 0.897 | | | 2.4 |
 
-PaddleOCR PP-OCRv5 with the server detector was chosen: one missed value in
-five fewer than docTR at the same precision. Its label-agnostic AP is slightly
-lower because AP also scores box tightness and ranking, which redaction does
-not need. It is Apache 2.0. PP-OCRv5 has a larger "server" model only for
-detection; the Latin recogniser is the mobile one either way. The same models
-now run in the OCR server of `ocr-server/` (RapidOCR on ONNX Runtime), where
+PaddleOCR PP-OCRv5 with the server detector is the one in use: one missed value
+in five fewer than docTR at the same precision. Its label-agnostic AP is
+slightly lower because AP also scores box tightness and ranking, which
+redaction does not need. It is Apache 2.0. PP-OCRv5 has a larger "server" model
+only for detection; the Latin recogniser is the mobile one either way. In the
+OCR server (`ocr-server/`, RapidOCR on ONNX Runtime)
 `OCRSRV_DET_MODEL=PP-OCRv5_mobile_det` trades some accuracy for speed.
 
 PP-OCRv6 scores higher than v5 in PaddleOCR's own benchmarks, but those are
@@ -497,69 +502,48 @@ recogniser has one dictionary for 50 languages (18,708 characters, 15,565 of
 them Chinese, against 836 Latin characters for the v5 Latin model) and on our
 Italian documents it drops the spaces after punctuation ("Salerno,15/03/2026",
 "Cod.regionale724932") and adds accents ("Gaglíardǐ"): values glued to their
-neighbours are no longer recognised. The official package also returns line
-boxes only, so word boxes have to be estimated.
+neighbours are not recognised. The official package also returns line boxes
+only, so word boxes have to be estimated.
 
 ### Orientation and character boxes
 
-Two changes to how PP-OCRv5 is run, measured step by step on the scans of the
-evaluation set (box level; the first three rows on the 200 documents of
-20/10/2026, the last on the 201 documents of 21/10/2026), everything else
-identical. They were measured with the former in-pod OCR (PyMuPDF rendering,
-`ocr.py`) and then moved as they are to the OCR server (orientation) and to
-`cells.py` with the server's `POST /recognize` (character boxes); the current
-stack has not been measured with them yet:
+How PP-OCRv5 is run matters as much as the model:
 
-| | scan recall | scan precision | scan F1 | scan + OCR layer F1 |
-|---|---|---|---|---|
-| Before (line classifier on, boxes read by the page OCR) | 0.908 | 0.923 | 0.916 | 0.902 |
-| Line orientation classifier off, upside-down pages read turned | 0.920 | 0.938 | 0.929 | 0.916 |
-| Plus character boxes read again cleaned | 0.930 | 0.939 | 0.935 | 0.916 |
-| Plus upside-down lines read turned, guards on turned pages and valid codes | 0.931 | 0.940 | 0.935 | 0.917 |
-
-- **The line classifier.** RapidOCR passes every detected line to an
+- **The line classifier is off.** RapidOCR can pass every detected line to an
   orientation classifier; on our scans it turned upright, perfectly legible
   lines by 180 degrees ("Paz. Zanetti Carlo Alberto - nato il 30.08.1953 - Acc.
   TC2025-118842", "la cugina Khady Sow (+39 389 0047215)"). The recogniser then
   read noise (confidence about 0.35) and RapidOCR dropped the whole line under
   its 0.5 threshold. Without the classifier the same lines are read at 0.98 to
-  0.99. Of the values missed on plain scans but found on the native twin, about
-  a fifth were lines never read at all; most of them are back.
-- **Character boxes.** About 80 of those values were codes in boxes broken by
-  specks. Read again as one clean word, the ten rows of the misses were all read
-  right; on the evaluation set codice fiscale goes from 94% to 98% and tessera
-  sanitaria from 91% to 100% on plain scans, and no document loses a code. A
-  first version replaced the page OCR also when only part of a row was found
-  (a lost border) and lost two codes the page OCR had read whole: the guards
-  described in "Text layers" come from that.
-- **Edge cases.** `e056_orientamento_ocr` holds what the evaluation set did not
-  have: a label pasted upside down, a page scanned upside down, a fax. Before
-  the changes its plain scan scored recall 0.80 (1 value of 7 on the upside-down
-  page, the label's record number and phone missed); now 1.0 on every variant,
-  and the fax page is never swapped for a turned reading.
+  0.99. Pages and lines upside down are handled by the OCR server instead (see
+  "Text layers").
+- **Character boxes are read again cleaned.** Codes in boxes broken by specks
+  are read again as one clean word; tessera sanitaria reaches 100% on plain
+  scans. The guards described in "Text layers" (the whole row must be found, a
+  valid code read by the page OCR is kept) stop a partial row from replacing a
+  code read whole.
 - **Cost.** Finding the box rows takes about 0.08 s per page; each row and each
-  low line read again is one recognition call on a small crop (CPU). A page is
-  read twice only when its mean confidence is below 0.8, which no page of the
+  low line read again is one recognition call on a small crop. A page is read
+  twice only when its mean confidence is below 0.8, which no page of the
   evaluation set reaches (its lowest is 0.98).
-- **Side effects.** More lines read means more text to misjudge: eponyms wrongly
-  redacted on scans went from 70 to 75 of 415. On 60 upright pages the turned
-  re-reading of low lines added one piece of noise (a signature read as two
-  short words) and removed no word read with confidence.
+- **Side effects.** More lines read means more text to misjudge: a few eponyms
+  more are redacted on scans than on native pages. On upright pages the turned
+  re-reading of low lines can add a piece of noise (a signature read as two
+  short words) and removes no word read with confidence.
 
 ### Speed
 
+- Seconds per page on the evaluation set (table above, laptop RTX 5070, 8 GB,
+  OCR server on the GPU, NER in the AILAB service): 0.75 native, 2.5 scan, 2.7
+  scan with a hidden OCR layer, verification included.
 - **Detector input size**: RapidOCR shrinks every image to a long side of 2000
   px before detection (its `Global.max_side_len`), so a 300 dpi A4 page reaches
   the detector at 1984 x 1408.
-- Measured on 12 documents per variant before the switch to the AILAB NER
-  service (RTX 5070 8 GB, OCR server and in-pod GLiNER NER on the same GPU):
-  0.7 s per native page, 2.4 s per scanned page, 2.5 s per scan with an OCR
-  layer, verification included.
 - Native pages are not read by OCR, except the pictures on them (X-rays), whose
   burned-in text is read.
 - **GPU memory**: only the OCR server uses a GPU; it peaks at about 4 GB per
   page and releases it after every run (0.3 GB idle); an optional cap is
-  `OCRSRV_GPU_MEM_LIMIT_MB` (0 = none). NER runs in the AILAB NER service.
+  `OCRSRV_GPU_MEM_LIMIT_MB` (0 = none).
 
 Not adopted:
 
@@ -575,30 +559,17 @@ Not adopted:
 - **Docling**: document structure (tables, reading order), with OCR delegated
   to an engine like the one above and no word boxes.
 
-## NER choice
+## NER
 
-The measurements of this section were taken before the OCR changes of
-21/10/2026 (see "OCR choice"); the comparison holds, both NERs read the same text.
+NER is the AILAB NER service of the platform (`ANONPIP_NER_URL`): the pipeline
+sends the text of each page and keeps only the entities, never its
+`obfuscated_text`. The configuration endpoints of the service
+(`/medical_orgs`, `/medical_labels`) are shared with ai-platform and never
+called.
 
-NER is delegated to the AILAB NER service already used by the platform
-(`ANONPIP_NER_URL`): the pipeline sends the text of each page and keeps only
-the entities, never its `obfuscated_text`. The configuration endpoints of the
-service (`/medical_orgs`, `/medical_labels`) are shared with ai-platform and
-never called.
-
-Measured against the earlier in-pod GLiNER + GLiNER2 (commit `92ae6e5`) on the
-same 600 PDFs, everything else identical; differences in points, AILAB minus
-GLiNER, 95% interval from a document bootstrap:
-
-| | native | scan | scan + OCR layer |
-|---|---|---|---|
-| Recall, dev / test | -1.0 / -1.0 | -0.6 / -0.6 | -0.6 / -0.5 |
-| Precision, dev / test | -0.5 / -2.5 | -0.9 / -1.4 | -2.2 / -1.8 |
-| Values found only by GLiNER / only by AILAB (all) | 86 / 18 | 77 / 36 | 64 / 29 |
-
-The values lost are almost all persons and places (the other labels come from
-the rules; one phone per variant moves through propagation). Their causes, all
-in the service output:
+Recall depends far more on the rules, the labels and propagation than on the
+NER: every type but persons and places comes from the rules. What the service
+output still misses on the evaluation set:
 
 - eponyms of its dictionary are replaced before the model, also when they are
   surnames or first names ("Alessia Corti" -> "Alessia EPONYM3", "Vittoria"
@@ -610,59 +581,31 @@ in the service output:
   at all ("Emeka Okafor", "Popescu Ioana");
 - places with the country in brackets found in part ("Casablanca (Marocco)").
 
-The extra over-redaction comes from fragments taken for places ("il", "C",
-"PUGLIA"), medical eponyms taken for persons ("Marsh-Oberhuber", "Ishak") and
-label words joined to names ("CAIRONI DANILO Nato"). Joining word pieces and
-cutting spans at the next field (see `ner.py` above) recovered +0.1 to +0.3
-points of recall and +0.3 to +2.0 points of precision; the rest needs either a
-change in the service (offsets on the original text, or no `EPONYM`
-replacement on the entities) or further filters on our side.
-
-Earlier benchmark (before the switch to the service): six on-premise PII models (open weights, run in the pod, no external call) in
-place of the default, on the 108 native documents of the dev split (179-document set), every other
-part of the pipeline identical (75% coverage, laptop RTX 5070):
-
-| NER model | Recall | Precision | F1 | AP@0.5 / mAP@0.5 | s/page |
-|---|---|---|---|---|---|
-| `urchade/gliner_multi_pii-v1` | 0.937 | **0.973** | **0.955** | 0.648 / 0.653 | 0.65 |
-| `fastino/gliner2-privacy-filter-PII-multi` (GLiNER2, 2026) | **0.942** | 0.962 | 0.952 | **0.664 / 0.671** | 0.62 |
-| `DeepMount00/GLiNER_PII_ITA` (Italian only) | 0.932 | 0.970 | 0.950 | 0.659 / 0.669 | 0.65 |
-| `knowledgator/gliner-pii-large-v1.0` | 0.925 | 0.967 | 0.946 | 0.647 / 0.665 | 0.73 |
-| `nvidia/gliner-PII` | 0.920 | 0.959 | 0.939 | 0.628 / 0.668 | 0.73 |
-| `openai/privacy-filter` (mainly English) | 0.925 | 0.940 | 0.933 | 0.616 / 0.638 | 1.36 |
-
-| **GLiNER + GLiNER2 together** (default at the time) | **0.948** | 0.961 | **0.954** | 0.654 / 0.653 | 0.7 |
-
-No single model beats GLiNER on F1; the two best together find 1.1 points more
-recall than GLiNER alone (17% fewer missed values) at the same F1: the extra
-boxes are over-redaction, the safe error. Both are multilingual: on the English
-documents of the dev split they tie the best (recall 0.964), while the
-Italian-only model drops there (0.945). GLiNER alone had precision 0.973 and
-recall 0.937. Recall depends far more on the
-rules, the labels and propagation than on the NER: the models differ by 2
-points at most. GLiNER2 (`gliner2`, Apache 2.0, Fastino) is loaded with
-`from_pretrained`, like GLiNER; its API client for Fastino's cloud is never used.
+Over-redaction from the service comes from fragments taken for places ("il",
+"C", "PUGLIA"), medical eponyms taken for persons ("Marsh-Oberhuber", "Ishak")
+and label words joined to names ("CAIRONI DANILO Nato"). Joining word pieces and
+cutting spans at the next field (see `ner.py` above) handle part of it; the rest
+needs either a change in the service (offsets on the original text, or no
+`EPONYM` replacement on the entities) or further filters on our side.
 
 ## Known limits
 
-- Handwritten PII on scans is not detected (0 of 12 handwritten boxes in the
-  scanned dev documents): the UI edits cover it. DOCX/TXT input is not supported.
+- Handwritten PII on scans is not detected (0 of 21 handwritten boxes in the
+  evaluation set): the UI edits cover it. DOCX/TXT input is not supported.
 - Reversible mode (encrypted mapping, reconstruction of the original) is out of scope.
-- Professional IDs and some phones on plain scans depend on OCR quality; the
-  UI edits cover the misses.
+- Internal record numbers without a known label (MEDICAL_RECORD, 74% to 79%),
+  professional IDs and some phones on plain scans depend on the label
+  vocabulary and on OCR quality; the UI edits cover the misses.
 - Pages with a box become images: the text stays searchable through an
-  invisible layer, but it is no longer vector text, and native documents grow
-  by about 45%.
+  invisible layer, but it is not vector text, and native documents grow by
+  about 45%.
 - Character boxes are found only when their ruling is dark and continuous:
-  light grey or red dropout grids, dashed boxes and the two fax prescriptions of
-  the evaluation set are left to the page OCR (24 codici fiscali still missed on
-  plain scans, measured with the former in-pod OCR). Boxes tuned on synthetic
-  forms with 14 to 15 pt cells.
-- Upside-down pages and lines are measured only on `e056_orientamento_ocr`;
-  a page whose upside-down reading looks confident (mean above 0.8) is not read
-  again turned. Text turned by angles other than 90 and 180 degrees is not
-  handled.
+  light grey or red dropout grids, dashed boxes and fax prescriptions are left
+  to the page OCR. Boxes tuned on synthetic forms with 14 to 15 pt cells.
+- Upside-down pages and lines are handled for 180 degrees only; a page whose
+  upside-down reading looks confident (mean above 0.8) is not read again
+  turned. Text turned by angles other than 90 and 180 degrees is not handled.
 - NER depends on the AILAB NER service: names it replaces as eponyms ("Corti",
   "Vittoria"), foreign names and dense lists of patients can be missed or
-  redacted in part (see "NER choice"); the text of each page leaves the pod for
-  the service; if the service is down, jobs fail (fail-closed).
+  redacted in part (see "NER"); the text of each page leaves the pod for the
+  service; if the service is down, jobs fail (fail-closed).

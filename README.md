@@ -8,7 +8,7 @@ themselves with black boxes painted in (layout, colours and tables look the
 same, an invisible text layer keeps them searchable), the other pages stay as
 they are. Every output is verified before it can be downloaded (fail-closed).
 All models run on-prem, on open-source components with permissive licences
-(pypdfium2, pypdf, LiteParse, RapidOCR with PP-OCRv5 models; no PyMuPDF). OCR runs in a second
+(pypdfium2, pypdf, LiteParse, RapidOCR with PP-OCRv5 models). OCR runs in a second
 service, `ocr-server/`; NER runs in the AILAB NER service.
 
 Generated from `agenas-python-template`: same stack, logging and privacy rules
@@ -22,9 +22,8 @@ as Markdown tables and `[IMMAGINE]` placeholders.
 How the algorithm works, the API, the PII taxonomy and the evaluation results:
 **[docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)**.
 
-This branch holds the engine, the API, the OCR server and the evaluation CLI
-(`evaluation/`: scoring against the dataset). The demo page (`apps/web`), the
-synthetic dataset generator and the evaluation viewer live on `ref/mod-separation`.
+The repository holds the engine, the API, the OCR server and the evaluation
+CLI (`evaluation/`: scoring against the dataset in `dataset/`).
 
 ## How the algorithm works
 
@@ -120,7 +119,7 @@ flowchart TD
 
 ## Quick start
 
-Requirements: `uv`, `just`. A GPU is optional (about 3 s per scanned page on a
+Requirements: `uv`, `just`. A GPU is optional (about 2.5 s per scanned page on a
 laptop RTX 5070, slower on CPU; see "Speed" in [docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)).
 
 ```bash
@@ -235,63 +234,33 @@ scripts/                start.sh: OCR server and API on the host (`just start`)
 
 ## Results
 
-Measured with the evaluation package (`evaluation/`, `just evaluate`) on
-the whole evaluation set (200 documents, 326
-pages, each as native PDF, scan and scan with a hidden OCR layer: 600 PDFs;
-20/10/2026). The current stack (LiteParse + OCR server, AILAB NER service, OCR
-orientation and character boxes) has not been measured yet: the tables below
-measure each part on its own branch.
-
-LiteParse stack, NER still GLiNER + GLiNER2 in the pod (pypdfium2 + pypdf,
-LiteParse, PP-OCRv5 server on RapidOCR), before the OCR orientation and
-character-box changes:
+Measured with `just evaluate` on the whole evaluation set: 200 documents, 326
+pages, each as native PDF, scan and scan with a hidden OCR layer (600 PDFs;
+22/10/2026), with the AILAB NER service and the OCR server on a laptop RTX 5070
+(8 GB):
 
 | | native | scan | scan + OCR layer |
 |---|---|---|---|
-| **Recall** (box, required PII) | 0.942 | 0.892 | 0.937 |
-| **Precision** (box) | 0.953 | 0.906 | 0.866 |
-| **F1** (box) | 0.948 | 0.899 | 0.900 |
-| Precision / recall / F1 (word) | 0.930 / 0.957 / 0.944 | 0.725 / 0.922 / 0.812 | 0.689 / 0.956 / 0.801 |
-| **Accuracy** (word) | 0.985 | 0.945 | 0.939 |
-| **AP@0.5** (PII, label-agnostic) | 0.652 | 0.588 | 0.500 |
-| **mAP@0.5** (mean over PII types) | 0.666 | 0.562 | 0.541 |
-| Hidden PII leaked (white text, metadata, OCR layers) | 0/324 | n/a | 0/324 |
-| Eponyms wrongly redacted | 32/415 | 40/415 | 49/415 |
+| **Recall** (box, required PII) | 0.940 | 0.918 | 0.933 |
+| **Precision** (box) | 0.954 | 0.926 | 0.872 |
+| **F1** (box) | 0.947 | 0.922 | 0.902 |
+| Precision / recall / F1 (word) | 0.941 / 0.952 / 0.946 | 0.785 / 0.941 / 0.856 | 0.737 / 0.954 / 0.832 |
+| **Accuracy** (word) | 0.986 | 0.960 | 0.951 |
+| **AP@0.5** (PII, label-agnostic) | 0.663 | 0.595 | 0.519 |
+| **mAP@0.5** (mean over PII types) | 0.674 | 0.582 | 0.568 |
+| Hidden PII leaked (white text, metadata, OCR layers) | 1/324 | n/a | 0/324 |
+| Eponyms wrongly redacted | 65/415 | 77/415 | 108/415 |
 | Documents passing verification | 200/200 | 200/200 | 200/200 |
-| Seconds per page (laptop RTX 5070, 8 GB) | 1.4 | 3.0 | 3.3 |
+| Seconds per page | 0.75 | 2.54 | 2.67 |
 
-Against the former PyMuPDF + RapidOCR pipeline (16/10/2026) recall is 0.6, 2.3
-and 0.7 points lower and scans are about 5 times faster; the gaps, their
-suspected causes and the next steps are in
-[docs/PDF_BACKEND_GAPS.md](docs/PDF_BACKEND_GAPS.md).
-
-AILAB NER service with the OCR orientation and character-box changes, OCR still
-PyMuPDF + PaddleOCR PP-OCRv5 in the pod (201 documents, 329 pages, 603 PDFs:
-the orientation document `e056` added; 21/10/2026). In brackets the same stack
-before those changes (20/10/2026):
-
-| | native | scan | scan + OCR layer |
-|---|---|---|---|
-| **Recall** (box, required PII) | 0.940 (0.938) | 0.931 (0.909) | 0.942 (0.939) |
-| **Precision** (box) | 0.960 (0.959) | 0.940 (0.928) | 0.893 (0.884) |
-| **F1** (box) | 0.950 (0.948) | 0.935 (0.918) | 0.917 (0.911) |
-| Precision / recall / F1 (word) | 0.947 / 0.950 / 0.948 | 0.791 / 0.947 / 0.862 | 0.743 / 0.956 / 0.836 |
-| **Accuracy** (word) | 0.987 | 0.961 | 0.952 |
-| **AP@0.5** (PII, label-agnostic) | 0.657 | 0.586 | 0.504 |
-| **mAP@0.5** (mean over PII types) | 0.672 | 0.587 | 0.566 |
-| Hidden PII leaked (white text, metadata, OCR layers) | 0/324 | n/a | 1/324 |
-| Eponyms wrongly redacted | 53/416 | 75/416 | 102/416 |
-| Documents passing verification | 201/201 | 201/201 | 201/201 |
-| Seconds per page (laptop RTX 5090, 24 GB) | 0.6 | 3.0 | 3.9 |
-
-On plain scans the OCR changes recover lines the orientation classifier used to
-drop and codes in character boxes broken by specks (codice fiscale 93% to 98%,
-tessera sanitaria 91% to 100%). Compared with the earlier in-pod GLiNER +
-GLiNER2, the AILAB service has 0.5 to 1 point less recall: names it replaces as
-eponyms, foreign names and fragments taken for places (details in
-docs/ANONYMIZATION.md, "OCR choice" and "NER choice").
-The current stack has not been measured as a whole yet: run `just evaluate`
-against it.
+By type: codice fiscale 99% / 94% / 96% (native / scan / scan + OCR layer),
+tessera sanitaria 100%, persons 96% to 97%, barcodes, QR codes, URLs and IBAN
+97% to 100%. The weakest are internal record numbers (MEDICAL_RECORD, 74% to
+79%: numbers with no label, or a label the vocabulary lacks), identity documents
+on plain scans (70%) and handwriting, which is not detected (0 of 21: the manual
+edits cover it). Per-type recall and AP and every miss are in the report that
+`just evaluate` writes (`reports/evaluation.md`); details in
+[docs/ANONYMIZATION.md](docs/ANONYMIZATION.md).
 
 - **Box level** (scikit-learn): every required ground-truth box is found when
   redaction covers at least 75% of it; every redaction box touching no ground
@@ -311,10 +280,9 @@ results and the analysis are in [docs/ANONYMIZATION.md](docs/ANONYMIZATION.md).
 
 ## Notes
 
-- The API serves no page: in the platform the doctor-facing frontend is `fe`
-  (a demo page for local tests is `apps/web` on `ref/mod-separation`).
+- The API serves no page: in the platform the doctor-facing frontend is `fe`.
 - Licences: every component is open source; the licence audit and the few
-  non-permissive transitive packages left are in
+  non-permissive transitive packages are in
   [docs/PDF_BACKEND_GAPS.md](docs/PDF_BACKEND_GAPS.md).
 - Technical document (Italian, BV TECH format, 10 pages):
   `docs/anonymization-pipeline.pdf`.

@@ -72,12 +72,6 @@ questo servizio: nessuna esposizione.
 | Variabili | `OCRSRV_MARGIN_PT` (`60`), `OCRSRV_MARGIN_MIN_SCORE` (`0.5`), `OCRSRV_MAX_UPLOAD_MB` (`40`), `OCRSRV_DEVICE` (`auto`: GPU se utilizzabile, altrimenti CPU con un WARNING all'avvio; `gpu`: senza GPU il container termina; `cpu`), `OCRSRV_GPU_MEM_LIMIT_MB` (`0` = nessun tetto, in MiB), `OCRSRV_LOG_LEVEL` (`INFO`); nessun segreto |
 | Dati | riceve immagini di pagine (dati sanitari): non scrive su disco e non registra il testo letto |
 
-## Pagina demo
-
-L'API non serve più nessuna pagina: prima la serviva con `ANONPIP_UI_ENABLED=true`. La
-variabile si può togliere dalla ConfigMap (se resta viene ignorata). La pagina demo è
-un'immagine a parte (`apps/web`, nginx), sul branch `ref/mod-separation`, non in questo.
-
 ## Cosa fa il team piattaforma
 
 1. **Namespace**: cartella `<namespace>/` in `oke-staging` e `oke-prod` con `ns.yaml`.

@@ -297,6 +297,18 @@ reports it. Error codes in the frames: `NER_UNAVAILABLE` or
 `PROCESSING_FAILED`, `CANCELLED`, `SESSION_BUSY`, `JOB_NOT_FOUND` (deleted
 during an edit).
 
+A whole run from a shell (`-N` shows the frames as they arrive):
+
+```bash
+B=http://127.0.0.1:8000/anonymizations/sessions
+ID=$(curl -s -F file=@referto.pdf -F mode=accurate $B | jq -r .session_id)
+curl -N -X POST $B/$ID/anonymize/stream          # status ... status, then done
+curl -N -X POST -H 'Content-Type: application/json' \
+     -d '{"search": "Medicina Interna"}' $B/$ID/edits/stream
+curl -o anonimizzato.pdf "$B/$ID/download?format=pdf"
+curl -X DELETE $B/$ID
+```
+
 **Releases are fail-closed.** `preview` and `download` answer 409
 `VERIFICATION_FAILED` when verification failed, `JOB_NOT_READY` before the end
 or while an edit replaces the files, and 404 `JOB_NOT_FOUND` when the session
@@ -377,6 +389,8 @@ Errors are `ServiceError` subclasses with generic Italian messages (`errors.py`)
 
 ### KPI events (contract with KPI-dashboard)
 
+Names and keys are unchanged by the session API: `job_id` is the session id.
+
 | Event | Keys |
 |---|---|
 | `anonymization_job_created` | `job_id`, `pages`, `size_kb`, `source_format`, `mode` |
@@ -426,7 +440,8 @@ is ever seen while tuning; `--split dev` is the rest (123 documents). The
 | `eNNN_` | 56 | edge cases: fax with the codice fiscale in character boxes, phone photo with perspective and handwritten PII, landscape table on a `/Rotate 90` page, PII in AcroForm fields, X-ray with PII burned into the pixels and a DICOM header dump, handwritten note on a scan plus the same scan with an OCR layer, PII in metadata, attachments, sticky notes, white text, text under an image and a 2 pt footer, surnames that are cities or words, foreign patients (STP/ENI, passports, diacritics), US and UK documents |
 | `d3_` | 6 | hand-annotated worst cases: mixed scanned and native pages, phone photo, fax, hidden channels, US forms |
 
-The dataset is not in git: back up `dataset/` before deleting it. On the documents whose native PDF is
+The dataset is not in git and not in the repository: copy the gold set into
+`dataset/` before an evaluation (only the `NNN_` documents can be regenerated). On the documents whose native PDF is
 already an image (fax, photo, scans) the `scan_ocr` variant has no OCR layer.
 
 **Evaluation** (metrics from standard libraries):

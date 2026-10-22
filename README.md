@@ -12,7 +12,7 @@ All models run on-prem, on open-source components with permissive licences
 service, `ocr-server/`; NER runs in the AILAB NER service.
 
 Generated from `agenas-python-template`: same stack, logging and privacy rules
-(see `CLAUDE.md` and `docs/`). The service is stateless: no database.
+(see the `AGENTS.md` of each service and `docs/`). The service is stateless: no database.
 
 Two modes, chosen at upload (`POST /anonymizations?mode=`): `accurate` (default)
 releases the redacted PDF, reviewable side by side and editable by hand; `fast`
@@ -161,6 +161,10 @@ From the repository root; each service also has its own `justfile`
 | `just backend::evaluate [--variants scan --split test --limit 20]` | Score the engine against `dataset/` -> `reports/evaluation.md` (needs the OCR server and NER) |
 | `just backend::eval-compare ../reports_a ../reports_b` | Two evaluations side by side -> `reports/comparison.md` |
 | `just backend::audit` | Vulnerabilities in the dependencies |
+
+The evaluation needs the gold set in `dataset/` (not in git, not in the
+repository: copy it there; only its 42 `NNN_` documents can be regenerated) and
+writes to `reports/`, also outside git.
 
 ## Services
 

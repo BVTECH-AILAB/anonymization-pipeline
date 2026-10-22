@@ -109,6 +109,9 @@ righe. Esempi dei formati esistenti:
 | anonymization-pipeline | `anonymization_completed {json}` (`job_id`, `pages`, `scanned_pages`, `boxes`, `values_by_label`, `verified`, `edits`, `seconds_total`, `timings`, `mode`) | Volumi, dati oscurati per tipo, verifiche, tempi |
 | anonymization-pipeline | `anonymization_edited {json}`, `anonymization_failed {json}`, `anonymization_cancelled {json}`, `anonymization_job_deleted {json}` | Correzioni manuali, errori, cancellazioni |
 
+Per anonymization-pipeline `job_id` è l'id della sessione dell'API (`/anonymizations/sessions/{id}`);
+i nomi dei logger seguono i moduli (`src.services.anonymization`), nomi e chiavi degli eventi no.
+
 Inventario completo: `KPI-dashboard/documentation/loki-query-inventory.md`.
 
 Regole per i nuovi eventi:

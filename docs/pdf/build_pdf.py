@@ -402,8 +402,8 @@ def architecture() -> Drawing:
         by + 26,
         112,
         36,
-        "backend/api",
-        ["FastAPI, job, SSE, KPI"],
+        "API  (src/router)",
+        ["sessioni, stream SSE, KPI"],
         fill=DEEP,
     )
     box(
@@ -412,8 +412,8 @@ def architecture() -> Drawing:
         by + 26,
         112,
         36,
-        "backend/core",
-        ["motore (libreria)"],
+        "Motore",
+        ["src/services/anonymizer"],
         fill=MEDIUM,
     )
     arrow(d, bx + 120, by + 44, bx + 130, by + 44, color=DEEP)
@@ -821,7 +821,7 @@ s.append(
         [
             ["Componente", "Immagine / porta", "Ruolo", "Risorse"],
             [
-                "Backend (api + core)",
+                "Backend (API + motore)",
                 "anonymization-pipeline<br/>:8000",
                 (
                     "Upload, coda dei job, progresso SSE, "
@@ -852,21 +852,28 @@ s.append(
 s.append(H2("Struttura del repository"))
 s.append(
     P(
-        "Una cartella per pod, più la valutazione (solo sviluppo, mai in un'immagine). Backend e valutazione "
-        "formano un workspace uv: il motore non importa mai il servizio né un framework web (vincolo imposto "
-        "da ruff), così può essere estratto da solo."
+        "Una cartella per pod, ciascuna con la struttura di ai-platform-v2: un progetto uv con il proprio lock, "
+        "codice in un pacchetto <font name='Mono'>src/</font> servito come <font name='Mono'>src.main:app</font>, "
+        "test che rispecchiano <font name='Mono'>src/</font>, <font name='Mono'>Dockerfile.api</font>, justfile e "
+        "AGENTS.md. Il motore è un sotto-pacchetto autonomo del backend: non importa mai il servizio né un "
+        "framework web (vincolo imposto da ruff), così può essere estratto da solo."
     )
 )
 s.append(
     Preformatted(
-        "backend/                 pod 1, immagine anonymization-pipeline\n"
-        "  Dockerfile             build di api + core (contesto: root del repository)\n"
-        "  api/                   servizio FastAPI: main, config, errors, privacy, api/, services/jobs.py\n"
-        "  core/                  motore: reader, detect/, pipeline, release, verify, export\n"
-        "ocr-server/              pod 2, immagine paddle-ocr-server (lock e Dockerfile propri)\n"
-        "evaluation/              CLI di valutazione sul dataset: just evaluate, just eval-compare\n"
+        "backend/                 pod 1, immagine anonymization-pipeline (contesto: backend/)\n"
+        "  src/  main, lifespan, config, errors\n"
+        "        router/          HTTP: health, anonymization (sessioni, stream SSE), errors\n"
+        "        models/          modelli wire dell'API\n"
+        "        services/        anonymization.py (sessioni, coda, KPI), anonymizer/ (motore)\n"
+        "        llms/            client NER (ner.py) e server OCR (ocr.py)\n"
+        "        utils/           logging con filtro PII, privacy, request id\n"
+        "  tests/  evals/         test (come src/), CLI di valutazione\n"
+        "ocr-server/              pod 2, immagine paddle-ocr-server, stessa struttura:\n"
+        "  src/  router/ (ocr, health), services/ (lettura pagina), llms/ (RapidOCR)\n"
+        "infra/                   docker-compose.yml dei due pod\n"
         "docs/  scripts/          documentazione, avvio locale\n"
-        "docker-compose.yml  justfile  .gitlab-ci.yml  pyproject.toml  uv.lock",
+        "justfile  .gitlab-ci.yml  sonar-project.properties",
         code,
     )
 )
@@ -918,7 +925,7 @@ s.append(
     P(
         "Il server (<font name='Mono'>ocr-server/</font>) espone PP-OCRv5 su RapidOCR (ONNX Runtime) dietro "
         "l'API OCR di LiteParse. Il contratto è fissato da test su entrambi i lati "
-        "(<font name='Mono'>backend/core/OCR_CONTRACT.md</font>). Il testo letto non viene mai registrato."
+        "(<font name='Mono'>backend/src/services/anonymizer/OCR_CONTRACT.md</font>). Il testo letto non viene mai registrato."
     )
 )
 s.append(
@@ -1127,7 +1134,7 @@ s.append(
     callout(
         "<b>Blocco.</b> Un documento che fallisce anche la seconda verifica non è scaricabile "
         "(409 <font name='Mono'>VERIFICATION_FAILED</font>) e le ragioni sono mostrate a chi lo ha "
-        "caricato. Una modifica manuale rende subito il job non verificato: nulla è scaricabile finché "
+        "caricato. Una modifica manuale rende subito la sessione non verificata: nulla è scaricabile finché "
         "la nuova versione non supera tutti i controlli."
     )
 )
@@ -1137,9 +1144,12 @@ s.append(PageBreak())
 s.append(H1("7", "API REST"))
 s.append(
     P(
-        "Prefisso <font name='Mono'>/anonymizations</font>. La modalità si sceglie all'upload con "
-        "<font name='Mono'>?mode=accurate|fast</font>; un'azione dell'altra modalità risponde 409 "
-        "<font name='Mono'>MODE_NOT_SUPPORTED</font>. Endpoint di piattaforma: "
+        "Gli endpoint seguono il document agent di ai-platform-v2: l'upload crea una <b>sessione</b>, il lavoro "
+        "avviene dentro una POST che restituisce uno <b>stream</b> Server-Sent Events, il risultato si legge con "
+        "<font name='Mono'>preview</font> e <font name='Mono'>download</font>. Prefisso "
+        "<font name='Mono'>/anonymizations</font>; la modalità si sceglie all'upload (campo "
+        "<font name='Mono'>mode</font>, <font name='Mono'>accurate|fast</font>); un'azione dell'altra modalità "
+        "risponde 409 <font name='Mono'>MODE_NOT_SUPPORTED</font>. Endpoint di piattaforma: "
         "<font name='Mono'>/healthz</font>, <font name='Mono'>/readyz</font>, <font name='Mono'>/version</font>."
     )
 )
@@ -1148,78 +1158,89 @@ s.append(
         [
             ["Metodo e path", "Cosa fa", "Modalità"],
             [
-                "POST /anonymizations",
-                "Upload multipart (file) e avvio; 202 con {id, pages, size, mode}",
+                "POST /sessions",
+                "Upload multipart (file, mode): crea la sessione; 201, status created",
                 "entrambe",
             ],
             [
-                "GET /{id}",
-                "Stato del job; include il risultato a fine elaborazione",
+                "GET /sessions/{id}",
+                "Stato della sessione; include il risultato a fine elaborazione",
                 "entrambe",
             ],
             [
-                "GET /{id}/events",
-                "Server-Sent Events: un messaggio per avanzamento, poi lo stato finale",
+                "POST /sessions/{id}/anonymize/stream",
+                "Avvia l'anonimizzazione; stream SSE status, poi done o error",
                 "entrambe",
             ],
             [
-                "POST /{id}/cancel",
-                "Interrompe al passo successivo; file cancellati",
+                "POST /sessions/{id}/edits/stream",
+                "Correzioni {add, remove, restore, search}; stream SSE come sopra",
+                "accurate",
+            ],
+            [
+                "POST /sessions/{id}/cancel",
+                "Interrompe al passo successivo; sessione e file cancellati",
                 "entrambe",
             ],
             [
-                "GET /{id}/preview",
+                "GET /sessions/{id}/preview",
+                "Documento rilasciato inline: PDF (accurate) o Markdown (fast)",
+                "entrambe",
+            ],
+            [
+                "GET /sessions/{id}/download?format=",
+                "Allegato pdf | docx (accurate), md (fast); solo se verificato",
+                "entrambe",
+            ],
+            [
+                "GET /sessions/{id}/review",
                 "Manifest della revisione affiancata: pagine, riquadri, etichette, versione",
                 "accurate",
             ],
             [
-                "GET /{id}/pages/{original|anonymized}/{n}",
-                "PNG della pagina (dpi 50-200, default 110)",
-                "accurate*",
+                "GET /sessions/{id}/pages/{which}/{n}",
+                "PNG della pagina original o anonymized (solo accurate)",
+                "entrambe",
             ],
-            [
-                "POST /{id}/edits",
-                "{add, remove, restore, search}: redazione e verifica, nessun nuovo rilevamento",
-                "accurate",
-            ],
-            [
-                "GET /{id}/download/{pdf|docx}",
-                "Documento anonimizzato, solo se verificato e senza modifiche in corso",
-                "accurate",
-            ],
-            [
-                "GET /{id}/download/md",
-                "Testo anonimizzato in Markdown, solo se verificato",
-                "fast",
-            ],
-            ["DELETE /{id}", "Cancellazione immediata", "entrambe"],
-            ["GET /labels", "Tassonomia con i nomi italiani", "-"],
+            ["DELETE /sessions/{id}", "Cancellazione immediata", "entrambe"],
+            ["GET /labels", "Tassonomia: [{code, title, kind, redact}]", "-"],
         ],
-        [56 * mm, CW - 56 * mm - 19 * mm, 19 * mm],
+        [62 * mm, CW - 62 * mm - 19 * mm, 19 * mm],
     )
 )
-s.append(
-    P(
-        "* La pagina originale è disponibile in entrambe le modalità, quella anonimizzata solo in accurate.",
-        note,
-    )
+s.append(H2("Stream SSE"))
+s += bullets(
+    [
+        (
+            "Ogni frame è <font name='Mono'>event: &lt;nome&gt;</font> più una riga <font name='Mono'>data</font> "
+            "JSON. <font name='Mono'>status</font>: <font name='Mono'>{step, percent, text}</font>, avanzamento con "
+            "un testo in italiano. <font name='Mono'>done</font>: la sessione con il risultato e i tempi. "
+            "<font name='Mono'>error</font>: <font name='Mono'>{error_title, error_message, error_code}</font>, "
+            "titolo e messaggio generici, mai il testo del documento."
+        ),
+        (
+            "Una sessione già conclusa risponde subito <font name='Mono'>done</font>; una sessione già in lavorazione "
+            "risponde <font name='Mono'>error</font> <font name='Mono'>SESSION_BUSY</font>."
+        ),
+        (
+            "Se il client si disconnette si chiude solo lo stream: il lavoro prosegue e "
+            "<font name='Mono'>GET /sessions/{id}</font> ne riporta lo stato."
+        ),
+    ]
 )
 s.append(H2("Revisione affiancata (contratto con il frontend)"))
 s += bullets(
     [
         (
-            "Il client segue <font name='Mono'>/events</font> (o interroga <font name='Mono'>GET /{id}</font>) fino a "
-            "<font name='Mono'>status: done</font>, poi legge <font name='Mono'>/preview</font>: originale a sinistra, "
+            "Il client crea la sessione, segue lo stream <font name='Mono'>anonymize/stream</font> fino al frame "
+            "<font name='Mono'>done</font>, poi legge <font name='Mono'>/review</font>: originale a sinistra, "
             "anonimizzato a destra."
         ),
         (
-            "<font name='Mono'>rect</font> e dimensioni pagina sono in punti PDF con origine in alto a sinistra: si "
-            "scalano con <font name='Mono'>larghezza_immagine_px / width</font>. I riquadri non contengono testo."
-        ),
-        (
-            "Il revisore disegna un'area per redigerla o clicca un riquadro per toglierlo o ripristinarlo "
-            "(<font name='Mono'>POST /edits</font>); <font name='Mono'>version</font> e gli URL delle pagine cambiano "
-            "a ogni modifica, quindi nessuna cache obsoleta."
+            "<font name='Mono'>rect</font> e pagine sono in punti PDF, origine in alto a sinistra (scala "
+            "<font name='Mono'>larghezza_immagine_px / width</font>); i riquadri non contengono testo. Il revisore "
+            "disegna un'area o clicca un riquadro (<font name='Mono'>edits/stream</font>); "
+            "<font name='Mono'>version</font> e gli URL delle pagine cambiano a ogni modifica."
         ),
     ]
 )
@@ -1247,18 +1268,18 @@ s.append(
             [
                 "JOB_NOT_READY / MODE_NOT_SUPPORTED",
                 "409",
-                "job non concluso o modifica in corso / azione dell'altra modalità",
+                "sessione non conclusa o modifica in corso / azione dell'altra modalità",
             ],
             ["VERIFICATION_FAILED", "409", "verifica fail-closed non superata"],
             [
                 "NER_UNAVAILABLE / SERVICE_UNAVAILABLE",
-                "503 / error_code",
+                "503 / frame error",
                 "dipendenza giù: riprovare più tardi",
             ],
             [
-                "PROCESSING_FAILED",
-                "error_code",
-                "errore di elaborazione non classificato",
+                "PROCESSING_FAILED / SESSION_BUSY / CANCELLED",
+                "frame error",
+                "errore non classificato / sessione già in lavorazione / annullata",
             ],
         ],
         [70 * mm, 26 * mm, CW - 96 * mm],
@@ -1385,8 +1406,8 @@ s.append(
             ],
             [
                 "Build",
-                "docker build -f backend/Dockerfile --target runtime .",
-                "docker build --build-arg OCR_EXTRA=gpu ocr-server",
+                "docker build -f backend/Dockerfile.api --target runtime backend",
+                "docker build -f ocr-server/Dockerfile.api --build-arg OCR_EXTRA=gpu ocr-server",
             ],
             [
                 "Probe",
@@ -1462,7 +1483,7 @@ s.append(H2("Rilascio"))
 s.append(
     P(
         "Feature branch, poi MR verso <font name='Mono'>test</font>: la CI esegue lint, tipi, test e Sonar "
-        "per i soli pacchetti toccati, costruisce <font name='Mono'>YYYY.MM.DD-test.&lt;epoch&gt;</font> e Flux "
+        "per i soli servizi toccati, costruisce <font name='Mono'>YYYY.MM.DD-test.&lt;epoch&gt;</font> e Flux "
         "rilascia in staging. Dopo la validazione, MR da <font name='Mono'>test</font> a "
         "<font name='Mono'>main</font>: tag <font name='Mono'>YYYY.MM.DD</font> e rilascio in produzione. "
         "L'immagine OCR si ricostruisce solo quando cambia <font name='Mono'>ocr-server/</font>."
@@ -1478,18 +1499,24 @@ s.append(
                 "dipendenze, server OCR sull'host (GPU se presente), API sulla prima porta libera, pagina /docs",
             ],
             [
-                "just ocr-server  +  just dev",
+                "just ocr::serve  +  just backend::dev",
                 "i due processi separati, come i due pod (API con reload)",
             ],
-            ["just up / just down", "docker compose con i container app e paddle-ocr"],
-            ["just models", "verifica che server OCR e servizio NER rispondano"],
             [
-                "just lint / just test-cov",
-                "ruff + ty; test con copertura minima 80% per pacchetto",
+                "just up / just down",
+                "docker compose (infra/docker-compose.yml) con i container app e paddle-ocr",
             ],
             [
-                "just evaluate / just eval-compare",
-                "valutazione su dataset/ (report in reports/evaluation.md); confronto tra due run",
+                "just backend::models",
+                "verifica che server OCR e servizio NER rispondano",
+            ],
+            [
+                "just backend::lint / backend::test-cov",
+                "ruff + ty; test con copertura minima 80% (idem just ocr::...)",
+            ],
+            [
+                "just backend::evaluate",
+                "valutazione sul gold set copiato in dataset/ (fuori da git); report in reports/",
             ],
         ],
         [46 * mm, CW - 46 * mm],
@@ -1501,7 +1528,7 @@ s.append(PageBreak())
 s.append(H1("10", "Risultati e limiti noti"))
 s.append(
     P(
-        "Misure con <font name='Mono'>just evaluate</font> sull'insieme di valutazione: 200 documenti "
+        "Misure con <font name='Mono'>just backend::evaluate</font> sull'insieme di valutazione: 200 documenti "
         "sintetici (326 pagine), ciascuno come PDF nativo, scansione e scansione con layer OCR nascosto, per "
         "600 PDF. 185 documenti in italiano e 15 in inglese, con trappole mirate: testo bianco, metadati, note "
         "cancellate, cognomi uguali a eponimi, codici in caselle, fax. Ground truth esatta, generata dallo "

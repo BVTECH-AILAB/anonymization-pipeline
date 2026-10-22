@@ -316,5 +316,7 @@ results and the analysis are in [docs/ANONYMIZATION.md](docs/ANONYMIZATION.md).
 - Licences: every component is open source; the licence audit and the few
   non-permissive transitive packages left are in
   [docs/PDF_BACKEND_GAPS.md](docs/PDF_BACKEND_GAPS.md).
+- Technical document (Italian, BV TECH format, 10 pages):
+  `docs/anonymization-pipeline.pdf`.
 - Deploy: `docs/DEPLOY_HANDOVER.md` lists image, variables, resources and the
   model weights the platform team has to provide (the cluster has no internet access).

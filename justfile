@@ -2,9 +2,6 @@
 # as a module: `just backend::test`, `just ocr::serve`. `just --list --list-submodules`
 # lists everything.
 
-# Reads OCR_EXTRA and the compose ports from .env: no credentials in this file.
-set dotenv-load := true
-
 # The anonymization service (backend/justfile)
 mod backend
 # The OCR server (ocr-server/justfile)
@@ -13,21 +10,21 @@ mod ocr 'ocr-server'
 default:
     @just --list
 
-# --- Compose (service + OCR server) ---
+# --- Compose (infra/docker-compose.yml: service + OCR server; variables in infra/.env) ---
 
 # Build and start the stack in the background
 up:
-    docker compose up --build -d
+    docker compose -f infra/docker-compose.yml up --build -d
 
 down:
-    docker compose down
+    docker compose -f infra/docker-compose.yml down
 
 # Stop the stack and delete the volumes (the cached model weights)
 down-v:
-    docker compose down -v
+    docker compose -f infra/docker-compose.yml down -v
 
 logs:
-    docker compose logs -f app
+    docker compose -f infra/docker-compose.yml logs -f app
 
 # Local run: OCR server on the host unless one answers, API on the first free port, OpenAPI page in the browser
 start:

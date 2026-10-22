@@ -1,19 +1,21 @@
-# Local development stack: the anonymization service (no database: jobs live
-# in memory and documents in a private folder until they expire).
-# Settings have defaults; this service has no credentials.
+# Local development stack: the anonymization service and the OCR server (no
+# database: jobs live in memory and documents in a private folder until they
+# expire). Run from the root with `just up`, or here with `docker compose up`.
+# Compose variables (OCR_EXTRA, ports): infra/.env; each service's settings: its
+# own .env (env_file). No credentials in these services.
 # Model weights are cached in the "models" volume, so they download once.
 name: anonymization-pipeline
 
 services:
   app:
     build:
-      context: ./backend
+      context: ../backend
       dockerfile: Dockerfile.api
       target: dev
     # the service's settings (ANONPIP_*): backend/.env, copied from backend/.env.example;
     # without it the defaults of src/config.py apply (no credentials in this service)
     env_file:
-      - path: ./backend/.env
+      - path: ../backend/.env
         required: false
     environment:
       # inside compose: the OCR server is the paddle-ocr service, the logs are local
@@ -22,8 +24,8 @@ services:
     ports:
       - "127.0.0.1:${APP_PORT:-8000}:8000"
     volumes:
-      - ./backend/src:/app/src
-      - ./backend/tests:/app/tests
+      - ../backend/src:/app/src
+      - ../backend/tests:/app/tests
     depends_on:
       - paddle-ocr
     command: >
@@ -32,7 +34,7 @@ services:
   # OCR server (PP-OCRv5 on RapidOCR, LiteParse OCR API): the service reads scanned pages through it
   paddle-ocr:
     build:
-      context: ./ocr-server
+      context: ../ocr-server
       dockerfile: Dockerfile.api
       args:
         # cpu works everywhere; gpu (CUDA 12 wheels) needs the deploy block below
@@ -40,7 +42,7 @@ services:
     # the server's settings (OCRSRV_*): ocr-server/.env, copied from ocr-server/.env.example;
     # without it the defaults of src/config.py apply
     env_file:
-      - path: ./ocr-server/.env
+      - path: ../ocr-server/.env
         required: false
     environment:
       # weights download there on the first start (about 90 MB)

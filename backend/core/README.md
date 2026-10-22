@@ -3,14 +3,14 @@
 Surgical anonymization of clinical documents: PDFs (native or scanned) and
 images in, a redacted PDF, a Word copy or a Markdown text out, each verified
 before release. A library: no web framework, no environment lookup, no
-logging setup. The service (`apps/api`) is built on it, and it never imports
+logging setup. The service (`backend/api`) is built on it, and it never imports
 the service (banned in `pyproject.toml`).
 
 ## What it needs at run time
 
 | Dependency | Why | Contract |
 |---|---|---|
-| OCR server | Scanned pages and the grayscale pictures of native pages | [OCR_CONTRACT.md](OCR_CONTRACT.md); reference server `services/ocr-server` |
+| OCR server | Scanned pages and the grayscale pictures of native pages | [OCR_CONTRACT.md](OCR_CONTRACT.md); reference server `ocr-server` |
 | NER service (AILAB, `POST /batch_ner`) | Names, places, organisations in free text | `detect/ner.py`; optional (`ner_enabled=False`) |
 
 Both are reached over HTTP. Until they answer, `load_models` returns False and
@@ -92,7 +92,7 @@ uv run ruff check && uv run ty check src tests
 The folder is self-contained: dependencies, test kit, lint, type and coverage
 settings, tests.
 
-1. Copy `packages/anonymization-core/` to the new repository.
+1. Copy `backend/core/` to the new repository.
 2. Run `uv lock`: the folder carries no lock of its own.
 3. Run `uv sync && uv run pytest`.
 4. In each consumer, replace `anonymization-core = { workspace = true }` in

@@ -1,6 +1,6 @@
 """The reader's side of OCR_CONTRACT.md: requests sent, answers read.
 
-The server's side is services/ocr-server/tests/test_contract.py.
+The server's side is ocr-server/tests/test_contract.py.
 """
 
 from pathlib import Path

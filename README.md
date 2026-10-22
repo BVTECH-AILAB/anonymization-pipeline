@@ -9,7 +9,7 @@ same, an invisible text layer keeps them searchable), the other pages stay as
 they are. Every output is verified before it can be downloaded (fail-closed).
 All models run on-prem, on open-source components with permissive licences
 (pypdfium2, pypdf, LiteParse, RapidOCR with PP-OCRv5 models; no PyMuPDF). OCR runs in a second
-service, `services/ocr-server/`; NER runs in the AILAB NER service.
+service, `ocr-server/`; NER runs in the AILAB NER service.
 
 Generated from `agenas-python-template`: same stack, logging and privacy rules
 (see `CLAUDE.md` and `docs/`). The service is stateless: no database.
@@ -34,7 +34,7 @@ flowchart TD
     CONV --> PAGE{"For each page:<br/>image covers &gt; 50% of the page?"}
 
     PAGE -- "no: native page" --> NAT["Native text layer (pypdfium2)<br/>exact character boxes<br/>(invisible / white text and form fields included,<br/>rotated pages in unrotated coordinates)"]
-    PAGE -- "yes: scanned page" --> OCR["OCR server (services/ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°,<br/>pages and lines upside down re-read turned)"]
+    PAGE -- "yes: scanned page" --> OCR["OCR server (ocr-server/)<br/>PP-OCRv5 on RapidOCR, one box per word<br/>(margins re-read rotated 90°,<br/>pages and lines upside down re-read turned)"]
     PAGE -- "yes, with hidden OCR text" --> NAT
 
     NAT --> CELLS["Characters printed one per box joined<br/>R S S M R A … → RSSMRA…<br/>(on scans: boxes found from the ruling,<br/>read again cleaned of specks)"]
@@ -128,7 +128,7 @@ cp .env.example .env
 just start          # deps, OCR server, API on the first free port, OpenAPI page in the browser
 ```
 
-`just start` starts the OCR server (`services/ocr-server/`, port 8829) unless one is
+`just start` starts the OCR server (`ocr-server/`, port 8829) unless one is
 already running, downloads the OCR weights on the first run (NER: set
 `ANONPIP_NER_URL` to the AILAB NER service), starts the API on
 `http://127.0.0.1:8000` (or the next free port) and opens its OpenAPI page
@@ -156,68 +156,72 @@ volume; uncomment the GPU blocks in `docker-compose.yml` and set
 
 ## Modules
 
-Each area is a package with its own dependencies, tests, lint and image, so
-it can be deployed, or extracted, on its own:
+One folder per pod. `backend/` is the service pod: the API and the engine, two
+packages built into one image. `ocr-server/` is the OCR pod, called by the
+backend over HTTP. Each package has its own dependencies, tests and lint, so it
+can be extracted on its own:
 
 ```mermaid
 flowchart LR
     CLIENT["fe or any client"] -- "HTTP /anonymizations" --> API
-    API["apps/api<br/>the service: jobs, SSE, limits, KPI events<br/>(image anonymization-pipeline)"] -- "Python import" --> CORE
-    CORE["packages/anonymization-core<br/>the engine (library)"] -- "HTTP, OCR_CONTRACT.md" --> OCR["services/ocr-server<br/>PP-OCRv5 on ONNX Runtime<br/>(image paddle-ocr-server)"]
+    API["backend/api<br/>the service: jobs, SSE, limits, KPI events<br/>(image anonymization-pipeline)"] -- "Python import" --> CORE
+    CORE["backend/core<br/>the engine (library)"] -- "HTTP, OCR_CONTRACT.md" --> OCR["ocr-server<br/>PP-OCRv5 on ONNX Runtime<br/>(image paddle-ocr-server)"]
     CORE -- "HTTP /batch_ner" --> NER["AILAB NER service"]
 ```
 
 | Package | Depends on | Never imports | Tests |
 |---|---|---|---|
-| `packages/anonymization-core` | OCR server and NER over HTTP | the service, any web framework | `just test-core` |
-| `apps/api` | the engine | - | `just test-api` |
-| `services/ocr-server` | - (own lock, outside the workspace) | - | `just ocr-server-test` |
+| `backend/core` | OCR server and NER over HTTP | the service, any web framework | `just test-core` |
+| `backend/api` | the engine | - | `just test-api` |
+| `ocr-server` | - (own lock, outside the workspace) | - | `just ocr-server-test` |
 
 The "never imports" column is enforced by ruff (`banned-api` in each
 `pyproject.toml`). To extract the engine, copy its folder: see
-[packages/anonymization-core/README.md](packages/anonymization-core/README.md).
+[backend/core/README.md](backend/core/README.md).
 
 ## Layout
 
-A uv workspace: one lock, one package per area, each with its own dependencies,
-tests and lint config. The root is not a package: its dev group is the developer
-environment (every member).
+The backend packages form a uv workspace: one lock, each package with its own
+dependencies, tests and lint config. The root is not a package: its dev group is
+the developer environment (every member). The OCR server has its own lock.
 
 ```
-packages/anonymization-core/   the engine, a library: no web framework, never imports the
-                               service (banned in its pyproject); own tests,
-                               coverage and lint config, so it can be extracted as is
-  src/anonymization_core/
-    config.py             PipelineConfig (plain values, no environment lookup)
-    factory.py            build_pipeline, load_models
-    errors.py             engine errors (the service maps them to HTTP)
-    convert.py            upload (PDF or image) -> PDF
-    document.py           releases (PDF + Word, Markdown), manual edits, page images
-    reader.py, layers.py, geometry.py, pdf_pages.py, pdf_text.py, cells.py
-                          text layers: pypdfium2 text, LiteParse + OCR server
-    pipeline.py           analysis: text layers -> findings -> boxes
-    release.py, verify.py flatten pages with boxes + pypdf rewrite, checks
-    export_docx.py, export_markdown.py, taxonomy.py
-    detect/               rules, labels (+ labels.yaml), ner, eponyms
-                          (+ eponyms.yaml), allowlist, ensemble, visual
-    testing.py            synthetic PDFs and fake engines (extra `testing`)
-  tests/                  engine tests: `just test-core`
-apps/api/                      the service (image anonymization-pipeline): Dockerfile,
-                               scripts/entrypoint.sh, own tests (`just test-api`)
-  src/anonymization_pipeline/
-    main.py               create_app(), lifespan (pipeline and job manager on app.state)
-    config.py             Settings (pydantic-settings, prefix ANONPIP_), pipeline_config()
-    errors.py             service errors, Italian messages, engine error mapping
-    logging_setup.py      setup_logging, log_event, request id
-    privacy.py            hashing/masking, user-text redaction, log filter
-    api/health.py         /healthz, /readyz (models loaded), /version
-    api/anonymization.py  upload, SSE progress, edits, previews, downloads
-    services/jobs.py      job lifecycle around the engine: queue, SSE, expiry, limits, KPI events
-services/ocr-server/           OCR server: PP-OCRv5 (RapidOCR) behind the LiteParse OCR API;
-                               own pyproject, lock and image (ONNX Runtime, CPU or GPU),
-                               outside the workspace: `just ocr-server-test`
-docs/                     ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
-                          deploy handover
+backend/                pod 1, image anonymization-pipeline
+  Dockerfile            builds api + core (context: the repository root)
+  core/                 the engine, a library: no web framework, never imports the
+                        service (banned in its pyproject); own tests, coverage and
+                        lint config, so it can be extracted as is
+    src/anonymization_core/
+      config.py             PipelineConfig (plain values, no environment lookup)
+      factory.py            build_pipeline, load_models
+      errors.py             engine errors (the service maps them to HTTP)
+      convert.py            upload (PDF or image) -> PDF
+      document.py           releases (PDF + Word, Markdown), manual edits, page images
+      reader.py, layers.py, geometry.py, pdf_pages.py, pdf_text.py, cells.py
+                            text layers: pypdfium2 text, LiteParse + OCR server
+      pipeline.py           analysis: text layers -> findings -> boxes
+      release.py, verify.py flatten pages with boxes + pypdf rewrite, checks
+      export_docx.py, export_markdown.py, taxonomy.py
+      detect/               rules, labels (+ labels.yaml), ner, eponyms
+                            (+ eponyms.yaml), allowlist, ensemble, visual
+      testing.py            synthetic PDFs and fake engines (extra `testing`)
+    tests/                  engine tests: `just test-core`
+  api/                  the service: scripts/entrypoint.sh, own tests (`just test-api`)
+    src/anonymization_pipeline/
+      main.py               create_app(), lifespan (pipeline and job manager on app.state)
+      config.py             Settings (pydantic-settings, prefix ANONPIP_), pipeline_config()
+      errors.py             service errors, Italian messages, engine error mapping
+      logging_setup.py      setup_logging, log_event, request id
+      privacy.py            hashing/masking, user-text redaction, log filter
+      api/health.py         /healthz, /readyz (models loaded), /version
+      api/anonymization.py  upload, SSE progress, edits, previews, downloads
+      services/jobs.py      job lifecycle around the engine: queue, SSE, expiry, limits, KPI events
+ocr-server/             pod 2, image paddle-ocr-server: PP-OCRv5 (RapidOCR) behind the
+                        LiteParse OCR API; own pyproject, lock and Dockerfile (ONNX
+                        Runtime, CPU or GPU), outside the workspace: `just ocr-server-test`
+docs/                   ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
+                        deploy handover
+scripts/                start.sh: OCR server and API on the host (`just start`)
 ```
 
 ## Results

@@ -1,5 +1,5 @@
 # The service image. Build context: the repository root (the engine is a
-# workspace member): docker build -f apps/api/Dockerfile .
+# workspace member): docker build -f backend/Dockerfile .
 # Only this package and its dependencies are installed (--package).
 # uv needs the pyproject.toml of every workspace member to read the lock.
 # Stages:
@@ -21,11 +21,11 @@ WORKDIR /app
 
 FROM base AS dev
 COPY pyproject.toml uv.lock ./
-COPY packages/anonymization-core/pyproject.toml ./packages/anonymization-core/
-COPY apps/api/pyproject.toml ./apps/api/
+COPY backend/core/pyproject.toml ./backend/core/
+COPY backend/api/pyproject.toml ./backend/api/
 RUN uv sync --frozen --package anonymization-pipeline --no-install-workspace
-COPY packages ./packages
-COPY apps/api/src ./apps/api/src
+COPY backend/core ./backend/core
+COPY backend/api/src ./backend/api/src
 RUN uv sync --frozen --package anonymization-pipeline && chown -R appuser:appuser /app
 ENV PATH="/app/.venv/bin:$PATH"
 USER appuser
@@ -35,11 +35,11 @@ CMD ["uvicorn", "anonymization_pipeline.main:app", "--host", "0.0.0.0", "--port"
 # The workspace members are installed as wheels: the runtime image has no sources.
 FROM base AS builder
 COPY pyproject.toml uv.lock ./
-COPY packages/anonymization-core/pyproject.toml ./packages/anonymization-core/
-COPY apps/api/pyproject.toml ./apps/api/
+COPY backend/core/pyproject.toml ./backend/core/
+COPY backend/api/pyproject.toml ./backend/api/
 RUN uv sync --frozen --package anonymization-pipeline --no-dev --no-install-workspace
-COPY packages ./packages
-COPY apps/api/src ./apps/api/src
+COPY backend/core ./backend/core
+COPY backend/api/src ./backend/api/src
 RUN uv sync --frozen --package anonymization-pipeline --no-dev --no-editable
 
 FROM python:3.12-slim AS runtime
@@ -48,8 +48,8 @@ RUN pip install --no-cache-dir --upgrade "pip>=25.3" \
     && useradd --uid 1000 --create-home appuser
 WORKDIR /app
 COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
-COPY --chown=appuser:appuser apps/api/scripts/entrypoint.sh ./entrypoint.sh
-# No model weights here: OCR runs in the OCR server (services/ocr-server/), NER in the AILAB NER service.
+COPY --chown=appuser:appuser backend/api/scripts/entrypoint.sh ./entrypoint.sh
+# No model weights here: OCR runs in the OCR server (ocr-server/), NER in the AILAB NER service.
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1

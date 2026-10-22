@@ -41,16 +41,16 @@ models:
 
 # OCR server on the host, port 8829 (extra: gpu | cpu); `just dev` needs it
 ocr-server extra="gpu":
-    cd services/ocr-server && VIRTUAL_ENV= uv run --extra {{extra}} python -m paddle_ocr_server
+    cd ocr-server && VIRTUAL_ENV= uv run --extra {{extra}} python -m paddle_ocr_server
 
 # Unit tests of the OCR server (its own venv: ONNX Runtime stays out of the service)
 ocr-server-test extra="gpu":
-    cd services/ocr-server && VIRTUAL_ENV= uv run --extra {{extra}} pytest -q
+    cd ocr-server && VIRTUAL_ENV= uv run --extra {{extra}} pytest -q
 
 # --- Quality (ruff picks each package's own config: engine boundaries included) ---
 
-core := "packages/anonymization-core"
-api := "apps/api"
+core := "backend/core"
+api := "backend/api"
 
 format:
     uv run ruff format

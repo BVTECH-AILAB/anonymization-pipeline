@@ -3,7 +3,7 @@
 The engine reads scanned pages (and the grayscale pictures of native pages)
 through an OCR server over HTTP: `LiteparseReader` in `reader.py` is the
 client. Any server that implements the three endpoints below works. The
-reference implementation is `services/ocr-server` in this repository.
+reference implementation is `ocr-server` in this repository.
 
 `/ocr` follows the LiteParse OCR API (`OCR_API_SPEC.md` of run-llama/liteparse),
 with one result per word. `/health` and `/recognize` are additions of this
@@ -13,7 +13,7 @@ Both sides pin the contract with tests:
 
 - engine: `tests/test_ocr_contract.py` checks the requests the reader sends
   and how it reads the answers, against `anonymization_core.testing.OcrServerStub`;
-- server: `services/ocr-server/tests/test_contract.py` checks that the answers
+- server: `ocr-server/tests/test_contract.py` checks that the answers
   have this shape.
 
 Change this file and both tests together.

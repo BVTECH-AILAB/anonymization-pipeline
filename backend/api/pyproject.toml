@@ -9,7 +9,7 @@ dependencies = [
     "pydantic-settings>=2.7",
     "uvicorn[standard]>=0.34",
     "python-multipart>=0.0.20",
-    # the engine: packages/anonymization-core
+    # the engine: backend/core
     "anonymization-core",
 ]
 

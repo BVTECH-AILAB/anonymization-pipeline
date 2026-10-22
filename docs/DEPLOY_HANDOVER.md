@@ -10,7 +10,7 @@ fa il provisioning.
 |---|---|
 | Nome servizio / immagine | `anonymization-pipeline` -> `harbor.agenas.oci/agenas/anonymization-pipeline` |
 | Repository GitLab | `gitlab.agenas.oci:application/backend/anonymization-pipeline` |
-| Build | `docker build -f apps/api/Dockerfile --target runtime .` (contesto: la root del repository, che contiene anche il motore `packages/anonymization-core`) |
+| Build | `docker build -f backend/Dockerfile --target runtime .` (contesto: la root del repository, che contiene anche il motore `backend/core`) |
 | Namespace proposto | |
 | Porta | `8000` (nome `web`) |
 | Liveness probe | `GET /healthz` |
@@ -59,7 +59,7 @@ Il servizio non ha credenziali: nessun segreto da Vault.
 ## Secondo servizio: `paddle-ocr`
 
 Server OCR (modelli PP-OCRv5 su RapidOCR e ONNX Runtime, dietro l'API OCR di LiteParse `POST /ocr`, più
-`POST /recognize` per rileggere una sola riga), immagine costruita da `services/ocr-server/Dockerfile`. Lo chiama solo
+`POST /recognize` per rileggere una sola riga), immagine costruita da `ocr-server/Dockerfile`. Lo chiama solo
 questo servizio: nessuna esposizione.
 
 | Voce | Valore |
@@ -103,7 +103,7 @@ un'immagine a parte (`apps/web`, nginx), sul branch `ref/mod-separation`, non in
 2. Merge su `test`: la CI costruisce e pubblica `YYYY.MM.DD-test.<epoch>`,
    Flux lo rilascia in **staging**. L'immagine del servizio si costruisce a ogni
    merge; `paddle-ocr-server` (`OCR_EXTRA=gpu`, che senza GPU ripiega sulla CPU) solo
-   quando cambia `services/ocr-server/`, con lo stesso schema di tag: la sua
+   quando cambia `ocr-server/`, con lo stesso schema di tag: la sua
    ImagePolicy resta sull'ultimo tag pubblicato.
 3. Validazione in staging.
 4. MR da `test` a `main`: la CI pubblica `YYYY.MM.DD`, Flux lo rilascia in **produzione**.

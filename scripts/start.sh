@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Local run: installs dependencies, starts the OCR server (services/ocr-server/,
+# Local run: installs dependencies, starts the OCR server (ocr-server/,
 # port 8829) unless one already answers and the API on the first free port,
 # then opens the OpenAPI page (/docs) once the models are ready.
 #   just start                  -> http://127.0.0.1:8000/docs
@@ -44,7 +44,7 @@ if ! curl -sf -o /dev/null "${OCR_URL}/health"; then
     if command -v nvidia-smi >/dev/null 2>&1; then OCR_EXTRA=gpu; else OCR_EXTRA=cpu; fi
   fi
   echo "==> Starting the OCR server (${OCR_EXTRA}) at ${OCR_URL}; first run downloads the models"
-  (cd services/ocr-server && VIRTUAL_ENV= uv run --quiet --extra "$OCR_EXTRA" python -m paddle_ocr_server) &
+  (cd ocr-server && VIRTUAL_ENV= uv run --quiet --extra "$OCR_EXTRA" python -m paddle_ocr_server) &
   PIDS+=("$!")
 fi
 

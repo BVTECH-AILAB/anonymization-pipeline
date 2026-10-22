@@ -4,14 +4,14 @@ requires-python = "==3.12.*"
 
 [manifest]
 members = [
-    "anonymization-pipeline",
     "anonymization-core",
+    "anonymization-pipeline",
 ]
 
 [manifest.dependency-groups]
 dev = [
-    { name = "anonymization-pipeline", editable = "apps/api" },
-    { name = "anonymization-core", extras = ["testing"], editable = "packages/anonymization-core" },
+    { name = "anonymization-core", extras = ["testing"], editable = "backend/core" },
+    { name = "anonymization-pipeline", editable = "backend/api" },
     { name = "httpx", specifier = ">=0.28" },
     { name = "pip-audit", specifier = ">=2.7" },
     { name = "pre-commit", specifier = ">=4.0" },
@@ -41,56 +41,9 @@ wheels = [
 ]
 
 [[package]]
-name = "anonymization-pipeline"
-version = "0.1.0"
-source = { editable = "apps/api" }
-dependencies = [
-    { name = "anonymization-core" },
-    { name = "fastapi" },
-    { name = "pydantic" },
-    { name = "pydantic-settings" },
-    { name = "python-multipart" },
-    { name = "uvicorn", extra = ["standard"] },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "anonymization-core", extra = ["testing"] },
-    { name = "httpx" },
-    { name = "pip-audit" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "pytest-cov" },
-    { name = "ruff" },
-    { name = "ty" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "anonymization-core", editable = "packages/anonymization-core" },
-    { name = "fastapi", specifier = ">=0.115" },
-    { name = "pydantic", specifier = ">=2.10" },
-    { name = "pydantic-settings", specifier = ">=2.7" },
-    { name = "python-multipart", specifier = ">=0.0.20" },
-    { name = "uvicorn", extras = ["standard"], specifier = ">=0.34" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "anonymization-core", extras = ["testing"], editable = "packages/anonymization-core" },
-    { name = "httpx", specifier = ">=0.28" },
-    { name = "pip-audit", specifier = ">=2.7" },
-    { name = "pytest", specifier = ">=8.3" },
-    { name = "pytest-asyncio", specifier = ">=0.25" },
-    { name = "pytest-cov", specifier = ">=6.0" },
-    { name = "ruff", specifier = ">=0.15" },
-    { name = "ty", specifier = ">=0.0.1a0" },
-]
-
-[[package]]
 name = "anonymization-core"
 version = "0.1.0"
-source = { editable = "packages/anonymization-core" }
+source = { editable = "backend/core" }
 dependencies = [
     { name = "httpx" },
     { name = "liteparse" },
@@ -141,7 +94,54 @@ provides-extras = ["testing"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "anonymization-core", extras = ["testing"], editable = "packages/anonymization-core" },
+    { name = "anonymization-core", extras = ["testing"], editable = "backend/core" },
+    { name = "pytest-cov", specifier = ">=6.0" },
+    { name = "ruff", specifier = ">=0.15" },
+    { name = "ty", specifier = ">=0.0.1a0" },
+]
+
+[[package]]
+name = "anonymization-pipeline"
+version = "0.1.0"
+source = { editable = "backend/api" }
+dependencies = [
+    { name = "anonymization-core" },
+    { name = "fastapi" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+    { name = "python-multipart" },
+    { name = "uvicorn", extra = ["standard"] },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "anonymization-core", extra = ["testing"] },
+    { name = "httpx" },
+    { name = "pip-audit" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+    { name = "ruff" },
+    { name = "ty" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anonymization-core", editable = "backend/core" },
+    { name = "fastapi", specifier = ">=0.115" },
+    { name = "pydantic", specifier = ">=2.10" },
+    { name = "pydantic-settings", specifier = ">=2.7" },
+    { name = "python-multipart", specifier = ">=0.0.20" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.34" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "anonymization-core", extras = ["testing"], editable = "backend/core" },
+    { name = "httpx", specifier = ">=0.28" },
+    { name = "pip-audit", specifier = ">=2.7" },
+    { name = "pytest", specifier = ">=8.3" },
+    { name = "pytest-asyncio", specifier = ">=0.25" },
     { name = "pytest-cov", specifier = ">=6.0" },
     { name = "ruff", specifier = ">=0.15" },
     { name = "ty", specifier = ">=0.0.1a0" },

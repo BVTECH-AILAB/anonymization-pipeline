@@ -1,7 +1,7 @@
 """The server's side of the engine's OCR contract.
 
-packages/anonymization-core/OCR_CONTRACT.md; the reader's side is
-packages/anonymization-core/tests/test_ocr_contract.py. Requests are built
+backend/core/OCR_CONTRACT.md; the reader's side is
+backend/core/tests/test_ocr_contract.py. Requests are built
 exactly as the reader sends them.
 """
 

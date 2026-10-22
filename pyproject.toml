@@ -1,14 +1,14 @@
 # uv workspace root (not a package): one lock for every member.
-#   packages/anonymization-core  the engine (library)
-#   apps/api                     the service (image anonymization-pipeline)
-# The OCR server (services/ocr-server) has its own lock. The dev group below is
+#   backend/core  the engine (library)
+#   backend/api   the service; with the engine, the image anonymization-pipeline
+# The OCR server (ocr-server/, the second pod) has its own lock. The dev group below is
 # the developer environment: every member and the repository-wide tools
 # (pre-commit, audit). Each member has its own lint, type, test and coverage
 # configuration.
 [tool.uv.workspace]
-members = ["packages/*", "apps/api"]
+members = ["backend/core", "backend/api"]
 # own lock and ONNX Runtime extras (cpu | gpu): kept out of the workspace
-exclude = ["services/*"]
+exclude = ["ocr-server"]
 
 [dependency-groups]
 dev = [

@@ -24,14 +24,14 @@ from docx import Document
 from fastapi.testclient import TestClient
 from PIL import Image
 
-from anonmyzation_pipeline.api.anonymization import open_file_response
-from anonmyzation_pipeline.errors import (
+from anonymization_pipeline.api.anonymization import open_file_response
+from anonymization_pipeline.errors import (
     FileTooLargeError,
     ServiceUnavailableError,
     TooManyJobsError,
     TooManyPagesError,
 )
-from anonmyzation_pipeline.services.jobs import JobManager
+from anonymization_pipeline.services.jobs import JobManager
 from tests.conftest import FAKE_CF
 
 

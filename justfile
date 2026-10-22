@@ -29,7 +29,7 @@ sync:
 
 # Run the API on the host
 dev:
-    uv run uvicorn anonmyzation_pipeline.main:app --reload --port 8000
+    uv run uvicorn anonymization_pipeline.main:app --reload --port 8000
 
 # Local run: deps, OCR server on the host unless one answers, API on the first free port, OpenAPI page in the browser
 start:
@@ -37,7 +37,7 @@ start:
 
 # Check the OCR server and the NER service (both must answer; nothing is downloaded)
 models:
-    uv run python -c "from anonmyzation_pipeline.config import get_settings; from anonymization_core.factory import build_pipeline, load_models; import sys; sys.exit(0 if load_models(build_pipeline(get_settings().pipeline_config())) else 1)"
+    uv run python -c "from anonymization_pipeline.config import get_settings; from anonymization_core.factory import build_pipeline, load_models; import sys; sys.exit(0 if load_models(build_pipeline(get_settings().pipeline_config())) else 1)"
 
 # OCR server on the host, port 8829 (extra: gpu | cpu); `just dev` needs it
 ocr-server extra="gpu":

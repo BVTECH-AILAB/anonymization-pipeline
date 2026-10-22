@@ -28,7 +28,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    app_name: str = "anonmyzation-pipeline"
+    app_name: str = "anonymization-pipeline"
     # Defaults to "prod" on purpose: a forgotten variable must fall back to
     # the most privacy-conservative behaviour, never the most verbose one.
     environment: Environment = "prod"

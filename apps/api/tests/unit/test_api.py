@@ -1,9 +1,9 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from anonmyzation_pipeline import __version__
-from anonmyzation_pipeline.config import Settings
-from anonmyzation_pipeline.main import create_app
+from anonymization_pipeline import __version__
+from anonymization_pipeline.config import Settings
+from anonymization_pipeline.main import create_app
 from tests.conftest import FAKE_CF, make_settings
 
 
@@ -28,7 +28,7 @@ def test_readyz_reflects_models(
 
 def test_version(client: TestClient) -> None:
     assert client.get("/version").json() == {
-        "name": "anonmyzation-pipeline",
+        "name": "anonymization-pipeline",
         "version": __version__,
     }
 

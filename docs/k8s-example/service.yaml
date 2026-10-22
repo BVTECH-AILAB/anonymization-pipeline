@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: anonmyzation-pipeline-config-env
+  name: anonymization-pipeline-config-env
 data:
   ANONPIP_ENVIRONMENT: "staging"
   ANONPIP_LOG_LEVEL: "DEBUG"
@@ -18,19 +18,19 @@ kind: Deployment
 metadata:
   annotations:
     reloader.stakater.com/auto: "true"
-  name: anonmyzation-pipeline
+  name: anonymization-pipeline
   labels:
-    app: anonmyzation-pipeline
+    app: anonymization-pipeline
 spec:
   # Jobs live in memory: one replica, or session affinity on the ingress.
   replicas: 1
   selector:
     matchLabels:
-      app: anonmyzation-pipeline
+      app: anonymization-pipeline
   template:
     metadata:
       labels:
-        app: anonmyzation-pipeline
+        app: anonymization-pipeline
     spec:
       affinity:
         podAntiAffinity:
@@ -40,15 +40,15 @@ spec:
               - key: app
                 operator: In
                 values:
-                - anonmyzation-pipeline
+                - anonymization-pipeline
             topologyKey: "kubernetes.io/hostname"
       containers:
-      - name: anonmyzation-pipeline
-        image: harbor.agenas.oci/agenas/anonmyzation-pipeline:2026.10.06-test.1791280000 # {"$imagepolicy": "flux-system:anonmyzation-pipeline-test"}
+      - name: anonymization-pipeline
+        image: harbor.agenas.oci/agenas/anonymization-pipeline:2026.10.06-test.1791280000 # {"$imagepolicy": "flux-system:anonymization-pipeline-test"}
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
-            name: anonmyzation-pipeline-config-env
+            name: anonymization-pipeline-config-env
         volumeMounts:
         - name: work            # documents, deleted after ANONPIP_JOB_TTL_MINUTES
           mountPath: /work
@@ -82,32 +82,32 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: anonmyzation-pipeline
+  name: anonymization-pipeline
   labels:
-    app: anonmyzation-pipeline
+    app: anonymization-pipeline
 spec:
   ports:
     - name: web
       port: 8000
       targetPort: web
   selector:
-    app: anonmyzation-pipeline
+    app: anonymization-pipeline
   type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: anonmyzation-pipeline-ingress
+  name: anonymization-pipeline-ingress
 spec:
   ingressClassName: traefik-int
   rules:
-  - host: "anonmyzation-pipeline.agenas-stg.oci"
+  - host: "anonymization-pipeline.agenas-stg.oci"
     http:
       paths:
       - pathType: Prefix
         path: "/"
         backend:
           service:
-            name: anonmyzation-pipeline
+            name: anonymization-pipeline
             port:
               name: web

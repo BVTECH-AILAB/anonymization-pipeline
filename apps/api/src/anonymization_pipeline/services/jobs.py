@@ -39,8 +39,8 @@ from anonymization_core.pipeline import Analysis, Pipeline
 from anonymization_core.taxonomy import LABELS
 from fastapi import Depends, Request
 
-from anonmyzation_pipeline.config import Settings
-from anonmyzation_pipeline.errors import (
+from anonymization_pipeline.config import Settings
+from anonymization_pipeline.errors import (
     FileTooLargeError,
     JobNotFoundError,
     JobNotReadyError,
@@ -50,7 +50,7 @@ from anonmyzation_pipeline.errors import (
     TooManyJobsError,
     service_error,
 )
-from anonmyzation_pipeline.logging_setup import log_event
+from anonymization_pipeline.logging_setup import log_event
 
 logger = logging.getLogger(__name__)
 

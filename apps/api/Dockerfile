@@ -23,24 +23,24 @@ FROM base AS dev
 COPY pyproject.toml uv.lock ./
 COPY packages/anonymization-core/pyproject.toml ./packages/anonymization-core/
 COPY apps/api/pyproject.toml ./apps/api/
-RUN uv sync --frozen --package anonmyzation-pipeline --no-install-workspace
+RUN uv sync --frozen --package anonymization-pipeline --no-install-workspace
 COPY packages ./packages
 COPY apps/api/src ./apps/api/src
-RUN uv sync --frozen --package anonmyzation-pipeline && chown -R appuser:appuser /app
+RUN uv sync --frozen --package anonymization-pipeline && chown -R appuser:appuser /app
 ENV PATH="/app/.venv/bin:$PATH"
 USER appuser
 EXPOSE 8000
-CMD ["uvicorn", "anonmyzation_pipeline.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "anonymization_pipeline.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
 # The workspace members are installed as wheels: the runtime image has no sources.
 FROM base AS builder
 COPY pyproject.toml uv.lock ./
 COPY packages/anonymization-core/pyproject.toml ./packages/anonymization-core/
 COPY apps/api/pyproject.toml ./apps/api/
-RUN uv sync --frozen --package anonmyzation-pipeline --no-dev --no-install-workspace
+RUN uv sync --frozen --package anonymization-pipeline --no-dev --no-install-workspace
 COPY packages ./packages
 COPY apps/api/src ./apps/api/src
-RUN uv sync --frozen --package anonmyzation-pipeline --no-dev --no-editable
+RUN uv sync --frozen --package anonymization-pipeline --no-dev --no-editable
 
 FROM python:3.12-slim AS runtime
 RUN pip install --no-cache-dir --upgrade "pip>=25.3" \

@@ -2,7 +2,7 @@
 # in memory and documents in a private folder until they expire).
 # Settings have defaults (${VAR:-default}); this service has no credentials.
 # Model weights are cached in the "models" volume, so they download once.
-name: anonmyzation-pipeline
+name: anonymization-pipeline
 
 services:
   app:
@@ -47,7 +47,7 @@ services:
     depends_on:
       - paddle-ocr
     command: >
-      uvicorn anonmyzation_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/apps/api/src --reload-dir /app/packages
+      uvicorn anonymization_pipeline.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/apps/api/src --reload-dir /app/packages
 
   # OCR server (PP-OCRv5 on RapidOCR, LiteParse OCR API): the service reads scanned pages through it
   paddle-ocr:

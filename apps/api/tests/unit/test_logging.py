@@ -8,7 +8,7 @@ import pytest
 from anonymization_core.testing import EMAIL, PATIENT, PHONE, letter_pdf
 from fastapi.testclient import TestClient
 
-from anonmyzation_pipeline.logging_setup import log_event, setup_logging
+from anonymization_pipeline.logging_setup import log_event, setup_logging
 from tests.conftest import FAKE_CF, make_settings
 
 
@@ -36,7 +36,7 @@ def test_setup_logging_is_idempotent_and_keeps_foreign_handlers() -> None:
         ours = [
             h
             for h in root.handlers
-            if getattr(h, "_anonmyzation_pipeline_handler", False)
+            if getattr(h, "_anonymization_pipeline_handler", False)
         ]
         assert len(ours) == 1
         assert foreign in root.handlers

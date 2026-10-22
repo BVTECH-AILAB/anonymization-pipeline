@@ -4,13 +4,13 @@ requires-python = "==3.12.*"
 
 [manifest]
 members = [
-    "anonmyzation-pipeline",
+    "anonymization-pipeline",
     "anonymization-core",
 ]
 
 [manifest.dependency-groups]
 dev = [
-    { name = "anonmyzation-pipeline", editable = "apps/api" },
+    { name = "anonymization-pipeline", editable = "apps/api" },
     { name = "anonymization-core", extras = ["testing"], editable = "packages/anonymization-core" },
     { name = "httpx", specifier = ">=0.28" },
     { name = "pip-audit", specifier = ">=2.7" },
@@ -41,7 +41,7 @@ wheels = [
 ]
 
 [[package]]
-name = "anonmyzation-pipeline"
+name = "anonymization-pipeline"
 version = "0.1.0"
 source = { editable = "apps/api" }
 dependencies = [

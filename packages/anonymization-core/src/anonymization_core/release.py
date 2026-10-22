@@ -54,7 +54,7 @@ from anonymization_core.verify import (
 logger = logging.getLogger(__name__)
 
 PAD = 1.0  # points added around every box before painting it
-PRODUCER = "anonmyzation-pipeline"
+PRODUCER = "anonymization-pipeline"
 # page entries that can carry text outside the page content
 PAGE_KEYS = (
     "/Annots",

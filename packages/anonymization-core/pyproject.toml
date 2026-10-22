@@ -66,7 +66,7 @@ ignore = ["E501"]
 "os.getenv".msg = "The engine takes a PipelineConfig: it never reads the environment."
 "fastapi".msg = "The engine has no web framework: raise an engine error from errors.py."
 "starlette".msg = "The engine has no web framework: raise an engine error from errors.py."
-"anonmyzation_pipeline".msg = "The engine never imports the service built on it."
+"anonymization_pipeline".msg = "The engine never imports the service built on it."
 "tools".msg = "The engine never imports the developer tools."
 
 [tool.pytest.ini_options]

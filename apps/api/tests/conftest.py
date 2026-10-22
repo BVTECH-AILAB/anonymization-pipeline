@@ -12,8 +12,8 @@ import pytest
 from anonymization_core.testing import FAKE_CF
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource
 
-from anonmyzation_pipeline.config import Settings
-from anonmyzation_pipeline.logging_setup import setup_logging
+from anonymization_pipeline.config import Settings
+from anonymization_pipeline.logging_setup import setup_logging
 
 __all__ = ["FAKE_CF", "make_settings"]
 

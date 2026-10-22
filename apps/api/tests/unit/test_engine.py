@@ -4,7 +4,7 @@ import pytest
 from anonymization_core import errors
 from anonymization_core.config import PipelineConfig
 
-from anonmyzation_pipeline import errors as service_errors
+from anonymization_pipeline import errors as service_errors
 from tests.conftest import make_settings
 
 

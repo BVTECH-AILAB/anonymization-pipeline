@@ -8,8 +8,8 @@ from anonymization_core.pipeline import Pipeline
 from anonymization_core.testing import FakeNER, FakeReader, letter_pdf, scanned_pdf
 from fastapi.testclient import TestClient
 
-from anonmyzation_pipeline.main import create_app
-from anonmyzation_pipeline.services.jobs import JobManager, get_job_manager
+from anonymization_pipeline.main import create_app
+from anonymization_pipeline.services.jobs import JobManager, get_job_manager
 from tests.conftest import make_settings
 
 

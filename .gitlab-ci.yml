@@ -9,7 +9,7 @@ default:
     - docker info
 
 variables:
-  IMAGE_NAME: anonmyzation-pipeline
+  IMAGE_NAME: anonymization-pipeline
   REGISTRY: harbor.agenas.oci
   REPO_OWNER: agenas
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
@@ -110,7 +110,7 @@ api:
   extends: .uv-job
   variables:
     UV_SCRIPT: >-
-      uv sync --frozen --package anonmyzation-pipeline &&
+      uv sync --frozen --package anonymization-pipeline &&
       cd apps/api &&
       uv run ruff check && uv run ruff format --check && uv run ty check src tests &&
       uv run pytest --cov --cov-report=xml:coverage.xml --junitxml=junit.xml -q

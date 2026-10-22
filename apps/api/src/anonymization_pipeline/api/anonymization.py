@@ -18,13 +18,13 @@ from fastapi import APIRouter, File, Path, Query, Request, Response, UploadFile
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from anonmyzation_pipeline.errors import (
+from anonymization_pipeline.errors import (
     JobNotFoundError,
     JobNotReadyError,
     ModeNotSupportedError,
     VerificationFailedError,
 )
-from anonmyzation_pipeline.services.jobs import TERMINAL, JobManagerDep, Mode
+from anonymization_pipeline.services.jobs import TERMINAL, JobManagerDep, Mode
 
 router = APIRouter(prefix="/anonymizations", tags=["anonymization"])
 

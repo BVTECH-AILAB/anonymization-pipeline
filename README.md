@@ -1,4 +1,4 @@
-# anonmyzation-pipeline
+# anonymization-pipeline
 
 MIA platform service (AGENAS) for the **anonymization of clinical documents**
 (evolution C1). A doctor uploads a referto, a discharge letter or a
@@ -162,7 +162,7 @@ it can be deployed, or extracted, on its own:
 ```mermaid
 flowchart LR
     CLIENT["fe or any client"] -- "HTTP /anonymizations" --> API
-    API["apps/api<br/>the service: jobs, SSE, limits, KPI events<br/>(image anonmyzation-pipeline)"] -- "Python import" --> CORE
+    API["apps/api<br/>the service: jobs, SSE, limits, KPI events<br/>(image anonymization-pipeline)"] -- "Python import" --> CORE
     CORE["packages/anonymization-core<br/>the engine (library)"] -- "HTTP, OCR_CONTRACT.md" --> OCR["services/ocr-server<br/>PP-OCRv5 on ONNX Runtime<br/>(image paddle-ocr-server)"]
     CORE -- "HTTP /batch_ner" --> NER["AILAB NER service"]
 ```
@@ -202,9 +202,9 @@ packages/anonymization-core/   the engine, a library: no web framework, never im
                           (+ eponyms.yaml), allowlist, ensemble, visual
     testing.py            synthetic PDFs and fake engines (extra `testing`)
   tests/                  engine tests: `just test-core`
-apps/api/                      the service (image anonmyzation-pipeline): Dockerfile,
+apps/api/                      the service (image anonymization-pipeline): Dockerfile,
                                scripts/entrypoint.sh, own tests (`just test-api`)
-  src/anonmyzation_pipeline/
+  src/anonymization_pipeline/
     main.py               create_app(), lifespan (pipeline and job manager on app.state)
     config.py             Settings (pydantic-settings, prefix ANONPIP_), pipeline_config()
     errors.py             service errors, Italian messages, engine error mapping

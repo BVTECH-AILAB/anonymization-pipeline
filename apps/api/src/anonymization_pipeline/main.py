@@ -1,4 +1,4 @@
-"""Application factory and ASGI entry point (``anonmyzation_pipeline.main:app``)."""
+"""Application factory and ASGI entry point (``anonymization_pipeline.main:app``)."""
 
 import asyncio
 import contextlib
@@ -15,13 +15,13 @@ from anonymization_core.factory import (
 from anonymization_core.pipeline import Pipeline
 from fastapi import FastAPI
 
-from anonmyzation_pipeline import __version__
-from anonmyzation_pipeline.api import anonymization, health
-from anonmyzation_pipeline.config import Settings, get_settings
-from anonmyzation_pipeline.errors import register_exception_handlers
-from anonmyzation_pipeline.logging_setup import setup_logging
-from anonmyzation_pipeline.middleware import RequestIdMiddleware
-from anonmyzation_pipeline.services.jobs import JobManager
+from anonymization_pipeline import __version__
+from anonymization_pipeline.api import anonymization, health
+from anonymization_pipeline.config import Settings, get_settings
+from anonymization_pipeline.errors import register_exception_handlers
+from anonymization_pipeline.logging_setup import setup_logging
+from anonymization_pipeline.middleware import RequestIdMiddleware
+from anonymization_pipeline.services.jobs import JobManager
 
 logger = logging.getLogger(__name__)
 

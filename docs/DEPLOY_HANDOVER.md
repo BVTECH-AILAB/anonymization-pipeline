@@ -8,8 +8,8 @@ fa il provisioning.
 
 | Voce | Valore |
 |---|---|
-| Nome servizio / immagine | `anonmyzation-pipeline` -> `harbor.agenas.oci/agenas/anonmyzation-pipeline` |
-| Repository GitLab | `gitlab.agenas.oci:application/backend/anonmyzation-pipeline` |
+| Nome servizio / immagine | `anonymization-pipeline` -> `harbor.agenas.oci/agenas/anonymization-pipeline` |
+| Repository GitLab | `gitlab.agenas.oci:application/backend/anonymization-pipeline` |
 | Build | `docker build -f apps/api/Dockerfile --target runtime .` (contesto: la root del repository, che contiene anche il motore `packages/anonymization-core`) |
 | Namespace proposto | |
 | Porta | `8000` (nome `web`) |

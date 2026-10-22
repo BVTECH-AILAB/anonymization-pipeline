@@ -14,7 +14,7 @@ import pytest
 from anonymization_core.testing import record_unlocked_pdfium
 from PIL import Image
 
-from anonmyzation_pipeline.services.jobs import Job, JobManager
+from anonymization_pipeline.services.jobs import Job, JobManager
 
 
 def _wait(job: Job, seconds: float = 60) -> None:

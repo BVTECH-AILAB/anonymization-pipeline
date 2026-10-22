@@ -1,7 +1,7 @@
 """Errors of the anonymization engine, free of any transport.
 
 Callers map them to their own responses: the service turns them into the
-Italian HTTP errors of ``anonmyzation_pipeline.errors`` (``service_error``).
+Italian HTTP errors of ``anonymization_pipeline.errors`` (``service_error``).
 Messages never carry document text.
 """
 

@@ -25,7 +25,7 @@ servizio -> stdout (testo) -> Grafana Alloy -> Loki -> Grafana / KPI-dashboard
 ## Formato
 
 ```
-2026-10-06 10:00:00,123 INFO anonmyzation_pipeline.services.jobs [3f2a9c...]: anonymization_job_created {"job_id": "9ab85d97...", "pages": 2, "size_kb": 248, "source_format": "pdf", "mode": "accurate"}
+2026-10-06 10:00:00,123 INFO anonymization_pipeline.services.jobs [3f2a9c...]: anonymization_job_created {"job_id": "9ab85d97...", "pages": 2, "size_kb": 248, "source_format": "pdf", "mode": "accurate"}
 ```
 
 `%(asctime)s %(levelname)s %(name)s [%(request_id)s]: %(message)s`
@@ -105,9 +105,9 @@ righe. Esempi dei formati esistenti:
 | rag-system | `inference_latency {json}` con `client_ttft_ms` | Latenza |
 | rag-system | `Hallucination detection: level=...` | Allucinazioni |
 | rag-system | access log uvicorn `"POST /chat/stream HTTP/1.1" 200` | Success rate, uptime |
-| anonmyzation-pipeline | `anonymization_job_created {json}` (`job_id`, `pages`, `size_kb`, `source_format`, `mode`) | Documenti caricati, per modalità |
-| anonmyzation-pipeline | `anonymization_completed {json}` (`job_id`, `pages`, `scanned_pages`, `boxes`, `values_by_label`, `verified`, `edits`, `seconds_total`, `timings`, `mode`) | Volumi, dati oscurati per tipo, verifiche, tempi |
-| anonmyzation-pipeline | `anonymization_edited {json}`, `anonymization_failed {json}`, `anonymization_cancelled {json}`, `anonymization_job_deleted {json}` | Correzioni manuali, errori, cancellazioni |
+| anonymization-pipeline | `anonymization_job_created {json}` (`job_id`, `pages`, `size_kb`, `source_format`, `mode`) | Documenti caricati, per modalità |
+| anonymization-pipeline | `anonymization_completed {json}` (`job_id`, `pages`, `scanned_pages`, `boxes`, `values_by_label`, `verified`, `edits`, `seconds_total`, `timings`, `mode`) | Volumi, dati oscurati per tipo, verifiche, tempi |
+| anonymization-pipeline | `anonymization_edited {json}`, `anonymization_failed {json}`, `anonymization_cancelled {json}`, `anonymization_job_deleted {json}` | Correzioni manuali, errori, cancellazioni |
 
 Inventario completo: `KPI-dashboard/documentation/loki-query-inventory.md`.
 

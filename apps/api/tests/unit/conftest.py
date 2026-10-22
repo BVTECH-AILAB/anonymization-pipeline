@@ -8,9 +8,9 @@ from anonymization_core.pipeline import Pipeline
 from anonymization_core.testing import FakeNER, FakeReader, letter_pdf
 from fastapi.testclient import TestClient
 
-from anonmyzation_pipeline.config import Settings
-from anonmyzation_pipeline.main import create_app
-from anonmyzation_pipeline.services.jobs import JobManager, get_job_manager
+from anonymization_pipeline.config import Settings
+from anonymization_pipeline.main import create_app
+from anonymization_pipeline.services.jobs import JobManager, get_job_manager
 
 
 @pytest.fixture

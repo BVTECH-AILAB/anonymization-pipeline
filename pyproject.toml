@@ -1,6 +1,6 @@
 # uv workspace root (not a package): one lock for every member.
 #   packages/anonymization-core  the engine (library)
-#   apps/api                     the service (image anonmyzation-pipeline)
+#   apps/api                     the service (image anonymization-pipeline)
 # The OCR server (services/ocr-server) has its own lock. The dev group below is
 # the developer environment: every member and the repository-wide tools
 # (pre-commit, audit). Each member has its own lint, type, test and coverage
@@ -12,7 +12,7 @@ exclude = ["services/*"]
 
 [dependency-groups]
 dev = [
-    "anonmyzation-pipeline",
+    "anonymization-pipeline",
     "anonymization-core[testing]",
     "httpx>=0.28",
     "pip-audit>=2.7",
@@ -25,5 +25,5 @@ dev = [
 ]
 
 [tool.uv.sources]
-anonmyzation-pipeline = { workspace = true }
+anonymization-pipeline = { workspace = true }
 anonymization-core = { workspace = true }

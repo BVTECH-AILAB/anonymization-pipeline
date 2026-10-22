@@ -68,4 +68,4 @@ echo "==> Starting the API at ${API_URL}; open ${URL} (Ctrl+C to stop)"
 export ANONPIP_ENVIRONMENT="${ANONPIP_ENVIRONMENT:-local}"
 export ANONPIP_OCR_SERVER_URL="$OCR_URL"
 # not exec: the trap stops the OCR server when the API stops
-uv run uvicorn anonmyzation_pipeline.main:app --host "$HOST" --port "$PORT"
+uv run uvicorn anonymization_pipeline.main:app --host "$HOST" --port "$PORT"

@@ -1,5 +1,5 @@
 [project]
-name = "anonmyzation-pipeline"
+name = "anonymization-pipeline"
 version = "0.1.0"
 description = "AGENAS MIA service: surgical anonymization of clinical documents (C1), generated from agenas-python-template"
 requires-python = ">=3.12,<3.13"
@@ -34,7 +34,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/anonmyzation_pipeline"]
+packages = ["src/anonymization_pipeline"]
 
 # Self-contained on purpose: the service lints the same way on its own.
 [tool.ruff]
@@ -54,7 +54,7 @@ ignore = ["E501"]
 "tests/**" = ["S101", "S105", "S106", "ARG"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
-"logging.basicConfig".msg = "Use anonmyzation_pipeline.logging_setup.setup_logging: it installs the PII redaction filter."
+"logging.basicConfig".msg = "Use anonymization_pipeline.logging_setup.setup_logging: it installs the PII redaction filter."
 "os.getenv".msg = "Read configuration through Settings in config.py, so every variable has a typed default."
 "tools".msg = "The service never imports the developer tools."
 
@@ -65,7 +65,7 @@ asyncio_default_fixture_loop_scope = "function"
 addopts = "--strict-markers"
 
 [tool.coverage.run]
-source = ["anonmyzation_pipeline"]
+source = ["anonymization_pipeline"]
 branch = true
 
 [tool.coverage.report]

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from anonmyzation_pipeline.config import Settings
+from anonymization_pipeline.config import Settings
 from tests.conftest import make_settings
 
 

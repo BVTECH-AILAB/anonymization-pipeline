@@ -72,7 +72,7 @@ flowchart TD
     BLOCK -.-> EDIT
 ```
 
-### 1. Text layers (`anonymization_core/reader.py`, `layers.py`)
+### 1. Text layers (`backend/src/services/anonymizer/reader.py`, `layers.py`)
 
 Detection runs on plain text; redaction runs on the PDF. The link is the
 **text layer**: page text in which every character keeps its box on the page.
@@ -148,7 +148,7 @@ A detected span `(start, end)` becomes one rectangle per line.
 The visual detectors work on pypdfium2 page views (`pdf_pages.py`). Components,
 open points and licences: [PDF_BACKEND_GAPS.md](PDF_BACKEND_GAPS.md).
 
-### 2. Detection (`anonymization_core/detect/`)
+### 2. Detection (`backend/src/services/anonymizer/detect/`)
 
 Recall first: one detector is enough to redact.
 
@@ -161,7 +161,7 @@ Recall first: one detector is enough to redact.
 | `ensemble.py` | Person spans lose leading titles, references without a name ("la paziente") are dropped, institution names become organisations. Document-wide propagation: every name token and every redacted identifier found anywhere is searched in every layer (spaced, glued, with initials, both orders, wrapped on two lines); words ambiguous on their own (three letters or fewer, acronyms, field labels, eponyms, scales, Italian municipalities: "Ugo", "HIV", "Masson", "Napoli") are spread only as part of the full name, never alone. Also found: a surname glued to an initial in capitals ("TOKAFOR"), a full name glued to what follows ("LindaMarshRX-550"), OCR confusions 0/o, 1/l, 5/s in names and numbers ("Adebay0", "389 555 773l"), and other codes of the numbering scheme of a found identifier ("RX-550-2913" -> "RX-550-2877"). Names and places with stray symbols or numbers-only words are OCR fragments; addresses from NER need the shape of an address; facility names are organisations. Overlapping spans merge into the most specific label |
 | `visual.py` | Barcodes and QR codes (zxing), embedded images (signature or stamp; grayscale clinical pictures left to OCR, colour photos redacted whole; header logos excluded), vector signatures and stamp frames on native pages, on scans the ink that OCR does not explain (signatures), stamps (frame, coloured ink, or a cluster of words around "OMCeO" / "Medico Chirurgo") |
 
-### 3. PII taxonomy (`anonymization_core/taxonomy.py`)
+### 3. PII taxonomy (`backend/src/services/anonymizer/taxonomy.py`)
 
 | Label | Kind | Redacted by default |
 |---|---|---|
@@ -199,7 +199,7 @@ What each label covers (detectors and reviewers apply the same definition):
 | `FACE` | Photos of the patient's face. |
 | `HANDWRITING` | Handwritten notes. |
 
-### 4. Redaction (`anonymization_core/release.py`)
+### 4. Redaction (`backend/src/services/anonymizer/release.py`)
 
 - **Propagation**: every occurrence of a redacted identifier or full name gets a
   box, also where detection missed it (glued to a label, broken by OCR, in a
@@ -217,7 +217,7 @@ What each label covers (detectors and reviewers apply the same definition):
   versions (a note added and deleted, for example).
 - Hand-drawn areas are snapped to the full box of every character they touch.
 
-### 5. Verification (`anonymization_core/verify.py`)
+### 5. Verification (`backend/src/services/anonymizer/verify.py`)
 
 A document is released only if all checks pass:
 
@@ -313,7 +313,7 @@ the meantime answers 404 `JOB_NOT_FOUND`.
    result; `GET /{id}/preview` again gives the new boxes and URLs.
 4. `GET /{id}/download/pdf` (or `docx`) once `verified` is true and no edit is running.
 
-### Fast mode (`anonymization_core/export_markdown.py`)
+### Fast mode (`backend/src/services/anonymizer/export_markdown.py`)
 
 The text is the one of the Word export (native layer, or OCR on scanned pages),
 line by line, with:
@@ -363,12 +363,12 @@ Errors are `ServiceError` subclasses with generic Italian messages (`errors.py`)
 | `anonymization_cancelled` | `job_id` |
 | `anonymization_job_deleted` | `job_id`, `reason` (`user`, `expired`) |
 
-`backend/api/tests/unit/test_logging.py` pins the keys and checks that no PII reaches the logs.
+`backend/tests/utils/test_logging_setup.py` pins the keys and checks that no PII reaches the logs.
 
 ## Synthetic dataset and evaluation
 
-The scoring is the evaluation CLI of `evaluation/` (`just evaluate`, `just
-eval-compare`). What follows describes the dataset, the metrics and the results.
+The scoring is the evaluation CLI of `backend/evals/` (`just backend::evaluate`,
+`just backend::eval-compare`). What follows describes the dataset, the metrics and the results.
 
 **Dataset**: seven Italian document types (discharge
 letter, lab report, radiology report, ER report, referral letter, sick-leave
@@ -474,7 +474,7 @@ Reading the numbers:
   box smaller than the image box of the ground truth. Address, CAP and city are
   annotated separately but often detected as one box.
 - Per-type AP and every miss are listed in the report the evaluation writes
-  (`reports/evaluation.md`); `just eval-compare` compares two runs.
+  (`reports/evaluation.md`); `just backend::eval-compare` compares two runs.
 
 ## OCR choice
 

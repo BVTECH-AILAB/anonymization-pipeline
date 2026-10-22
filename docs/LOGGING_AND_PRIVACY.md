@@ -25,7 +25,7 @@ servizio -> stdout (testo) -> Grafana Alloy -> Loki -> Grafana / KPI-dashboard
 ## Formato
 
 ```
-2026-10-06 10:00:00,123 INFO anonymization_pipeline.services.jobs [3f2a9c...]: anonymization_job_created {"job_id": "9ab85d97...", "pages": 2, "size_kb": 248, "source_format": "pdf", "mode": "accurate"}
+2026-10-06 10:00:00,123 INFO src.services.anonymization [3f2a9c...]: anonymization_job_created {"job_id": "9ab85d97...", "pages": 2, "size_kb": 248, "source_format": "pdf", "mode": "accurate"}
 ```
 
 `%(asctime)s %(levelname)s %(name)s [%(request_id)s]: %(message)s`
@@ -123,7 +123,7 @@ Regole per i nuovi eventi:
 
 Nel servizio di anonimizzazione nessuna riga contiene testo del documento,
 valori rilevati o nomi dei file: solo id del job, contatori e tempi (vedi
-`docs/ANONYMIZATION.md`, test in `backend/api/tests/unit/test_logging.py`).
+`docs/ANONYMIZATION.md`, test in `backend/tests/utils/test_logging_setup.py`).
 
 ## Test di non-leak
 

@@ -10,7 +10,7 @@ fa il provisioning.
 |---|---|
 | Nome servizio / immagine | `anonymization-pipeline` -> `harbor.agenas.oci/agenas/anonymization-pipeline` |
 | Repository GitLab | `gitlab.agenas.oci:application/backend/anonymization-pipeline` |
-| Build | `docker build -f backend/Dockerfile --target runtime .` (contesto: la root del repository, che contiene anche il motore `backend/core`) |
+| Build | `docker build -f Dockerfile.api --target runtime .` da `backend/` (contesto: `backend/`, che contiene servizio e motore) |
 | Namespace proposto | |
 | Porta | `8000` (nome `web`) |
 | Liveness probe | `GET /healthz` |

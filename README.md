@@ -22,8 +22,9 @@ as Markdown tables and `[IMMAGINE]` placeholders.
 How the algorithm works, the API, the PII taxonomy and the evaluation results:
 **[docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)**.
 
-The repository holds the engine, the API, the OCR server and the evaluation
-CLI (`evaluation/`: scoring against the dataset in `dataset/`).
+The repository holds two services, each with the folder structure of
+ai-platform-v2: `backend/` (the API and the engine, with the evaluation CLI in
+`backend/evals/`) and `ocr-server/`.
 
 ## How the algorithm works
 
@@ -123,7 +124,8 @@ Requirements: `uv`, `just`. A GPU is optional (about 2.5 s per scanned page on a
 laptop RTX 5070, slower on CPU; see "Speed" in [docs/ANONYMIZATION.md](docs/ANONYMIZATION.md)).
 
 ```bash
-cp .env.example .env
+cp backend/.env.example backend/.env   # the service's settings (ANONPIP_*)
+cp .env.example .env                   # OCR server and compose overrides
 just start          # deps, OCR server, API on the first free port, OpenAPI page in the browser
 ```
 
@@ -132,7 +134,7 @@ already running, downloads the OCR weights on the first run (NER: set
 `ANONPIP_NER_URL` to the AILAB NER service), starts the API on
 `http://127.0.0.1:8000` (or the next free port) and opens its OpenAPI page
 (`/docs`, off in prod) once `/readyz` is ready.
-`just dev` needs the OCR server too: `just ocr-server`.
+`just backend::dev` needs the OCR server too: `just ocr-server`.
 
 With Docker: `just up` starts the API and the OCR server (weights cached in the `models`
 volume; uncomment the GPU blocks in `docker-compose.yml` and set
@@ -140,101 +142,79 @@ volume; uncomment the GPU blocks in `docker-compose.yml` and set
 
 ## Commands
 
+From the repository root; each service also has its own `justfile`
+(`cd backend && just test` is the same as `just backend::test`).
+
 | Command | What it does |
 |---|---|
 | `just start` | Local run: OCR server and API, OpenAPI page in the browser |
-| `just dev` | API on the host with reload |
 | `just up` / `just down` / `just logs` | Compose stack (API, OCR server) |
-| `just models` | Check the OCR server and the NER service (both must answer) |
 | `just ocr-server [cpu]` / `just ocr-server-test` | OCR server on the host, port 8829 / its unit tests |
-| `just lint` | ruff fix + format + ty: before every commit |
-| `just check` | Same checks without fixes (what CI runs) |
-| `just test` / `just test-cov` | Unit tests of every package / with coverage (at least 80% per package) |
-| `just test-core` / `just test-api` / `just test-eval` | One suite only (arguments go to pytest) |
-| `just evaluate [--variants scan --split test --limit 20]` | Score the engine against `dataset/` -> `reports/evaluation.md` (needs the OCR server and NER) |
-| `just eval-compare reports_a reports_b` | Two evaluations side by side -> `reports/comparison.md` |
-| `just audit` | Vulnerabilities in the dependencies |
+| `just backend::dev` | API on the host with reload |
+| `just backend::models` | Check the OCR server and the NER service (both must answer) |
+| `just backend::lint` / `just backend::check` | ruff fix + format + ty (before every commit) / the same without fixes (CI) |
+| `just backend::test` / `just backend::test-cov` | Unit tests / with coverage (at least 80%) |
+| `just backend::evals-test` | Tests of the evaluation (installs the `evals` group: torch, scikit-learn) |
+| `just backend::evaluate [--variants scan --split test --limit 20]` | Score the engine against `dataset/` -> `reports/evaluation.md` (needs the OCR server and NER) |
+| `just backend::eval-compare ../reports_a ../reports_b` | Two evaluations side by side -> `reports/comparison.md` |
+| `just backend::audit` | Vulnerabilities in the dependencies |
 
-## Modules
+## Services
 
-One folder per pod. `backend/` is the service pod: the API and the engine, two
-packages built into one image. `ocr-server/` is the OCR pod, called by the
-backend over HTTP. Each package has its own dependencies, tests and lint, so it
-can be extracted on its own:
+One folder per pod, each a uv project of its own (dependencies, lock, tests,
+Dockerfile, justfile, AGENTS.md), with the structure of ai-platform-v2: code in
+a flat `src/` package imported as `src.*`, served as `src.main:app`.
 
 ```mermaid
 flowchart LR
     CLIENT["fe or any client"] -- "HTTP /anonymizations" --> API
-    API["backend/api<br/>the service: jobs, SSE, limits, KPI events<br/>(image anonymization-pipeline)"] -- "Python import" --> CORE
-    CORE["backend/core<br/>the engine (library)"] -- "HTTP, OCR_CONTRACT.md" --> OCR["ocr-server<br/>PP-OCRv5 on ONNX Runtime<br/>(image paddle-ocr-server)"]
-    CORE -- "HTTP /batch_ner" --> NER["AILAB NER service"]
+    API["backend: src/router, src/services/anonymization.py<br/>jobs, SSE, limits, KPI events<br/>(image anonymization-pipeline)"] -- "Python import" --> CORE
+    CORE["backend: src/services/anonymizer<br/>the engine"] -- "src/llms/ocr.py, OCR_CONTRACT.md" --> OCR["ocr-server<br/>PP-OCRv5 on ONNX Runtime<br/>(image paddle-ocr-server)"]
+    CORE -- "src/llms/ner.py, POST /batch_ner" --> NER["AILAB NER service"]
 ```
 
-| Package | Depends on | Never imports | Tests |
-|---|---|---|---|
-| `backend/core` | OCR server and NER over HTTP | the service, any web framework | `just test-core` |
-| `backend/api` | the engine | - | `just test-api` |
-| `ocr-server` | - (own lock, outside the workspace) | - | `just ocr-server-test` |
-| `evaluation` | the engine (dev only, never in an image) | the service | `just test-eval` |
-
-The "never imports" column is enforced by ruff (`banned-api` in each
-`pyproject.toml`). To extract the engine, copy its folder: see
-[backend/core/README.md](backend/core/README.md).
+The engine is a self-contained sub-package of the backend: `ruff.toml` in its
+folder bans the router, the session service, the app, `Settings` and any web
+framework. The evaluation (`backend/evals/`) uses the engine and never the
+service. See [backend/src/services/anonymizer/README.md](backend/src/services/anonymizer/README.md).
 
 ## Layout
 
-The backend packages and the evaluation form a uv workspace: one lock, each package with its own
-dependencies, tests and lint config. The root is not a package: its dev group is
-the developer environment (every member). The OCR server has its own lock.
-
 ```
-backend/                pod 1, image anonymization-pipeline
-  Dockerfile            builds api + core (context: the repository root)
-  core/                 the engine, a library: no web framework, never imports the
-                        service (banned in its pyproject); own tests, coverage and
-                        lint config, so it can be extracted as is
-    src/anonymization_core/
-      config.py             PipelineConfig (plain values, no environment lookup)
-      factory.py            build_pipeline, load_models
-      errors.py             engine errors (the service maps them to HTTP)
-      convert.py            upload (PDF or image) -> PDF
-      document.py           releases (PDF + Word, Markdown), manual edits, page images
-      reader.py, layers.py, geometry.py, pdf_pages.py, pdf_text.py, cells.py
-                            text layers: pypdfium2 text, LiteParse + OCR server
-      pipeline.py           analysis: text layers -> findings -> boxes
-      release.py, verify.py flatten pages with boxes + pypdf rewrite, checks
-      export_docx.py, export_markdown.py, taxonomy.py
-      detect/               rules, labels (+ labels.yaml), ner, eponyms
-                            (+ eponyms.yaml), allowlist, ensemble, visual
-      testing.py            synthetic PDFs and fake engines (extra `testing`)
-    tests/                  engine tests: `just test-core`
-  api/                  the service: scripts/entrypoint.sh, own tests (`just test-api`)
-    src/anonymization_pipeline/
-      main.py               create_app(), lifespan (pipeline and job manager on app.state)
-      config.py             Settings (pydantic-settings, prefix ANONPIP_), pipeline_config()
-      errors.py             service errors, Italian messages, engine error mapping
-      logging_setup.py      setup_logging, log_event, request id
-      privacy.py            hashing/masking, user-text redaction, log filter
-      api/health.py         /healthz, /readyz (models loaded), /version
-      api/anonymization.py  upload, SSE progress, edits, previews, downloads
-      services/jobs.py      job lifecycle around the engine: queue, SSE, expiry, limits, KPI events
+backend/                pod 1, image anonymization-pipeline (build context: backend/)
+  pyproject.toml uv.lock  one project; groups dev (tests, lint) and evals (not installed by default)
+  Dockerfile.api        the service image (runtime target); Dockerfile: tests and evaluation
+  justfile AGENTS.md .env.example scripts/entrypoint.sh
+  src/
+    main.py             create_app(), routers, middleware, error handlers
+    lifespan.py         pipeline and job manager on app.state, model loading retries, purge
+    config.py           Settings (pydantic-settings, prefix ANONPIP_), pipeline_config()
+    errors.py           service errors (Italian messages), engine error mapping (service_error)
+    router/             health.py (/healthz /readyz /version), anonymization.py, errors.py (handlers)
+    models/             anonymization.py: API wire models
+    services/
+      anonymization.py  job lifecycle around the engine: queue, SSE, expiry, limits, KPI events
+      anonymizer/       the engine: config, factory, errors, convert (upload -> PDF),
+                        document (releases, edits, page images), reader (pypdfium2 text,
+                        LiteParse + OCR server), layers, geometry, pdf_pages, pdf_text,
+                        cells, pipeline, release, verify, export_docx, export_markdown,
+                        taxonomy, detect/ (rules, labels, eponyms, allowlist, ensemble,
+                        visual); OCR_CONTRACT.md, README.md, ruff.toml (boundaries)
+    llms/               ner.py (AILAB NER client), ocr.py (OCR server client)
+    utils/              logging_setup.py, privacy.py, request_context.py (request id)
+  tests/                mirrors src/; documents.py: synthetic PDFs and fake engines
+  evals/                evaluation CLI (python -m evals): evaluate.py, metrics.py, pdf.py; tests/
 ocr-server/             pod 2, image paddle-ocr-server: PP-OCRv5 (RapidOCR) behind the
                         LiteParse OCR API; own pyproject, lock and Dockerfile (ONNX
-                        Runtime, CPU or GPU), outside the workspace: `just ocr-server-test`
+                        Runtime, CPU or GPU): `just ocr-server-test`
 docs/                   ANONYMIZATION.md, PDF_BACKEND_GAPS.md, logging and privacy,
                         deploy handover
-evaluation/             evaluation CLI (dev only, never in an image): `just evaluate`,
-                        `just eval-compare`; reads `dataset/`, writes `reports/`
-  src/anonymization_eval/
-    evaluate.py           scoring per variant, Markdown report, comparison of two runs
-    metrics.py            box and word level scores (scikit-learn), AP / mAP (torchmetrics)
-    pdf.py                the judge: words and file content of the output PDFs
 scripts/                start.sh: OCR server and API on the host (`just start`)
 ```
 
 ## Results
 
-Measured with `just evaluate` on the whole evaluation set: 200 documents, 326
+Measured with `just backend::evaluate` on the whole evaluation set: 200 documents, 326
 pages, each as native PDF, scan and scan with a hidden OCR layer (600 PDFs;
 22/10/2026), with the AILAB NER service and the OCR server on a laptop RTX 5070
 (8 GB):
@@ -259,7 +239,7 @@ tessera sanitaria 100%, persons 96% to 97%, barcodes, QR codes, URLs and IBAN
 79%: numbers with no label, or a label the vocabulary lacks), identity documents
 on plain scans (70%) and handwriting, which is not detected (0 of 21: the manual
 edits cover it). Per-type recall and AP and every miss are in the report that
-`just evaluate` writes (`reports/evaluation.md`); details in
+`just backend::evaluate` writes (`reports/evaluation.md`); details in
 [docs/ANONYMIZATION.md](docs/ANONYMIZATION.md).
 
 - **Box level** (scikit-learn): every required ground-truth box is found when

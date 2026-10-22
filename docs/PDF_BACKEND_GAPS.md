@@ -58,8 +58,8 @@ eponym lists.
 
 ## Behaviour that must stay
 
-Each has a regression test in `backend/core/tests/test_liteparse_reader.py`,
-`backend/core/tests/test_release.py` or `ocr-server/tests/`.
+Each has a regression test in `backend/tests/services/anonymizer/test_liteparse_reader.py`,
+`backend/tests/services/anonymizer/test_release.py` or `ocr-server/tests/`.
 
 - **LiteParse never runs OCR itself.** With OCR on, it would replace a scan's
   hidden text layer with what OCR sees, and hidden values would never be
@@ -79,7 +79,7 @@ Each has a regression test in `backend/core/tests/test_liteparse_reader.py`,
 
 Installed packages of the service (runtime) and of `ocr-server/`, model
 weights and the native libraries bundled in the wheels. The evaluation
-(`evaluation/`, dev only) is never part of an image. Everything is MIT, BSD,
+(`backend/evals/`, the `evals` dependency group, dev only) is never part of an image. Everything is MIT, BSD,
 Apache-2.0, PSF or ISC except:
 
 | Package | Licence | Pulled by | Status |

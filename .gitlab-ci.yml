@@ -120,7 +120,16 @@ ocr-server:
       uv sync --frozen --extra cpu &&
       uv run --extra cpu ruff check && uv run --extra cpu ruff format --check &&
       uv run --extra cpu ty check src tests &&
-      uv run --extra cpu pytest --cov -q
+      uv run --extra cpu pytest --cov --cov-report=xml:coverage.xml --junitxml=junit.xml -q
+  after_script:
+    - sed -i "s|/app/|$CI_PROJECT_DIR/|g" ocr-server/coverage.xml || true
+  artifacts:
+    when: always
+    expire_in: 1 day
+    paths:
+      - ocr-server/coverage.xml
+    reports:
+      junit: ocr-server/junit.xml
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH =~ /^(main|test|dev)$/
       changes: *ocr-paths
@@ -128,9 +137,12 @@ ocr-server:
 # Analysis only: allow_failure so an unreachable Sonar never blocks the pipeline.
 build-sonar:
   stage: build-sonar
-  # coverage of the backend, when its job ran in this pipeline
+  # coverage of the services whose job ran in this pipeline
   needs:
     - job: backend
+      optional: true
+      artifacts: true
+    - job: ocr-server
       optional: true
       artifacts: true
   cache:
